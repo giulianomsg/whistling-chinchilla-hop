@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [profileLoading, setProfileLoading] = useState(false)
+  const [authState, setAuthState] = useState<'initializing' | 'loading-profile' | 'ready' | 'error'>('initializing')
 
   const analyzer = AuthStateAnalyzer.getInstance()
 
@@ -165,15 +165,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Função para atualizar o perfil
   const refreshProfile = useCallback(async () => {
-    if (user && !profileLoading) {
-      setProfileLoading(true)
+    if (user && authState === 'ready') {
       analyzer.log('🔄 ATUALIZANDO PERFIL MANUALMENTE', { userId: user.id })
       const profileData = await fetchProfile(user.id)
       setProfile(profileData)
       analyzer.log('📋 PERFIL ATUALIZADO', { profile: profileData })
-      setProfileLoading(false)
     }
-  }, [user, profileLoading, fetchProfile, analyzer])
+  }, [user, authState, fetchProfile, analyzer])
 
   // Login
   const signIn = async (email: string, password: string) => {
@@ -236,6 +234,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     analyzer.checkLoadingState(loading, user, profile)
   }, [loading, user, profile, analyzer])
 
+  // Efeito para gerenciar o estado de loading baseado no authState
+  useEffect(() => {
+    const shouldLoad = authState === 'initializing' || authState === 'loading-profile'
+    setLoading(shouldLoad)
+    
+    analyzer.log('🔄 ESTADO DE LOADING ATUALIZADO', { 
+      authState, 
+      loading: shouldLoad,
+      user: user?.email,
+      profile: profile?.role
+    })
+  }, [authState, user, profile, analyzer])
+
   useEffect(() => {
     analyzer.log('🚀 AUTH PROVIDER MONTADO')
     analyzer.reset() // Resetar analisador
@@ -253,48 +264,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (event === 'SIGNED_IN' && session) {
           analyzer.log('👤 USUÁRIO FEZ LOGIN', { userId: session.user.id })
           console.log('Usuário fez login, buscando perfil...')
-          setProfileLoading(true)
+          setAuthState('loading-profile')
+          
           const profileData = await fetchProfile(session.user.id)
           setProfile(profileData)
-          setProfileLoading(false)
+          
           if (profileData) {
             analyzer.log('✅ PERFIL CARREGADO APÓS LOGIN', { role: profileData.role })
             console.log('Perfil carregado:', profileData.role)
+            setAuthState('ready')
           } else {
             analyzer.log('❌ PERFIL NÃO CARREGADO APÓS LOGIN')
+            setAuthState('error')
           }
         } else if (event === 'SIGNED_OUT') {
           analyzer.log('🚪 USUÁRIO FEZ LOGOUT')
           console.log('Usuário fez logout, limpando perfil...')
           setProfile(null)
+          setAuthState('ready')
         } else if (event === 'INITIAL_SESSION') {
           analyzer.log('🔍 SESSÃO INICIAL CARREGADA', { hasSession: !!session })
           console.log('Sessão inicial carregada, buscando perfil...')
+          
           if (session) {
-            setProfileLoading(true)
+            setAuthState('loading-profile')
             const profileData = await fetchProfile(session.user.id)
             setProfile(profileData)
-            setProfileLoading(false)
+            
             if (profileData) {
               analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
               console.log('Perfil inicial carregado:', profileData.role)
+              setAuthState('ready')
             } else {
               analyzer.log('❌ PERFIL INICIAL NÃO CARREGADO')
+              setAuthState('error')
             }
+          } else {
+            analyzer.log('❌ NENHUMA SESSÃO INICIAL ENCONTRADA')
+            console.log('Nenhuma sessão inicial encontrada')
+            setAuthState('ready')
           }
         } else if (event === 'TOKEN_REFRESHED') {
           analyzer.log('🔄 TOKEN REFRESHED')
         }
-        
-        // Finaliza o loading após processar
-        setLoading(false)
-        analyzer.log('⏹️ LOADING FINALIZADO')
       }
     )
 
     // Dispara o listener manualmente para obter a sessão inicial
     const initializeAuth = async () => {
       analyzer.log('🎯 INICIANDO AUTENTICAÇÃO')
+      setAuthState('initializing')
+      
       try {
         const { data: { session } } = await supabase.auth.getSession()
         
@@ -307,26 +327,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           analyzer.log('✅ SESSÃO CONFIGURADA', { userId: session.user.id })
           console.log('Sessão inicial encontrada:', session.user.email)
           
-          setProfileLoading(true)
+          setAuthState('loading-profile')
           const profileData = await fetchProfile(session.user.id)
           setProfile(profileData)
-          setProfileLoading(false)
+          
           if (profileData) {
             analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
             console.log('Perfil inicial carregado:', profileData.role)
+            setAuthState('ready')
           } else {
             analyzer.log('❌ PERFIL INICIAL NÃO CARREGADO')
+            setAuthState('error')
           }
         } else {
           analyzer.log('❌ NENHUMA SESSÃO INICIAL ENCONTRADA')
           console.log('Nenhuma sessão inicial encontrada')
+          setAuthState('ready')
         }
       } catch (error) {
         analyzer.log('❌ ERRO NA INICIALIZAÇÃO', { error })
         console.error('Erro na inicialização da auth:', error)
-      } finally {
-        setLoading(false)
-        analyzer.log('⏹️ LOADING FINALIZADO (INIT)')
+        setAuthState('error')
       }
     }
     
@@ -343,7 +364,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     profile,
     session,
-    loading: loading || profileLoading, // Loading geral + loading do perfil
+    loading,
     signIn,
     signUp,
     signOut,
