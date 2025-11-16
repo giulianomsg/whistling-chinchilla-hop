@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { Database } from '@/integrations/supabase/client'
@@ -96,11 +96,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [profileLoading, setProfileLoading] = useState(false)
 
   const analyzer = AuthStateAnalyzer.getInstance()
 
   // Função para buscar o perfil do usuário
-  const fetchProfile = async (userId: string): Promise<Profile | null> => {
+  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     analyzer.log('🔍 INICIANDO BUSCA DE PERFIL', { userId })
     
     try {
@@ -160,17 +161,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Erro inesperado ao buscar perfil:', error)
       return null
     }
-  }
+  }, [analyzer])
 
   // Função para atualizar o perfil
-  const refreshProfile = async () => {
-    if (user) {
+  const refreshProfile = useCallback(async () => {
+    if (user && !profileLoading) {
+      setProfileLoading(true)
       analyzer.log('🔄 ATUALIZANDO PERFIL MANUALMENTE', { userId: user.id })
       const profileData = await fetchProfile(user.id)
       setProfile(profileData)
       analyzer.log('📋 PERFIL ATUALIZADO', { profile: profileData })
+      setProfileLoading(false)
     }
-  }
+  }, [user, profileLoading, fetchProfile, analyzer])
 
   // Login
   const signIn = async (email: string, password: string) => {
@@ -231,7 +234,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Monitor de estado
   useEffect(() => {
     analyzer.checkLoadingState(loading, user, profile)
-  }, [loading, user, profile])
+  }, [loading, user, profile, analyzer])
 
   useEffect(() => {
     analyzer.log('🚀 AUTH PROVIDER MONTADO')
@@ -250,8 +253,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (event === 'SIGNED_IN' && session) {
           analyzer.log('👤 USUÁRIO FEZ LOGIN', { userId: session.user.id })
           console.log('Usuário fez login, buscando perfil...')
+          setProfileLoading(true)
           const profileData = await fetchProfile(session.user.id)
           setProfile(profileData)
+          setProfileLoading(false)
           if (profileData) {
             analyzer.log('✅ PERFIL CARREGADO APÓS LOGIN', { role: profileData.role })
             console.log('Perfil carregado:', profileData.role)
@@ -266,8 +271,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           analyzer.log('🔍 SESSÃO INICIAL CARREGADA', { hasSession: !!session })
           console.log('Sessão inicial carregada, buscando perfil...')
           if (session) {
+            setProfileLoading(true)
             const profileData = await fetchProfile(session.user.id)
             setProfile(profileData)
+            setProfileLoading(false)
             if (profileData) {
               analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
               console.log('Perfil inicial carregado:', profileData.role)
@@ -300,8 +307,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           analyzer.log('✅ SESSÃO CONFIGURADA', { userId: session.user.id })
           console.log('Sessão inicial encontrada:', session.user.email)
           
+          setProfileLoading(true)
           const profileData = await fetchProfile(session.user.id)
           setProfile(profileData)
+          setProfileLoading(false)
           if (profileData) {
             analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
             console.log('Perfil inicial carregado:', profileData.role)
@@ -328,13 +337,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       analyzer.log('🧹 LIMPANDO SUBSCRIPTION')
       subscription.unsubscribe()
     }
-  }, [])
+  }, [fetchProfile, analyzer])
 
   const value: AuthContextType = {
     user,
     profile,
     session,
-    loading,
+    loading: loading || profileLoading, // Loading geral + loading do perfil
     signIn,
     signUp,
     signOut,
