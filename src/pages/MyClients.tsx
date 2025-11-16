@@ -84,7 +84,7 @@ const MyClients: React.FC = () => {
         .from('client_professionals')
         .select(`
           *,
-          client:profiles(*)
+          client:profiles!client_id(*)
         `)
         .eq('professional_id', user.id)
         .eq('status', 'active')
