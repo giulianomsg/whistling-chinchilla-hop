@@ -22,9 +22,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true) // Começa como true para carga inicial
+  const [loading, setLoading] = useState(true) // Começa true, termina false
 
-  // Função para buscar o perfil do usuário com fallback
+  // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
     try {
       const { data, error } = await supabase
@@ -36,8 +36,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Erro ao buscar perfil:', error)
         
-        // Se o perfil não existir, tenta criar um básico
-        if (error.code === 'PGRST116') { // Row not found
+        // Se perfil não existe, tenta criar um básico
+        if (error.code === 'PGRST116') {
           console.log('Perfil não encontrado, tentando criar...')
           const { data: userData } = await supabase.auth.getUser(userId)
           
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  // Função para atualizar o perfil (usada após cadastro)
+  // Função para atualizar o perfil
   const refreshProfile = async () => {
     if (user) {
       const profileData = await fetchProfile(user.id)
@@ -119,64 +119,75 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    // 1. LÓGICA DE CARGA INICIAL (F5)
-    const loadInitialSession = async () => {
-      try {
-        console.log('Iniciando carga inicial da sessão...')
+    // Listener único para todos os eventos de auth
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Evento de auth:', event, session?.user?.email)
         
-        const { data: { session } } = await supabase.auth.getSession()
+        // Sempre atualiza session e user primeiro
+        setSession(session)
+        setUser(session?.user ?? null)
         
-        if (session) {
-          console.log('Sessão encontrada:', session.user.email)
-          setSession(session)
-          setUser(session.user)
-          
-          // Buscar perfil do usuário
+        // Depois trata o perfil baseado no evento
+        if (event === 'SIGNED_IN' && session) {
+          console.log('Usuário fez login, buscando perfil...')
           const profileData = await fetchProfile(session.user.id)
           setProfile(profileData)
-          
           if (profileData) {
-            console.log('Perfil carregado com sucesso:', profileData.role)
-          } else {
-            console.warn('Perfil não pôde ser carregado')
+            console.log('Perfil carregado:', profileData.role)
+          }
+        } else if (event === 'SIGNED_OUT') {
+          console.log('Usuário fez logout, limpando perfil...')
+          setProfile(null)
+        } else if (event === 'INITIAL_SESSION') {
+          console.log('Sessão inicial carregada, buscando perfil...')
+          if (session) {
+            const profileData = await fetchProfile(session.user.id)
+            setProfile(profileData)
+            if (profileData) {
+              console.log('Perfil inicial carregado:', profileData.role)
+            }
+          }
+        }
+        
+        // Finaliza o loading após processar
+        setLoading(false)
+      }
+    )
+
+    // Dispara o listener manualmente para obter a sessão inicial
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        // Simula o evento INITIAL_SESSION
+        if (session) {
+          setSession(session)
+          setUser(session.user)
+          console.log('Sessão inicial encontrada:', session.user.email)
+          
+          const profileData = await fetchProfile(session.user.id)
+          setProfile(profileData)
+          if (profileData) {
+            console.log('Perfil inicial carregado:', profileData.role)
           }
         } else {
-          console.log('Nenhuma sessão encontrada')
+          console.log('Nenhuma sessão inicial encontrada')
         }
       } catch (error) {
-        console.error("Falha na carga inicial da sessão:", error)
+        console.error('Erro na inicialização da auth:', error)
       } finally {
         setLoading(false)
       }
     }
     
-    loadInitialSession()
-
-    // 2. LISTENER PARA MUDANÇAS (Login / Logout)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Evento de auth:', event, session?.user?.email)
-        
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        if (event === 'SIGNED_IN' && session) {
-          // Se for login, busca o perfil
-          const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
-        }
-        
-        if (event === 'SIGNED_OUT') {
-          setProfile(null)
-        }
-      }
-    )
+    initializeAuth()
 
     // Limpeza
     return () => {
       subscription.unsubscribe()
     }
-  }, []) // Array vazio, roda apenas na montagem
+  }, [])
 
   const value: AuthContextType = {
     user,
