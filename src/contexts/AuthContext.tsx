@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single()
+      .single() // <-- .single() é bom, pois força um erro se RLS falhar
 
     if (error) {
       // LANÇA O ERRO em vez de só logar e retornar
@@ -87,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // 1. LÓGICA DE CARGA INICIAL (F5)
-    // Esta função só roda UMA VEZ na montagem
+    // Esta função só roda UMA VEIZ na montagem
     const loadInitialSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
@@ -96,17 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(session)
           setUser(session.user)
           // Se a sessão existir, buscamos o perfil
-          const { data: profileData, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-            
-          if (error) {
-            console.error("Erro ao buscar perfil na carga inicial:", error)
-            throw error
-          }
-          setProfile(profileData)
+          await fetchProfile(session.user.id)
         }
       } catch (error) {
         console.error("Falha na carga inicial da sessão:", error)
@@ -127,12 +117,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (event === 'SIGNED_IN' && session) {
           // Se for login, busca o perfil
-          const { data: profileData, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-          if (profileData) setProfile(profileData)
+          try {
+            await fetchProfile(session.user.id)
+          } catch (error) {
+            console.error("Erro ao buscar perfil no login:", error)
+          }
         }
         
         if (event === 'SIGNED_OUT') {
