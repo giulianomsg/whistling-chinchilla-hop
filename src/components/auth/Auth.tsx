@@ -41,6 +41,7 @@ export const Auth: React.FC = () => {
         showError('Erro no login: ' + error.message)
       } else {
         showSuccess('Login realizado com sucesso!')
+        // Redirecionamento será feito automaticamente pelo listener
       }
     } catch (error) {
       const errorMessage = 'Erro inesperado ao fazer login'
@@ -82,6 +83,7 @@ export const Auth: React.FC = () => {
         setSignupEmail('')
         setSignupPassword('')
         setSignupFullName('')
+        // Redirecionamento será feito automaticamente pelo listener após confirmação
       }
     } catch (error) {
       const errorMessage = 'Erro inesperado ao fazer cadastro'

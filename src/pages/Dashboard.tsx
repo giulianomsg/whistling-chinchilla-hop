@@ -10,6 +10,7 @@ const DashboardPage: React.FC = () => {
 
   const handleLogout = async () => {
     await signOut()
+    // Redirecionamento será feito automaticamente pelo listener
   }
 
   return (
@@ -87,6 +88,10 @@ const DashboardPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Conexão Supabase:</span>
                   <span className="text-sm font-medium text-green-600">✅ Estabelecida</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Roteamento Automático:</span>
+                  <span className="text-sm font-medium text-green-600">✅ Ativo</span>
                 </div>
               </div>
             </CardContent>
