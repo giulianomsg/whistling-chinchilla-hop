@@ -98,7 +98,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         setSession(session)
         setUser(session?.user ?? null)
-        setLoading(false)
 
         // Gerenciamento de roteamento automático baseado no evento
         if (event === 'SIGNED_IN') {
@@ -110,24 +109,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         if (session?.user) {
-          // Buscar perfil do usuário quando autenticado
+          // Buscar perfil do usuário quando autenticado (incluindo INITIAL_SESSION)
+          console.log('Buscando perfil para o usuário:', session.user.id)
           await fetchProfile(session.user.id)
         } else {
           // Limpar perfil quando desautenticado
           setProfile(null)
         }
+
+        setLoading(false)
       }
     )
 
     // Verificar sessão inicial
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Sessão inicial verificada:', session?.user?.id)
       setSession(session)
       setUser(session?.user ?? null)
-      setLoading(false)
 
       // Se já houver sessão ativa, buscar perfil
       if (session?.user) {
-        fetchProfile(session.user.id)
+        console.log('Sessão ativa encontrada, buscando perfil...')
+        fetchProfile(session.user.id).then(() => {
+          setLoading(false)
+        })
+      } else {
+        setLoading(false)
       }
     })
 
