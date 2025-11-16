@@ -74,18 +74,6 @@ const MyClients: React.FC = () => {
     notes: ''
   })
 
-  // Verificar se usuário é profissional OU admin
-  if (profile?.role !== 'professional' && profile?.role !== 'admin') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Restrito</h1>
-          <p className="text-gray-600">Acesso restrito a profissionais e administradores.</p>
-        </div>
-      </div>
-    )
-  }
-
   // Buscar clientes vinculados
   const fetchClients = async () => {
     if (!user) return
@@ -470,7 +458,7 @@ const MyClients: React.FC = () => {
                 {workouts.length === 0 && (
                   <p className="text-sm text-gray-500">
                     Você ainda não criou nenhum plano. 
-                    <a href="/workout-planner" className="text-blue-600 hover:underline ml-1">
+                    <a href="/app/planner" className="text-blue-600 hover:underline ml-1">
                       Criar plano agora
                     </a>
                   </p>

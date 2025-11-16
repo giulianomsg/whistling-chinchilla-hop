@@ -98,7 +98,7 @@ const WorkoutPlanner: React.FC = () => {
     notes: ''
   })
 
-  // ✅ NOVO: Estado para edição de exercício do plano
+  // Estado para edição de exercício do plano
   const [editingExerciseDetails, setEditingExerciseDetails] = useState<WorkoutExercise | null>(null)
   const [editExerciseFormData, setEditExerciseFormData] = useState({
     sets: 3,
@@ -107,18 +107,6 @@ const WorkoutPlanner: React.FC = () => {
     rest_time_seconds: 60,
     notes: ''
   })
-
-  // Verificar se usuário é profissional OU admin
-  if (profile?.role !== 'professional' && profile?.role !== 'admin') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Restrito</h1>
-          <p className="text-gray-600">Acesso restrito a profissionais e administradores.</p>
-        </div>
-      </div>
-    )
-  }
 
   // Buscar workouts
   const fetchWorkouts = async () => {
@@ -392,7 +380,7 @@ const WorkoutPlanner: React.FC = () => {
     }
   }
 
-  // ✅ NOVO: Editar exercício do workout
+  // Editar exercício do workout
   const handleEditWorkoutExercise = (workoutExercise: WorkoutExercise) => {
     setEditingExerciseDetails(workoutExercise)
     setEditExerciseFormData({
@@ -405,7 +393,7 @@ const WorkoutPlanner: React.FC = () => {
     setIsEditExerciseDialogOpen(true)
   }
 
-  // ✅ NOVO: Atualizar exercício do workout
+  // Atualizar exercício do workout
   const handleUpdateWorkoutExercise = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editingExerciseDetails) return
@@ -846,7 +834,7 @@ const WorkoutPlanner: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="flex gap-1">
-                                    {/* ✅ NOVO: Botão de Editar */}
+                                    {/* Botão de Editar */}
                                     <Button
                                       size="sm"
                                       variant="ghost"
@@ -966,7 +954,7 @@ const WorkoutPlanner: React.FC = () => {
           </DialogContent>
         </Dialog>
 
-        {/* ✅ NOVO: Dialog de Edição de Exercício do Plano */}
+        {/* Dialog de Edição de Exercício do Plano */}
         <Dialog open={isEditExerciseDialogOpen} onOpenChange={setIsEditExerciseDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
