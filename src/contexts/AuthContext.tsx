@@ -26,22 +26,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single()
 
-      if (error) {
-        console.error('Erro ao buscar perfil:', error)
-        return
-      }
-
-      setProfile(data)
-    } catch (error) {
-      console.error('Erro inesperado ao buscar perfil:', error)
+    if (error) {
+      // LANÇA O ERRO em vez de só logar e retornar
+      throw error 
     }
+
+    // Só seta o perfil se NÃO houver erro
+    setProfile(data)
   }
 
   // Função para atualizar o perfil (usada após cadastro)
