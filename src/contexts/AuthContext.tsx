@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { Database } from '@/integrations/supabase/client'
@@ -23,14 +23,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [initialized, setInitialized] = useState(false)
 
-  // Função para buscar perfil - CORRIGIDA
-  const fetchProfile = async (authUser: User): Promise<Profile | null> => {
+  // Função para buscar perfil
+  const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
     console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
     
     try {
-      // Buscar diretamente o perfil sem verificação redundante
-      console.log('📋 [PROFILE] Buscando perfil na tabela...')
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -50,7 +49,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (error.code === 'PGRST116') {
           console.log('🔧 [PROFILE] Perfil não encontrado, criando...')
           
-          // Criar o perfil usando dados do usuário autenticado
           const { data: newProfile, error: insertError } = await supabase
             .from('profiles')
             .insert({
@@ -87,17 +85,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('❌ [PROFILE] Erro inesperado:', error)
       return null
     }
-  }
+  }, [])
 
   // Função para atualizar perfil
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user) {
       console.log('🔄 [PROFILE] Atualizando perfil manualmente...')
       const profileData = await fetchProfile(user)
       setProfile(profileData)
       console.log('📋 [PROFILE] Perfil atualizado:', !!profileData)
     }
-  }
+  }, [user, fetchProfile])
+
+  // Função para processar usuário e buscar perfil
+  const processUserAndProfile = useCallback(async (session: Session | null) => {
+    console.log('🔄 [AUTH] Processando usuário e perfil...')
+    
+    setSession(session)
+    setUser(session?.user ?? null)
+    
+    if (session?.user) {
+      console.log('👤 [AUTH] Usuário encontrado, buscando perfil...')
+      const profileData = await fetchProfile(session.user)
+      setProfile(profileData)
+      console.log('📋 [AUTH] Perfil definido:', { 
+        hasProfile: !!profileData,
+        profileRole: profileData?.role,
+        profileEmail: profileData?.email
+      })
+    } else {
+      console.log('❌ [AUTH] Nenhum usuário na sessão')
+      setProfile(null)
+    }
+  }, [fetchProfile])
 
   // Login
   const signIn = async (email: string, password: string) => {
@@ -133,7 +153,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
-    let initialized = false
 
     // Timeout de segurança
     const safetyTimeout = setTimeout(() => {
@@ -141,14 +160,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('⚠️ [AUTH] TIMEOUT: Forçando loading = false')
         setLoading(false)
       }
-    }, 3000)
+    }, 5000)
 
     // Função inicial
     const initialize = async () => {
       console.log('🎯 [AUTH] Iniciando autenticação...')
       
       try {
-        // 1. Obter sessão
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
         console.log('📋 [AUTH] Sessão obtida:', { 
           hasSession: !!session, 
@@ -161,38 +179,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         
         if (mounted) {
-          setSession(session)
-          setUser(session?.user ?? null)
-          
-          // 2. Se tem usuário, buscar perfil
-          if (session?.user) {
-            console.log('👤 [AUTH] Usuário encontrado, buscando perfil...')
-            const profileData = await fetchProfile(session.user)
-            
-            if (mounted) {
-              setProfile(profileData)
-              console.log('📋 [AUTH] Perfil definido:', { 
-                hasProfile: !!profileData,
-                profileRole: profileData?.role,
-                profileEmail: profileData?.email
-              })
-            }
-          } else {
-            console.log('❌ [AUTH] Nenhum usuário na sessão')
-          }
+          await processUserAndProfile(session)
         }
       } catch (error) {
         console.error('❌ [AUTH] Erro na inicialização:', error)
       } finally {
         if (mounted) {
           console.log('✅ [AUTH] Inicialização concluída')
-          initialized = true
+          setInitialized(true)
           setLoading(false)
         }
       }
     }
 
-    // Listener de auth - CORRIGIDO
+    // Listener de auth - SIMPLIFICADO
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
@@ -203,28 +203,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           userEmail: session?.user?.email 
         })
 
-        setSession(session)
-        setUser(session?.user ?? null)
-
-        if (event === 'SIGNED_IN' && session?.user) {
-          console.log('👤 [AUTH] Login detectado, buscando perfil...')
-          // CORREÇÃO: Usar diretamente session.user em vez de getUser()
-          const profileData = await fetchProfile(session.user)
-          
+        // Processar apenas eventos relevantes
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
           if (mounted) {
-            setProfile(profileData)
-            console.log('📋 [AUTH] Perfil definido após login:', { 
-              hasProfile: !!profileData,
-              profileRole: profileData?.role 
-            })
+            await processUserAndProfile(session)
           }
-        } else if (event === 'SIGNED_OUT') {
-          console.log('🚪 [AUTH] Logout detectado')
-          setProfile(null)
         }
 
-        if (!initialized) {
-          initialized = true
+        // Se ainda não inicializou, marca como inicializado
+        if (!initialized && mounted) {
+          setInitialized(true)
           setLoading(false)
         }
       }
@@ -238,7 +226,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
-  }, [])
+  }, [initialized, processUserAndProfile])
 
   const value: AuthContextType = {
     user,
