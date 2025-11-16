@@ -121,23 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     )
 
-    // Verificar sessão inicial
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Sessão inicial verificada:', session?.user?.id)
-      setSession(session)
-      setUser(session?.user ?? null)
-
-      // Se já houver sessão ativa, buscar perfil
-      if (session?.user) {
-        console.log('Sessão ativa encontrada, buscando perfil...')
-        fetchProfile(session.user.id).then(() => {
-          setLoading(false)
-        })
-      } else {
-        setLoading(false)
-      }
-    })
-
     // Limpeza do listener quando o componente for desmontado
     return () => {
       console.log('Cleaning up auth listener')
