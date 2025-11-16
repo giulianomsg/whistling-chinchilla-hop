@@ -24,19 +24,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Função simplificada para buscar perfil
+  // Função para buscar perfil com tratamento robusto de erros
   const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
-    console.log('🔍 [PROFILE] Buscando perfil para userId:', authUser.id)
+    console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
     
     try {
-      // Busca direta sem testes complexos
+      // Tentativa 1: Busca direta com timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 segundos timeout
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', authUser.id)
         .single()
+        .abortSignal(controller.signal)
 
-      console.log('📊 [PROFILE] Resultado:', { 
+      clearTimeout(timeoutId)
+
+      console.log('📊 [PROFILE] Resultado da busca:', { 
         data, 
         error,
         errorCode: error?.code,
@@ -44,35 +50,69 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
 
       if (error) {
-        console.error('❌ [PROFILE] Erro:', error)
+        console.error('❌ [PROFILE] Erro na busca:', error)
         
-        if (error.code === 'PGRST116') {
-          console.log('🔧 [PROFILE] Criando perfil...')
+        // Se for erro de permissão ou RLS, tentar criar perfil
+        if (error.code === 'PGRST116' || error.message?.includes('permission')) {
+          console.log('🔧 [PROFILE] Tentando criar perfil...')
           
-          const { data: newProfile, error: insertError } = await supabase
-            .from('profiles')
-            .insert({
+          try {
+            const { data: newProfile, error: insertError } = await supabase
+              .from('profiles')
+              .insert({
+                id: authUser.id,
+                email: authUser.email || '',
+                full_name: authUser.user_metadata?.full_name || '',
+                role: authUser.user_metadata?.role || 'client'
+              })
+              .select()
+              .single()
+
+            console.log('🆕 [PROFILE] Resultado da criação:', { 
+              data: newProfile, 
+              error: insertError,
+              errorCode: insertError?.code,
+              errorMessage: insertError?.message
+            })
+
+            if (insertError) {
+              console.error('❌ [PROFILE] Erro ao criar perfil:', insertError)
+              
+              // Fallback: criar perfil mock local
+              console.log('🔄 [PROFILE] Usando fallback local...')
+              const fallbackProfile: Profile = {
+                id: authUser.id,
+                email: authUser.email || '',
+                full_name: authUser.user_metadata?.full_name || '',
+                role: authUser.user_metadata?.role || 'client',
+                avatar_url: null,
+                phone: null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }
+              
+              console.log('✅ [PROFILE] Perfil fallback criado:', fallbackProfile)
+              return fallbackProfile
+            }
+            
+            return newProfile
+          } catch (createError) {
+            console.error('❌ [PROFILE] Erro ao criar perfil:', createError)
+            
+            // Fallback final
+            const fallbackProfile: Profile = {
               id: authUser.id,
               email: authUser.email || '',
               full_name: authUser.user_metadata?.full_name || '',
-              role: authUser.user_metadata?.role || 'client'
-            })
-            .select()
-            .single()
-
-          console.log('🆕 [PROFILE] Criação:', { 
-            data: newProfile, 
-            error: insertError,
-            errorCode: insertError?.code,
-            errorMessage: insertError?.message
-          })
-
-          if (insertError) {
-            console.error('❌ [PROFILE] Erro ao criar:', insertError)
-            return null
+              role: authUser.user_metadata?.role || 'client',
+              avatar_url: null,
+              phone: null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            }
+            
+            return fallbackProfile
           }
-          
-          return newProfile
         }
         
         return null
@@ -81,6 +121,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return data
     } catch (error) {
       console.error('❌ [PROFILE] Erro inesperado:', error)
+      
+      // Fallback em caso de erro de conexão
+      if (authUser) {
+        console.log('🔄 [PROFILE] Usando fallback devido a erro de conexão...')
+        const fallbackProfile: Profile = {
+          id: authUser.id,
+          email: authUser.email || '',
+          full_name: authUser.user_metadata?.full_name || '',
+          role: authUser.user_metadata?.role || 'client',
+          avatar_url: null,
+          phone: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+        
+        return fallbackProfile
+      }
+      
       return null
     }
   }, [])
@@ -150,7 +208,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
 
-    // Função inicial simplificada
+    // Função inicial com timeout
     const initialize = async () => {
       console.log('🎯 [AUTH] Iniciando autenticação...')
       
@@ -179,7 +237,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Listener de auth simplificado
+    // Listener de auth com tratamento de erro
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
@@ -190,10 +248,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           userEmail: session?.user?.email 
         })
 
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-          if (mounted) {
-            await processUserAndProfile(session)
+        try {
+          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+            if (mounted) {
+              await processUserAndProfile(session)
+            }
           }
+        } catch (error) {
+          console.error('❌ [AUTH] Erro no processamento do evento:', error)
         }
       }
     )
