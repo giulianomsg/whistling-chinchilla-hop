@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true) // Começa true, termina false
+  const [loading, setLoading] = useState(true)
 
   // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
@@ -119,72 +119,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    // Listener único para todos os eventos de auth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Evento de auth:', event, session?.user?.email)
+    let mounted = true
+
+    // Função principal que gerencia o estado de autenticação
+    const initializeAuth = async () => {
+      try {
+        // 1. Obter sessão atual
+        const { data: { session: currentSession } } = await supabase.auth.getSession()
         
-        // Sempre atualiza session e user primeiro
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        // Depois trata o perfil baseado no evento
-        if (event === 'SIGNED_IN' && session) {
-          console.log('Usuário fez login, buscando perfil...')
-          const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
+        if (!mounted) return
+
+        if (currentSession) {
+          console.log('Sessão encontrada:', currentSession.user.email)
+          setSession(currentSession)
+          setUser(currentSession.user)
+
+          // 2. Buscar perfil do usuário
+          const profileData = await fetchProfile(currentSession.user.id)
+          
+          if (!mounted) return
+          
           if (profileData) {
             console.log('Perfil carregado:', profileData.role)
+            setProfile(profileData)
+          } else {
+            console.log('Perfil não encontrado ou erro ao carregar')
+          }
+        } else {
+          console.log('Nenhuma sessão encontrada')
+          setSession(null)
+          setUser(null)
+          setProfile(null)
+        }
+      } catch (error) {
+        console.error('Erro na inicialização da autenticação:', error)
+        if (mounted) {
+          setSession(null)
+          setUser(null)
+          setProfile(null)
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    // Inicializar autenticação
+    initializeAuth()
+
+    // Configurar listener para mudanças de estado
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, newSession) => {
+        console.log('Mudança de estado de autenticação:', event, newSession?.user?.email)
+        
+        if (!mounted) return
+
+        // Atualizar estados básicos
+        setSession(newSession)
+        setUser(newSession?.user ?? null)
+
+        // Tratar eventos específicos
+        if (event === 'SIGNED_IN' && newSession) {
+          const profileData = await fetchProfile(newSession.user.id)
+          if (mounted) {
+            setProfile(profileData)
           }
         } else if (event === 'SIGNED_OUT') {
-          console.log('Usuário fez logout, limpando perfil...')
-          setProfile(null)
-        } else if (event === 'INITIAL_SESSION') {
-          console.log('Sessão inicial carregada, buscando perfil...')
-          if (session) {
-            const profileData = await fetchProfile(session.user.id)
-            setProfile(profileData)
-            if (profileData) {
-              console.log('Perfil inicial carregado:', profileData.role)
-            }
+          if (mounted) {
+            setProfile(null)
           }
         }
-        
-        // Finaliza o loading após processar
-        setLoading(false)
+        // Note: não precisamos setar loading=false aqui porque já foi setado na inicialização
       }
     )
 
-    // Dispara o listener manualmente para obter a sessão inicial
-    const initializeAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        // Simula o evento INITIAL_SESSION
-        if (session) {
-          setSession(session)
-          setUser(session.user)
-          console.log('Sessão inicial encontrada:', session.user.email)
-          
-          const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
-          if (profileData) {
-            console.log('Perfil inicial carregado:', profileData.role)
-          }
-        } else {
-          console.log('Nenhuma sessão inicial encontrada')
-        }
-      } catch (error) {
-        console.error('Erro na inicialização da auth:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    initializeAuth()
-
-    // Limpeza
+    // Cleanup
     return () => {
+      mounted = false
       subscription.unsubscribe()
     }
   }, [])
