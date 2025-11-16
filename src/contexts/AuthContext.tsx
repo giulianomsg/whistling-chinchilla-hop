@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null
   profile: Profile | null
   session: Session | null
-  loading: boolean
+  loading: boolean // loading agora será 'false' apenas após a carga inicial
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true) // Começa como true
 
   // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string) => {
@@ -86,38 +86,67 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    // Configurar listener para mudanças na autenticação
+    // 1. LÓGICA DE CARGA INICIAL (F5)
+    // Esta função só roda UMA VEZ na montagem
+    const loadInitialSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          setSession(session)
+          setUser(session.user)
+          // Se a sessão existir, buscamos o perfil
+          const { data: profileData, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+            
+          if (error) {
+            console.error("Erro ao buscar perfil na carga inicial:", error)
+            throw error
+          }
+          setProfile(profileData)
+        }
+      } catch (error) {
+        console.error("Falha na carga inicial da sessão:", error)
+        // Não faz nada, usuário continua null
+      } finally {
+        // Após a tentativa de carregar (sucesso ou falha), paramos o loading
+        setLoading(false)
+      }
+    }
+    
+    loadInitialSession()
+
+    // 2. LISTENER PARA MUDANÇAS (Login / Logout)
+    // Ouve eventos DEPOIS da carga inicial
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        try {
-          console.log('Auth state changed:', event, session?.user?.id)
-          
-          setSession(session)
-          setUser(session?.user ?? null)
-
-          if (session?.user) {
-            // Buscar perfil do usuário quando autenticado (incluindo INITIAL_SESSION)
-            console.log('Buscando perfil para o usuário:', session.user.id)
-            await fetchProfile(session.user.id)
-          } else {
-            // Limpar perfil quando desautenticado
-            setProfile(null)
-          }
-        } catch (error) {
-          console.error("Erro crítico no listener de autenticação:", error)
-        } finally {
-          // Esta linha AGORA está garantida para ser executada
-          setLoading(false)
+        setSession(session)
+        setUser(session?.user ?? null)
+        
+        if (event === 'SIGNED_IN' && session) {
+          // Se for login, busca o perfil
+          const { data: profileData, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+          if (profileData) setProfile(profileData)
+        }
+        
+        if (event === 'SIGNED_OUT') {
+          setProfile(null)
         }
       }
     )
 
-    // Limpeza do listener quando o componente for desmontado
+    // Limpeza
     return () => {
-      console.log('Cleaning up auth listener')
       subscription.unsubscribe()
     }
-  }, []) // Array de dependências vazio
+  }, []) // Array vazio, roda apenas na montagem
 
   const value: AuthContextType = {
     user,
