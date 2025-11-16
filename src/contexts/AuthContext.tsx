@@ -23,125 +23,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [initialized, setInitialized] = useState(false)
 
-  // Função para buscar perfil com tratamento robusto de erros
-  const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
-    console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
-    
-    try {
-      // Tentativa 1: Busca direta com timeout
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 segundos timeout
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', authUser.id)
-        .single()
-        .abortSignal(controller.signal)
-
-      clearTimeout(timeoutId)
-
-      console.log('📊 [PROFILE] Resultado da busca:', { 
-        data, 
-        error,
-        errorCode: error?.code,
-        errorMessage: error?.message
-      })
-
-      if (error) {
-        console.error('❌ [PROFILE] Erro na busca:', error)
-        
-        // Se for erro de permissão ou RLS, tentar criar perfil
-        if (error.code === 'PGRST116' || error.message?.includes('permission')) {
-          console.log('🔧 [PROFILE] Tentando criar perfil...')
-          
-          try {
-            const { data: newProfile, error: insertError } = await supabase
-              .from('profiles')
-              .insert({
-                id: authUser.id,
-                email: authUser.email || '',
-                full_name: authUser.user_metadata?.full_name || '',
-                role: authUser.user_metadata?.role || 'client'
-              })
-              .select()
-              .single()
-
-            console.log('🆕 [PROFILE] Resultado da criação:', { 
-              data: newProfile, 
-              error: insertError,
-              errorCode: insertError?.code,
-              errorMessage: insertError?.message
-            })
-
-            if (insertError) {
-              console.error('❌ [PROFILE] Erro ao criar perfil:', insertError)
-              
-              // Fallback: criar perfil mock local
-              console.log('🔄 [PROFILE] Usando fallback local...')
-              const fallbackProfile: Profile = {
-                id: authUser.id,
-                email: authUser.email || '',
-                full_name: authUser.user_metadata?.full_name || '',
-                role: authUser.user_metadata?.role || 'client',
-                avatar_url: null,
-                phone: null,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-              }
-              
-              console.log('✅ [PROFILE] Perfil fallback criado:', fallbackProfile)
-              return fallbackProfile
-            }
-            
-            return newProfile
-          } catch (createError) {
-            console.error('❌ [PROFILE] Erro ao criar perfil:', createError)
-            
-            // Fallback final
-            const fallbackProfile: Profile = {
-              id: authUser.id,
-              email: authUser.email || '',
-              full_name: authUser.user_metadata?.full_name || '',
-              role: authUser.user_metadata?.role || 'client',
-              avatar_url: null,
-              phone: null,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            }
-            
-            return fallbackProfile
-          }
-        }
-        
-        return null
-      }
-
-      return data
-    } catch (error) {
-      console.error('❌ [PROFILE] Erro inesperado:', error)
-      
-      // Fallback em caso de erro de conexão
-      if (authUser) {
-        console.log('🔄 [PROFILE] Usando fallback devido a erro de conexão...')
-        const fallbackProfile: Profile = {
-          id: authUser.id,
-          email: authUser.email || '',
-          full_name: authUser.user_metadata?.full_name || '',
-          role: authUser.user_metadata?.role || 'client',
-          avatar_url: null,
-          phone: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-        
-        return fallbackProfile
-      }
-      
-      return null
+  // Função para criar perfil local (SEMPRE funciona)
+  const createLocalProfile = useCallback((authUser: User): Profile => {
+    console.log('🏠 [PROFILE] Criando perfil local para:', authUser.email)
+    return {
+      id: authUser.id,
+      email: authUser.email || '',
+      full_name: authUser.user_metadata?.full_name || '',
+      role: authUser.user_metadata?.role || 'client',
+      avatar_url: null,
+      phone: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     }
   }, [])
+
+  // Função para buscar perfil com fallback IMEDIATO
+  const fetchProfile = useCallback(async (authUser: User): Promise<Profile> => {
+    console.log('🔍 [PROFILE] Buscando perfil para userId:', authUser.id)
+    
+    // SEMPRE retorna um perfil local primeiro
+    const localProfile = createLocalProfile(authUser)
+    
+    // Tenta buscar do Supabase em background (não bloqueia)
+    supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authUser.id)
+      .single()
+      .then(({ data, error }) => {
+        if (data && !error) {
+          console.log('✅ [PROFILE] Perfil encontrado no Supabase:', data)
+          setProfile(data)
+        } else {
+          console.log('🔄 [PROFILE] Usando perfil local:', error?.message)
+          setProfile(localProfile)
+        }
+      })
+      .catch((error) => {
+        console.log('❌ [PROFILE] Erro no Supabase, usando local:', error)
+        setProfile(localProfile)
+      })
+    
+    // Retorna perfil local IMEDIATAMENTE
+    return localProfile
+  }, [createLocalProfile])
 
   // Função para atualizar perfil
   const refreshProfile = useCallback(async () => {
@@ -149,7 +77,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('🔄 [PROFILE] Atualizando perfil...')
       const profileData = await fetchProfile(user)
       setProfile(profileData)
-      console.log('📋 [PROFILE] Perfil atualizado:', !!profileData)
     }
   }, [user, fetchProfile])
 
@@ -161,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(session?.user ?? null)
     
     if (session?.user) {
-      console.log('👤 [AUTH] Buscando perfil para:', session.user.email)
+      console.log('👤 [AUTH] Usuário encontrado, criando perfil...')
       const profileData = await fetchProfile(session.user)
       setProfile(profileData)
       console.log('📋 [AUTH] Perfil definido:', { 
@@ -208,7 +135,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
 
-    // Função inicial com timeout
+    // FORÇAR loading = false após 2 segundos MÁXIMO
+    const forceTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.log('⚡ [AUTH] FORÇANDO loading = false (timeout)')
+        setLoading(false)
+        setInitialized(true)
+      }
+    }, 2000)
+
+    // Função inicial
     const initialize = async () => {
       console.log('🎯 [AUTH] Iniciando autenticação...')
       
@@ -226,18 +162,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (mounted) {
           await processUserAndProfile(session)
+          setLoading(false)
+          setInitialized(true)
         }
       } catch (error) {
         console.error('❌ [AUTH] Erro na inicialização:', error)
-      } finally {
         if (mounted) {
-          console.log('✅ [AUTH] Inicialização concluída')
           setLoading(false)
+          setInitialized(true)
         }
       }
     }
 
-    // Listener de auth com tratamento de erro
+    // Listener de auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
@@ -248,14 +185,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           userEmail: session?.user?.email 
         })
 
-        try {
-          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-            if (mounted) {
-              await processUserAndProfile(session)
-            }
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+          if (mounted) {
+            await processUserAndProfile(session)
+            setLoading(false)
+            setInitialized(true)
           }
-        } catch (error) {
-          console.error('❌ [AUTH] Erro no processamento do evento:', error)
         }
       }
     )
@@ -265,15 +200,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('🧹 [AUTH] AuthProvider desmontado')
       mounted = false
+      clearTimeout(forceTimeout)
       subscription.unsubscribe()
     }
-  }, [processUserAndProfile])
+  }, [loading, processUserAndProfile])
 
   const value: AuthContextType = {
     user,
     profile,
     session,
-    loading,
+    loading: loading && !initialized, // Só fica loading se não estiver inicializado
     signIn,
     signUp,
     signOut,
