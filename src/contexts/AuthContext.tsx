@@ -25,11 +25,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true)
   const [initialized, setInitialized] = useState(false)
 
-  // Função para buscar perfil
+  // Função para buscar perfil com diagnóstico RLS completo
   const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
     console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
+    console.log('🔐 [PROFILE] Token JWT disponível:', !!authUser.aud)
     
     try {
+      // 1. Testar conexão básica primeiro
+      console.log('🧪 [PROFILE] Testando conexão com Supabase...')
+      const { data: testData, error: testError } = await supabase
+        .from('profiles')
+        .select('count')
+        .limit(1)
+      
+      console.log('🧪 [PROFILE] Teste de conexão:', { 
+        data: testData, 
+        error: testError,
+        hasError: !!testError,
+        errorCode: testError?.code,
+        errorMessage: testError?.message
+      })
+
+      if (testError) {
+        console.error('❌ [PROFILE] Erro de conexão/teste:', testError)
+        return null
+      }
+
+      // 2. Tentar buscar o perfil específico
+      console.log('📋 [PROFILE] Buscando perfil específico...')
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -40,15 +63,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         data, 
         error,
         errorCode: error?.code,
-        errorMessage: error?.message
+        errorMessage: error?.message,
+        errorDetails: error?.details,
+        hint: error?.hint
       })
 
       if (error) {
         console.error('❌ [PROFILE] Erro na busca:', error)
         
+        // 3. Tentar buscar sem RLS (se possível)
+        console.log('🔓 [PROFILE] Tentando buscar sem filtro RLS...')
+        const { data: allData, error: allError } = await supabase
+          .from('profiles')
+          .select('*')
+          .limit(5)
+
+        console.log('🔓 [PROFILE] Busca sem filtro:', { 
+          data: allData, 
+          error: allError,
+          hasData: !!allData?.length,
+          totalRows: allData?.length
+        })
+
         if (error.code === 'PGRST116') {
-          console.log('🔧 [PROFILE] Perfil não encontrado, criando...')
+          console.log('🔧 [PROFILE] Perfil não encontrado, tentando criar...')
           
+          // 4. Tentar criar o perfil
           const { data: newProfile, error: insertError } = await supabase
             .from('profiles')
             .insert({
@@ -192,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Listener de auth - SIMPLIFICADO
+    // Listener de auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
@@ -203,15 +243,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           userEmail: session?.user?.email 
         })
 
-        // Processar apenas eventos relevantes
         if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
           if (mounted) {
             await processUserAndProfile(session)
           }
         }
 
-        // Se ainda não inicializou, marca como inicializado
-        if (!initialized && mounted) {
+        if (!initialized) {
           setInitialized(true)
           setLoading(false)
         }
