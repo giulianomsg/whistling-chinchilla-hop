@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/integrations/supabase/client'
 import { Database } from '@/integrations/supabase/client'
 
@@ -24,7 +23,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string) => {
@@ -99,15 +97,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session)
         setUser(session?.user ?? null)
 
-        // Gerenciamento de roteamento automático baseado no evento
-        if (event === 'SIGNED_IN') {
-          console.log('Usuário logado, redirecionando para /dashboard')
-          navigate('/dashboard')
-        } else if (event === 'SIGNED_OUT') {
-          console.log('Usuário deslogado, redirecionando para /auth')
-          navigate('/auth')
-        }
-
         if (session?.user) {
           // Buscar perfil do usuário quando autenticado (incluindo INITIAL_SESSION)
           console.log('Buscando perfil para o usuário:', session.user.id)
@@ -126,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('Cleaning up auth listener')
       subscription.unsubscribe()
     }
-  }, [navigate])
+  }, []) // Array de dependências vazio - sem navigate
 
   const value: AuthContextType = {
     user,
