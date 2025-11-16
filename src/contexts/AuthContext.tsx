@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { Database } from '@/integrations/supabase/client'
@@ -18,92 +18,113 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// 🔍 ANALISADOR DE ESTADO DE AUTENTICAÇÃO
-class AuthStateAnalyzer {
-  private static instance: AuthStateAnalyzer
-  private startTime: number = Date.now()
-  private events: Array<{timestamp: number, event: string, data: any}> = []
+// 🏗️ ESTADO IMUTÁVEL E CENTRALIZADO
+interface AuthState {
+  user: User | null
+  profile: Profile | null
+  session: Session | null
+  loading: boolean
+  initialized: boolean
+}
 
-  static getInstance(): AuthStateAnalyzer {
-    if (!AuthStateAnalyzer.instance) {
-      AuthStateAnalyzer.instance = new AuthStateAnalyzer()
+// 🔧 GERENCIADOR DE ESTADO COM CONTROLE DE CONCORRÊNCIA
+class AuthStateManager {
+  private state: AuthState
+  private listeners: Array<(state: AuthState) => void> = []
+  private processingRef = new Set<string>()
+  private subscription: any = null
+
+  constructor() {
+    this.state = {
+      user: null,
+      profile: null,
+      session: null,
+      loading: true,
+      initialized: false
     }
-    return AuthStateAnalyzer.instance
   }
 
-  log(event: string, data: any = {}) {
-    const timestamp = Date.now()
-    const elapsed = timestamp - this.startTime
+  getState(): AuthState {
+    return { ...this.state }
+  }
+
+  setState(updates: Partial<AuthState>): void {
+    const prevState = { ...this.state }
+    this.state = { ...this.state, ...updates }
     
-    this.events.push({ timestamp, event, data })
-    
-    console.group(`🔍 [${elapsed}ms] ${event}`)
-    console.log('Data:', data)
-    console.log('Estado atual:', this.getCurrentState())
+    console.group('🔄 STATE MANAGER - ATUALIZAÇÃO')
+    console.log('Estado anterior:', prevState)
+    console.log('Atualizações:', updates)
+    console.log('Novo estado:', this.state)
     console.groupEnd()
+    
+    this.listeners.forEach(listener => listener(this.state))
   }
 
-  getCurrentState() {
-    return {
-      elapsed: Date.now() - this.startTime,
-      totalEvents: this.events.length,
-      recentEvents: this.events.slice(-5)
+  subscribe(listener: (state: AuthState) => void): () => void {
+    this.listeners.push(listener)
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener)
     }
   }
 
-  checkLoadingState(loading: boolean, user: User | null, profile: Profile | null) {
-    const elapsed = Date.now() - this.startTime
-    
-    console.group('🔍 ANÁLISE DE ESTADO DE LOADING')
-    console.log('⏱️ Tempo decorrido:', elapsed + 'ms')
-    console.log('🔄 Loading:', loading)
-    console.log('👤 User:', user ? `${user.email} (ID: ${user.id})` : 'null')
-    console.log('📋 Profile:', profile ? `${profile.role} - ${profile.full_name}` : 'null')
-    
-    // Análises específicas
-    if (loading && elapsed > 5000) {
-      console.error('🚨 PROBLEMA: Loading por mais de 5 segundos!')
-      console.log('📊 Últimos eventos:', this.events.slice(-10))
-    }
-    
-    if (!loading && !user) {
-      console.warn('⚠️ Loading terminou mas não há usuário')
-    }
-    
-    if (!loading && user && !profile) {
-      console.error('🚨 PROBLEMA CRÍTICO: Loading terminou, usuário existe, mas perfil é null!')
-      console.log('👤 User ID:', user.id)
-      console.log('📊 Últimos eventos:', this.events.slice(-10))
-    }
-    
-    if (!loading && user && profile) {
-      console.log('✅ ESTADO PERFEITO: Loading terminou, usuário e perfil carregados')
-      console.log('🎯 Role:', profile.role)
-    }
-    
-    console.groupEnd()
+  isProcessing(operation: string): boolean {
+    return this.processingRef.has(operation)
   }
 
-  reset() {
-    this.startTime = Date.now()
-    this.events = []
-    console.log('🔄 Analisador resetado')
+  setProcessing(operation: string, processing: boolean): void {
+    if (processing) {
+      this.processingRef.add(operation)
+    } else {
+      this.processingRef.delete(operation)
+    }
+  }
+
+  cleanup(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+      this.subscription = null
+    }
+    this.processingRef.clear()
+    this.listeners = []
   }
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [authState, setAuthState] = useState<'initializing' | 'loading-profile' | 'ready' | 'error'>('initializing')
+  const stateManagerRef = useRef<AuthStateManager>()
+  const [state, setState] = useState<AuthState>(() => ({
+    user: null,
+    profile: null,
+    session: null,
+    loading: true,
+    initialized: false
+  }))
 
-  const analyzer = AuthStateAnalyzer.getInstance()
+  // Inicializar o state manager
+  if (!stateManagerRef.current) {
+    stateManagerRef.current = new AuthStateManager()
+  }
 
-  // Função para buscar o perfil do usuário
+  const stateManager = stateManagerRef.current
+
+  // Sincronizar estado React com state manager
+  useEffect(() => {
+    const unsubscribe = stateManager.subscribe(setState)
+    return unsubscribe
+  }, [stateManager])
+
+  // Função para buscar o perfil com controle de concorrência
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
-    analyzer.log('🔍 INICIANDO BUSCA DE PERFIL', { userId })
+    const operation = `fetch-profile-${userId}`
     
+    if (stateManager.isProcessing(operation)) {
+      console.log('⏳ Operação já em andamento, aguardando...')
+      return null
+    }
+
+    stateManager.setProcessing(operation, true)
+    console.log('🔍 INICIANDO BUSCA DE PERFIL', { userId })
+
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -112,22 +133,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single()
 
       if (error) {
-        analyzer.log('❌ ERRO NA BUSCA DE PERFIL', { error: error.message, code: error.code })
-        console.error('Erro ao buscar perfil:', error)
+        console.error('❌ ERRO NA BUSCA DE PERFIL:', error)
         
-        // Se perfil não existe, tenta criar um básico
         if (error.code === 'PGRST116') {
-          analyzer.log('🔧 PERFIL NÃO ENCONTRADO, TENTANDO CRIAR', { userId })
-          console.log('Perfil não encontrado, tentando criar...')
+          console.log('🔧 PERFIL NÃO ENCONTRADO, TENTANDO CRIAR')
           
           const { data: userData } = await supabase.auth.getUser(userId)
           
           if (userData.user) {
-            analyzer.log('👤 DADOS DO USUÁRIO OBTIDOS', { 
-              email: userData.user.email,
-              metadata: userData.user.user_metadata 
-            })
-            
             const { data: newProfile, error: insertError } = await supabase
               .from('profiles')
               .insert({
@@ -140,13 +153,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               .single()
             
             if (insertError) {
-              analyzer.log('❌ ERRO AO CRIAR PERFIL', { error: insertError.message })
-              console.error('Erro ao criar perfil:', insertError)
+              console.error('❌ ERRO AO CRIAR PERFIL:', insertError)
               return null
             }
             
-            analyzer.log('✅ PERFIL CRIADO COM SUCESSO', { profile: newProfile })
-            console.log('Perfil criado com sucesso:', newProfile)
+            console.log('✅ PERFIL CRIADO COM SUCESSO:', newProfile)
             return newProfile
           }
         }
@@ -154,28 +165,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return null
       }
 
-      analyzer.log('✅ PERFIL ENCONTRADO', { profile: data })
+      console.log('✅ PERFIL ENCONTRADO:', data)
       return data
     } catch (error) {
-      analyzer.log('❌ ERRO INESPERADO NA BUSCA', { error })
-      console.error('Erro inesperado ao buscar perfil:', error)
+      console.error('❌ ERRO INESPERADO NA BUSCA:', error)
       return null
+    } finally {
+      stateManager.setProcessing(operation, false)
     }
-  }, [analyzer])
+  }, [stateManager])
 
   // Função para atualizar o perfil
   const refreshProfile = useCallback(async () => {
-    if (user && authState === 'ready') {
-      analyzer.log('🔄 ATUALIZANDO PERFIL MANUALMENTE', { userId: user.id })
-      const profileData = await fetchProfile(user.id)
-      setProfile(profileData)
-      analyzer.log('📋 PERFIL ATUALIZADO', { profile: profileData })
+    const currentState = stateManager.getState()
+    if (currentState.user && !currentState.loading) {
+      console.log('🔄 ATUALIZANDO PERFIL MANUALMENTE')
+      const profileData = await fetchProfile(currentState.user.id)
+      stateManager.setState({ profile: profileData })
     }
-  }, [user, authState, fetchProfile, analyzer])
+  }, [stateManager, fetchProfile])
 
   // Login
   const signIn = async (email: string, password: string) => {
-    analyzer.log('🔑 INICIANDO LOGIN', { email })
+    console.log('🔑 INICIANDO LOGIN', { email })
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -183,21 +195,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
       
       if (error) {
-        analyzer.log('❌ ERRO NO LOGIN', { error: error.message })
+        console.error('❌ ERRO NO LOGIN:', error)
       } else {
-        analyzer.log('✅ LOGIN INICIADO COM SUCESSO')
+        console.log('✅ LOGIN INICIADO COM SUCESSO')
       }
       
       return { error }
     } catch (error) {
-      analyzer.log('❌ ERRO INESPERADO NO LOGIN', { error })
+      console.error('❌ ERRO INESPERADO NO LOGIN:', error)
       return { error }
     }
   }
 
   // Cadastro
   const signUp = async (email: string, password: string, fullName: string) => {
-    analyzer.log('📝 INICIANDO CADASTRO', { email, fullName })
+    console.log('📝 INICIANDO CADASTRO', { email, fullName })
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -211,160 +223,144 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
       
       if (error) {
-        analyzer.log('❌ ERRO NO CADASTRO', { error: error.message })
+        console.error('❌ ERRO NO CADASTRO:', error)
       } else {
-        analyzer.log('✅ CADASTRO INICIADO COM SUCESSO')
+        console.log('✅ CADASTRO INICIADO COM SUCESSO')
       }
       
       return { error }
     } catch (error) {
-      analyzer.log('❌ ERRO INESPERADO NO CADASTRO', { error })
+      console.error('❌ ERRO INESPERADO NO CADASTRO:', error)
       return { error }
     }
   }
 
   // Logout
   const signOut = async () => {
-    analyzer.log('🚪 INICIANDO LOGOUT')
+    console.log('🚪 INICIANDO LOGOUT')
     await supabase.auth.signOut()
   }
 
-  // Monitor de estado
+  // Efeito principal de inicialização
   useEffect(() => {
-    analyzer.checkLoadingState(loading, user, profile)
-  }, [loading, user, profile, analyzer])
-
-  // Efeito para gerenciar o estado de loading baseado no authState
-  useEffect(() => {
-    const shouldLoad = authState === 'initializing' || authState === 'loading-profile'
-    setLoading(shouldLoad)
+    console.log('🚀 AUTH PROVIDER MONTADO - INICIANDO SISTEMA')
     
-    analyzer.log('🔄 ESTADO DE LOADING ATUALIZADO', { 
-      authState, 
-      loading: shouldLoad,
-      user: user?.email,
-      profile: profile?.role
-    })
-  }, [authState, user, profile, analyzer])
-
-  useEffect(() => {
-    analyzer.log('🚀 AUTH PROVIDER MONTADO')
-    analyzer.reset() // Resetar analisador
-
-    // Listener único para todos os eventos de auth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        analyzer.log('🔄 EVENTO DE AUTH', { event, hasSession: !!session, email: session?.user?.email })
+    const initializeAuth = async () => {
+      console.log('🎯 INICIANDO AUTENTICAÇÃO')
+      stateManager.setState({ loading: true })
+      
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        console.log('📋 SESSÃO OBTIDA:', { hasSession: !!session, email: session?.user?.email })
         
-        // Sempre atualiza session e user primeiro
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        // Depois trata o perfil baseado no evento
-        if (event === 'SIGNED_IN' && session) {
-          analyzer.log('👤 USUÁRIO FEZ LOGIN', { userId: session.user.id })
-          console.log('Usuário fez login, buscando perfil...')
-          setAuthState('loading-profile')
+        if (session) {
+          stateManager.setState({ 
+            session, 
+            user: session.user,
+            loading: true 
+          })
           
           const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
+          stateManager.setState({ 
+            profile: profileData,
+            loading: false,
+            initialized: true
+          })
           
           if (profileData) {
-            analyzer.log('✅ PERFIL CARREGADO APÓS LOGIN', { role: profileData.role })
-            console.log('Perfil carregado:', profileData.role)
-            setAuthState('ready')
+            console.log('✅ SISTEMA INICIALIZADO COM SUCESSO:', profileData.role)
           } else {
-            analyzer.log('❌ PERFIL NÃO CARREGADO APÓS LOGIN')
-            setAuthState('error')
+            console.error('❌ FALHA NA INICIALIZAÇÃO: PERFIL NÃO CARREGADO')
           }
-        } else if (event === 'SIGNED_OUT') {
-          analyzer.log('🚪 USUÁRIO FEZ LOGOUT')
-          console.log('Usuário fez logout, limpando perfil...')
-          setProfile(null)
-          setAuthState('ready')
-        } else if (event === 'INITIAL_SESSION') {
-          analyzer.log('🔍 SESSÃO INICIAL CARREGADA', { hasSession: !!session })
-          console.log('Sessão inicial carregada, buscando perfil...')
+        } else {
+          console.log('❌ NENHUMA SESSÃO INICIAL ENCONTRADA')
+          stateManager.setState({ 
+            loading: false, 
+            initialized: true 
+          })
+        }
+      } catch (error) {
+        console.error('❌ ERRO NA INICIALIZAÇÃO:', error)
+        stateManager.setState({ 
+          loading: false, 
+          initialized: true 
+        })
+      }
+    }
+
+    // Configurar listener com controle de concorrência
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('🔄 EVENTO DE AUTH:', { event, hasSession: !!session, email: session?.user?.email })
+        
+        // Prevenir processamento simultâneo
+        const operation = `auth-event-${event}`
+        if (stateManager.isProcessing(operation)) {
+          console.log('⏳ EVENTO JÁ EM PROCESSAMENTO, IGNORANDO')
+          return
+        }
+        
+        stateManager.setProcessing(operation, true)
+        
+        try {
+          stateManager.setState({ 
+            session, 
+            user: session?.user ?? null 
+          })
           
-          if (session) {
-            setAuthState('loading-profile')
+          if (event === 'SIGNED_IN' && session) {
+            console.log('👤 USUÁRIO FEZ LOGIN, BUSCANDO PERFIL...')
+            stateManager.setState({ loading: true })
+            
             const profileData = await fetchProfile(session.user.id)
-            setProfile(profileData)
+            stateManager.setState({ 
+              profile: profileData,
+              loading: false,
+              initialized: true
+            })
             
             if (profileData) {
-              analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
-              console.log('Perfil inicial carregado:', profileData.role)
-              setAuthState('ready')
+              console.log('✅ LOGIN COMPLETO:', profileData.role)
             } else {
-              analyzer.log('❌ PERFIL INICIAL NÃO CARREGADO')
-              setAuthState('error')
+              console.error('❌ LOGIN INCOMPLETO: PERFIL NÃO CARREGADO')
             }
-          } else {
-            analyzer.log('❌ NENHUMA SESSÃO INICIAL ENCONTRADA')
-            console.log('Nenhuma sessão inicial encontrada')
-            setAuthState('ready')
+          } else if (event === 'SIGNED_OUT') {
+            console.log('🚪 USUÁRIO FEZ LOGOUT')
+            stateManager.setState({ 
+              profile: null,
+              loading: false,
+              initialized: true
+            })
+          } else if (event === 'INITIAL_SESSION') {
+            // Já tratado na inicialização
+            console.log('🔍 SESSÃO INICIAL JÁ PROCESSADA')
+          } else if (event === 'TOKEN_REFRESHED') {
+            console.log('🔄 TOKEN ATUALIZADO')
           }
-        } else if (event === 'TOKEN_REFRESHED') {
-          analyzer.log('🔄 TOKEN REFRESHED')
+        } catch (error) {
+          console.error('❌ ERRO PROCESSANDO EVENTO:', error)
+          stateManager.setState({ loading: false })
+        } finally {
+          stateManager.setProcessing(operation, false)
         }
       }
     )
 
-    // Dispara o listener manualmente para obter a sessão inicial
-    const initializeAuth = async () => {
-      analyzer.log('🎯 INICIANDO AUTENTICAÇÃO')
-      setAuthState('initializing')
-      
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        analyzer.log('📋 SESSÃO OBTIDA', { hasSession: !!session, email: session?.user?.email })
-        
-        // Simula o evento INITIAL_SESSION
-        if (session) {
-          setSession(session)
-          setUser(session.user)
-          analyzer.log('✅ SESSÃO CONFIGURADA', { userId: session.user.id })
-          console.log('Sessão inicial encontrada:', session.user.email)
-          
-          setAuthState('loading-profile')
-          const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
-          
-          if (profileData) {
-            analyzer.log('✅ PERFIL INICIAL CARREGADO', { role: profileData.role })
-            console.log('Perfil inicial carregado:', profileData.role)
-            setAuthState('ready')
-          } else {
-            analyzer.log('❌ PERFIL INICIAL NÃO CARREGADO')
-            setAuthState('error')
-          }
-        } else {
-          analyzer.log('❌ NENHUMA SESSÃO INICIAL ENCONTRADA')
-          console.log('Nenhuma sessão inicial encontrada')
-          setAuthState('ready')
-        }
-      } catch (error) {
-        analyzer.log('❌ ERRO NA INICIALIZAÇÃO', { error })
-        console.error('Erro na inicialização da auth:', error)
-        setAuthState('error')
-      }
-    }
-    
+    stateManager.subscription = subscription
     initializeAuth()
 
-    // Limpeza
+    // Limpeza completa
     return () => {
-      analyzer.log('🧹 LIMPANDO SUBSCRIPTION')
-      subscription.unsubscribe()
+      console.log('🧹 LIMPANDO AUTH PROVIDER')
+      stateManager.cleanup()
     }
-  }, [fetchProfile, analyzer])
+  }, [stateManager, fetchProfile])
 
   const value: AuthContextType = {
-    user,
-    profile,
-    session,
-    loading,
+    user: state.user,
+    profile: state.profile,
+    session: state.session,
+    loading: state.loading,
     signIn,
     signUp,
     signOut,
