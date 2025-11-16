@@ -8,7 +8,10 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
+import DashboardLayout from "./components/layout/DashboardLayout";
+import ExerciseLibrary from "./pages/ExerciseLibrary";
+import WorkoutPlanner from "./pages/WorkoutPlanner";
+import MyClients from "./pages/MyClients";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +24,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Rotas Públicas */}
             <Route path="/" element={<Index />} />
             <Route 
               path="/auth" 
@@ -30,15 +34,29 @@ const App = () => (
                 </PublicRoute>
               } 
             />
+
+            {/* ROTAS PROTEGIDAS DO APP */}
             <Route 
-              path="/dashboard" 
+              path="/app" 
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <DashboardLayout /> 
                 </ProtectedRoute>
-              } 
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              }
+            >
+              {/* Rotas de Professional/Admin */}
+              <Route path="library" element={<ExerciseLibrary />} />
+              <Route path="planner" element={<WorkoutPlanner />} />
+              <Route path="clients" element={<MyClients />} />
+
+              {/* Rotas de Cliente (Ainda não criadas) */}
+              {/* <Route path="my-workout" element={<ClientDashboard />} /> */}
+
+              {/* Rota Padrão - Redireciona baseado no role */}
+              <Route index element={<Navigate to="clients" replace />} /> 
+            </Route>
+
+            {/* Rota de Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
