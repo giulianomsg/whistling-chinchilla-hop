@@ -339,7 +339,7 @@ const ClientWorkout: React.FC = () => {
         </div>
       </div>
     )
-  </div>
+  )
 }
 
 export default ClientWorkout
