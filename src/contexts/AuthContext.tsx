@@ -23,72 +23,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [initialized, setInitialized] = useState(false)
 
-  // Função para buscar perfil com diagnóstico RLS completo
+  // Função simplificada para buscar perfil
   const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
-    console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
-    console.log('🔐 [PROFILE] Token JWT disponível:', !!authUser.aud)
+    console.log('🔍 [PROFILE] Buscando perfil para userId:', authUser.id)
     
     try {
-      // 1. Testar conexão básica primeiro
-      console.log('🧪 [PROFILE] Testando conexão com Supabase...')
-      const { data: testData, error: testError } = await supabase
-        .from('profiles')
-        .select('count')
-        .limit(1)
-      
-      console.log('🧪 [PROFILE] Teste de conexão:', { 
-        data: testData, 
-        error: testError,
-        hasError: !!testError,
-        errorCode: testError?.code,
-        errorMessage: testError?.message
-      })
-
-      if (testError) {
-        console.error('❌ [PROFILE] Erro de conexão/teste:', testError)
-        return null
-      }
-
-      // 2. Tentar buscar o perfil específico
-      console.log('📋 [PROFILE] Buscando perfil específico...')
+      // Busca direta sem testes complexos
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', authUser.id)
         .single()
 
-      console.log('📊 [PROFILE] Resultado da busca:', { 
+      console.log('📊 [PROFILE] Resultado:', { 
         data, 
         error,
         errorCode: error?.code,
-        errorMessage: error?.message,
-        errorDetails: error?.details,
-        hint: error?.hint
+        errorMessage: error?.message
       })
 
       if (error) {
-        console.error('❌ [PROFILE] Erro na busca:', error)
+        console.error('❌ [PROFILE] Erro:', error)
         
-        // 3. Tentar buscar sem RLS (se possível)
-        console.log('🔓 [PROFILE] Tentando buscar sem filtro RLS...')
-        const { data: allData, error: allError } = await supabase
-          .from('profiles')
-          .select('*')
-          .limit(5)
-
-        console.log('🔓 [PROFILE] Busca sem filtro:', { 
-          data: allData, 
-          error: allError,
-          hasData: !!allData?.length,
-          totalRows: allData?.length
-        })
-
         if (error.code === 'PGRST116') {
-          console.log('🔧 [PROFILE] Perfil não encontrado, tentando criar...')
+          console.log('🔧 [PROFILE] Criando perfil...')
           
-          // 4. Tentar criar o perfil
           const { data: newProfile, error: insertError } = await supabase
             .from('profiles')
             .insert({
@@ -100,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             .select()
             .single()
 
-          console.log('🆕 [PROFILE] Resultado da criação:', { 
+          console.log('🆕 [PROFILE] Criação:', { 
             data: newProfile, 
             error: insertError,
             errorCode: insertError?.code,
@@ -108,18 +68,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           })
 
           if (insertError) {
-            console.error('❌ [PROFILE] Erro ao criar perfil:', insertError)
+            console.error('❌ [PROFILE] Erro ao criar:', insertError)
             return null
           }
           
-          console.log('✅ [PROFILE] Perfil criado com sucesso:', newProfile)
           return newProfile
         }
         
         return null
       }
 
-      console.log('✅ [PROFILE] Perfil encontrado com sucesso:', data)
       return data
     } catch (error) {
       console.error('❌ [PROFILE] Erro inesperado:', error)
@@ -130,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Função para atualizar perfil
   const refreshProfile = useCallback(async () => {
     if (user) {
-      console.log('🔄 [PROFILE] Atualizando perfil manualmente...')
+      console.log('🔄 [PROFILE] Atualizando perfil...')
       const profileData = await fetchProfile(user)
       setProfile(profileData)
       console.log('📋 [PROFILE] Perfil atualizado:', !!profileData)
@@ -145,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(session?.user ?? null)
     
     if (session?.user) {
-      console.log('👤 [AUTH] Usuário encontrado, buscando perfil...')
+      console.log('👤 [AUTH] Buscando perfil para:', session.user.email)
       const profileData = await fetchProfile(session.user)
       setProfile(profileData)
       console.log('📋 [AUTH] Perfil definido:', { 
@@ -161,15 +119,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Login
   const signIn = async (email: string, password: string) => {
-    console.log('🔑 [AUTH] Iniciando login:', email)
+    console.log('🔑 [AUTH] Login:', email)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    console.log('📊 [AUTH] Resultado do login:', { error })
     return { error }
   }
 
   // Cadastro
   const signUp = async (email: string, password: string, fullName: string) => {
-    console.log('📝 [AUTH] Iniciando cadastro:', { email, fullName })
+    console.log('📝 [AUTH] Cadastro:', { email, fullName })
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -180,13 +137,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     })
-    console.log('📊 [AUTH] Resultado do cadastro:', { error })
     return { error }
   }
 
   // Logout
   const signOut = async () => {
-    console.log('🚪 [AUTH] Iniciando logout')
+    console.log('🚪 [AUTH] Logout')
     await supabase.auth.signOut()
   }
 
@@ -194,15 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
 
-    // Timeout de segurança
-    const safetyTimeout = setTimeout(() => {
-      if (mounted && !initialized) {
-        console.log('⚠️ [AUTH] TIMEOUT: Forçando loading = false')
-        setLoading(false)
-      }
-    }, 5000)
-
-    // Função inicial
+    // Função inicial simplificada
     const initialize = async () => {
       console.log('🎯 [AUTH] Iniciando autenticação...')
       
@@ -226,18 +174,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } finally {
         if (mounted) {
           console.log('✅ [AUTH] Inicialização concluída')
-          setInitialized(true)
           setLoading(false)
         }
       }
     }
 
-    // Listener de auth
+    // Listener de auth simplificado
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
 
-        console.log('🔄 [AUTH] Evento de auth:', { 
+        console.log('🔄 [AUTH] Evento:', { 
           event, 
           hasSession: !!session, 
           userEmail: session?.user?.email 
@@ -248,11 +195,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await processUserAndProfile(session)
           }
         }
-
-        if (!initialized) {
-          setInitialized(true)
-          setLoading(false)
-        }
       }
     )
 
@@ -261,10 +203,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('🧹 [AUTH] AuthProvider desmontado')
       mounted = false
-      clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
-  }, [initialized, processUserAndProfile])
+  }, [processUserAndProfile])
 
   const value: AuthContextType = {
     user,
