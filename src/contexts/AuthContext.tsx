@@ -24,51 +24,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Função para buscar perfil com diagnóstico completo
-  const fetchProfile = async (userId: string): Promise<Profile | null> => {
-    console.log('🔍 [PROFILE] Iniciando busca para userId:', userId)
+  // Função para buscar perfil - CORRIGIDA
+  const fetchProfile = async (authUser: User): Promise<Profile | null> => {
+    console.log('🔍 [PROFILE] Iniciando busca para userId:', authUser.id)
     
     try {
-      // 1. Verificar se o usuário está autenticado
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(userId)
-      console.log('🔐 [PROFILE] Verificação de autenticação:', { 
-        hasUser: !!authUser, 
-        error: authError,
-        userEmail: authUser?.email 
-      })
-      
-      if (authError || !authUser) {
-        console.error('❌ [PROFILE] Usuário não autenticado:', authError)
-        return null
-      }
-
-      // 2. Tentar buscar o perfil
+      // Buscar diretamente o perfil sem verificação redundante
       console.log('📋 [PROFILE] Buscando perfil na tabela...')
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', userId)
+        .eq('id', authUser.id)
         .single()
 
       console.log('📊 [PROFILE] Resultado da busca:', { 
         data, 
         error,
         errorCode: error?.code,
-        errorMessage: error?.message,
-        errorDetails: error?.details
+        errorMessage: error?.message
       })
 
       if (error) {
         console.error('❌ [PROFILE] Erro na busca:', error)
         
         if (error.code === 'PGRST116') {
-          console.log('🔧 [PROFILE] Perfil não encontrado, tentando criar...')
+          console.log('🔧 [PROFILE] Perfil não encontrado, criando...')
           
-          // 3. Tentar criar o perfil
+          // Criar o perfil usando dados do usuário autenticado
           const { data: newProfile, error: insertError } = await supabase
             .from('profiles')
             .insert({
-              id: userId,
+              id: authUser.id,
               email: authUser.email || '',
               full_name: authUser.user_metadata?.full_name || '',
               role: authUser.user_metadata?.role || 'client'
@@ -107,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshProfile = async () => {
     if (user) {
       console.log('🔄 [PROFILE] Atualizando perfil manualmente...')
-      const profileData = await fetchProfile(user.id)
+      const profileData = await fetchProfile(user)
       setProfile(profileData)
       console.log('📋 [PROFILE] Perfil atualizado:', !!profileData)
     }
@@ -149,13 +135,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let mounted = true
     let initialized = false
 
-    // Timeout de segurança aumentado para profile
+    // Timeout de segurança
     const safetyTimeout = setTimeout(() => {
       if (mounted && !initialized) {
-        console.log('⚠️ [AUTH] TIMEOUT: Forçando loading = false (profile pode não estar carregado)')
+        console.log('⚠️ [AUTH] TIMEOUT: Forçando loading = false')
         setLoading(false)
       }
-    }, 5000)
+    }, 3000)
 
     // Função inicial
     const initialize = async () => {
@@ -181,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // 2. Se tem usuário, buscar perfil
           if (session?.user) {
             console.log('👤 [AUTH] Usuário encontrado, buscando perfil...')
-            const profileData = await fetchProfile(session.user.id)
+            const profileData = await fetchProfile(session.user)
             
             if (mounted) {
               setProfile(profileData)
@@ -206,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Listener de auth
+    // Listener de auth - CORRIGIDO
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
@@ -222,7 +208,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (event === 'SIGNED_IN' && session?.user) {
           console.log('👤 [AUTH] Login detectado, buscando perfil...')
-          const profileData = await fetchProfile(session.user.id)
+          // CORREÇÃO: Usar diretamente session.user em vez de getUser()
+          const profileData = await fetchProfile(session.user)
           
           if (mounted) {
             setProfile(profileData)
