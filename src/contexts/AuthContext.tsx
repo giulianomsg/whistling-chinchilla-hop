@@ -92,21 +92,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Configurar listener para mudanças na autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id)
-        
-        setSession(session)
-        setUser(session?.user ?? null)
+        try {
+          console.log('Auth state changed:', event, session?.user?.id)
+          
+          setSession(session)
+          setUser(session?.user ?? null)
 
-        if (session?.user) {
-          // Buscar perfil do usuário quando autenticado (incluindo INITIAL_SESSION)
-          console.log('Buscando perfil para o usuário:', session.user.id)
-          await fetchProfile(session.user.id)
-        } else {
-          // Limpar perfil quando desautenticado
-          setProfile(null)
+          if (session?.user) {
+            // Buscar perfil do usuário quando autenticado (incluindo INITIAL_SESSION)
+            console.log('Buscando perfil para o usuário:', session.user.id)
+            await fetchProfile(session.user.id)
+          } else {
+            // Limpar perfil quando desautenticado
+            setProfile(null)
+          }
+        } catch (error) {
+          console.error("Erro crítico no listener de autenticação:", error)
+        } finally {
+          // Esta linha AGORA está garantida para ser executada
+          setLoading(false)
         }
-
-        setLoading(false)
       }
     )
 
@@ -115,7 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('Cleaning up auth listener')
       subscription.unsubscribe()
     }
-  }, []) // Array de dependências vazio - sem navigate
+  }, []) // Array de dependências vazio
 
   const value: AuthContextType = {
     user,
