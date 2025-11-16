@@ -77,6 +77,7 @@ const WorkoutPlanner: React.FC = () => {
   const [isEditWorkoutDialogOpen, setIsEditWorkoutDialogOpen] = useState(false)
   const [isManageExercisesSheetOpen, setIsManageExercisesSheetOpen] = useState(false)
   const [isAddExerciseDialogOpen, setIsAddExerciseDialogOpen] = useState(false)
+  const [isEditExerciseDialogOpen, setIsEditExerciseDialogOpen] = useState(false)
 
   // Form states
   const [workoutFormData, setWorkoutFormData] = useState({
@@ -90,6 +91,16 @@ const WorkoutPlanner: React.FC = () => {
   const [exerciseFormData, setExerciseFormData] = useState({
     exercise_id: '',
     day_number: 1,
+    sets: 3,
+    reps: '8-12',
+    weight: null,
+    rest_time_seconds: 60,
+    notes: ''
+  })
+
+  // ✅ NOVO: Estado para edição de exercício do plano
+  const [editingExerciseDetails, setEditingExerciseDetails] = useState<WorkoutExercise | null>(null)
+  const [editExerciseFormData, setEditExerciseFormData] = useState({
     sets: 3,
     reps: '8-12',
     weight: null,
@@ -209,6 +220,18 @@ const WorkoutPlanner: React.FC = () => {
       rest_time_seconds: 60,
       notes: ''
     })
+  }
+
+  // Resetar formulário de edição de exercício
+  const resetEditExerciseForm = () => {
+    setEditExerciseFormData({
+      sets: 3,
+      reps: '8-12',
+      weight: null,
+      rest_time_seconds: 60,
+      notes: ''
+    })
+    setEditingExerciseDetails(null)
   }
 
   // Criar workout
@@ -366,6 +389,56 @@ const WorkoutPlanner: React.FC = () => {
     } catch (error) {
       console.error('Erro inesperado:', error)
       showError('Erro inesperado ao adicionar exercício')
+    }
+  }
+
+  // ✅ NOVO: Editar exercício do workout
+  const handleEditWorkoutExercise = (workoutExercise: WorkoutExercise) => {
+    setEditingExerciseDetails(workoutExercise)
+    setEditExerciseFormData({
+      sets: workoutExercise.sets,
+      reps: workoutExercise.reps || '8-12',
+      weight: workoutExercise.weight,
+      rest_time_seconds: workoutExercise.rest_time_seconds || 60,
+      notes: workoutExercise.notes || ''
+    })
+    setIsEditExerciseDialogOpen(true)
+  }
+
+  // ✅ NOVO: Atualizar exercício do workout
+  const handleUpdateWorkoutExercise = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingExerciseDetails) return
+
+    try {
+      const updateData = {
+        sets: editExerciseFormData.sets,
+        reps: editExerciseFormData.reps,
+        weight: editExerciseFormData.weight,
+        rest_time_seconds: editExerciseFormData.rest_time_seconds,
+        notes: editExerciseFormData.notes || null
+      }
+
+      const { error } = await supabase
+        .from('workout_exercises')
+        .update(updateData)
+        .eq('id', editingExerciseDetails.id)
+
+      if (error) {
+        console.error('Erro ao atualizar exercício do workout:', error)
+        showError('Erro ao atualizar exercício do plano')
+        return
+      }
+
+      showSuccess('Exercício atualizado com sucesso!')
+      setIsEditExerciseDialogOpen(false)
+      resetEditExerciseForm()
+      if (selectedWorkout) {
+        fetchWorkoutExercises(selectedWorkout.id)
+      }
+    } catch (error) {
+      console.error('Erro inesperado:', error)
+      showError('Erro inesperado ao atualizar exercício')
     }
   }
 
@@ -772,27 +845,37 @@ const WorkoutPlanner: React.FC = () => {
                                       )}
                                     </div>
                                   </div>
-                                  <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                      <Button size="sm" variant="ghost">
-                                        <Trash2 className="h-4 w-4 text-red-600" />
-                                      </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Tem certeza que deseja remover "{workoutExercise.exercise?.name}" do plano?
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => handleDeleteWorkoutExercise(workoutExercise.id)}>
-                                          Remover
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
+                                  <div className="flex gap-1">
+                                    {/* ✅ NOVO: Botão de Editar */}
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleEditWorkoutExercise(workoutExercise)}
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button size="sm" variant="ghost">
+                                          <Trash2 className="h-4 w-4 text-red-600" />
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Tem certeza que deseja remover "{workoutExercise.exercise?.name}" do plano?
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                          <AlertDialogAction onClick={() => handleDeleteWorkoutExercise(workoutExercise.id)}>
+                                            Remover
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  </div>
                                 </div>
                               </CardContent>
                             </Card>
@@ -877,6 +960,97 @@ const WorkoutPlanner: React.FC = () => {
                 </Button>
                 <Button type="submit">
                   Atualizar Plano
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* ✅ NOVO: Dialog de Edição de Exercício do Plano */}
+        <Dialog open={isEditExerciseDialogOpen} onOpenChange={setIsEditExerciseDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Editar Exercício do Plano</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleUpdateWorkoutExercise} className="space-y-4">
+              <div className="space-y-2">
+                <Label>Exercício</Label>
+                <Input 
+                  value={editingExerciseDetails?.exercise?.name || ''} 
+                  disabled 
+                  className="bg-gray-50"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-sets">Séries</Label>
+                  <Input
+                    id="edit-sets"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={editExerciseFormData.sets}
+                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, sets: parseInt(e.target.value) })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-reps">Repetições</Label>
+                  <Input
+                    id="edit-reps"
+                    value={editExerciseFormData.reps}
+                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, reps: e.target.value })}
+                    placeholder="8-12, 10, 15..."
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-weight">Carga (kg)</Label>
+                  <Input
+                    id="edit-weight"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value={editExerciseFormData.weight || ''}
+                    onChange={(e) => setEditExerciseFormData({ 
+                      ...editExerciseFormData, 
+                      weight: e.target.value ? parseFloat(e.target.value) : null 
+                    })}
+                    placeholder="Opcional"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-rest">Descanso (segundos)</Label>
+                  <Input
+                    id="edit-rest"
+                    type="number"
+                    min="0"
+                    max="600"
+                    value={editExerciseFormData.rest_time_seconds}
+                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, rest_time_seconds: parseInt(e.target.value) })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-notes">Observações</Label>
+                <Textarea
+                  id="edit-notes"
+                  value={editExerciseFormData.notes}
+                  onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, notes: e.target.value })}
+                  placeholder="Observações sobre o exercício..."
+                  rows={2}
+                />
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsEditExerciseDialogOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Atualizar Exercício
                 </Button>
               </div>
             </form>
