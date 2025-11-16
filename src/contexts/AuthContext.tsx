@@ -203,7 +203,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearTimeout(forceTimeout)
       subscription.unsubscribe()
     }
-  }, [loading, processUserAndProfile])
+  }, [processUserAndProfile]) // ✅ CORREÇÃO: Removido 'loading' do array de dependências
 
   const value: AuthContextType = {
     user,
