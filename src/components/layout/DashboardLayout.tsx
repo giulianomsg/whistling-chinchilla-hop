@@ -67,21 +67,6 @@ const DashboardLayout: React.FC = () => {
     return <Navigate to="/auth" replace />
   }
 
-  // Determinar rota padrão baseada no role
-  const getDefaultRoute = () => {
-    if (profile.role === 'professional' || profile.role === 'admin') {
-      return '/app/clients'
-    } else if (profile.role === 'client') {
-      return '/app/my-workout'
-    }
-    return '/app/clients'
-  }
-
-  // Se estiver na rota /app, redirecionar para a rota padrão
-  if (location.pathname === '/app') {
-    return <Navigate to={getDefaultRoute()} replace />
-  }
-
   const handleLogout = async () => {
     await signOut()
     showSuccess('Logout realizado com sucesso!')

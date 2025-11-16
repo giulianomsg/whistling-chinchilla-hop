@@ -21,9 +21,9 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     )
   }
 
-  // Se usuário já está logado, redirecionar para dashboard
+  // Se usuário já está logado, redirecionar para /app
   if (user) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/app" replace />
   }
 
   return <>{children}</>
