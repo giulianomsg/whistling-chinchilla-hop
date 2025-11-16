@@ -195,150 +195,150 @@ const ClientWorkout: React.FC = () => {
               <p className="text-gray-600">Seu plano personalizado de treino</p>
             </div>
           </div>
-
-          {/* Informações do Plano */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-blue-600" />
-                {clientWorkout.workout.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {clientWorkout.workout.description && (
-                <p className="text-gray-600 mb-4">{clientWorkout.workout.description}</p>
-              )}
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Início:</span>
-                  <span className="text-sm font-medium">
-                    {new Date(clientWorkout.start_date).toLocaleDateString('pt-BR')}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Duração:</span>
-                  <span className="text-sm font-medium">{clientWorkout.workout.duration_weeks} semanas</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-gray-600">Status:</span>
-                  <Badge variant="secondary" className="text-xs">
-                    Ativo
-                  </Badge>
-                </div>
-              </div>
-
-              {clientWorkout.workout.objective && (
-                <div className="mt-4 p-3 bg-gray-50 rounded">
-                  <p className="text-sm font-medium text-gray-700">Objetivo:</p>
-                  <p className="text-sm text-gray-600">{clientWorkout.workout.objective}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Exercícios por Dia */}
-          {workoutExercises.length > 0 && (
-            <Tabs defaultValue="day-1" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => (
-                  <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
-                    Dia {i + 1}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => {
-                const dayNumber = i + 1
-                const dayExercises = exercisesByDay[dayNumber] || []
-                
-                return (
-                  <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
-                    {dayExercises.length === 0 ? (
-                      <div className="text-center py-8 text-gray-500">
-                        <p>Nenhum exercício para este dia</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {dayExercises.map((workoutExercise, index) => (
-                          <Card key={workoutExercise.id}>
-                            <CardContent className="p-6">
-                              <div className="flex items-start gap-4">
-                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                                    {index + 1}
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    {workoutExercise.exercise?.name}
-                                  </h3>
-                                  
-                                  {workoutExercise.exercise?.description && (
-                                    <p className="text-gray-600 mb-3">
-                                      {workoutExercise.exercise.description}
-                                    </p>
-                                  )}
-
-                                  <div className="flex flex-wrap gap-2 mb-3">
-                                    <Badge variant="secondary">
-                                      {workoutExercise.sets} séries
-                                    </Badge>
-                                    <Badge variant="outline">
-                                      {workoutExercise.reps} reps
-                                    </Badge>
-                                    {workoutExercise.weight && (
-                                      <Badge variant="outline">
-                                        {workoutExercise.weight} kg
-                                      </Badge>
-                                    )}
-                                    {workoutExercise.rest_time_seconds && (
-                                      <Badge variant="outline">
-                                        {workoutExercise.rest_time_seconds}s descanso
-                                      </Badge>
-                                    )}
-                                  </div>
-
-                                  {workoutExercise.exercise?.muscle_groups && workoutExercise.exercise.muscle_groups.length > 0 && (
-                                    <div className="mb-3">
-                                      <p className="text-sm font-medium text-gray-700 mb-1">Músculos trabalhados:</p>
-                                      <div className="flex flex-wrap gap-1">
-                                        {workoutExercise.exercise.muscle_groups.map((muscle, muscleIndex) => (
-                                          <Badge key={muscleIndex} variant="secondary" className="text-xs">
-                                            {muscle}
-                                          </Badge>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {workoutExercise.notes && (
-                                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                                      <p className="text-sm text-yellow-800">
-                                        <strong>Nota do profissional:</strong> {workoutExercise.notes}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </TabsContent>
-                )
-              })}
-            </Tabs>
-          )}
         </div>
+
+        {/* Informações do Plano */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-blue-600" />
+              {clientWorkout.workout.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {clientWorkout.workout.description && (
+              <p className="text-gray-600 mb-4">{clientWorkout.workout.description}</p>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Início:</span>
+                <span className="text-sm font-medium">
+                  {new Date(clientWorkout.start_date).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Duração:</span>
+                <span className="text-sm font-medium">{clientWorkout.workout.duration_weeks} semanas</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <span className="text-sm text-gray-600">Status:</span>
+                <Badge variant="secondary" className="text-xs">
+                  Ativo
+                </Badge>
+              </div>
+            </div>
+
+            {clientWorkout.workout.objective && (
+              <div className="mt-4 p-3 bg-gray-50 rounded">
+                <p className="text-sm font-medium text-gray-700">Objetivo:</p>
+                <p className="text-sm text-gray-600">{clientWorkout.workout.objective}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Exercícios por Dia */}
+        {workoutExercises.length > 0 && (
+          <Tabs defaultValue="day-1" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => (
+                <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
+                  Dia {i + 1}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => {
+              const dayNumber = i + 1
+              const dayExercises = exercisesByDay[dayNumber] || []
+              
+              return (
+                <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
+                  {dayExercises.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>Nenhum exercício para este dia</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {dayExercises.map((workoutExercise, index) => (
+                        <Card key={workoutExercise.id}>
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-4">
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
+                                  {index + 1}
+                                </span>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                  {workoutExercise.exercise?.name}
+                                </h3>
+                                
+                                {workoutExercise.exercise?.description && (
+                                  <p className="text-gray-600 mb-3">
+                                    {workoutExercise.exercise.description}
+                                  </p>
+                                )}
+
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  <Badge variant="secondary">
+                                    {workoutExercise.sets} séries
+                                  </Badge>
+                                  <Badge variant="outline">
+                                    {workoutExercise.reps} reps
+                                  </Badge>
+                                  {workoutExercise.weight && (
+                                    <Badge variant="outline">
+                                      {workoutExercise.weight} kg
+                                    </Badge>
+                                  )}
+                                  {workoutExercise.rest_time_seconds && (
+                                    <Badge variant="outline">
+                                      {workoutExercise.rest_time_seconds}s descanso
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                {workoutExercise.exercise?.muscle_groups && workoutExercise.exercise.muscle_groups.length > 0 && (
+                                  <div className="mb-3">
+                                    <p className="text-sm font-medium text-gray-700 mb-1">Músculos trabalhados:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                      {workoutExercise.exercise.muscle_groups.map((muscle, muscleIndex) => (
+                                        <Badge key={muscleIndex} variant="secondary" className="text-xs">
+                                          {muscle}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {workoutExercise.notes && (
+                                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                                    <p className="text-sm text-yellow-800">
+                                      <strong>Nota do profissional:</strong> {workoutExercise.notes}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              )
+            })}
+          </Tabs>
+        )}
       </div>
-    )
+    </div>
   )
 }
 
