@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null
   profile: Profile | null
   session: Session | null
-  loading: boolean // loading agora será 'false' apenas após a carga inicial
+  loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true) // Começa como true
+  const [loading, setLoading] = useState(false) // Sempre false
 
   // Função para buscar o perfil do usuário
   const fetchProfile = async (userId: string) => {
@@ -112,8 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error("Falha na carga inicial da sessão:", error)
         // Não faz nada, usuário continua null
       } finally {
-        // Após a tentativa de carregar (sucesso ou falha), paramos o loading
-        setLoading(false)
+        // setLoading(false) removido - loading sempre false
       }
     }
     
