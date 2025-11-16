@@ -12,6 +12,8 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import ExerciseLibrary from "./pages/ExerciseLibrary";
 import WorkoutPlanner from "./pages/WorkoutPlanner";
 import MyClients from "./pages/MyClients";
+import ClientWorkout from "./pages/ClientWorkout";
+import AppIndex from "./components/auth/AppIndex";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,11 +51,11 @@ const App = () => (
               <Route path="planner" element={<WorkoutPlanner />} />
               <Route path="clients" element={<MyClients />} />
 
-              {/* Rotas de Cliente (Ainda não criadas) */}
-              {/* <Route path="my-workout" element={<ClientDashboard />} /> */}
+              {/* Rotas de Cliente */}
+              <Route path="my-workout" element={<ClientWorkout />} />
 
-              {/* Rota Padrão - Redireciona baseado no role */}
-              <Route index element={<Navigate to="clients" replace />} /> 
+              {/* Rota Padrão - AGORA É DINÂMICA */}
+              <Route index element={<AppIndex />} /> 
             </Route>
 
             {/* Rota de Catch-all */}
