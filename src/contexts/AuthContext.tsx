@@ -24,8 +24,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Função simples para buscar perfil
+  // Função para buscar perfil
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
+    console.log('🔍 Buscando perfil para:', userId)
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -34,8 +35,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single()
 
       if (error) {
+        console.log('❌ Erro ao buscar perfil:', error)
         if (error.code === 'PGRST116') {
-          // Criar perfil se não existir
+          console.log('🔧 Criando perfil...')
           const { data: userData } = await supabase.auth.getUser(userId)
           if (userData.user) {
             const { data: newProfile } = await supabase
@@ -48,14 +50,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               })
               .select()
               .single()
+            console.log('✅ Perfil criado:', newProfile)
             return newProfile
           }
         }
         return null
       }
+      console.log('✅ Perfil encontrado:', data)
       return data
     } catch (error) {
-      console.error('Erro ao buscar perfil:', error)
+      console.error('❌ Erro inesperado:', error)
       return null
     }
   }
@@ -95,28 +99,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   useEffect(() => {
+    console.log('🚀 AuthProvider montado')
     let mounted = true
+    let initialized = false
+
+    // Timeout de segurança
+    const safetyTimeout = setTimeout(() => {
+      if (mounted && !initialized) {
+        console.log('⚠️ TIMEOUT: Forçando loading = false')
+        setLoading(false)
+      }
+    }, 3000)
 
     // Função inicial
     const initialize = async () => {
+      console.log('🎯 Iniciando autenticação...')
       try {
         const { data: { session } } = await supabase.auth.getSession()
+        console.log('📋 Sessão obtida:', !!session)
         
         if (mounted) {
           setSession(session)
           setUser(session?.user ?? null)
           
           if (session?.user) {
+            console.log('👤 Usuário encontrado, buscando perfil...')
             const profileData = await fetchProfile(session.user.id)
             if (mounted) {
               setProfile(profileData)
+              console.log('📋 Perfil definido:', !!profileData)
             }
           }
         }
       } catch (error) {
-        console.error('Erro na inicialização:', error)
+        console.error('❌ Erro na inicialização:', error)
       } finally {
         if (mounted) {
+          console.log('✅ Inicialização concluída')
+          initialized = true
           setLoading(false)
         }
       }
@@ -127,28 +147,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!mounted) return
 
-        console.log('Auth event:', event, session?.user?.email)
+        console.log('🔄 Auth event:', event, !!session)
 
         setSession(session)
         setUser(session?.user ?? null)
 
         if (event === 'SIGNED_IN' && session?.user) {
+          console.log('👤 Login detectado, buscando perfil...')
           const profileData = await fetchProfile(session.user.id)
           if (mounted) {
             setProfile(profileData)
+            console.log('📋 Perfil definido após login:', !!profileData)
           }
         } else if (event === 'SIGNED_OUT') {
+          console.log('🚪 Logout detectado')
           setProfile(null)
         }
 
-        setLoading(false)
+        if (!initialized) {
+          initialized = true
+          setLoading(false)
+        }
       }
     )
 
     initialize()
 
     return () => {
+      console.log('🧹 AuthProvider desmontado')
       mounted = false
+      clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
   }, [])
