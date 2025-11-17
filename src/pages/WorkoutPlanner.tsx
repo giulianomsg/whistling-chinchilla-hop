@@ -1049,4 +1049,4 @@ const WorkoutPlanner: React.FC = () => {
   )
 }
 
-export default WorkoutPlanner
+export default WorkoutPlanner 
