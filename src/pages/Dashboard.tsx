@@ -13,6 +13,15 @@ const DashboardPage: React.FC = () => {
     await signOut()
   }
 
+  // ✅ PROTEÇÃO CONTRA NULL
+  const getDisplayName = () => {
+    return profile?.full_name || 'Usuário'
+  }
+
+  const getRoleDisplay = () => {
+    return profile?.role || 'carregando...'
+  }
+
   return (
     <ProtectedRoute>
       <AuthDebug />
@@ -36,20 +45,18 @@ const DashboardPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">Email:</span>
-                  <span className="text-sm font-medium">{user?.email}</span>
+                  <span className="text-sm font-medium">{user?.email || 'carregando...'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">Role:</span>
-                  <span className="text-sm font-medium capitalize">{profile?.role}</span>
+                  <span className="text-sm font-medium capitalize">{getRoleDisplay()}</span>
                 </div>
-                {profile?.full_name && (
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">Nome:</span>
-                    <span className="text-sm font-medium">{profile.full_name}</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">Nome:</span>
+                  <span className="text-sm font-medium">{getDisplayName()}</span>
+                </div>
               </CardContent>
             </Card>
 

@@ -65,7 +65,8 @@ const DashboardLayout: React.FC = () => {
   }
 
   const getUserInitials = () => {
-    if (profile?.full_name) {
+    // ✅ PROTEÇÃO CONTRA NULL
+    if (profile?.full_name && profile.full_name.trim()) {
       return profile.full_name
         .split(' ')
         .map(name => name[0])
@@ -73,7 +74,13 @@ const DashboardLayout: React.FC = () => {
         .toUpperCase()
         .slice(0, 2)
     }
+    // Fallback para email
     return user?.email?.[0]?.toUpperCase() || 'U'
+  }
+
+  const getDisplayName = () => {
+    // ✅ PROTEÇÃO CONTRA NULL
+    return profile?.full_name || 'Usuário'
   }
 
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
@@ -86,7 +93,7 @@ const DashboardLayout: React.FC = () => {
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900">CapiFit</h2>
-            <p className="text-xs text-gray-500 capitalize">{profile?.role}</p>
+            <p className="text-xs text-gray-500 capitalize">{profile?.role || 'carregando...'}</p>
           </div>
         </div>
       </div>
@@ -102,10 +109,10 @@ const DashboardLayout: React.FC = () => {
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">
-              {profile?.full_name || 'Usuário'}
+              {getDisplayName()}
             </p>
             <p className="text-xs text-gray-500 truncate">
-              {user?.email}
+              {user?.email || 'carregando...'}
             </p>
           </div>
         </div>
