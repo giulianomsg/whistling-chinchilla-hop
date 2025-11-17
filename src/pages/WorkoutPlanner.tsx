@@ -69,7 +69,7 @@ const WorkoutPlanner: React.FC = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
-  const [loading, setLoading] = useState(true)
+  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
 
   // Dialog states
@@ -113,7 +113,7 @@ const WorkoutPlanner: React.FC = () => {
     if (!user) return
 
     try {
-      setLoading(true)
+      setPageLoading(true)
       const { data, error } = await supabase
         .from('workouts')
         .select('*')
@@ -131,7 +131,7 @@ const WorkoutPlanner: React.FC = () => {
       console.error('Erro inesperado:', error)
       showError('Erro inesperado ao carregar planos de treino')
     } finally {
-      setLoading(false)
+      setPageLoading(false)
     }
   }
 
@@ -571,7 +571,7 @@ const WorkoutPlanner: React.FC = () => {
         </div>
 
         {/* Lista de Workouts */}
-        {loading ? (
+        {pageLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
@@ -661,7 +661,7 @@ const WorkoutPlanner: React.FC = () => {
         )}
 
         {/* Empty State */}
-        {workouts.length === 0 && !loading && (
+        {workouts.length === 0 && !pageLoading && (
           <div className="text-center py-12">
             <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano encontrado</h3>

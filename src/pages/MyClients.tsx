@@ -59,7 +59,7 @@ const MyClients: React.FC = () => {
   const { user, profile, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [loading, setLoading] = useState(true)
+  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
 
   // Dialog states
   const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false)
@@ -79,7 +79,7 @@ const MyClients: React.FC = () => {
     if (!user) return
 
     try {
-      setLoading(true)
+      setPageLoading(true)
       const { data, error } = await supabase
         .from('client_professionals')
         .select(`
@@ -101,7 +101,7 @@ const MyClients: React.FC = () => {
       console.error('Erro inesperado:', error)
       showError('Erro inesperado ao carregar clientes')
     } finally {
-      setLoading(false)
+      setPageLoading(false)
     }
   }
 
@@ -328,7 +328,7 @@ const MyClients: React.FC = () => {
         </div>
 
         {/* Lista de Clientes */}
-        {loading ? (
+        {pageLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
@@ -409,7 +409,7 @@ const MyClients: React.FC = () => {
         )}
 
         {/* Empty State */}
-        {clients.length === 0 && !loading && (
+        {clients.length === 0 && !pageLoading && (
           <div className="text-center py-12">
             <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum cliente encontrado</h3>

@@ -34,7 +34,7 @@ interface Exercise {
 const ExerciseLibrary: React.FC = () => {
   const { user, profile, loading } = useAuth()
   const [exercises, setExercises] = useState<Exercise[]>([])
-  const [loading, setLoading] = useState(true)
+  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false)
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
@@ -55,7 +55,7 @@ const ExerciseLibrary: React.FC = () => {
     if (!user) return
 
     try {
-      setLoading(true)
+      setPageLoading(true)
       const { data, error } = await supabase
         .from('exercises_library')
         .select('*')
@@ -73,7 +73,7 @@ const ExerciseLibrary: React.FC = () => {
       console.error('Erro inesperado:', error)
       showError('Erro inesperado ao carregar exercícios')
     } finally {
-      setLoading(false)
+      setPageLoading(false)
     }
   }
 
@@ -339,7 +339,7 @@ const ExerciseLibrary: React.FC = () => {
         </div>
 
         {/* Lista de Exercícios */}
-        {loading ? (
+        {pageLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
@@ -548,7 +548,7 @@ const ExerciseLibrary: React.FC = () => {
           </SheetContent>
         </Sheet>
 
-        {exercises.length === 0 && !loading && (
+        {exercises.length === 0 && !pageLoading && (
           <div className="text-center py-12">
             <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum exercício encontrado</h3>
