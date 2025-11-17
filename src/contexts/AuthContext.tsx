@@ -97,6 +97,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             updated_at: new Date().toISOString()
           }
           
+          // 🔍 DEBUGGING DETALHADO
+          console.log('🔍 [AUTH] Dados do usuário auth:', {
+            email: session.user.email,
+            metadata_role: session.user.user_metadata?.role,
+            metadata_full_name: session.user.user_metadata?.full_name,
+            basic_profile_role: basicProfile.role
+          })
+          
           setProfile(basicProfile)
           
           // Tentar buscar perfil completo em background
