@@ -70,10 +70,15 @@ const ClientWorkout: React.FC = () => {
 
   // Buscar plano ativo do cliente
   const fetchClientWorkout = async () => {
-    if (!user) return
+    if (!user) {
+      console.log('❌ [CLIENT_WORKOUT] Usuário null, não buscando plano')
+      return
+    }
 
     try {
+      console.log('🔍 [CLIENT_WORKOUT] Buscando plano do cliente:', user.id)
       setLoading(true)
+      
       const { data, error } = await supabase
         .from('client_workouts')
         .select(`
@@ -85,10 +90,16 @@ const ClientWorkout: React.FC = () => {
         .single()
 
       if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Erro ao buscar plano do cliente:', error)
+        console.error('❌ [CLIENT_WORKOUT] Erro ao buscar plano do cliente:', error)
+        console.error('❌ [CLIENT_WORKOUT] Detalhes do erro:', {
+          code: error.code,
+          message: error.message,
+          details: error.details
+        })
         return
       }
 
+      console.log('✅ [CLIENT_WORKOUT] Plano encontrado:', data)
       setClientWorkout(data)
       
       // Se encontrou um plano, buscar os exercícios
@@ -96,7 +107,7 @@ const ClientWorkout: React.FC = () => {
         await fetchWorkoutExercises(data.workout_id)
       }
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      console.error('❌ [CLIENT_WORKOUT] Erro inesperado:', error)
     } finally {
       setLoading(false)
     }
@@ -105,6 +116,8 @@ const ClientWorkout: React.FC = () => {
   // Buscar exercícios do plano
   const fetchWorkoutExercises = async (workoutId: string) => {
     try {
+      console.log('🔍 [CLIENT_WORKOUT] Buscando exercícios do plano:', workoutId)
+      
       const { data, error } = await supabase
         .from('workout_exercises')
         .select(`
@@ -116,19 +129,31 @@ const ClientWorkout: React.FC = () => {
         .order('order_index', { ascending: true })
 
       if (error) {
-        console.error('Erro ao buscar exercícios do plano:', error)
+        console.error('❌ [CLIENT_WORKOUT] Erro ao buscar exercícios do plano:', error)
         return
       }
 
-      setWorkoutExercises(data || [])
+      // ✅ PROTEGER CONTRA NULL: Filtrar itens com exercise null
+      const filteredData = (data || []).filter(item => item.exercise !== null)
+      console.log('✅ [CLIENT_WORKOUT] Exercícios do plano carregados:', filteredData.length)
+      setWorkoutExercises(filteredData)
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      console.error('❌ [CLIENT_WORKOUT] Erro inesperado:', error)
     }
   }
 
   useEffect(() => {
-    fetchClientWorkout()
-  }, [user])
+    console.log('🔍 [CLIENT_WORKOUT] useEffect chamado', { 
+      loading: !loading, 
+      user: !!user, 
+      profile: !!profile,
+      userId: user?.id
+    })
+    
+    if (!loading && user) {
+      fetchClientWorkout()
+    }
+  }, [user?.id, loading])
 
   // Agrupar exercícios por dia
   const getExercisesByDay = () => {
