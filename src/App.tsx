@@ -37,28 +37,28 @@ const App = () => (
               } 
             />
 
-            {/* ROTAS PROTEGIDAS DO APP */}
+            {/* Rotas Protegidas */}
             <Route 
               path="/app" 
               element={
                 <ProtectedRoute>
-                  <DashboardLayout /> 
+                  <DashboardLayout />
                 </ProtectedRoute>
               }
             >
-              {/* Rotas de Professional/Admin */}
-              <Route path="library" element={<ExerciseLibrary />} />
-              <Route path="planner" element={<WorkoutPlanner />} />
+              {/* Professional/Admin */}
               <Route path="clients" element={<MyClients />} />
+              <Route path="planner" element={<WorkoutPlanner />} />
+              <Route path="library" element={<ExerciseLibrary />} />
 
-              {/* Rotas de Cliente */}
+              {/* Cliente */}
               <Route path="my-workout" element={<ClientWorkout />} />
 
-              {/* Rota Padrão - AGORA É DINÂMICA */}
-              <Route index element={<AppIndex />} /> 
+              {/* Rota Dinâmica */}
+              <Route index element={<AppIndex />} />
             </Route>
 
-            {/* Rota de Catch-all */}
+            {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

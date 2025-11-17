@@ -4,52 +4,28 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 
 const AppIndex: React.FC = () => {
-  const { profile, loading, user } = useAuth()
+  const { profile, loading } = useAuth()
 
-  console.log('🏠 [APPINDEX] Estado atual:', {
-    hasUser: !!user,
-    hasProfile: !!profile,
-    loading,
-    userRole: profile?.role,
-    userEmail: user?.email
-  })
-
+  // Loading
   if (loading) {
-    console.log('🏠 [APPINDEX] Aguardando carregamento...')
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
     )
   }
 
-  // Se não há perfil mesmo após loading, redirecionar para auth
+  // Sem perfil = redirecionar para auth
   if (!profile) {
-    console.log('🏠 [APPINDEX] Perfil não encontrado, redirecionando para /auth')
     return <Navigate to="/auth" replace />
   }
 
-  // Redirecionamento baseado no role do usuário
-  let redirectPath = '/app/my-workout' // fallback padrão
-
-  switch (profile.role) {
-    case 'client':
-      redirectPath = '/app/my-workout'
-      console.log('🏠 [APPINDEX] Redirecionando cliente para:', redirectPath)
-      break
-    case 'professional':
-    case 'admin':
-      redirectPath = '/app/clients'
-      console.log('🏠 [APPINDEX] Redirecionando professional/admin para:', redirectPath)
-      break
-    default:
-      console.log('🏠 [APPINDEX] Role não reconhecido, usando fallback:', redirectPath)
-      break
-  }
-
+  // Redirecionamento baseado no role
+  const redirectPath = profile.role === 'client' ? '/app/my-workout' : '/app/clients'
+  
   return <Navigate to={redirectPath} replace />
 }
 

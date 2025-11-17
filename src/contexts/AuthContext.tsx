@@ -1,9 +1,17 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
-import { Database } from '@/integrations/supabase/client'
 
-type Profile = Database['public']['Tables']['profiles']['Row']
+type Profile = {
+  id: string
+  email: string
+  full_name: string | null
+  avatar_url: string | null
+  phone: string | null
+  role: 'admin' | 'professional' | 'client'
+  created_at: string
+  updated_at: string
+}
 
 interface AuthContextType {
   user: User | null
@@ -13,7 +21,6 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
-  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -24,10 +31,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Função para buscar perfil do usuário
-  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
-    console.log('🔍 [PROFILE] Buscando perfil para userId:', userId)
-    
+  // Função para buscar perfil - SIMPLIFICADA
+  const fetchProfile = async (userId: string): Promise<Profile | null> => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -36,41 +41,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single()
 
       if (error) {
-        console.error('❌ [PROFILE] Erro ao buscar perfil:', error)
-        throw error
+        console.error('❌ [AUTH] Erro ao buscar perfil:', error)
+        return null
       }
 
-      console.log('✅ [PROFILE] Perfil encontrado:', data)
       return data
     } catch (error) {
-      console.error('❌ [PROFILE] Falha na busca do perfil:', error)
-      throw error
+      console.error('❌ [AUTH] Erro na busca do perfil:', error)
+      return null
     }
-  }, [])
-
-  // Função para atualizar perfil
-  const refreshProfile = useCallback(async () => {
-    if (user) {
-      console.log('🔄 [PROFILE] Atualizando perfil...')
-      try {
-        const profileData = await fetchProfile(user.id)
-        setProfile(profileData)
-      } catch (error) {
-        console.error('❌ [PROFILE] Erro ao atualizar perfil:', error)
-      }
-    }
-  }, [user, fetchProfile])
+  }
 
   // Login
   const signIn = async (email: string, password: string) => {
-    console.log('🔑 [AUTH] Login:', email)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
   }
 
   // Cadastro
   const signUp = async (email: string, password: string, fullName: string) => {
-    console.log('📝 [AUTH] Cadastro:', { email, fullName })
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -86,7 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Logout
   const signOut = async () => {
-    console.log('🚪 [AUTH] Logout')
     await supabase.auth.signOut()
   }
 
@@ -94,39 +82,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
 
-    // Função inicial
+    // Função inicial - SIMPLIFICADA
     const initialize = async () => {
-      console.log('🎯 [AUTH] Iniciando autenticação...')
-      
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        console.log('📋 [AUTH] Sessão obtida:', { 
-          hasSession: !!session, 
-          error: sessionError,
-          userEmail: session?.user?.email 
-        })
+        // Obter sessão atual
+        const { data: { session }, error } = await supabase.auth.getSession()
         
-        if (sessionError) {
-          console.error('❌ [AUTH] Erro ao obter sessão:', sessionError)
+        if (error) {
+          console.error('❌ [AUTH] Erro ao obter sessão:', error)
         }
         
         if (mounted) {
           setSession(session)
           setUser(session?.user ?? null)
           
+          // Se há usuário, buscar perfil
           if (session?.user) {
-            try {
-              const profileData = await fetchProfile(session.user.id)
-              setProfile(profileData)
-              console.log('📋 [AUTH] Perfil definido:', { 
-                hasProfile: !!profileData,
-                profileRole: profileData?.role,
-                profileEmail: profileData?.email
-              })
-            } catch (profileError) {
-              console.error('❌ [AUTH] Erro ao carregar perfil:', profileError)
-              setProfile(null)
-            }
+            const profileData = await fetchProfile(session.user.id)
+            setProfile(profileData)
+            console.log('✅ [AUTH] Perfil carregado:', profileData?.role)
           } else {
             setProfile(null)
           }
@@ -145,34 +119,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Listener de auth
+    // Listener de auth - SIMPLIFICADO
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
 
-        console.log('🔄 [AUTH] Evento:', { 
-          event, 
-          hasSession: !!session, 
-          userEmail: session?.user?.email 
-        })
+        console.log('🔄 [AUTH] Evento:', event, 'User:', session?.user?.email)
 
         if (mounted) {
           setSession(session)
           setUser(session?.user ?? null)
           
           if (event === 'SIGNED_IN' && session?.user) {
-            try {
-              const profileData = await fetchProfile(session.user.id)
-              setProfile(profileData)
-              console.log('📋 [AUTH] Perfil definido após SIGNED_IN:', { 
-                hasProfile: !!profileData,
-                profileRole: profileData?.role,
-                profileEmail: profileData?.email
-              })
-            } catch (profileError) {
-              console.error('❌ [AUTH] Erro ao carregar perfil após SIGNED_IN:', profileError)
-              setProfile(null)
-            }
+            const profileData = await fetchProfile(session.user.id)
+            setProfile(profileData)
+            console.log('✅ [AUTH] Perfil carregado após SIGNED_IN:', profileData?.role)
           } else if (event === 'SIGNED_OUT') {
             setProfile(null)
           }
@@ -187,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       mounted = false
       subscription.unsubscribe()
     }
-  }, [fetchProfile])
+  }, [])
 
   const value: AuthContextType = {
     user,
@@ -196,8 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signIn,
     signUp,
-    signOut,
-    refreshProfile
+    signOut
   }
 
   return (

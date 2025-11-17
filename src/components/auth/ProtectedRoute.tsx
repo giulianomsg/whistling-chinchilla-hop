@@ -14,37 +14,27 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { user, profile, loading } = useAuth()
 
-  console.log('🛡️ [PROTECTED] Estado atual:', { 
-    hasUser: !!user, 
-    hasProfile: !!profile, 
-    loading, 
-    requiredRole,
-    userRole: profile?.role,
-    userEmail: user?.email
-  })
-
+  // Loading state
   if (loading) {
-    console.log('🛡️ [PROTECTED] Aguardando carregamento...')
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
     )
   }
 
+  // Usuário não autenticado
   if (!user) {
-    console.log('🛡️ [PROTECTED] Usuário não autenticado, redirecionando para /auth')
     return <Navigate to="/auth" replace />
   }
 
-  // Verificar role específico se necessário
+  // Verificação de role específica
   if (requiredRole && profile?.role !== requiredRole) {
-    console.log('🛡️ [PROTECTED] Role incorreto, redirecionando')
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Negado</h1>
           <p className="text-gray-600">
@@ -55,6 +45,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
-  console.log('🛡️ [PROTECTED] Acesso permitido, renderizando children')
+  // Tudo certo, renderizar children
   return <>{children}</>
 }

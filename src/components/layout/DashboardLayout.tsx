@@ -1,18 +1,15 @@
 import React from 'react'
-import { Outlet, Link, useLocation, Navigate } from 'react-router-dom'
+import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { 
-  LayoutDashboard, 
-  Dumbbell, 
-  Calendar, 
   Users, 
+  Calendar, 
   BookOpen, 
-  Settings,
+  Dumbbell, 
   LogOut,
-  Menu,
-  X
+  Menu
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
@@ -29,15 +26,7 @@ const DashboardLayout: React.FC = () => {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
-  console.log('🏗️ [LAYOUT] Renderizando DashboardLayout:', {
-    hasUser: !!user,
-    hasProfile: !!profile,
-    userRole: profile?.role,
-    userEmail: user?.email,
-    currentPath: location.pathname
-  })
-
-  // Menu items dinâmicos baseados no role
+  // Menu items
   const menuItems: MenuItem[] = [
     {
       title: 'Meus Clientes',
@@ -65,18 +54,10 @@ const DashboardLayout: React.FC = () => {
     }
   ]
 
-  // Filtrar menu items baseados no role do usuário
+  // Filtrar menu baseado no role
   const filteredMenuItems = menuItems.filter(item => 
     profile?.role && item.roles.includes(profile.role as any)
   )
-
-  console.log('🏗️ [LAYOUT] Menu items filtrados:', filteredMenuItems.map(item => item.title))
-
-  // Verificar se usuário está autenticado
-  if (!user || !profile) {
-    console.log('🏗️ [LAYOUT] Usuário ou perfil não encontrado, redirecionando para /auth')
-    return <Navigate to="/auth" replace />
-  }
 
   const handleLogout = async () => {
     await signOut()
@@ -106,7 +87,7 @@ const DashboardLayout: React.FC = () => {
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900">CapiFit</h2>
-            <p className="text-xs text-gray-500 capitalize">{profile.role}</p>
+            <p className="text-xs text-gray-500 capitalize">{profile?.role}</p>
           </div>
         </div>
       </div>
@@ -168,8 +149,6 @@ const DashboardLayout: React.FC = () => {
       </div>
     </div>
   )
-
-  console.log('🏗️ [LAYOUT] Renderizando layout completo')
 
   return (
     <div className="flex h-screen bg-gray-50">
