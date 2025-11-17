@@ -89,7 +89,7 @@ const MyClients: React.FC = () => {
         .from('client_professionals')
         .select(`
           *,
-          client:profiles!client_id(*)
+          client:profiles!client_id(id, email, full_name, role, created_at)
         `)
         .eq('professional_id', user.id)
         .eq('status', 'active')
@@ -153,24 +153,31 @@ const MyClients: React.FC = () => {
     }
   }, [user?.id, loading])
 
-  // Adicionar cliente
+  // Adicionar cliente - MELHORADO
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !addClientEmail.trim()) return
 
     try {
-      // Primeiro, encontrar o usuário cliente
-      const { data: clientData, error: clientError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', addClientEmail.trim())
-        .eq('role', 'client')
-        .single()
+      console.log('🔍 [CLIENTS] Buscando cliente para adicionar:', addClientEmail.trim())
+      
+      // 🔧 MELHORIA: Usar RPC para buscar cliente de forma segura
+      const { data: clientData, error: clientError } = await supabase.rpc('find_client_by_email', {
+        client_email: addClientEmail.trim()
+      })
 
-      if (clientError || !clientData) {
+      if (clientError) {
+        console.error('❌ [CLIENTS] Erro ao buscar cliente via RPC:', clientError)
+        showError('Erro ao buscar cliente: ' + clientError.message)
+        return
+      }
+
+      if (!clientData) {
         showError('Cliente não encontrado. Verifique o email e se o usuário tem role "client".')
         return
       }
+
+      console.log('✅ [CLIENTS] Cliente encontrado via RPC:', clientData)
 
       // Verificar se já existe vínculo ativo
       const { data: existingLink, error: linkError } = await supabase
