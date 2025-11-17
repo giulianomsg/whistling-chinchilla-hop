@@ -1,0 +1,1 @@
+ALTER TABLE client_workouts ENABLE ROW LEVEL SECURITY;
