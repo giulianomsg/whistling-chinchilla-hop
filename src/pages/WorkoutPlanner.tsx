@@ -187,7 +187,7 @@ const WorkoutPlanner: React.FC = () => {
       fetchWorkouts()
       fetchExercises()
     }
-  }, [loading]) // <-- A dependência agora é SÓ o loading
+  }, [user?.id, loading]) // <-- A dependência agora é estável
 
   // Resetar formulário de workout
   const resetWorkoutForm = () => {

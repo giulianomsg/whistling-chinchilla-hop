@@ -133,7 +133,7 @@ const MyClients: React.FC = () => {
       fetchClients()
       fetchWorkouts()
     }
-  }, [loading]) // <-- A dependência agora é SÓ o loading
+  }, [user?.id, loading]) // <-- A dependência agora é estável
 
   // Adicionar cliente
   const handleAddClient = async (e: React.FormEvent) => {

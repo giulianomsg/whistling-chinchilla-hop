@@ -82,7 +82,7 @@ const ExerciseLibrary: React.FC = () => {
     if (!loading && user) {
       fetchExercises()
     }
-  }, [loading]) // <-- A dependência agora é SÓ o loading
+  }, [user?.id, loading]) // <-- A dependência agora é estável
 
   // Resetar formulário
   const resetForm = () => {
