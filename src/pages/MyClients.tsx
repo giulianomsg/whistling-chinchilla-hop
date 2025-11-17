@@ -504,6 +504,6 @@ const MyClients: React.FC = () => {
       </div>
     </div>
   )
-} 
+}
 
 export default MyClients
