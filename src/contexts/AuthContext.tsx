@@ -33,33 +33,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // 1. fetchProfile (memoizada com tratamento de erros e debugging)
-  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
-    console.log('🔍 [AUTH] Buscando perfil para userId:', userId)
+  // 1. fetchProfile (corrigido - usa usuário da sessão em vez de getUser)
+  const fetchProfile = useCallback(async (authUser: User): Promise<Profile | null> => {
+    console.log('🔍 [AUTH] Buscando perfil para usuário:', authUser.email)
     
     try {
-      // Primeiro, verificar se o usuário existe no auth
-      console.log('🔍 [AUTH] Verificando usuário no auth...')
-      const { data: authUser, error: authError } = await supabase.auth.getUser(userId)
-      
-      if (authError) {
-        console.error('❌ [AUTH] Erro ao buscar usuário auth:', authError)
-        return null
-      }
-      
-      if (!authUser.user) {
-        console.error('❌ [AUTH] Usuário não encontrado no auth')
-        return null
-      }
-      
-      console.log('✅ [AUTH] Usuário auth encontrado:', authUser.user.email)
-
-      // Agora buscar o perfil na tabela profiles
+      // Buscar o perfil na tabela profiles usando o ID do usuário da sessão
       console.log('🔍 [AUTH] Buscando perfil na tabela profiles...')
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', userId)
+        .eq('id', authUser.id)
         .single()
 
       console.log('📊 [AUTH] Resultado da busca:', { data, error })
@@ -76,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Se perfil não existe, tentar criar
         if (error.code === 'PGRST116') { // No rows found
           console.log('📝 [AUTH] Perfil não encontrado, tentando criar...')
-          return await createProfileForUser(userId, authUser.user)
+          return await createProfileForUser(authUser)
         }
         return null
       }
@@ -96,13 +80,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [])
 
   // 2. Criar perfil para usuário que não tem
-  const createProfileForUser = async (userId: string, authUser: User): Promise<Profile | null> => {
+  const createProfileForUser = async (authUser: User): Promise<Profile | null> => {
     console.log('📝 [AUTH] Criando perfil para usuário:', authUser.email)
     
     try {
       // Criar perfil básico
       const profileData = {
-        id: userId,
+        id: authUser.id,
         email: authUser.email || '',
         full_name: authUser.user_metadata?.full_name || null,
         role: authUser.user_metadata?.role || 'client',
@@ -165,12 +149,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshProfile = useCallback(async () => {
     if (user) {
       console.log('🔄 [AUTH] Refresh profile solicitado')
-      const profileData = await fetchProfile(user.id)
+      const profileData = await fetchProfile(user)
       setProfile(profileData)
     }
   }, [user, fetchProfile])
 
-  // 4. useEffect principal com tratamento robusto
+  // 4. useEffect principal (corrigido - passa o usuário da sessão)
   useEffect(() => {
     console.log('🚀 [AUTH] AuthProvider montado e listener anexado')
     
@@ -199,7 +183,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (session?.user) {
             // Se o usuário existe (logado ou sessão restaurada)
             console.log('👤 [AUTH] Usuário detectado, buscando perfil...')
-            const profileData = await fetchProfile(session.user.id)
+            // ✅ CORREÇÃO: Passa o usuário da sessão diretamente
+            const profileData = await fetchProfile(session.user)
             
             if (mounted) {
               setProfile(profileData)
