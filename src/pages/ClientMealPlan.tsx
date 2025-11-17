@@ -180,10 +180,14 @@ const ClientMealPlan: React.FC = () => {
 
   const mealsByDay = getMealsByDay()
 
-  // Calcular macros totais do dia
+  // 🔧 CORREÇÃO: Calcular macros totais do dia com proteção contra null
   const calculateDayMacros = (dayMeals: MealPlanItem[]) => {
     return dayMeals.reduce((acc, item) => {
-      if (!item.food) return acc
+      // ✅ PROTEÇÃO MÁXIMA CONTRA NULL
+      if (!item.food) {
+        console.warn('⚠️ [CLIENT_MEAL_PLAN] Item sem food encontrado, ignorando no cálculo:', item)
+        return acc
+      }
       
       const factor = item.quantity / item.food.serving_size
       return {
