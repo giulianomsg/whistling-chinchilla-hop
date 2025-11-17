@@ -2,8 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
-// Use a definição de tipo exportada do seu client.ts se disponível
-// Se não, esta definição local está OK.
+// Tipagem do Perfil (do seu client.ts)
 type Profile = {
   id: string
   email: string
@@ -19,7 +18,7 @@ interface AuthContextType {
   user: User | null
   profile: Profile | null
   session: Session | null
-  loading: boolean
+  loading: boolean // <-- 'loading: false' agora significa "pronto"
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -33,8 +32,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true) // Começa true
 
-  // 1. Memoize fetchProfile com useCallback
-  // Esta função agora é estável e não causará re-renderizações do useEffect
+  // 1. fetchProfile (memoizada)
+  // Esta função é estável e não causará re-renderizações do useEffect
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     console.log('🔍 [AUTH] Buscando perfil para userId:', userId)
     try {
@@ -66,12 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-          role: 'client'
-        }
-      }
+      options: { data: { full_name: fullName, role: 'client' } }
     })
     return { error }
   }
@@ -84,14 +78,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('🚀 [AUTH] AuthProvider montado e listener anexado')
     
-    // Define loading como true no início (caso de HMR ou re-renderizações)
-    setLoading(true)
+    // NÃO definimos loading(true) aqui, pois ele já começa true.
 
     // Este listener único gerencia TUDO:
     // 1. INITIAL_SESSION (F5 / Refresh)
     // 2. SIGNED_IN (Login)
     // 3. SIGNED_OUT (Logout)
-    // 4. TOKEN_REFRESHED (Sessão atualizada)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log(`🔄 [AUTH] Evento: ${event}`, 'User:', session?.user?.email)
@@ -111,8 +103,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error('❌ [AUTH] Erro no processamento do evento:', error)
           setProfile(null)
         } finally {
-          // Após o primeiro evento (seja uma sessão ou null),
-          // paramos o loading.
+          // Após o processamento do evento, paramos o loading.
+          // O Supabase garante que o 'onAuthStateChange' dispara
+          // no carregamento inicial (F5), então isso é seguro.
+          console.log('🏁 [AUTH] Evento processado. Loading = false.')
           setLoading(false)
         }
       }
@@ -125,7 +119,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [fetchProfile]) // A única dependência é a função memoizada fetchProfile
 
-  // REMOVEMOS O ESTADO 'isReady'. Ele é redundante. 'loading: false' é o novo 'isReady: true'
   const value: AuthContextType = {
     user,
     profile,
