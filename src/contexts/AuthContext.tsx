@@ -18,10 +18,11 @@ interface AuthContextType {
   user: User | null
   profile: Profile | null
   session: Session | null
-  loading: boolean // <-- 'loading: false' agora significa "pronto"
+  loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -30,10 +31,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true) // Começa true
+  const [loading, setLoading] = useState(true)
 
-  // 1. fetchProfile (memoizada)
-  // Esta função é estável e não causará re-renderizações do useEffect
+  // 1. fetchProfile (memoizada com tratamento de erros)
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     console.log('🔍 [AUTH] Buscando perfil para userId:', userId)
     try {
@@ -45,6 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('❌ [AUTH] Erro ao buscar perfil:', error)
+        // Não retornar null imediatamente, tentar criar perfil se não existir
+        if (error.code === 'PGRST116') { // No rows found
+          console.log('📝 [AUTH] Perfil não encontrado, tentando criar...')
+          return await createProfileForUser(userId)
+        }
         return null
       }
       console.log('✅ [AUTH] Perfil carregado:', data?.role)
@@ -53,9 +58,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('❌ [AUTH] Erro na busca do perfil:', error)
       return null
     }
-  }, []) // Dependência vazia: esta função nunca muda
+  }, [])
 
-  // 2. Funções de Auth (sem alteração)
+  // 2. Criar perfil para usuário que não tem
+  const createProfileForUser = async (userId: string): Promise<Profile | null> => {
+    try {
+      // Buscar dados do usuário no auth
+      const { data: { user }, error: userError } = await supabase.auth.getUser(userId)
+      
+      if (userError || !user) {
+        console.error('❌ [AUTH] Erro ao buscar usuário auth:', userError)
+        return null
+      }
+
+      // Criar perfil básico
+      const profileData = {
+        id: userId,
+        email: user.email || '',
+        full_name: user.user_metadata?.full_name || null,
+        role: user.user_metadata?.role || 'client',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert(profileData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ [AUTH] Erro ao criar perfil:', error)
+        return null
+      }
+
+      console.log('✅ [AUTH] Perfil criado com sucesso:', data?.role)
+      return data
+    } catch (error) {
+      console.error('❌ [AUTH] Erro ao criar perfil:', error)
+      return null
+    }
+  }
+
+  // 3. Funções de Auth
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
@@ -74,19 +119,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut()
   }
 
-  // 3. O useEffect ÚNICO e CORRIGIDO
+  const refreshProfile = useCallback(async () => {
+    if (user) {
+      console.log('🔄 [AUTH] Refresh profile solicitado')
+      const profileData = await fetchProfile(user.id)
+      setProfile(profileData)
+    }
+  }, [user, fetchProfile])
+
+  // 4. useEffect principal com tratamento robusto
   useEffect(() => {
     console.log('🚀 [AUTH] AuthProvider montado e listener anexado')
     
-    // NÃO definimos loading(true) aqui, pois ele já começa true.
+    let mounted = true
+    let timeoutId: NodeJS.Timeout
 
-    // Este listener único gerencia TUDO:
-    // 1. INITIAL_SESSION (F5 / Refresh)
-    // 2. SIGNED_IN (Login)
-    // 3. SIGNED_OUT (Logout)
+    // Função para garantir que loading seja false
+    const ensureLoadingFalse = () => {
+      if (mounted) {
+        console.log('🏁 [AUTH] Garantindo loading = false (timeout)')
+        setLoading(false)
+      }
+    }
+
+    // Listener de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log(`🔄 [AUTH] Evento: ${event}`, 'User:', session?.user?.email)
+        
+        if (!mounted) return
+
         try {
           setSession(session)
           setUser(session?.user ?? null)
@@ -94,39 +156,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (session?.user) {
             // Se o usuário existe (logado ou sessão restaurada)
             const profileData = await fetchProfile(session.user.id)
-            setProfile(profileData)
+            
+            if (mounted) {
+              setProfile(profileData)
+              console.log('🏁 [AUTH] Evento processado. Loading = false.')
+              setLoading(false)
+            }
           } else {
             // Se o usuário não existe (logout)
-            setProfile(null)
+            if (mounted) {
+              setProfile(null)
+              console.log('🏁 [AUTH] Evento processado. Loading = false.')
+              setLoading(false)
+            }
           }
         } catch (error) {
           console.error('❌ [AUTH] Erro no processamento do evento:', error)
-          setProfile(null)
-        } finally {
-          // Após o processamento do evento, paramos o loading.
-          // O Supabase garante que o 'onAuthStateChange' dispara
-          // no carregamento inicial (F5), então isso é seguro.
-          console.log('🏁 [AUTH] Evento processado. Loading = false.')
-          setLoading(false)
+          if (mounted) {
+            setProfile(null)
+            setLoading(false) // Garantir que loading seja false mesmo em erro
+          }
         }
+
+        // Timeout de segurança para garantir loading false
+        timeoutId = setTimeout(ensureLoadingFalse, 3000)
       }
     )
 
     // Função de limpeza
     return () => {
       console.log('🧹 [AUTH] AuthProvider desmontado, listener removido')
+      mounted = false
+      if (timeoutId) clearTimeout(timeoutId)
       subscription.unsubscribe()
     }
-  }, [fetchProfile]) // A única dependência é a função memoizada fetchProfile
+  }, [fetchProfile])
 
   const value: AuthContextType = {
     user,
     profile,
     session,
-    loading, 
+    loading,
     signIn,
     signUp,
-    signOut
+    signOut,
+    refreshProfile
   }
 
   return (

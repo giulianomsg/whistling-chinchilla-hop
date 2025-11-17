@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
 import { Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -22,14 +23,32 @@ const queryClient = new QueryClient();
 // Componente interno para lidar com redirecionamentos
 const AppRoutes: React.FC = () => {
   const { user, profile, loading } = useAuth();
+  const [safetyLoading, setSafetyLoading] = useState(true);
 
-  // Loading global - simplificado sem isReady
-  if (loading) {
+  // Timeout de segurança para evitar loading infinito
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn('⚠️ [APP] Loading demorando demais, forçando continuidade...');
+        setSafetyLoading(false);
+      } else {
+        setSafetyLoading(false);
+      }
+    }, 5000); // 5 segundos de timeout
+
+    return () => clearTimeout(timeout);
+  }, [loading]);
+
+  // Loading combinado (auth + safety)
+  const isLoading = loading && safetyLoading;
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-gray-600">Carregando...</p>
+          <p className="text-xs text-gray-500 mt-2">Se demorar muito, recarregue a página</p>
         </div>
       </div>
     );
