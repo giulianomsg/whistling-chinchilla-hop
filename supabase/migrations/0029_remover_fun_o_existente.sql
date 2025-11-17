@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS find_client_by_email(text);
