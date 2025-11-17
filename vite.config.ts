@@ -5,13 +5,13 @@ import path from "path";
 
 export default defineConfig(() => ({
   server: {
-    host: "127.0.0.1",
+    host: "127.0.0.1", // Forçar IPv4
     port: 3000,
   },
   preview: {
-    host: "127.0.0.1",
+    host: "127.0.0.1", // Forçar IPv4
     port: 3000,
-    allowedHosts: 'all' // Permitir todos os hosts temporariamente
+    allowedHosts: ['capifit.app.br', 'www.capifit.app.br', 'localhost', '127.0.0.1']
   },
   plugins: [dyadComponentTagger(), react()],
   resolve: {

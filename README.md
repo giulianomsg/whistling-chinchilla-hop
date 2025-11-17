@@ -132,16 +132,37 @@ ls -la dist/
 
 ## 🔥 Passo 8: Configurar PM2
 
-```bash
-# O arquivo ecosystem.config.cjs já está na raiz do projeto
-# Verifique se ele existe:
-ls -la ecosystem.config.cjs
+O arquivo `ecosystem.config.cjs` já está configurado corretamente:
 
+```javascript
+module.exports = {
+  apps: [{
+    name: 'capifit',
+    script: 'npm',
+    args: 'run preview',
+    cwd: '/var/www/capifit',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production'
+    },
+    error_file: '/var/log/pm2/capifit-error.log',
+    out_file: '/var/log/pm2/capifit-out.log',
+    log_file: '/var/log/pm2/capifit-combined.log',
+    time: true,
+    kill_timeout: 5000
+  }]
+};
+```
+
+```bash
 # Criar diretório de logs
 sudo mkdir -p /var/log/pm2
 sudo chown $USER:$USER /var/log/pm2
 
-# Iniciar aplicação com PM2 (usando .cjs para ES modules)
+# Iniciar aplicação com PM2
 pm2 start ecosystem.config.cjs
 
 # Salvar configuração do PM2
@@ -154,70 +175,17 @@ sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -
 
 ## 🌐 Passo 9: Configurar Nginx
 
-```bash
-# Criar arquivo de configuração do site
-sudo nano /etc/nginx/sites-available/capifit
-```
-
-Adicione o seguinte conteúdo:
-
-```nginx
-server {
-    listen 80;
-    server_name seu-dominio.com www.seu-dominio.com;
-
-    # Redirecionar HTTP para HTTPS
-    return 301 https://$server_name$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name seu-dominio.com www.seu-dominio.com;
-
-    # SSL Configuration (será configurado no próximo passo)
-    # ssl_certificate /etc/letsencrypt/live/seu-dominio.com/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/seu-dominio.com/privkey.pem;
-
-    # Security Headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "no-referrer-when-downgrade" always;
-    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
-
-    # Proxy para a aplicação
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        proxy_read_timeout 86400;
-    }
-
-    # Arquivos estáticos (se necessário)
-    location /static/ {
-        alias /var/www/capifit/dist/;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Health check
-    location /health {
-        access_log off;
-        return 200 "healthy\n";
-        add_header Content-Type text/plain;
-    }
-}
-```
+Use o arquivo `nginx-config.conf` do projeto:
 
 ```bash
+# Copiar configuração Nginx do projeto
+sudo cp /var/www/capifit/nginx-config.conf /etc/nginx/sites-available/capifit.app.br.conf
+
+# Substitua 'capifit.app.br' pelo seu domínio real no arquivo
+sudo nano /etc/nginx/sites-available/capifit.app.br.conf
+
 # Habilitar o site
-sudo ln -s /etc/nginx/sites-available/capifit /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/capifit.app.br.conf /etc/nginx/sites-enabled/
 
 # Remover site default (opcional)
 sudo rm /etc/nginx/sites-enabled/default
@@ -236,7 +204,7 @@ sudo systemctl restart nginx
 sudo apt install -y certbot python3-certbot-nginx
 
 # Obter certificado SSL
-sudo certbot --nginx -d seu-dominio.com -d www.seu-dominio.com
+sudo certbot --nginx -d capifit.app.br -d www.capifit.app.br
 
 # Testar renovação automática
 sudo certbot renew --dry-run
@@ -321,6 +289,10 @@ sudo netstat -tlnp | grep :3000
 
 # Matar processo na porta 3000 (se necessário)
 sudo kill -9 $(sudo lsof -t -i:3000)
+
+# Verificar se Vite está rodando em IPv4 (importante!)
+# Deve mostrar: tcp4 0 0 127.0.0.1:3000 (não tcp6)
+sudo netstat -tlnp | grep :3000
 ```
 
 ### Problema: Nginx não funciona
@@ -347,6 +319,32 @@ sudo chmod -R 755 /var/www/capifit
 # Limpar build e reconstruir
 rm -rf dist node_modules/.vite
 npm run build
+```
+
+### Problema: Vite bloqueando host externo (HTTP 403)
+```bash
+# Verificar se o domínio está em vite.config.ts
+grep -A 5 "allowedHosts" /var/www/capifit/vite.config.ts
+
+# Deve incluir seu domínio:
+# allowedHosts: ['capifit.app.br', 'www.capifit.app.br', 'localhost', '127.0.0.1']
+
+# Se necessário, reiniciar aplicação
+pm2 restart capifit
+```
+
+### Problema: IPv4 vs IPv6 (conexão recusada)
+```bash
+# Verificar se Vite está rodando em IPv4
+sudo netstat -tlnp | grep :3000
+# Deve mostrar: tcp4 (não tcp6)
+
+# Se estiver em tcp6, forçar IPv4 em vite.config.ts
+# server: { host: "127.0.0.1" }
+# preview: { host: "127.0.0.1" }
+
+# Reiniciar aplicação
+pm2 restart capifit
 ```
 
 ### Problema: Erro "module is not defined in ES module scope"
@@ -448,6 +446,103 @@ chmod +x /var/www/capifit/deploy.sh
 ./deploy.sh
 ```
 
+## 🎯 **CONFIGURAÇÕES FINAIS QUE FUNCIONAM**
+
+### Arquivo `nginx-config.conf`:
+```nginx
+upstream capifit_backend {
+    server 127.0.0.1:3000;
+}
+
+server {
+    listen 80;
+    server_name capifit.app.br www.capifit.app.br;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name capifit.app.br www.capifit.app.br;
+
+    # SSL Configuration
+    ssl_certificate /etc/letsencrypt/live/capifit.app.br/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/capifit.app.br/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # Proxy para a aplicação usando upstream
+    location / {
+        proxy_pass http://capifit_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # Health check
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+}
+```
+
+### Arquivo `vite.config.ts`:
+```typescript
+import { defineConfig } from "vite";
+import dyadComponentTagger from "@dyad-sh/react-vite-component-tagger";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+
+export default defineConfig(() => ({
+  server: {
+    host: "127.0.0.1", // Forçar IPv4
+    port: 3000,
+  },
+  preview: {
+    host: "127.0.0.1", // Forçar IPv4
+    port: 3000,
+    allowedHosts: ['capifit.app.br', 'www.capifit.app.br', 'localhost', '127.0.0.1']
+  },
+  plugins: [dyadComponentTagger(), react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+}));
+```
+
+### Arquivo `ecosystem.config.cjs`:
+```javascript
+module.exports = {
+  apps: [{
+    name: 'capifit',
+    script: 'npm',
+    args: 'run preview',
+    cwd: '/var/www/capifit',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production'
+    },
+    error_file: '/var/log/pm2/capifit-error.log',
+    out_file: '/var/log/pm2/capifit-out.log',
+    log_file: '/var/log/pm2/capifit-combined.log',
+    time: true,
+    kill_timeout: 5000
+  }]
+};
+```
+
 ## 📞 Suporte
 
 Se encontrar problemas durante a instalação:
@@ -456,7 +551,10 @@ Se encontrar problemas durante a instalação:
 2. Use os comandos de troubleshooting acima
 3. Verifique se todas as variáveis de ambiente estão configuradas corretamente
 4. Confirme se o Supabase está acessível e configurado corretamente
+5. **IMPORTANTE:** Verifique se Vite está rodando em IPv4 (`sudo netstat -tlnp | grep :3000` deve mostrar `tcp4`)
 
 ---
 
 **Parabéns!** Sua aplicação CapiFit agora está rodando no seu servidor Ubuntu 24.04.3! 🎉
+
+**Configurações testadas e funcionando!** ✅
