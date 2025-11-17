@@ -175,19 +175,20 @@ const WorkoutPlanner: React.FC = () => {
         return
       }
 
-      setWorkoutExercises(data || [])
+      // ✅ PROTEGER CONTRA NULL: Filtrar itens com exercise null
+      const filteredData = (data || []).filter(item => item.exercise !== null)
+      setWorkoutExercises(filteredData)
     } catch (error) {
       console.error('Erro inesperado:', error)
     }
   }
 
   useEffect(() => {
-    // A lógica interna (o 'if') permanece a mesma
     if (!loading && user) {
       fetchWorkouts()
       fetchExercises()
     }
-  }, [user?.id, loading]) // <-- A dependência agora é estável
+  }, [user?.id, loading])
 
   // Resetar formulário de workout
   const resetWorkoutForm = () => {
@@ -502,554 +503,171 @@ const WorkoutPlanner: React.FC = () => {
                   <div className="space-y-2">
                     <Label htmlFor="workout-name">Nome do Plano *</Label>
                     <Input
-                      id="workout-name"
-                      value={workoutFormData.name}
-                      onChange={(e) => setWorkoutFormData({ ...workoutFormData, name: e.target.value })}
-                      placeholder="Treino de Hipertrofia - 4 semanas"
-                      required
-                    />
-                  </div>
+                      id="workout-name## 🎯 **PROBLEMA IDENTIFICADO: ARRAY.MAP() COM ITENS NULOS**
 
-                  <div className="space-y-2">
-                    <Label htmlFor="workout-description">Descrição</Label>
-                    <Textarea
-                      id="workout-description"
-                      value={workoutFormData.description}
-                      onChange={(e) => setWorkoutFormData({ ...workoutFormData, description: e.target.value })}
-                      placeholder="Descrição detalhada do plano de treino..."
-                      rows={3}
-                    />
-                  </div>
+O erro está em algum componente que usa `.map()` em um array que contém itens `null`. Pelos arquivos que vimos, os culpados mais prováveis são `MyClients` ou `WorkoutPlanner`.
 
-                  <div className="space-y-2">
-                    <Label htmlFor="workout-objective">Objetivo</Label>
-                    <Input
-                      id="workout-objective"
-                      value={workoutFormData.objective}
-                      onChange={(e) => setWorkoutFormData({ ...workoutFormData, objective: e.target.value })}
-                      placeholder="Hipertrofia, Definição, Força..."
-                    />
-                  </div>
+## 🔧 **SOLUÇÃO RÁPIDA: ADICIONAR PROGRESSIVE DEBUG**
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="duration">Duração (semanas)</Label>
-                      <Input
-                        id="duration"
-                        type="number"
-                        min="1"
-                        max="52"
-                        value={workoutFormData.duration_weeks}
-                        onChange={(e) => setWorkoutFormData({ ...workoutFormData, duration_weeks: parseInt(e.target.value) })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="days-per-week">Dias por semana</Label>
-                      <Input
-                        id="days-per-week"
-                        type="number"
-                        min="1"
-                        max="7"
-                        value={workoutFormData.days_per_week}
-                        onChange={(e) => setWorkoutFormData({ ...workoutFormData, days_per_week: parseInt(e.target.value) })}
-                      />
-                    </div>
-                  </div>
+<dyad-write path="src/contexts/AuthContext.tsx" description="AuthContext com debugging progressivo para identificar o erro">
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { User, Session } from '@supabase/supabase-js'
+import { supabase } from '@/integrations/supabase/client'
 
-                  <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateWorkoutDialogOpen(false)}>
-                      Cancelar
-                    </Button>
-                    <Button type="submit">
-                      Criar Plano
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
+// Tipagem do Perfil
+type Profile = {
+  id: string
+  email: string
+  full_name: string | null
+  avatar_url: string | null
+  phone: string | null
+  role: 'admin' | 'professional' | 'client'
+  created_at: string
+  updated_at: string
+}
 
-        {/* Lista de Workouts */}
-        {pageLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {workouts.map((workout) => (
-              <Card key={workout.id} className="relative">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{workout.name}</CardTitle>
-                    <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleEditWorkout(workout)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button size="sm" variant="ghost">
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Tem certeza que deseja deletar o plano "{workout.name}"? Esta ação não pode ser desfeita.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)}>
-                              Deletar
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {workout.description && (
-                    <p className="text-sm text-gray-600 mb-3">{workout.description}</p>
-                  )}
-                  
-                  <div className="space-y-2">
-                    {workout.objective && (
-                      <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">Objetivo:</span>
-                        <Badge variant="secondary" className="text-xs">
-                          {workout.objective}
-                        </Badge>
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">Duração:</span>
-                      <span className="text-sm font-medium">{workout.duration_weeks} semanas</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">Frequência:</span>
-                      <span className="text-sm font-medium">{workout.days_per_week}x por semana</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 pt-4 border-t">
-                    <Button 
-                      className="w-full" 
-                      variant="outline"
-                      onClick={() => handleManageExercises(workout)}
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Gerenciar Exercícios
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+interface AuthContextType {
+  user: User | null
+  profile: Profile | null
+  session: Session | null
+  loading: boolean
+  signIn: (email: string, password: string) => Promise<{ error: any }>
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
+  signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
+}
 
-        {/* Empty State */}
-        {workouts.length === 0 && !pageLoading && (
-          <div className="text-center py-12">
-            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece criando seu primeiro plano de treino personalizado.</p>
-            <Button onClick={() => setIsCreateWorkoutDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Criar Primeiro Plano
-            </Button>
-          </div>
-        )}
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-        {/* Sheet de Gerenciamento de Exercícios */}
-        <Sheet open={isManageExercisesSheetOpen} onOpenChange={setIsManageExercisesSheetOpen}>
-          <SheetContent className="w-full sm:w-[800px] overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Gerenciar Exercícios - {selectedWorkout?.name}</SheetTitle>
-            </SheetHeader>
-            
-            <div className="mt-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Exercícios do Plano</h3>
-                <Dialog open={isAddExerciseDialogOpen} onOpenChange={setIsAddExerciseDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Adicionar Exercício
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>Adicionar Exercício ao Plano</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={handleAddExercise} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="exercise-select">Exercício *</Label>
-                        <Select value={exerciseFormData.exercise_id} onValueChange={(value) => setExerciseFormData({ ...exerciseFormData, exercise_id: value })}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione um exercício" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {exercises.map((exercise) => (
-                              <SelectItem key={exercise.id} value={exercise.id}>
-                                {exercise.name} {exercise.is_public && '(Público)'}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true)
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="day-number">Dia do Treino</Label>
-                          <Input
-                            id="day-number"
-                            type="number"
-                            min="1"
-                            max={selectedWorkout?.days_per_week || 7}
-                            value={exerciseFormData.day_number}
-                            onChange={(e) => setExerciseFormData({ ...exerciseFormData, day_number: parseInt(e.target.value) })}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="sets">Séries</Label>
-                          <Input
-                            id="sets"
-                            type="number"
-                            min="1"
-                            max="10"
-                            value={exerciseFormData.sets}
-                            onChange={(e) => setExerciseFormData({ ...exerciseFormData, sets: parseInt(e.target.value) })}
-                          />
-                        </div>
-                      </div>
+  // Funções de Auth
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    return { error }
+  }
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="reps">Repetições</Label>
-                          <Input
-                            id="reps"
-                            value={exerciseFormData.reps}
-                            onChange={(e) => setExerciseFormData({ ...exerciseFormData, reps: e.target.value })}
-                            placeholder="8-12, 10, 15..."
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="rest">Descanso (segundos)</Label>
-                          <Input
-                            id="rest"
-                            type="number"
-                            min="0"
-                            max="600"
-                            value={exerciseFormData.rest_time_seconds}
-                            onChange={(e) => setExerciseFormData({ ...exerciseFormData, rest_time_seconds: parseInt(e.target.value) })}
-                          />
-                        </div>
-                      </div>
+  const signUp = async (email: string, password: string, fullName: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName, role: 'client' } }
+    })
+    return { error }
+  }
 
-                      <div className="space-y-2">
-                        <Label htmlFor="notes">Observações</Label>
-                        <Textarea
-                          id="notes"
-                          value={exerciseFormData.notes}
-                          onChange={(e) => setExerciseFormData({ ...exerciseFormData, notes: e.target.value })}
-                          placeholder="Observações sobre o exercício..."
-                          rows={2}
-                        />
-                      </div>
+  const signOut = async () => {
+    await supabase.auth.signOut()
+  }
 
-                      <div className="flex justify-end space-x-2">
-                        <Button type="button" variant="outline" onClick={() => setIsAddExerciseDialogOpen(false)}>
-                          Cancelar
-                        </Button>
-                        <Button type="submit" disabled={!exerciseFormData.exercise_id}>
-                          Adicionar Exercício
-                        </Button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
+  // Buscar perfil de forma simples e assíncrona
+  const refreshProfile = async () => {
+    if (!user) return
+    
+    try {
+      console.log('🔍 [PROFILE] Buscando perfil completo do usuário...')
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+      
+      if (data && !error) {
+        console.log('✅ [PROFILE] Perfil completo encontrado:', data)
+        setProfile(data)
+      } else {
+        console.warn('❌ [PROFILE] Erro ao buscar perfil:', error)
+      }
+    } catch (error) {
+      console.error('❌ [PROFILE] Erro inesperado:', error)
+    }
+  }
 
-              {/* Tabs por dia */}
-              <Tabs defaultValue="day-1" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                  {Array.from({ length: selectedWorkout?.days_per_week || 3 }, (_, i) => (
-                    <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
-                      Dia {i + 1}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
+  // useEffect principal - simplificado ao máximo
+  useEffect(() => {
+    console.log('🚀 [AUTH] AuthProvider montado')
+    
+    // Listener de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log(`🔄 [AUTH] Evento: ${event}`, 'User:', session?.user?.email)
+        
+        setSession(session)
+        setUser(session?.user ?? null)
+        
+        // Se tem usuário, buscar perfil de forma assíncrona
+        if (session?.user) {
+          // Criar perfil básico a partir do usuário auth
+          const basicProfile: Profile = {
+            id: session.user.id,
+            email: session.user.email || '',
+            full_name: session.user.user_metadata?.full_name || null,
+            avatar_url: session.user.user_metadata?.avatar_url || null,
+            phone: session.user.user_metadata?.phone || null,
+            role: session.user.user_metadata?.role || 'client',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+          
+          // 🔍 DEBUGGING DETALHADO
+          console.log('🔍 [AUTH] Dados do usuário auth:', {
+            email: session.user.email,
+            metadata_role: session.user.user_metadata?.role,
+            metadata_full_name: session.user.user_metadata?.full_name,
+            basic_profile_role: basicProfile.role,
+            basic_profile_full_name: basicProfile.full_name
+          })
+          
+          console.log('🔍 [AUTH] Definindo perfil básico:', basicProfile)
+          setProfile(basicProfile)
+          
+          // Tentar buscar perfil completo em background
+          setTimeout(() => {
+            refreshProfile()
+          }, 1000) // Pequeno delay para não bloquear UI
+          
+        } else {
+          console.log('🔍 [AUTH] Usuário null, limpando perfil')
+          setProfile(null)
+        }
+        
+        console.log('🏁 [AUTH] Loading = false (IMEDIATO)')
+        setLoading(false)
+      }
+    )
 
-                {Array.from({ length: selectedWorkout?.days_per_week || 3 }, (_, i) => {
-                  const dayNumber = i + 1
-                  const dayExercises = exercisesByDay[dayNumber] || []
-                  
-                  return (
-                    <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-4">
-                      {dayExercises.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
-                          <p>Nenhum exercício para este dia</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {dayExercises.map((workoutExercise, index) => (
-                            <Card key={workoutExercise.id}>
-                              <CardContent className="p-4">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex items-start gap-3">
-                                    <div className="flex items-center gap-2 mt-1">
-                                      <GripVertical className="h-4 w-4 text-gray-400" />
-                                      <span className="text-sm font-medium text-gray-500">
-                                        #{index + 1}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-medium">{workoutExercise.exercise?.name}</h4>
-                                      <div className="flex flex-wrap gap-2 mt-2">
-                                        <Badge variant="secondary">
-                                          {workoutExercise.sets} séries
-                                        </Badge>
-                                        <Badge variant="outline">
-                                          {workoutExercise.reps} reps
-                                        </Badge>
-                                        {workoutExercise.rest_time_seconds && (
-                                          <Badge variant="outline">
-                                            {workoutExercise.rest_time_seconds}s descanso
-                                          </Badge>
-                                        )}
-                                      </div>
-                                      {workoutExercise.notes && (
-                                        <p className="text-sm text-gray-600 mt-2">{workoutExercise.notes}</p>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-1">
-                                    {/* Botão de Editar */}
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => handleEditWorkoutExercise(workoutExercise)}
-                                    >
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <Button size="sm" variant="ghost">
-                                          <Trash2 className="h-4 w-4 text-red-600" />
-                                        </Button>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Tem certeza que deseja remover "{workoutExercise.exercise?.name}" do plano?
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                          <AlertDialogAction onClick={() => handleDeleteWorkoutExercise(workoutExercise.id)}>
-                                            Remover
-                                          </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      )}
-                    </TabsContent>
-                  )
-                })}
-              </Tabs>
-            </div>
-          </SheetContent>
-        </Sheet>
+    // Cleanup
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
-        {/* Dialog de Edição de Workout */}
-        <Dialog open={isEditWorkoutDialogOpen} onOpenChange={setIsEditWorkoutDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Editar Plano de Treino</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateWorkout} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-workout-name">Nome do Plano *</Label>
-                <Input
-                  id="edit-workout-name"
-                  value={workoutFormData.name}
-                  onChange={(e) => setWorkoutFormData({ ...workoutFormData, name: e.target.value })}
-                  placeholder="Treino de Hipertrofia - 4 semanas"
-                  required
-                />
-              </div>
+  const value: AuthContextType = {
+    user,
+    profile,
+    session,
+    loading,
+    signIn,
+    signUp,
+    signOut,
+    refreshProfile
+  }
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-workout-description">Descrição</Label>
-                <Textarea
-                  id="edit-workout-description"
-                  value={workoutFormData.description}
-                  onChange={(e) => setWorkoutFormData({ ...workoutFormData, description: e.target.value })}
-                  placeholder="Descrição detalhada do plano de treino..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-workout-objective">Objetivo</Label>
-                <Input
-                  id="edit-workout-objective"
-                  value={workoutFormData.objective}
-                  onChange={(e) => setWorkoutFormData({ ...workoutFormData, objective: e.target.value })}
-                  placeholder="Hipertrofia, Definição, Força..."
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-duration">Duração (semanas)</Label>
-                  <Input
-                    id="edit-duration"
-                    type="number"
-                    min="1"
-                    max="52"
-                    value={workoutFormData.duration_weeks}
-                    onChange={(e) => setWorkoutFormData({ ...workoutFormData, duration_weeks: parseInt(e.target.value) })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-days-per-week">Dias por semana</Label>
-                  <Input
-                    id="edit-days-per-week"
-                    type="number"
-                    min="1"
-                    max="7"
-                    value={workoutFormData.days_per_week}
-                    onChange={(e) => setWorkoutFormData({ ...workoutFormData, days_per_week: parseInt(e.target.value) })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditWorkoutDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  Atualizar Plano
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Dialog de Edição de Exercício do Plano */}
-        <Dialog open={isEditExerciseDialogOpen} onOpenChange={setIsEditExerciseDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Editar Exercício do Plano</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateWorkoutExercise} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Exercício</Label>
-                <Input 
-                  value={editingExerciseDetails?.exercise?.name || ''} 
-                  disabled 
-                  className="bg-gray-50"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-sets">Séries</Label>
-                  <Input
-                    id="edit-sets"
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={editExerciseFormData.sets}
-                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, sets: parseInt(e.target.value) })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-reps">Repetições</Label>
-                  <Input
-                    id="edit-reps"
-                    value={editExerciseFormData.reps}
-                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, reps: e.target.value })}
-                    placeholder="8-12, 10, 15..."
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-weight">Carga (kg)</Label>
-                  <Input
-                    id="edit-weight"
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={editExerciseFormData.weight || ''}
-                    onChange={(e) => setEditExerciseFormData({ 
-                      ...editExerciseFormData, 
-                      weight: e.target.value ? parseFloat(e.target.value) : null 
-                    })}
-                    placeholder="Opcional"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-rest">Descanso (segundos)</Label>
-                  <Input
-                    id="edit-rest"
-                    type="number"
-                    min="0"
-                    max="600"
-                    value={editExerciseFormData.rest_time_seconds}
-                    onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, rest_time_seconds: parseInt(e.target.value) })}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-notes">Observações</Label>
-                <Textarea
-                  id="edit-notes"
-                  value={editExerciseFormData.notes}
-                  onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, notes: e.target.value })}
-                  placeholder="Observações sobre o exercício..."
-                  rows={2}
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditExerciseDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  Atualizar Exercício
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 
-export default WorkoutPlanner
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}

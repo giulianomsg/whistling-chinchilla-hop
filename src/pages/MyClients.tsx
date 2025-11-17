@@ -76,10 +76,15 @@ const MyClients: React.FC = () => {
 
   // Buscar clientes vinculados
   const fetchClients = async () => {
-    if (!user) return
+    if (!user) {
+      console.log('❌ [CLIENTS] Usuário null, não buscando clientes')
+      return
+    }
 
     try {
+      console.log('🔍 [CLIENTS] Buscando clientes do profissional:', user.id)
       setPageLoading(true)
+      
       const { data, error } = await supabase
         .from('client_professionals')
         .select(`
@@ -91,14 +96,26 @@ const MyClients: React.FC = () => {
         .order('started_at', { ascending: false })
 
       if (error) {
-        console.error('Erro ao buscar clientes:', error)
+        console.error('❌ [CLIENTS] Erro ao buscar clientes:', error)
         showError('Erro ao carregar clientes')
         return
       }
 
-      setClients(data || [])
+      console.log('🔍 [CLIENTS] Dados brutos recebidos:', data)
+      
+      // ✅ PROTEGER CONTRA NULL: Filtrar itens com client null e logar
+      const filteredData = (data || []).filter(item => {
+        if (!item.client) {
+          console.warn('⚠️ [CLIENTS] Item com client null encontrado, filtrando:', item)
+          return false
+        }
+        return true
+      })
+      
+      console.log('✅ [CLIENTS] Clientes válidos filtrados:', filteredData)
+      setClients(filteredData)
     } catch (error) {
-      console.error('Erro inesperado:', error)
+      console.error('❌ [CLIENTS] Erro inesperado:', error)
       showError('Erro inesperado ao carregar clientes')
     } finally {
       setPageLoading(false)
@@ -121,6 +138,7 @@ const MyClients: React.FC = () => {
         return
       }
 
+      console.log('✅ [CLIENTS] Workouts carregados:', data?.length || 0)
       setWorkouts(data || [])
     } catch (error) {
       console.error('Erro inesperado:', error)
@@ -128,12 +146,12 @@ const MyClients: React.FC = () => {
   }
 
   useEffect(() => {
-    // A lógica interna (o 'if') permanece a mesma
+    console.log('🔍 [CLIENTS] useEffect chamado', { loading: !loading, user: !!user, profile: !!profile })
     if (!loading && user) {
       fetchClients()
       fetchWorkouts()
     }
-  }, [user?.id, loading]) // <-- A dependência agora é estável
+  }, [user?.id, loading])
 
   // Adicionar cliente
   const handleAddClient = async (e: React.FormEvent) => {
@@ -331,94 +349,106 @@ const MyClients: React.FC = () => {
         {pageLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
+            <p className="ml-2 text-gray-600">Carregando clientes...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {clients.map((clientProfessional) => (
-              <Card key={clientProfessional.id} className="relative">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <User className="h-5 w-5 text-blue-600" />
-                      {clientProfessional.client.full_name || 'Sem nome'}
-                    </CardTitle>
-                    <Badge variant="secondary" className="text-xs">
-                      <CheckCircle className="mr-1 h-3 w-3" />
-                      Ativo
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">{clientProfessional.client.email}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">
-                        Vinculado em {new Date(clientProfessional.started_at).toLocaleDateString('pt-BR')}
-                      </span>
-                    </div>
+          <>
+            <div className="mb-4 text-sm text-gray-600">
+              📊 Debug: {clients.length} clientes encontrados
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {clients.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum cliente encontrado</h3>
+                  <p className="text-gray-600 mb-4">Comece adicionando seu primeiro cliente para gerenciar seus planos de treino.</p>
+                  <Button onClick={() => setIsAddClientDialogOpen(true)}>
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Adicionar Primeiro Cliente
+                  </Button>
+                </div>
+              ) : (
+                clients.map((clientProfessional) => {
+                  console.log('🔍 [CLIENTS] Renderizando cliente:', clientProfessional)
+                  return (
+                    <Card key={clientProfessional.id} className="relative">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <User className="h-5 w-5 text-blue-600" />
+                            {/* ✅ PROTEÇÃO MÁXIMA CONTRA NULL */}
+                            {clientProfessional.client?.full_name || clientProfessional.client?.email || 'Cliente sem identificação'}
+                          </CardTitle>
+                          <Badge variant="secondary" className="text-xs">
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            Ativo
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Mail className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">
+                              {clientProfessional.client?.email || 'Sem email'}
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">
+                              Vinculado em {new Date(clientProfessional.started_at).toLocaleDateString('pt-BR')}
+                            </span>
+                          </div>
 
-                    {clientProfessional.notes && (
-                      <div className="p-2 bg-gray-50 rounded text-sm text-gray-600">
-                        <strong>Notas:</strong> {clientProfessional.notes}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="mt-4 pt-4 border-t space-y-2">
-                    <Button 
-                      className="w-full" 
-                      variant="outline"
-                      onClick={() => handleOpenAssignWorkoutDialog(clientProfessional)}
-                    >
-                      <Dumbbell className="mr-2 h-4 w-4" />
-                      Atribuir Plano
-                    </Button>
-                    
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button className="w-full" variant="ghost" size="sm">
-                          Remover Vínculo
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Tem certeza que deseja remover o vínculo com "{clientProfessional.client.full_name || clientProfessional.client.email}"? 
-                            O cliente perderá acesso aos seus planos.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleRemoveClient(clientProfessional.id)}>
-                            Remover Vínculo
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* Empty State */}
-        {clients.length === 0 && !pageLoading && (
-          <div className="text-center py-12">
-            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum cliente encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece adicionando seu primeiro cliente para gerenciar seus planos de treino.</p>
-            <Button onClick={() => setIsAddClientDialogOpen(true)}>
-              <UserPlus className="mr-2 h-4 w-4" />
-              Adicionar Primeiro Cliente
-            </Button>
-          </div>
+                          {clientProfessional.notes && (
+                            <div className="p-2 bg-gray-50 rounded text-sm text-gray-600">
+                              <strong>Notas:</strong> {clientProfessional.notes}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="mt-4 pt-4 border-t space-y-2">
+                          <Button 
+                            className="w-full" 
+                            variant="outline"
+                            onClick={() => handleOpenAssignWorkoutDialog(clientProfessional)}
+                          >
+                            <Dumbbell className="mr-2 h-4 w-4" />
+                            Atribuir Plano
+                          </Button>
+                          
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button className="w-full" variant="ghost" size="sm">
+                                Remover Vínculo
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Tem certeza que deseja remover o vínculo com "{clientProfessional.client?.full_name || clientProfessional.client?.email}"? 
+                                  O cliente perderá acesso aos seus planos.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleRemoveClient(clientProfessional.id)}>
+                                  Remover Vínculo
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })
+              )}
+            </div>
+          </>
         )}
 
         {/* Dialog de Atribuir Plano */}
@@ -431,8 +461,12 @@ const MyClients: React.FC = () => {
               <div className="space-y-2">
                 <Label>Cliente</Label>
                 <div className="p-3 bg-gray-50 rounded-md">
-                  <p className="font-medium">{selectedClient?.client.full_name || selectedClient?.client.email}</p>
-                  <p className="text-sm text-gray-600">{selectedClient?.client.email}</p>
+                  <p className="font-medium">
+                    {selectedClient?.client?.full_name || selectedClient?.client?.email}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {selectedClient?.client?.email}
+                  </p>
                 </div>
               </div>
 
