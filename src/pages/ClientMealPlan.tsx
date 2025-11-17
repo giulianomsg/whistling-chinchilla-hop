@@ -394,12 +394,16 @@ const ClientMealPlan: React.FC = () => {
                                   
                                   <div className="flex items-center gap-2 mb-3">
                                     <Apple className="h-4 w-4 text-green-600" />
-                                    <span className="font-medium">{mealPlanItem.food?.name}</span>
+                                    {/* ✅ PROTEÇÃO MÁXIMA CONTRA NULL */}
+                                    <span className="font-medium">
+                                      {mealPlanItem.food?.name || 'Alimento não encontrado'}
+                                    </span>
                                     <Badge variant="outline">
                                       {mealPlanItem.quantity}g
                                     </Badge>
                                   </div>
 
+                                  {/* ✅ PROTEÇÃO CONTRA NULL - Só renderizar macros se food existir */}
                                   {mealPlanItem.food && (
                                     <div className="grid grid-cols-4 gap-2 mb-3 text-sm">
                                       <div>
@@ -417,6 +421,7 @@ const ClientMealPlan: React.FC = () => {
                                     </div>
                                   )}
 
+                                  {/* ✅ PROTEÇÃO CONTRA NULL - Só renderizar categoria se food existir */}
                                   {mealPlanItem.food?.category && (
                                     <div className="mb-3">
                                       <Badge variant="secondary" className="text-xs">
