@@ -29,6 +29,14 @@ const DashboardLayout: React.FC = () => {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
+  console.log('🏗️ [LAYOUT] Renderizando DashboardLayout:', {
+    hasUser: !!user,
+    hasProfile: !!profile,
+    userRole: profile?.role,
+    userEmail: user?.email,
+    currentPath: location.pathname
+  })
+
   // Menu items dinâmicos baseados no role
   const menuItems: MenuItem[] = [
     {
@@ -62,8 +70,11 @@ const DashboardLayout: React.FC = () => {
     profile?.role && item.roles.includes(profile.role as any)
   )
 
+  console.log('🏗️ [LAYOUT] Menu items filtrados:', filteredMenuItems.map(item => item.title))
+
   // Verificar se usuário está autenticado
   if (!user || !profile) {
+    console.log('🏗️ [LAYOUT] Usuário ou perfil não encontrado, redirecionando para /auth')
     return <Navigate to="/auth" replace />
   }
 
@@ -157,6 +168,8 @@ const DashboardLayout: React.FC = () => {
       </div>
     </div>
   )
+
+  console.log('🏗️ [LAYOUT] Renderizando layout completo')
 
   return (
     <div className="flex h-screen bg-gray-50">
