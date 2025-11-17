@@ -133,42 +133,16 @@ ls -la dist/
 ## 🔥 Passo 8: Configurar PM2
 
 ```bash
-# Criar arquivo de configuração PM2
-nano ecosystem.config.js
-```
+# O arquivo ecosystem.config.cjs já está na raiz do projeto
+# Verifique se ele existe:
+ls -la ecosystem.config.cjs
 
-Adicione o seguinte conteúdo:
-
-```javascript
-module.exports = {
-  apps: [{
-    name: 'capifit',
-    script: 'npm',
-    args: 'run preview',
-    cwd: '/var/www/capifit',
-    instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '1G',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000
-    },
-    error_file: '/var/log/pm2/capifit-error.log',
-    out_file: '/var/log/pm2/capifit-out.log',
-    log_file: '/var/log/pm2/capifit-combined.log',
-    time: true
-  }]
-};
-```
-
-```bash
 # Criar diretório de logs
 sudo mkdir -p /var/log/pm2
 sudo chown $USER:$USER /var/log/pm2
 
-# Iniciar aplicação com PM2
-pm2 start ecosystem.config.js
+# Iniciar aplicação com PM2 (usando .cjs para ES modules)
+pm2 start ecosystem.config.cjs
 
 # Salvar configuração do PM2
 pm2 save
@@ -332,7 +306,7 @@ npm install
 npm run build
 
 # 5. Reiniciar aplicação
-pm2 start capifit
+pm2 start ecosystem.config.cjs
 ```
 
 ## 🐛 Troubleshooting
@@ -373,6 +347,14 @@ sudo chmod -R 755 /var/www/capifit
 # Limpar build e reconstruir
 rm -rf dist node_modules/.vite
 npm run build
+```
+
+### Problema: Erro "module is not defined in ES module scope"
+```bash
+# Este erro ocorre quando usa .js em projeto ES Module
+# Use sempre .cjs para arquivos de configuração do PM2
+pm2 start ecosystem.config.cjs  # CORRETO
+# pm2 start ecosystem.config.js  # ERRADO
 ```
 
 ## 📊 Monitoramento
@@ -453,7 +435,7 @@ npm install
 npm run build
 
 # Iniciar aplicação
-pm2 start capifit
+pm2 start ecosystem.config.cjs
 
 echo "Deploy concluído!"
 ```
