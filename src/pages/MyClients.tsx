@@ -153,7 +153,7 @@ const MyClients: React.FC = () => {
     }
   }, [user?.id, loading])
 
-  // Adicionar cliente - MELHORADO
+  // Adicionar cliente - CORRIGIDO
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !addClientEmail.trim()) return
@@ -172,18 +172,21 @@ const MyClients: React.FC = () => {
         return
       }
 
-      if (!clientData) {
+      // ✅ CORREÇÃO: RPC retorna array, pegar primeiro item
+      const client = Array.isArray(clientData) && clientData.length > 0 ? clientData[0] : null
+
+      if (!client) {
         showError('Cliente não encontrado. Verifique o email e se o usuário tem role "client".')
         return
       }
 
-      console.log('✅ [CLIENTS] Cliente encontrado via RPC:', clientData)
+      console.log('✅ [CLIENTS] Cliente encontrado via RPC:', client)
 
       // Verificar se já existe vínculo ativo
       const { data: existingLink, error: linkError } = await supabase
         .from('client_professionals')
         .select('*')
-        .eq('client_id', clientData.id)
+        .eq('client_id', client.id)
         .eq('professional_id', user.id)
         .eq('status', 'active')
         .single()
@@ -197,7 +200,7 @@ const MyClients: React.FC = () => {
       const { error: insertError } = await supabase
         .from('client_professionals')
         .insert({
-          client_id: clientData.id,
+          client_id: client.id, // ✅ CORREÇÃO: Usar client.id em vez de clientData.id
           professional_id: user.id,
           status: 'active'
         })
