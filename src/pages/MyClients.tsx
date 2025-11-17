@@ -59,7 +59,7 @@ const MyClients: React.FC = () => {
   const { user, profile, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
+  const [pageLoading, setPageLoading] = useState(true)
 
   // Dialog states
   const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false)

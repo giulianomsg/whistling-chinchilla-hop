@@ -69,7 +69,7 @@ const WorkoutPlanner: React.FC = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
-  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
+  const [pageLoading, setPageLoading] = useState(true)
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
 
   // Dialog states

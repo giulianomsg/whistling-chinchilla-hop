@@ -34,7 +34,7 @@ interface Exercise {
 const ExerciseLibrary: React.FC = () => {
   const { user, profile, loading } = useAuth()
   const [exercises, setExercises] = useState<Exercise[]>([])
-  const [pageLoading, setPageLoading] = useState(true) // Renomeado para evitar conflito
+  const [pageLoading, setPageLoading] = useState(true)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false)
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
