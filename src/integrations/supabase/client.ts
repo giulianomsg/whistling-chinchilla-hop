@@ -15,7 +15,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: true,
+    autoRefreshToken: false, // <-- MUDANÇA AQUI: Desativa auto-refresh para impedir refetch ao trocar de abas
     persistSession: true,
     detectSessionInUrl: true
   }
