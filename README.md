@@ -355,6 +355,15 @@ pm2 start ecosystem.config.cjs  # CORRETO
 # pm2 start ecosystem.config.js  # ERRADO
 ```
 
+### Problema: Loading infinito após F5
+```bash
+# Verificar logs do navegador (F12)
+# Deve ver: "🏁 [AUTH] Garantindo loading = false (timeout)"
+
+# Se ainda persistir, limpar cache e recarregar
+# Ctrl+Shift+R (hard reload)
+```
+
 ## 📊 Monitoramento
 
 ```bash
@@ -535,7 +544,7 @@ module.exports = {
       NODE_ENV: 'production'
     },
     error_file: '/var/log/pm2/capifit-error.log',
-    out_file: '/var/log/pm2/capifit-out.log',
+    out_file: '/var/www/pm2/capifit-out.log',
     log_file: '/var/log/pm2/capifit-combined.log',
     time: true,
     kill_timeout: 5000
