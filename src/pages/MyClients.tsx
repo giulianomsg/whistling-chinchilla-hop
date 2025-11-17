@@ -19,7 +19,8 @@ import {
   Loader2,
   UserPlus,
   Link2,
-  CheckCircle
+  CheckCircle,
+  Utensils
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
@@ -55,21 +56,42 @@ interface Workout {
   created_at: string
 }
 
+interface MealPlan {
+  id: string
+  name: string
+  description: string | null
+  objective: string | null
+  nutritionist_id: string
+  daily_calories_target: number | null
+  daily_protein_target: number | null
+  daily_carbs_target: number | null
+  daily_fat_target: number | null
+  is_template: boolean
+  created_at: string
+}
+
 const MyClients: React.FC = () => {
   const { user, profile, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>([])
   const [pageLoading, setPageLoading] = useState(true)
 
   // Dialog states
   const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false)
   const [isAssignWorkoutDialogOpen, setIsAssignWorkoutDialogOpen] = useState(false)
+  const [isAssignMealPlanDialogOpen, setIsAssignMealPlanDialogOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<ClientProfessional | null>(null)
 
   // Form states
   const [addClientEmail, setAddClientEmail] = useState('')
   const [assignWorkoutData, setAssignWorkoutData] = useState({
     workout_id: '',
+    start_date: '',
+    notes: ''
+  })
+  const [assignMealPlanData, setAssignMealPlanData] = useState({
+    meal_plan_id: '',
     start_date: '',
     notes: ''
   })
@@ -145,11 +167,35 @@ const MyClients: React.FC = () => {
     }
   }
 
+  // Buscar planos alimentares do profissional
+  const fetchMealPlans = async () => {
+    if (!user) return
+
+    try {
+      const { data, error } = await supabase
+        .from('meal_plans')
+        .select('*')
+        .eq('nutritionist_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Erro ao buscar planos alimentares:', error)
+        return
+      }
+
+      console.log('✅ [CLIENTS] Planos alimentares carregados:', data?.length || 0)
+      setMealPlans(data || [])
+    } catch (error) {
+      console.error('Erro inesperado:', error)
+    }
+  }
+
   useEffect(() => {
     console.log('🔍 [CLIENTS] useEffect chamado', { loading: !loading, user: !!user, profile: !!profile })
     if (!loading && user) {
       fetchClients()
       fetchWorkouts()
+      fetchMealPlans()
     }
   }, [user?.id, loading])
 
@@ -248,7 +294,7 @@ const MyClients: React.FC = () => {
     }
   }
 
-  // Atribuir plano ao cliente
+  // Atribuir plano de treino ao cliente
   const handleAssignWorkout = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !selectedClient || !assignWorkoutData.workout_id || !assignWorkoutData.start_date) return
@@ -268,12 +314,12 @@ const MyClients: React.FC = () => {
         .insert(workoutAssignment)
 
       if (error) {
-        console.error('Erro ao atribuir plano:', error)
-        showError('Erro ao atribuir plano ao cliente')
+        console.error('Erro ao atribuir plano de treino:', error)
+        showError('Erro ao atribuir plano de treino ao cliente')
         return
       }
 
-      showSuccess('Plano atribuído com sucesso!')
+      showSuccess('Plano de treino atribuído com sucesso!')
       setIsAssignWorkoutDialogOpen(false)
       setSelectedClient(null)
       setAssignWorkoutData({
@@ -283,7 +329,46 @@ const MyClients: React.FC = () => {
       })
     } catch (error) {
       console.error('Erro inesperado:', error)
-      showError('Erro inesperado ao atribuir plano')
+      showError('Erro inesperado ao atribuir plano de treino')
+    }
+  }
+
+  // Atribuir plano alimentar ao cliente
+  const handleAssignMealPlan = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!user || !selectedClient || !assignMealPlanData.meal_plan_id || !assignMealPlanData.start_date) return
+
+    try {
+      const mealPlanAssignment = {
+        client_id: selectedClient.client_id,
+        meal_plan_id: assignMealPlanData.meal_plan_id,
+        nutritionist_id: user.id,
+        start_date: assignMealPlanData.start_date,
+        status: 'active',
+        notes: assignMealPlanData.notes || null
+      }
+
+      const { error } = await supabase
+        .from('client_meal_plans')
+        .insert(mealPlanAssignment)
+
+      if (error) {
+        console.error('Erro ao atribuir plano alimentar:', error)
+        showError('Erro ao atribuir plano alimentar ao cliente')
+        return
+      }
+
+      showSuccess('Plano alimentar atribuído com sucesso!')
+      setIsAssignMealPlanDialogOpen(false)
+      setSelectedClient(null)
+      setAssignMealPlanData({
+        meal_plan_id: '',
+        start_date: '',
+        notes: ''
+      })
+    } catch (error) {
+      console.error('Erro inesperado:', error)
+      showError('Erro inesperado ao atribuir plano alimentar')
     }
   }
 
@@ -321,7 +406,24 @@ const MyClients: React.FC = () => {
         console.warn('⚠️ [CLIENTS] Vínculo removido mas houve erro ao cancelar planos:', workoutError)
       }
 
-      showSuccess('Cliente e planos de treino cancelados com sucesso!')
+      // 3. 🔧 CORREÇÃO: CANCELAR todos os planos alimentares ativos do cliente
+      const { error: mealPlanError } = await supabase
+        .from('client_meal_plans')
+        .update({ 
+          status: 'cancelled',
+          end_date: new Date().toISOString().split('T')[0] // Data atual
+        })
+        .eq('client_id', clientId)
+        .eq('nutritionist_id', user.id)
+        .eq('status', 'active')
+
+      if (mealPlanError) {
+        console.error('Erro ao cancelar planos alimentares:', mealPlanError)
+        // Não falhar completamente, apenas logar erro
+        console.warn('⚠️ [CLIENTS] Vínculo removido mas houve erro ao cancelar planos alimentares:', mealPlanError)
+      }
+
+      showSuccess('Cliente e todos os planos cancelados com sucesso!')
       fetchClients()
     } catch (error) {
       console.error('Erro inesperado:', error)
@@ -329,7 +431,7 @@ const MyClients: React.FC = () => {
     }
   }
 
-  // Abrir dialog de atribuir plano
+  // Abrir dialog de atribuir plano de treino
   const handleOpenAssignWorkoutDialog = (client: ClientProfessional) => {
     setSelectedClient(client)
     setAssignWorkoutData({
@@ -338,6 +440,17 @@ const MyClients: React.FC = () => {
       notes: ''
     })
     setIsAssignWorkoutDialogOpen(true)
+  }
+
+  // Abrir dialog de atribuir plano alimentar
+  const handleOpenAssignMealPlanDialog = (client: ClientProfessional) => {
+    setSelectedClient(client)
+    setAssignMealPlanData({
+      meal_plan_id: '',
+      start_date: '',
+      notes: ''
+    })
+    setIsAssignMealPlanDialogOpen(true)
   }
 
   return (
@@ -352,7 +465,7 @@ const MyClients: React.FC = () => {
                 Meus Clientes
               </h1>
               <p className="mt-2 text-gray-600">
-                Gerencie seus clientes e atribua planos de treino personalizados
+                Gerencie seus clientes e atribua planos de treino e alimentares personalizados
               </p>
             </div>
             
@@ -419,7 +532,7 @@ const MyClients: React.FC = () => {
                 <div className="col-span-full text-center py-12">
                   <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum cliente encontrado</h3>
-                  <p className="text-gray-600 mb-4">Comece adicionando seu primeiro cliente para gerenciar seus planos de treino.</p>
+                  <p className="text-gray-600 mb-4">Comece adicionando seu primeiro cliente para gerenciar seus planos.</p>
                   <Button onClick={() => setIsAddClientDialogOpen(true)}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     Adicionar Primeiro Cliente
@@ -473,7 +586,16 @@ const MyClients: React.FC = () => {
                             onClick={() => handleOpenAssignWorkoutDialog(clientProfessional)}
                           >
                             <Dumbbell className="mr-2 h-4 w-4" />
-                            Atribuir Plano
+                            Atribuir Plano de Treino
+                          </Button>
+                          
+                          <Button 
+                            className="w-full" 
+                            variant="outline"
+                            onClick={() => handleOpenAssignMealPlanDialog(clientProfessional)}
+                          >
+                            <Utensils className="mr-2 h-4 w-4" />
+                            Atribuir Plano Alimentar
                           </Button>
                           
                           <AlertDialog>
@@ -488,15 +610,15 @@ const MyClients: React.FC = () => {
                                 <AlertDialogDescription>
                                   Tem certeza que deseja remover o vínculo com "{clientProfessional.client?.full_name || clientProfessional.client?.email}"? 
                                   <br /><br />
-                                  <strong>⚠️ Isso também CANCELARÁ todos os planos de treino ativos deste cliente.</strong>
+                                  <strong>⚠️ Isso também CANCELARÁ todos os planos de treino e alimentares ativos deste cliente.</strong>
                                   <br /><br />
-                                  O cliente perderá acesso aos seus planos e não poderá mais visualizar os treinos.
+                                  O cliente perderá acesso aos seus planos e não poderá mais visualizar os treinos e refeições.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                                 <AlertDialogAction onClick={() => handleRemoveClient(clientProfessional.id, clientProfessional.client_id)}>
-                                  Remover Vínculo e Cancelar Planos
+                                  Remover Vínculo e Cancelar Todos os Planos
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -511,7 +633,7 @@ const MyClients: React.FC = () => {
           </>
         )}
 
-        {/* Dialog de Atribuir Plano */}
+        {/* Dialog de Atribuir Plano de Treino */}
         <Dialog open={isAssignWorkoutDialogOpen} onOpenChange={setIsAssignWorkoutDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -592,7 +714,96 @@ const MyClients: React.FC = () => {
                 </Button>
                 <Button type="submit" disabled={!assignWorkoutData.workout_id || !assignWorkoutData.start_date}>
                   <Dumbbell className="mr-2 h-4 w-4" />
-                  Atribuir Plano
+                  Atribuir Plano de Treino
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog de Atribuir Plano Alimentar */}
+        <Dialog open={isAssignMealPlanDialogOpen} onOpenChange={setIsAssignMealPlanDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Atribuir Plano Alimentar</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleAssignMealPlan} className="space-y-4">
+              <div className="space-y-2">
+                <Label>Cliente</Label>
+                <div className="p-3 bg-gray-50 rounded-md">
+                  <p className="font-medium">
+                    {selectedClient?.client?.full_name || selectedClient?.client?.email}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {selectedClient?.client?.email}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meal-plan-select">Plano Alimentar *</Label>
+                <Select 
+                  value={assignMealPlanData.meal_plan_id} 
+                  onValueChange={(value) => setAssignMealPlanData({ ...assignMealPlanData, meal_plan_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um plano alimentar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mealPlans.map((mealPlan) => (
+                      <SelectItem key={mealPlan.id} value={mealPlan.id}>
+                        <div>
+                          <p className="font-medium">{mealPlan.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {mealPlan.daily_calories_target ? `${mealPlan.daily_calories_target} cal/dia` : 'Sem meta calórica'}
+                            {mealPlan.objective && ` • ${mealPlan.objective}`}
+                          </p>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {mealPlans.length === 0 && (
+                  <p className="text-sm text-gray-500">
+                    Você ainda não criou nenhum plano alimentar. 
+                    <a href="/app/meal-planner" className="text-blue-600 hover:underline ml-1">
+                      Criar plano agora
+                    </a>
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meal-plan-start-date">Data de Início *</Label>
+                <Input
+                  id="meal-plan-start-date"
+                  type="date"
+                  value={assignMealPlanData.start_date}
+                  onChange={(e) => setAssignMealPlanData({ ...assignMealPlanData, start_date: e.target.value })}
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meal-plan-assignment-notes">Notas (opcional)</Label>
+                <textarea
+                  id="meal-plan-assignment-notes"
+                  className="w-full p-2 border rounded-md"
+                  rows={3}
+                  placeholder="Instruções especiais para este cliente..."
+                  value={assignMealPlanData.notes}
+                  onChange={(e) => setAssignMealPlanData({ ...assignMealPlanData, notes: e.target.value })}
+                />
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsAssignMealPlanDialogOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={!assignMealPlanData.meal_plan_id || !assignMealPlanData.start_date}>
+                  <Utensils className="mr-2 h-4 w-4" />
+                  Atribuir Plano Alimentar
                 </Button>
               </div>
             </form>
