@@ -153,7 +153,7 @@ const MyClients: React.FC = () => {
     }
   }, [user?.id, loading])
 
-  // Adicionar cliente - CORRIGIDO
+  // Adicionar cliente - MELHORADO
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !addClientEmail.trim()) return
@@ -182,25 +182,52 @@ const MyClients: React.FC = () => {
 
       console.log('✅ [CLIENTS] Cliente encontrado via RPC:', client)
 
-      // Verificar se já existe vínculo ativo
+      // 🔧 MELHORIA: Verificar se existe vínculo (ativo ou inativo)
       const { data: existingLink, error: linkError } = await supabase
         .from('client_professionals')
         .select('*')
         .eq('client_id', client.id)
         .eq('professional_id', user.id)
-        .eq('status', 'active')
         .single()
 
       if (existingLink) {
-        showError('Este cliente já está vinculado a você.')
-        return
+        if (existingLink.status === 'active') {
+          showError('Este cliente já está vinculado a você.')
+          return
+        } else {
+          // 🔧 MELHORIA: Reativar vínculo existente em vez de criar novo
+          console.log('🔄 [CLIENTS] Reativando vínculo existente:', existingLink.id)
+          
+          const { error: reactivateError } = await supabase
+            .from('client_professionals')
+            .update({ 
+              status: 'active', 
+              ended_at: null,
+              started_at: new Date().toISOString() // Nova data de início
+            })
+            .eq('id', existingLink.id)
+
+          if (reactivateError) {
+            console.error('Erro ao reativar vínculo:', reactivateError)
+            showError('Erro ao reativar vínculo com cliente')
+            return
+          }
+
+          showSuccess('Cliente reativado com sucesso!')
+          setIsAddClientDialogOpen(false)
+          setAddClientEmail('')
+          fetchClients()
+          return
+        }
       }
 
-      // Criar o vínculo
+      // Criar novo vínculo se não existir
+      console.log('🆕 [CLIENTS] Criando novo vínculo para cliente:', client.id)
+      
       const { error: insertError } = await supabase
         .from('client_professionals')
         .insert({
-          client_id: client.id, // ✅ CORREÇÃO: Usar client.id em vez de clientData.id
+          client_id: client.id,
           professional_id: user.id,
           status: 'active'
         })
