@@ -10,9 +10,10 @@ import {
   Dumbbell, 
   LogOut,
   Menu,
-  Apple
+  Apple,
+  Utensils
 } from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
 
 interface MenuItem {
@@ -38,6 +39,12 @@ const DashboardLayout: React.FC = () => {
       title: 'Planos de Treino',
       href: '/app/planner',
       icon: <Calendar className="h-5 w-5" />,
+      roles: ['admin', 'professional']
+    },
+    {
+      title: 'Planos Alimentares',
+      href: '/app/meal-planner',
+      icon: <Utensils className="h-5 w-5" />,
       roles: ['admin', 'professional']
     },
     {

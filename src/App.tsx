@@ -14,6 +14,7 @@ import WorkoutPlanner from "./pages/WorkoutPlanner";
 import MyClients from "./pages/MyClients";
 import ClientWorkout from "./pages/ClientWorkout";
 import FoodLibrary from "./pages/FoodLibrary";
+import MealPlanner from "./pages/MealPlanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,14 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <WorkoutPlanner /> : 
+              <Navigate to="/app/my-workout" replace />
+          } 
+        />
+        <Route 
+          path="meal-planner" 
+          element={
+            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+              <MealPlanner /> : 
               <Navigate to="/app/my-workout" replace />
           } 
         />
