@@ -9,7 +9,8 @@ import {
   BookOpen, 
   Dumbbell, 
   LogOut,
-  Menu
+  Menu,
+  Apple
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
@@ -43,6 +44,12 @@ const DashboardLayout: React.FC = () => {
       title: 'Biblioteca de Exercícios',
       href: '/app/library',
       icon: <BookOpen className="h-5 w-5" />,
+      roles: ['admin', 'professional']
+    },
+    {
+      title: 'Biblioteca de Alimentos',
+      href: '/app/foods',
+      icon: <Apple className="h-5 w-5" />,
       roles: ['admin', 'professional']
     },
     {

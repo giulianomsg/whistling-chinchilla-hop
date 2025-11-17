@@ -13,6 +13,7 @@ import ExerciseLibrary from "./pages/ExerciseLibrary";
 import WorkoutPlanner from "./pages/WorkoutPlanner";
 import MyClients from "./pages/MyClients";
 import ClientWorkout from "./pages/ClientWorkout";
+import FoodLibrary from "./pages/FoodLibrary";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -80,6 +81,14 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <ExerciseLibrary /> : 
+              <Navigate to="/app/my-workout" replace />
+          } 
+        />
+        <Route 
+          path="foods" 
+          element={
+            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+              <FoodLibrary /> : 
               <Navigate to="/app/my-workout" replace />
           } 
         />
