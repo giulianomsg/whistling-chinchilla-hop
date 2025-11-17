@@ -64,6 +64,12 @@ const DashboardLayout: React.FC = () => {
       href: '/app/my-workout',
       icon: <Dumbbell className="h-5 w-5" />,
       roles: ['client']
+    },
+    {
+      title: 'Meu Plano Alimentar',
+      href: '/app/my-meal-plan',
+      icon: <Utensils className="h-5 w-5" />,
+      roles: ['client']
     }
   ]
 
@@ -177,6 +183,7 @@ const DashboardLayout: React.FC = () => {
         <Sidebar />
       </div>
 
+     
       {/* Mobile Sidebar */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetContent side="left" className="p-0 w-64">

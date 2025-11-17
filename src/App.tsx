@@ -13,6 +13,7 @@ import ExerciseLibrary from "./pages/ExerciseLibrary";
 import WorkoutPlanner from "./pages/WorkoutPlanner";
 import MyClients from "./pages/MyClients";
 import ClientWorkout from "./pages/ClientWorkout";
+import ClientMealPlan from "./pages/ClientMealPlan";
 import FoodLibrary from "./pages/FoodLibrary";
 import MealPlanner from "./pages/MealPlanner";
 import NotFound from "./pages/NotFound";
@@ -108,6 +109,14 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ? 
               <ClientWorkout /> : 
+              <Navigate to="/app/clients" replace />
+          } 
+        />
+        <Route 
+          path="my-meal-plan" 
+          element={
+            profile?.role === 'client' ? 
+              <ClientMealPlan /> : 
               <Navigate to="/app/clients" replace />
           } 
         />
