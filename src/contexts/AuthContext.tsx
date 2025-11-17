@@ -33,53 +33,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // 1. fetchProfile (memoizada com tratamento de erros)
+  // 1. fetchProfile (memoizada com tratamento de erros e debugging)
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     console.log('🔍 [AUTH] Buscando perfil para userId:', userId)
+    
     try {
+      // Primeiro, verificar se o usuário existe no auth
+      console.log('🔍 [AUTH] Verificando usuário no auth...')
+      const { data: authUser, error: authError } = await supabase.auth.getUser(userId)
+      
+      if (authError) {
+        console.error('❌ [AUTH] Erro ao buscar usuário auth:', authError)
+        return null
+      }
+      
+      if (!authUser.user) {
+        console.error('❌ [AUTH] Usuário não encontrado no auth')
+        return null
+      }
+      
+      console.log('✅ [AUTH] Usuário auth encontrado:', authUser.user.email)
+
+      // Agora buscar o perfil na tabela profiles
+      console.log('🔍 [AUTH] Buscando perfil na tabela profiles...')
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
 
+      console.log('📊 [AUTH] Resultado da busca:', { data, error })
+
       if (error) {
         console.error('❌ [AUTH] Erro ao buscar perfil:', error)
-        // Não retornar null imediatamente, tentar criar perfil se não existir
+        console.error('❌ [AUTH] Detalhes do erro:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        })
+        
+        // Se perfil não existe, tentar criar
         if (error.code === 'PGRST116') { // No rows found
           console.log('📝 [AUTH] Perfil não encontrado, tentando criar...')
-          return await createProfileForUser(userId)
+          return await createProfileForUser(userId, authUser.user)
         }
         return null
       }
-      console.log('✅ [AUTH] Perfil carregado:', data?.role)
+      
+      console.log('✅ [AUTH] Perfil carregado com sucesso:', {
+        id: data.id,
+        email: data.email,
+        role: data.role,
+        full_name: data.full_name
+      })
+      
       return data
     } catch (error) {
-      console.error('❌ [AUTH] Erro na busca do perfil:', error)
+      console.error('❌ [AUTH] Erro na busca do perfil (catch):', error)
       return null
     }
   }, [])
 
   // 2. Criar perfil para usuário que não tem
-  const createProfileForUser = async (userId: string): Promise<Profile | null> => {
+  const createProfileForUser = async (userId: string, authUser: User): Promise<Profile | null> => {
+    console.log('📝 [AUTH] Criando perfil para usuário:', authUser.email)
+    
     try {
-      // Buscar dados do usuário no auth
-      const { data: { user }, error: userError } = await supabase.auth.getUser(userId)
-      
-      if (userError || !user) {
-        console.error('❌ [AUTH] Erro ao buscar usuário auth:', userError)
-        return null
-      }
-
       // Criar perfil básico
       const profileData = {
         id: userId,
-        email: user.email || '',
-        full_name: user.user_metadata?.full_name || null,
-        role: user.user_metadata?.role || 'client',
+        email: authUser.email || '',
+        full_name: authUser.user_metadata?.full_name || null,
+        role: authUser.user_metadata?.role || 'client',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
+
+      console.log('📝 [AUTH] Dados do perfil a ser criado:', profileData)
 
       const { data, error } = await supabase
         .from('profiles')
@@ -89,13 +120,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('❌ [AUTH] Erro ao criar perfil:', error)
+        console.error('❌ [AUTH] Detalhes do erro:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        })
         return null
       }
 
-      console.log('✅ [AUTH] Perfil criado com sucesso:', data?.role)
+      console.log('✅ [AUTH] Perfil criado com sucesso:', {
+        id: data.id,
+        email: data.email,
+        role: data.role,
+        full_name: data.full_name
+      })
+      
       return data
     } catch (error) {
-      console.error('❌ [AUTH] Erro ao criar perfil:', error)
+      console.error('❌ [AUTH] Erro ao criar perfil (catch):', error)
       return null
     }
   }
@@ -155,6 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (session?.user) {
             // Se o usuário existe (logado ou sessão restaurada)
+            console.log('👤 [AUTH] Usuário detectado, buscando perfil...')
             const profileData = await fetchProfile(session.user.id)
             
             if (mounted) {
