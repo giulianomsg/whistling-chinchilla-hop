@@ -128,12 +128,12 @@ const MyClients: React.FC = () => {
   }
 
   useEffect(() => {
-    // Só executa se o auth NÃO estiver carregando E o user existir
+    // A lógica interna (o 'if') permanece a mesma
     if (!loading && user) {
       fetchClients()
       fetchWorkouts()
     }
-  }, [user, loading]) // <-- Muda as dependências
+  }, [loading]) // <-- A dependência agora é SÓ o loading
 
   // Adicionar cliente
   const handleAddClient = async (e: React.FormEvent) => {

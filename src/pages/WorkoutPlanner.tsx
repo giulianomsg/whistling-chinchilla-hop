@@ -182,12 +182,12 @@ const WorkoutPlanner: React.FC = () => {
   }
 
   useEffect(() => {
-    // Só executa se o auth NÃO estiver carregando E o user existir
+    // A lógica interna (o 'if') permanece a mesma
     if (!loading && user) {
       fetchWorkouts()
       fetchExercises()
     }
-  }, [user, loading]) // <-- Muda as dependências
+  }, [loading]) // <-- A dependência agora é SÓ o loading
 
   // Resetar formulário de workout
   const resetWorkoutForm = () => {
