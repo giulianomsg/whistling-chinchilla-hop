@@ -18,6 +18,7 @@ interface AuthContextType {
   profile: Profile | null
   session: Session | null
   loading: boolean
+  isReady: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -30,8 +31,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isReady, setIsReady] = useState(false)
 
-  // Função para buscar perfil - SIMPLIFICADA
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
     try {
       const { data, error } = await supabase
@@ -39,12 +40,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .select('*')
         .eq('id', userId)
         .single()
-
+      
       if (error) {
         console.error('❌ [AUTH] Erro ao buscar perfil:', error)
         return null
       }
-
+      
       return data
     } catch (error) {
       console.error('❌ [AUTH] Erro na busca do perfil:', error)
@@ -52,13 +53,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  // Login
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
   }
 
-  // Cadastro
   const signUp = async (email: string, password: string, fullName: string) => {
     const { error } = await supabase.auth.signUp({
       email,
@@ -73,19 +72,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error }
   }
 
-  // Logout
   const signOut = async () => {
     await supabase.auth.signOut()
   }
 
   useEffect(() => {
-    console.log('🚀 [AUTH] AuthProvider montado')
     let mounted = true
+    let profileFetchTimeout: NodeJS.Timeout
 
-    // Função inicial - SIMPLIFICADA
     const initialize = async () => {
       try {
-        // Obter sessão atual
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (error) {
@@ -96,13 +92,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(session)
           setUser(session?.user ?? null)
           
-          // Se há usuário, buscar perfil
           if (session?.user) {
-            const profileData = await fetchProfile(session.user.id)
-            setProfile(profileData)
-            console.log('✅ [AUTH] Perfil carregado:', profileData?.role)
+            // Buscar perfil com timeout para evitar loops
+            const profilePromise = fetchProfile(session.user.id)
+            const timeoutPromise = new Promise<null>((_, reject) => {
+              profileFetchTimeout = setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+            })
+            
+            try {
+              const profileData = await Promise.race([profilePromise, timeoutPromise])
+              clearTimeout(profileFetchTimeout)
+              if (profileData && mounted) {
+                setProfile(profileData)
+                console.log('✅ [AUTH] Perfil carregado:', profileData.role)
+              }
+            } catch (error) {
+              clearTimeout(profileFetchTimeout)
+              console.error('❌ [AUTH] Timeout ao buscar perfil:', error)
+              if (mounted) {
+                setProfile(null)
+              }
+            }
           } else {
-            setProfile(null)
+            if (mounted) {
+              setProfile(null)
+            }
           }
         }
       } catch (error) {
@@ -115,27 +129,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } finally {
         if (mounted) {
           setLoading(false)
+          // Adicionar um pequeno delay para garantir que tudo está pronto
+          setTimeout(() => {
+            if (mounted) {
+              setIsReady(true)
+            }
+          }, 100)
         }
       }
     }
 
-    // Listener de auth - SIMPLIFICADO
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
-
+        
         console.log('🔄 [AUTH] Evento:', event, 'User:', session?.user?.email)
-
+        
         if (mounted) {
           setSession(session)
           setUser(session?.user ?? null)
           
           if (event === 'SIGNED_IN' && session?.user) {
             const profileData = await fetchProfile(session.user.id)
-            setProfile(profileData)
-            console.log('✅ [AUTH] Perfil carregado após SIGNED_IN:', profileData?.role)
+            if (mounted) {
+              setProfile(profileData)
+              console.log('✅ [AUTH] Perfil carregado após SIGNED_IN:', profileData?.role)
+            }
           } else if (event === 'SIGNED_OUT') {
-            setProfile(null)
+            if (mounted) {
+              setProfile(null)
+            }
           }
         }
       }
@@ -144,8 +167,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initialize()
 
     return () => {
-      console.log('🧹 [AUTH] AuthProvider desmontado')
       mounted = false
+      if (profileFetchTimeout) {
+        clearTimeout(profileFetchTimeout)
+      }
       subscription.unsubscribe()
     }
   }, [])
@@ -155,6 +180,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profile,
     session,
     loading,
+    isReady,
     signIn,
     signUp,
     signOut

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 
@@ -12,10 +11,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children, 
   requiredRole 
 }) => {
-  const { user, profile, loading } = useAuth()
+  const { user, profile, loading, isReady } = useAuth()
 
-  // Loading state
-  if (loading) {
+  // Loading state - só mostra loading se não está pronto
+  if (loading || !isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -26,23 +25,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
-  // Usuário não autenticado
+  // Usuário não autenticado - retorna null para deixar o App.tsx tratar
   if (!user) {
-    return <Navigate to="/auth" replace />
+    return null
   }
 
-  // Verificação de role específica
+  // Verificação de role específica - retorna null para deixar o App.tsx tratar
   if (requiredRole && profile?.role !== requiredRole) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Negado</h1>
-          <p className="text-gray-600">
-            Você não tem permissão para acessar esta página.
-          </p>
-        </div>
-      </div>
-    )
+    return null
   }
 
   // Tudo certo, renderizar children

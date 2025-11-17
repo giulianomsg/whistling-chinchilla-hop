@@ -26,7 +26,6 @@ const DashboardLayout: React.FC = () => {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
-  // Menu items
   const menuItems: MenuItem[] = [
     {
       title: 'Meus Clientes',
@@ -54,7 +53,6 @@ const DashboardLayout: React.FC = () => {
     }
   ]
 
-  // Filtrar menu baseado no role
   const filteredMenuItems = menuItems.filter(item => 
     profile?.role && item.roles.includes(profile.role as any)
   )
@@ -62,6 +60,8 @@ const DashboardLayout: React.FC = () => {
   const handleLogout = async () => {
     await signOut()
     showSuccess('Logout realizado com sucesso!')
+    // Forçar reload para limpar estados
+    window.location.href = '/auth'
   }
 
   const getUserInitials = () => {
@@ -76,7 +76,6 @@ const DashboardLayout: React.FC = () => {
     return user?.email?.[0]?.toUpperCase() || 'U'
   }
 
-  // Sidebar Component
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
     <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white border-r`}>
       {/* Header */}

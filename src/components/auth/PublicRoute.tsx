@@ -1,5 +1,4 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 
@@ -8,9 +7,10 @@ interface PublicRouteProps {
 }
 
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth()
+  const { user, loading, isReady } = useAuth()
 
-  if (loading) {
+  // Loading state - só mostra loading se não está pronto
+  if (loading || !isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -21,10 +21,11 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     )
   }
 
-  // Se usuário já está logado, redirecionar para /app
+  // Se usuário está autenticado, retorna null para deixar o App.tsx tratar
   if (user) {
-    return <Navigate to="/app" replace />
+    return null
   }
 
+  // Renderizar children se não está autenticado
   return <>{children}</>
 }
