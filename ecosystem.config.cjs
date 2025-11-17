@@ -1,8 +1,8 @@
 module.exports = {
   apps: [{
     name: 'capifit',
-    script: 'serve',
-    args: '-s dist -l 3000',
+    script: 'npm',
+    args: 'run preview',
     cwd: '/var/www/capifit',
     instances: 1,
     autorestart: true,
@@ -14,6 +14,7 @@ module.exports = {
     error_file: '/var/log/pm2/capifit-error.log',
     out_file: '/var/log/pm2/capifit-out.log',
     log_file: '/var/log/pm2/capifit-combined.log',
-    time: true
+    time: true,
+    kill_timeout: 5000
   }]
 };

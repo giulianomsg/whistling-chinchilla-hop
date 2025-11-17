@@ -6,7 +6,11 @@ import path from "path";
 export default defineConfig(() => ({
   server: {
     host: "::",
-    port: 3000, // <-- MUDANÇA: porta alterada de 8080 para 3000
+    port: 3000,
+  },
+  preview: {
+    host: "::",
+    port: 3000,  // FORÇAR PORTA 3000 NO PREVIEW
   },
   plugins: [dyadComponentTagger(), react()],
   resolve: {
