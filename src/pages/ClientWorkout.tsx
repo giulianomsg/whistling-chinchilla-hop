@@ -67,6 +67,7 @@ const ClientWorkout: React.FC = () => {
   const [clientWorkout, setClientWorkout] = useState<ClientWorkout | null>(null)
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
   const [loading, setLoading] = useState(true)
+  const [initialized, setInitialized] = useState(false)
 
   // Buscar plano ativo do cliente
   const fetchClientWorkout = async () => {
@@ -142,18 +143,22 @@ const ClientWorkout: React.FC = () => {
     }
   }
 
+  // 🔧 CORREÇÃO: useEffect simplificado e estável
   useEffect(() => {
     console.log('🔍 [CLIENT_WORKOUT] useEffect chamado', { 
-      loading: !loading, 
       user: !!user, 
       profile: !!profile,
-      userId: user?.id
+      userId: user?.id,
+      initialized
     })
     
-    if (!loading && user) {
+    // 🔧 CORREÇÃO: Só executar se tiver usuário e ainda não foi inicializado
+    if (user && !initialized) {
+      console.log('🚀 [CLIENT_WORKOUT] Inicializando busca de plano')
+      setInitialized(true)
       fetchClientWorkout()
     }
-  }, [user?.id, loading])
+  }, [user?.id, profile?.id, initialized]) // 🔧 DEPENDÊNCIAS ESTÁVEIS
 
   // Agrupar exercícios por dia
   const getExercisesByDay = () => {
