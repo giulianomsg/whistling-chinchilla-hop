@@ -11,7 +11,7 @@ export default defineConfig(() => ({
   preview: {
     host: "::",
     port: 3000,
-    allowedHosts: 'all' // Permite todos os hosts
+    allowedHosts: 'all' // Permitir todos os hosts temporariamente
   },
   plugins: [dyadComponentTagger(), react()],
   resolve: {
