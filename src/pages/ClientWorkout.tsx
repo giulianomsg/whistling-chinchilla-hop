@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 import { 
   Dumbbell, 
   Calendar, 
@@ -10,9 +10,12 @@ import {
   Clock,
   Loader2,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  Maximize2
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import WorkoutDetailView from '@/components/client/WorkoutDetailView'
 
 interface Workout {
   id: string
@@ -67,6 +70,7 @@ const ClientWorkout: React.FC = () => {
   const [clientWorkout, setClientWorkout] = useState<ClientWorkout | null>(null)
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
   const [loading, setLoading] = useState(true)
+  const [showDetailView, setShowDetailView] = useState(false)
   const [initialized, setInitialized] = useState(false)
 
   // Buscar plano ativo do cliente
@@ -143,7 +147,7 @@ const ClientWorkout: React.FC = () => {
     }
   }
 
-  // 🔧 CORREÇÃO: useEffect simplificado e estável
+  // useEffect simplificado e estável
   useEffect(() => {
     console.log('🔍 [CLIENT_WORKOUT] useEffect chamado', { 
       user: !!user, 
@@ -152,13 +156,13 @@ const ClientWorkout: React.FC = () => {
       initialized
     })
     
-    // 🔧 CORREÇÃO: Só executar se tiver usuário e ainda não foi inicializado
+    // Só executar se tiver usuário e ainda não foi inicializado
     if (user && !initialized) {
       console.log('🚀 [CLIENT_WORKOUT] Inicializando busca de plano')
       setInitialized(true)
       fetchClientWorkout()
     }
-  }, [user?.id, profile?.id, initialized]) // 🔧 DEPENDÊNCIAS ESTÁVEIS
+  }, [user?.id, profile?.id, initialized])
 
   // Agrupar exercícios por dia
   const getExercisesByDay = () => {
@@ -211,23 +215,52 @@ const ClientWorkout: React.FC = () => {
     )
   }
 
+  if (showDetailView) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowDetailView(false)}
+              className="mb-4"
+            >
+              ← Voltar para Visão Resumida
+            </Button>
+          </div>
+          <WorkoutDetailView clientWorkout={clientWorkout} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-600 rounded-lg">
-              <Dumbbell className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-blue-600 rounded-lg">
+                <Dumbbell className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Meu Treino</h1>
+                <p className="text-gray-600">Seu plano personalizado de treino</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Meu Treino</h1>
-              <p className="text-gray-600">Seu plano personalizado de treino</p>
-            </div>
+            
+            <Button 
+              onClick={() => setShowDetailView(true)}
+              className="flex items-center gap-2"
+            >
+              <Maximize2 className="h-4 w-4" />
+              Ver Detalhes Completos
+            </Button>
           </div>
         </div>
 
-        {/* Informações do Plano */}
+        {/* Card Resumo do Plano */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -270,102 +303,115 @@ const ClientWorkout: React.FC = () => {
                 <p className="text-sm text-gray-600">{clientWorkout.workout.objective}</p>
               </div>
             )}
+
+            {clientWorkout.notes && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                <p className="text-sm text-yellow-800">
+                  <strong>Nota do profissional:</strong> {clientWorkout.notes}
+                </p>
+              </div>
+            )}
+
+            {/* Estatísticas Rápidas */}
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-blue-50 rounded">
+                <p className="text-xl font-bold text-blue-600">{workoutExercises.length}</p>
+                <p className="text-xs text-gray-600">Exercícios</p>
+              </div>
+              <div className="text-center p-3 bg-green-50 rounded">
+                <p className="text-xl font-bold text-green-600">
+                  {workoutExercises.reduce((sum, we) => sum + we.sets, 0)}
+                </p>
+                <p className="text-xs text-gray-600">Séries Totais</p>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded">
+                <p className="text-xl font-bold text-purple-600">
+                  {clientWorkout.workout.days_per_week || 0}
+                </p>
+                <p className="text-xs text-gray-600">Dias/Semana</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Exercícios por Dia */}
+        {/* Prévia dos Exercícios por Dia */}
         {workoutExercises.length > 0 && (
-          <Tabs defaultValue="day-1" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => (
-                <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
-                  Dia {i + 1}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {Array.from({ length: clientWorkout.workout.days_per_week || 3 }, (_, i) => {
-              const dayNumber = i + 1
-              const dayExercises = exercisesByDay[dayNumber] || []
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5 text-gray-600" />
+                Prévia dos Exercícios
+              </CardTitle>
+              <p className="text-sm text-gray-600">
+                Clique em "Ver Detalhes Completos" para ver todos os exercícios com instruções detalhadas
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: Math.min(3, clientWorkout.workout.days_per_week || 3) }, (_, i) => {
+                  const dayNumber = i + 1
+                  const dayExercises = exercisesByDay[dayNumber] || []
+                  
+                  return (
+                    <div key={dayNumber} className="p-4 border rounded-lg">
+                      <h3 className="font-semibold text-gray-900 mb-2">Dia {dayNumber}</h3>
+                      <div className="space-y-2">
+                        {dayExercises.slice(0, 3).map((workoutExercise, index) => (
+                          <div key={workoutExercise.id} className="flex items-center gap-2 text-sm">
+                            <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
+                              {index + 1}
+                            </span>
+                            <span className="text-gray-700 truncate">
+                              {workoutExercise.exercise?.name}
+                            </span>
+                          </div>
+                        ))}
+                        {dayExercises.length > 3 && (
+                          <p className="text-xs text-gray-500">
+                            +{dayExercises.length - 3} exercícios...
+                          </p>
+                        )}
+                        {dayExercises.length === 0 && (
+                          <p className="text-xs text-gray-500">Nenhum exercício</p>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
               
-              return (
-                <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
-                  {dayExercises.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                      <p>Nenhum exercício para este dia</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {dayExercises.map((workoutExercise, index) => (
-                        <Card key={workoutExercise.id}>
-                          <CardContent className="p-6">
-                            <div className="flex items-start gap-4">
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                                  {index + 1}
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                  {workoutExercise.exercise?.name}
-                                </h3>
-                                
-                                {workoutExercise.exercise?.description && (
-                                  <p className="text-gray-600 mb-3">
-                                    {workoutExercise.exercise.description}
-                                  </p>
-                                )}
+              <div className="mt-6 text-center">
+                <Button 
+                  onClick={() => setShowDetailView(true)}
+                  variant="outline"
+                  className="flex items-center gap-2 mx-auto"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                  Ver Todos os Exercícios Detalhados
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-                                <div className="flex flex-wrap gap-2 mb-3">
-                                  <Badge variant="secondary">
-                                    {workoutExercise.sets} séries
-                                  </Badge>
-                                  <Badge variant="outline">
-                                    {workoutExercise.reps} reps
-                                  </Badge>
-                                  {workoutExercise.weight && (
-                                    <Badge variant="outline">
-                                      {workoutExercise.weight} kg
-                                    </Badge>
-                                  )}
-                                  {workoutExercise.rest_time_seconds && (
-                                    <Badge variant="outline">
-                                      {workoutExercise.rest_time_seconds}s descanso
-                                    </Badge>
-                                  )}
-                                </div>
-
-                                {workoutExercise.exercise?.muscle_groups && workoutExercise.exercise.muscle_groups.length > 0 && (
-                                  <div className="mb-3">
-                                    <p className="text-sm font-medium text-gray-700 mb-1">Músculos trabalhados:</p>
-                                    <div className="flex flex-wrap gap-1">
-                                      {workoutExercise.exercise.muscle_groups.map((muscle, muscleIndex) => (
-                                        <Badge key={muscleIndex} variant="secondary" className="text-xs">
-                                          {muscle}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {workoutExercise.notes && (
-                                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                                    <p className="text-sm text-yellow-800">
-                                      <strong>Nota do profissional:</strong> {workoutExercise.notes}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-              )
-            })}
-          </Tabs>
+        {workoutExercises.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-12">
+              <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum exercício encontrado</h3>
+              <p className="text-gray-600 mb-4">
+                Seu profissional ainda não adicionou exercícios a este plano.
+              </p>
+              <Button 
+                onClick={() => setShowDetailView(true)}
+                variant="outline"
+                disabled
+              >
+                <Maximize2 className="h-4 w-4 mr-2" />
+                Ver Detalhes (Indisponível)
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

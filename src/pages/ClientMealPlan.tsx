@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Utensils, 
@@ -11,9 +12,12 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
-  Apple
+  Apple,
+  Maximize2,
+  Eye
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import MealPlanDetailView from '@/components/client/MealPlanDetailView'
 
 interface MealPlan {
   id: string
@@ -73,6 +77,7 @@ const ClientMealPlan: React.FC = () => {
   const [clientMealPlan, setClientMealPlan] = useState<ClientMealPlan | null>(null)
   const [mealPlanItems, setMealPlanItems] = useState<MealPlanItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [showDetailView, setShowDetailView] = useState(false)
   const [initialized, setInitialized] = useState(false)
 
   // Buscar plano ativo do cliente
@@ -232,23 +237,52 @@ const ClientMealPlan: React.FC = () => {
     )
   }
 
+  if (showDetailView) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowDetailView(false)}
+              className="mb-4"
+            >
+              ← Voltar para Visão Resumida
+            </Button>
+          </div>
+          <MealPlanDetailView clientMealPlan={clientMealPlan} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-green-600 rounded-lg">
-              <Utensils className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-green-600 rounded-lg">
+                <Utensils className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Meu Plano Alimentar</h1>
+                <p className="text-gray-600">Seu plano personalizado de nutrição</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Meu Plano Alimentar</h1>
-              <p className="text-gray-600">Seu plano personalizado de nutrição</p>
-            </div>
+            
+            <Button 
+              onClick={() => setShowDetailView(true)}
+              className="flex items-center gap-2"
+            >
+              <Maximize2 className="h-4 w-4" />
+              Ver Detalhes Completos
+            </Button>
           </div>
         </div>
 
-        {/* Informações do Plano */}
+        {/* Card Resumo do Plano */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -325,131 +359,121 @@ const ClientMealPlan: React.FC = () => {
                 <p className="text-sm text-gray-600">{clientMealPlan.meal_plan.objective}</p>
               </div>
             )}
+
+            {clientMealPlan.notes && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                <p className="text-sm text-yellow-800">
+                  <strong>Nota do profissional:</strong> {clientMealPlan.notes}
+                </p>
+              </div>
+            )}
+
+            {/* Estatísticas Rápidas */}
+            <div className="mt-6 grid grid-cols-4 gap-4">
+              <div className="text-center p-3 bg-green-50 rounded">
+                <p className="text-xl font-bold text-green-600">{mealPlanItems.length}</p>
+                <p className="text-xs text-gray-600">Refeições</p>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded">
+                <p className="text-xl font-bold text-blue-600">
+                  {new Set(mealPlanItems.map(item => item.day_number)).size}
+                </p>
+                <p className="text-xs text-gray-600">Dias</p>
+              </div>
+              <div className="text-center p-3 bg-orange-50 rounded">
+                <p className="text-xl font-bold text-orange-600">
+                  {clientMealPlan.meal_plan?.daily_calories_target || 0}
+                </p>
+                <p className="text-xs text-gray-600">Cal/Dia</p>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded">
+                <p className="text-xl font-bold text-purple-600">
+                  {new Set(mealPlanItems.map(item => item.food?.category).filter(Boolean)).size}
+                </p>
+                <p className="text-xs text-gray-600">Categorias</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Refeições por Dia */}
+        {/* Prévia das Refeições */}
         {mealPlanItems.length > 0 && (
-          <Tabs defaultValue="day-1" className="w-full">
-            <TabsList className="grid w-full grid-cols-7">
-              {Array.from({ length: 7 }, (_, i) => (
-                <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
-                  Dia {i + 1}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {Array.from({ length: 7 }, (_, i) => {
-              const dayNumber = i + 1
-              const dayMeals = mealsByDay[dayNumber] || []
-              const dayMacros = calculateDayMacros(dayMeals)
-              
-              return (
-                <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
-                  {dayMeals.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                      <p>Nenhuma refeição para este dia</p>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Resumo do Dia */}
-                      <Card className="mb-6">
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold text-gray-900 mb-3">Resumo do Dia {dayNumber}</h3>
-                          <div className="grid grid-cols-4 gap-4 text-sm">
-                            <div className="text-center">
-                              <p className="text-gray-600">Calorias</p>
-                              <p className="font-bold text-lg">{dayMacros.calories}</p>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-gray-600">Proteínas</p>
-                              <p className="font-bold text-lg">{dayMacros.protein}g</p>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-gray-600">Carboidratos</p>
-                              <p className="font-bold text-lg">{dayMacros.carbs}g</p>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-gray-600">Gorduras</p>
-                              <p className="font-bold text-lg">{dayMacros.fat}g</p>
-                            </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5 text-gray-600" />
+                Prévia das Refeições
+              </CardTitle>
+              <p className="text-sm text-gray-600">
+                Clique em "Ver Detalhes Completos" para ver todas as refeições com informações nutricionais detalhadas
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: Math.min(3, 7) }, (_, i) => {
+                  const dayNumber = i + 1
+                  const dayMeals = mealsByDay[dayNumber] || []
+                  
+                  return (
+                    <div key={dayNumber} className="p-4 border rounded-lg">
+                      <h3 className="font-semibold text-gray-900 mb-2">Dia {dayNumber}</h3>
+                      <div className="space-y-2">
+                        {dayMeals.slice(0, 2).map((mealPlanItem, index) => (
+                          <div key={mealPlanItem.id} className="flex items-center gap-2 text-sm">
+                            <span className="flex items-center justify-center w-6 h-6 bg-green-100 text-green-600 rounded-full text-xs font-medium">
+                              {index + 1}
+                            </span>
+                            <span className="text-gray-700 truncate">
+                              {mealPlanItem.meal_name}
+                            </span>
                           </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Refeições do Dia */}
-                      <div className="space-y-4">
-                        {dayMeals.map((mealPlanItem, index) => (
-                          <Card key={mealPlanItem.id}>
-                            <CardContent className="p-6">
-                              <div className="flex items-start gap-4">
-                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="flex items-center justify-center w-8 h-8 bg-green-100 text-green-600 rounded-full text-sm font-medium">
-                                    {index + 1}
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    {mealPlanItem.meal_name}
-                                  </h3>
-                                  
-                                  <div className="flex items-center gap-2 mb-3">
-                                    <Apple className="h-4 w-4 text-green-600" />
-                                    {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
-                                    <span className="font-medium">
-                                      {mealPlanItem.food?.name || 'Alimento não encontrado'}
-                                    </span>
-                                    <Badge variant="outline">
-                                      {mealPlanItem.quantity}g
-                                    </Badge>
-                                  </div>
-
-                                  {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
-                                  {mealPlanItem.food && (
-                                    <div className="grid grid-cols-4 gap-2 mb-3 text-sm">
-                                      <div>
-                                        <span className="font-medium">Cal:</span> {Math.round(mealPlanItem.food.calories_per_serving * mealPlanItem.quantity / mealPlanItem.food.serving_size)}
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Prot:</span> {Math.round(mealPlanItem.food.protein * mealPlanItem.quantity / mealPlanItem.food.serving_size)}g
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Carb:</span> {Math.round(mealPlanItem.food.carbs * mealPlanItem.quantity / mealPlanItem.food.serving_size)}g
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Gord:</span> {Math.round(mealPlanItem.food.fat * mealPlanItem.quantity / mealPlanItem.food.serving_size)}g
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
-                                  {mealPlanItem.food?.category && (
-                                    <div className="mb-3">
-                                      <Badge variant="secondary" className="text-xs">
-                                        {mealPlanItem.food.category}
-                                      </Badge>
-                                    </div>
-                                  )}
-
-                                  {mealPlanItem.notes && (
-                                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                                      <p className="text-sm text-yellow-800">
-                                        <strong>Nota do profissional:</strong> {mealPlanItem.notes}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
                         ))}
+                        {dayMeals.length > 2 && (
+                          <p className="text-xs text-gray-500">
+                            +{dayMeals.length - 2} refeições...
+                          </p>
+                        )}
+                        {dayMeals.length === 0 && (
+                          <p className="text-xs text-gray-500">Nenhuma refeição</p>
+                        )}
                       </div>
-                    </>
-                  )}
-                </TabsContent>
-              )
-            })}
-          </Tabs>
+                    </div>
+                  )
+                })}
+              </div>
+              
+              <div className="mt-6 text-center">
+                <Button 
+                  onClick={() => setShowDetailView(true)}
+                  variant="outline"
+                  className="flex items-center gap-2 mx-auto"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                  Ver Todas as Refeições Detalhadas
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {mealPlanItems.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-12">
+              <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhuma refeição encontrada</h3>
+              <p className="text-gray-600 mb-4">
+                Seu profissional ainda não adicionou refeições a este plano.
+              </p>
+              <Button 
+                onClick={() => setShowDetailView(true)}
+                variant="outline"
+                disabled
+              >
+                <Maximize2 className="h-4 w-4 mr-2" />
+                Ver Detalhes (Indisponível)
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
