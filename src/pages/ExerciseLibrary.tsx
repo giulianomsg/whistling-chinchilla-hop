@@ -32,7 +32,7 @@ interface Exercise {
 }
 
 const ExerciseLibrary: React.FC = () => {
-  const { user, profile } = useAuth()
+  const { user, profile, loading } = useAuth()
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [loading, setLoading] = useState(true)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -78,8 +78,11 @@ const ExerciseLibrary: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchExercises()
-  }, [user])
+    // Só executa se o auth NÃO estiver carregando E o user existir
+    if (!loading && user) {
+      fetchExercises()
+    }
+  }, [user, loading]) // <-- Muda as dependências
 
   // Resetar formulário
   const resetForm = () => {

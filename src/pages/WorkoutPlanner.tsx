@@ -65,7 +65,7 @@ interface WorkoutExercise {
 }
 
 const WorkoutPlanner: React.FC = () => {
-  const { user, profile } = useAuth()
+  const { user, profile, loading } = useAuth()
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
@@ -182,9 +182,12 @@ const WorkoutPlanner: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchWorkouts()
-    fetchExercises()
-  }, [user])
+    // Só executa se o auth NÃO estiver carregando E o user existir
+    if (!loading && user) {
+      fetchWorkouts()
+      fetchExercises()
+    }
+  }, [user, loading]) // <-- Muda as dependências
 
   // Resetar formulário de workout
   const resetWorkoutForm = () => {

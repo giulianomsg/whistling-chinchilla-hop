@@ -56,7 +56,7 @@ interface Workout {
 }
 
 const MyClients: React.FC = () => {
-  const { user, profile } = useAuth()
+  const { user, profile, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [loading, setLoading] = useState(true)
@@ -128,9 +128,12 @@ const MyClients: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchClients()
-    fetchWorkouts()
-  }, [user])
+    // Só executa se o auth NÃO estiver carregando E o user existir
+    if (!loading && user) {
+      fetchClients()
+      fetchWorkouts()
+    }
+  }, [user, loading]) // <-- Muda as dependências
 
   // Adicionar cliente
   const handleAddClient = async (e: React.FormEvent) => {
