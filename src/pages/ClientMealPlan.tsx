@@ -140,7 +140,7 @@ const ClientMealPlan: React.FC = () => {
         return
       }
 
-      // ✅ PROTEGER CONTRA NULL: Filtrar itens com food null
+      // ✅ PROTEGER CONTRA NULL: Filtrar itens com food null (ainda necessário para foods)
       const filteredData = (data || []).filter(item => item.food !== null)
       console.log('✅ [CLIENT_MEAL_PLAN] Itens do plano carregados:', filteredData.length)
       setMealPlanItems(filteredData)
@@ -149,7 +149,7 @@ const ClientMealPlan: React.FC = () => {
     }
   }
 
-  // 🔧 CORREÇÃO: useEffect simplificado e estável
+  // useEffect simplificado e estável
   useEffect(() => {
     console.log('🔍 [CLIENT_MEAL_PLAN] useEffect chamado', { 
       user: !!user, 
@@ -158,13 +158,13 @@ const ClientMealPlan: React.FC = () => {
       initialized
     })
     
-    // 🔧 CORREÇÃO: Só executar se tiver usuário e ainda não foi inicializado
+    // Só executar se tiver usuário e ainda não foi inicializado
     if (user && !initialized) {
       console.log('🚀 [CLIENT_MEAL_PLAN] Inicializando busca de plano')
       setInitialized(true)
       fetchClientMealPlan()
     }
-  }, [user?.id, profile?.id, initialized]) // 🔧 DEPENDÊNCIAS ESTÁVEIS
+  }, [user?.id, profile?.id, initialized])
 
   // Agrupar refeições por dia
   const getMealsByDay = () => {
@@ -180,14 +180,10 @@ const ClientMealPlan: React.FC = () => {
 
   const mealsByDay = getMealsByDay()
 
-  // 🔧 CORREÇÃO: Calcular macros totais do dia com proteção contra null
+  // Calcular macros totais do dia
   const calculateDayMacros = (dayMeals: MealPlanItem[]) => {
     return dayMeals.reduce((acc, item) => {
-      // ✅ PROTEÇÃO MÁXIMA CONTRA NULL
-      if (!item.food) {
-        console.warn('⚠️ [CLIENT_MEAL_PLAN] Item sem food encontrado, ignorando no cálculo:', item)
-        return acc
-      }
+      if (!item.food) return acc
       
       const factor = item.quantity / item.food.serving_size
       return {
@@ -257,11 +253,12 @@ const ClientMealPlan: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5 text-green-600" />
-              {clientMealPlan.meal_plan.name}
+              {/* ✅ PROTEÇÃO SIMPLIFICADA - Agora meal_plan não deve ser null graças à correção RLS */}
+              {clientMealPlan.meal_plan?.name || 'Plano Alimentar'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {clientMealPlan.meal_plan.description && (
+            {clientMealPlan.meal_plan?.description && (
               <p className="text-gray-600 mb-4">{clientMealPlan.meal_plan.description}</p>
             )}
             
@@ -282,7 +279,7 @@ const ClientMealPlan: React.FC = () => {
                 </Badge>
               </div>
 
-              {clientMealPlan.meal_plan.daily_calories_target && (
+              {clientMealPlan.meal_plan?.daily_calories_target && (
                 <div className="flex items-center gap-2">
                   <Target className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">Meta diária:</span>
@@ -294,9 +291,9 @@ const ClientMealPlan: React.FC = () => {
             </div>
 
             {/* Targets Nutricionais */}
-            {(clientMealPlan.meal_plan.daily_protein_target || 
-              clientMealPlan.meal_plan.daily_carbs_target || 
-              clientMealPlan.meal_plan.daily_fat_target) && (
+            {(clientMealPlan.meal_plan?.daily_protein_target || 
+              clientMealPlan.meal_plan?.daily_carbs_target || 
+              clientMealPlan.meal_plan?.daily_fat_target) && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <p className="text-sm font-medium text-gray-700 mb-2">Metas Diárias:</p>
                 <div className="grid grid-cols-3 gap-4 text-sm">
@@ -322,7 +319,7 @@ const ClientMealPlan: React.FC = () => {
               </div>
             )}
 
-            {clientMealPlan.meal_plan.objective && (
+            {clientMealPlan.meal_plan?.objective && (
               <div className="mt-4 p-3 bg-gray-50 rounded">
                 <p className="text-sm font-medium text-gray-700">Objetivo:</p>
                 <p className="text-sm text-gray-600">{clientMealPlan.meal_plan.objective}</p>
@@ -398,7 +395,7 @@ const ClientMealPlan: React.FC = () => {
                                   
                                   <div className="flex items-center gap-2 mb-3">
                                     <Apple className="h-4 w-4 text-green-600" />
-                                    {/* ✅ PROTEÇÃO MÁXIMA CONTRA NULL */}
+                                    {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
                                     <span className="font-medium">
                                       {mealPlanItem.food?.name || 'Alimento não encontrado'}
                                     </span>
@@ -407,7 +404,7 @@ const ClientMealPlan: React.FC = () => {
                                     </Badge>
                                   </div>
 
-                                  {/* ✅ PROTEÇÃO CONTRA NULL - Só renderizar macros se food existir */}
+                                  {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
                                   {mealPlanItem.food && (
                                     <div className="grid grid-cols-4 gap-2 mb-3 text-sm">
                                       <div>
@@ -425,7 +422,7 @@ const ClientMealPlan: React.FC = () => {
                                     </div>
                                   )}
 
-                                  {/* ✅ PROTEÇÃO CONTRA NULL - Só renderizar categoria se food existir */}
+                                  {/* ✅ PROTEÇÃO MANTIDA - Ainda necessária para foods */}
                                   {mealPlanItem.food?.category && (
                                     <div className="mb-3">
                                       <Badge variant="secondary" className="text-xs">
