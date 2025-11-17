@@ -1,15 +1,17 @@
 module.exports = {
   apps: [{
     name: 'capifit',
-    script: 'npm',
-    args: 'run preview',
+    script: 'npx',
+    args: 'vite preview --port 3000 --host 0.0.0.0',
     cwd: '/var/www/capifit',
     instances: 1,
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',
     env: {
-      NODE_ENV: 'production'
+      NODE_ENV: 'production',
+      PORT: 3000,
+      VITE_ALLOWED_HOSTS: 'capifit.app.br,www.capifit.app.br,localhost'
     },
     error_file: '/var/log/pm2/capifit-error.log',
     out_file: '/var/log/pm2/capifit-out.log',

@@ -10,7 +10,8 @@ export default defineConfig(() => ({
   },
   preview: {
     host: "::",
-    port: 3000,  // FORÇAR PORTA 3000 NO PREVIEW
+    port: 3000,
+    allowedHosts: 'all' // Permite todos os hosts
   },
   plugins: [dyadComponentTagger(), react()],
   resolve: {
