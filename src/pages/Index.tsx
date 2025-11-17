@@ -10,7 +10,7 @@ const Index = () => {
 
   // Se já estiver autenticado, redirecionar para o dashboard
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return (
