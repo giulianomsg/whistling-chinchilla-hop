@@ -21,10 +21,10 @@ const queryClient = new QueryClient();
 
 // Componente interno para lidar com redirecionamentos
 const AppRoutes: React.FC = () => {
-  const { user, profile, loading, isReady } = useAuth();
+  const { user, profile, loading } = useAuth();
 
-  // Loading global
-  if (loading || !isReady) {
+  // Loading global - simplificado sem isReady
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

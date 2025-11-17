@@ -11,10 +11,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children, 
   requiredRole 
 }) => {
-  const { user, profile, loading, isReady } = useAuth()
+  const { user, profile, loading } = useAuth()
 
-  // Loading state - só mostra loading se não está pronto
-  if (loading || !isReady) {
+  // Loading state - simplificado sem isReady
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

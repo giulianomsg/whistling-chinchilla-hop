@@ -1,7 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
+// Use a definição de tipo exportada do seu client.ts se disponível
+// Se não, esta definição local está OK.
 type Profile = {
   id: string
   email: string
@@ -18,7 +20,6 @@ interface AuthContextType {
   profile: Profile | null
   session: Session | null
   loading: boolean
-  isReady: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -30,29 +31,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isReady, setIsReady] = useState(false)
+  const [loading, setLoading] = useState(true) // Começa true
 
-  const fetchProfile = async (userId: string): Promise<Profile | null> => {
+  // 1. Memoize fetchProfile com useCallback
+  // Esta função agora é estável e não causará re-renderizações do useEffect
+  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
+    console.log('🔍 [AUTH] Buscando perfil para userId:', userId)
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
-      
+
       if (error) {
         console.error('❌ [AUTH] Erro ao buscar perfil:', error)
         return null
       }
-      
+      console.log('✅ [AUTH] Perfil carregado:', data?.role)
       return data
     } catch (error) {
       console.error('❌ [AUTH] Erro na busca do perfil:', error)
       return null
     }
-  }
+  }, []) // Dependência vazia: esta função nunca muda
 
+  // 2. Funções de Auth (sem alteração)
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
@@ -76,111 +80,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut()
   }
 
+  // 3. O useEffect ÚNICO e CORRIGIDO
   useEffect(() => {
-    let mounted = true
-    let profileFetchTimeout: NodeJS.Timeout
+    console.log('🚀 [AUTH] AuthProvider montado e listener anexado')
+    
+    // Define loading como true no início (caso de HMR ou re-renderizações)
+    setLoading(true)
 
-    const initialize = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        
-        if (error) {
-          console.error('❌ [AUTH] Erro ao obter sessão:', error)
-        }
-        
-        if (mounted) {
-          setSession(session)
-          setUser(session?.user ?? null)
-          
-          if (session?.user) {
-            // Buscar perfil com timeout para evitar loops
-            const profilePromise = fetchProfile(session.user.id)
-            const timeoutPromise = new Promise<null>((_, reject) => {
-              profileFetchTimeout = setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
-            })
-            
-            try {
-              const profileData = await Promise.race([profilePromise, timeoutPromise])
-              clearTimeout(profileFetchTimeout)
-              if (profileData && mounted) {
-                setProfile(profileData)
-                console.log('✅ [AUTH] Perfil carregado:', profileData.role)
-              }
-            } catch (error) {
-              clearTimeout(profileFetchTimeout)
-              console.error('❌ [AUTH] Timeout ao buscar perfil:', error)
-              if (mounted) {
-                setProfile(null)
-              }
-            }
-          } else {
-            if (mounted) {
-              setProfile(null)
-            }
-          }
-        }
-      } catch (error) {
-        console.error('❌ [AUTH] Erro na inicialização:', error)
-        if (mounted) {
-          setSession(null)
-          setUser(null)
-          setProfile(null)
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-          // Adicionar um pequeno delay para garantir que tudo está pronto
-          setTimeout(() => {
-            if (mounted) {
-              setIsReady(true)
-            }
-          }, 100)
-        }
-      }
-    }
-
+    // Este listener único gerencia TUDO:
+    // 1. INITIAL_SESSION (F5 / Refresh)
+    // 2. SIGNED_IN (Login)
+    // 3. SIGNED_OUT (Logout)
+    // 4. TOKEN_REFRESHED (Sessão atualizada)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (!mounted) return
-        
-        console.log('🔄 [AUTH] Evento:', event, 'User:', session?.user?.email)
-        
-        if (mounted) {
+        console.log(`🔄 [AUTH] Evento: ${event}`, 'User:', session?.user?.email)
+        try {
           setSession(session)
           setUser(session?.user ?? null)
-          
-          if (event === 'SIGNED_IN' && session?.user) {
+
+          if (session?.user) {
+            // Se o usuário existe (logado ou sessão restaurada)
             const profileData = await fetchProfile(session.user.id)
-            if (mounted) {
-              setProfile(profileData)
-              console.log('✅ [AUTH] Perfil carregado após SIGNED_IN:', profileData?.role)
-            }
-          } else if (event === 'SIGNED_OUT') {
-            if (mounted) {
-              setProfile(null)
-            }
+            setProfile(profileData)
+          } else {
+            // Se o usuário não existe (logout)
+            setProfile(null)
           }
+        } catch (error) {
+          console.error('❌ [AUTH] Erro no processamento do evento:', error)
+          setProfile(null)
+        } finally {
+          // Após o primeiro evento (seja uma sessão ou null),
+          // paramos o loading.
+          setLoading(false)
         }
       }
     )
 
-    initialize()
-
+    // Função de limpeza
     return () => {
-      mounted = false
-      if (profileFetchTimeout) {
-        clearTimeout(profileFetchTimeout)
-      }
+      console.log('🧹 [AUTH] AuthProvider desmontado, listener removido')
       subscription.unsubscribe()
     }
-  }, [])
+  }, [fetchProfile]) // A única dependência é a função memoizada fetchProfile
 
+  // REMOVEMOS O ESTADO 'isReady'. Ele é redundante. 'loading: false' é o novo 'isReady: true'
   const value: AuthContextType = {
     user,
     profile,
     session,
-    loading,
-    isReady,
+    loading, 
     signIn,
     signUp,
     signOut

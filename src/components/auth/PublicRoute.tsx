@@ -7,10 +7,10 @@ interface PublicRouteProps {
 }
 
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const { user, loading, isReady } = useAuth()
+  const { user, loading } = useAuth()
 
-  // Loading state - só mostra loading se não está pronto
-  if (loading || !isReady) {
+  // Loading state - simplificado sem isReady
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
