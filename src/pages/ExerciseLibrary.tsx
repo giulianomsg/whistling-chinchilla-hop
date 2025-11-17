@@ -559,6 +559,6 @@ const ExerciseLibrary: React.FC = () => {
       </div>
     </div>
   )
-}
+} 
 
 export default ExerciseLibrary
