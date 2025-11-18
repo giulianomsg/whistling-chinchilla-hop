@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 import { 
   Dumbbell, 
   Calendar, 
@@ -12,7 +13,9 @@ import {
   AlertCircle,
   User,
   Timer,
-  BarChart3
+  BarChart3,
+  PlayCircle,
+  Youtube
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -34,6 +37,7 @@ interface Exercise {
   description: string | null
   muscle_groups: string[] | null
   difficulty_level: string | null
+  video_url: string | null
   is_public: boolean
   created_by: string
 }
@@ -71,6 +75,26 @@ interface WorkoutDetailViewProps {
 const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) => {
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
   const [loading, setLoading] = useState(true)
+  const [openVideoId, setOpenVideoId] = useState<string | null>(null)
+
+  // Função helper para converter URLs do YouTube em embed
+  const getEmbedUrl = (url: string): string | null => {
+    try {
+      const urlObj = new URL(url)
+      if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+        const videoId = urlObj.searchParams.get('v')
+        return videoId ? `https://www.youtube.com/embed/${videoId}` : null
+      }
+      if (urlObj.hostname === 'youtu.be') {
+        return `https://www.youtube.com/embed/${urlObj.pathname.substring(1)}`
+      }
+      // Adicionar outros provedores como Vimeo se desejar
+      return url // Retorna a URL original se for de outro host (assumindo que já é um embed)
+    } catch (e) {
+      console.error('URL de vídeo inválida:', e)
+      return null
+    }
+  }
 
   // Buscar exercícios do treino
   const fetchWorkoutExercises = async () => {
@@ -341,10 +365,40 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                                   )}
 
                                   {workoutExercise.notes && (
-                                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded mb-3">
                                       <p className="text-sm text-yellow-800">
                                         <strong>Nota do profissional:</strong> {workoutExercise.notes}
                                       </p>
+                                    </div>
+                                  )}
+
+                                  {/* Botão de Vídeo */}
+                                  {workoutExercise.exercise?.video_url && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="mt-4"
+                                      onClick={() => setOpenVideoId(
+                                        openVideoId === workoutExercise.id ? null : workoutExercise.id
+                                      )}
+                                    >
+                                      <PlayCircle className="h-4 w-4 mr-2" />
+                                      {openVideoId === workoutExercise.id ? 'Fechar Vídeo' : 'Ver Vídeo de Execução'}
+                                    </Button>
+                                  )}
+
+                                  {/* Player de Vídeo (Embed) */}
+                                  {openVideoId === workoutExercise.id && workoutExercise.exercise?.video_url && (
+                                    <div className="mt-4 aspect-video rounded-lg overflow-hidden border">
+                                      <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src={getEmbedUrl(workoutExercise.exercise.video_url) || ''}
+                                        title={`Vídeo para ${workoutExercise.exercise.name}`}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                      ></iframe>
                                     </div>
                                   )}
                                 </div>
