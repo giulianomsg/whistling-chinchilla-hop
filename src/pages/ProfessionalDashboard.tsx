@@ -142,10 +142,24 @@ const ProfessionalDashboard: React.FC = () => {
 
       if (error) {
         console.error('❌ [DASHBOARD] Erro ao buscar atividades:', error)
+        console.error('❌ [DASHBOARD] Detalhes do erro:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        })
         return
       }
 
       console.log('✅ [DASHBOARD] Atividades recentes carregadas:', data?.length || 0, 'sessões')
+      console.log('🔍 [DASHBOARD] Dados brutos:', data)
+      
+      // Verificar se os dados estão vindo corretamente
+      if (data && data.length > 0) {
+        console.log('🔍 [DASHBOARD] Primeira atividade:', data[0])
+        console.log('🔍 [DASHBOARD] Status das atividades:', data.map(a => a.status))
+      }
+
       setRecentActivities(data || [])
     } catch (error) {
       console.error('❌ [DASHBOARD] Erro inesperado:', error)
@@ -158,10 +172,15 @@ const ProfessionalDashboard: React.FC = () => {
 
     setPageLoading(true)
     try {
+      console.log('🚀 [DASHBOARD] Iniciando carregamento completo...')
+      
+      // Carregar métricas e atividades em paralelo
       await Promise.all([
         fetchMetrics(),
         fetchRecentActivities()
       ])
+      
+      console.log('✅ [DASHBOARD] Carregamento completo finalizado')
     } catch (error) {
       console.error('❌ [DASHBOARD] Erro ao carregar dashboard:', error)
     } finally {
@@ -170,8 +189,18 @@ const ProfessionalDashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    console.log('🔍 [DASHBOARD] useEffect chamado', { 
+      user: !!user, 
+      profile: !!profile,
+      userId: user?.id,
+      loading: !loading
+    })
+    
     if (!loading && user) {
+      console.log('🚀 [DASHBOARD] Condições atendidas, iniciando carregamento...')
       loadDashboardData()
+    } else {
+      console.log('⏳ [DASHBOARD] Aguardando condições:', { loading, hasUser: !!user })
     }
   }, [user?.id, loading])
 
@@ -258,6 +287,16 @@ const ProfessionalDashboard: React.FC = () => {
   const getDisplayName = () => {
     return profile?.full_name || 'Profissional'
   }
+
+  // Debug: Verificar estado atual
+  console.log('🔍 [DASHBOARD] Estado atual:', {
+    loading,
+    pageLoading,
+    hasUser: !!user,
+    hasProfile: !!profile,
+    activitiesCount: recentActivities.length,
+    metrics
+  })
 
   if (loading || pageLoading) {
     return (
