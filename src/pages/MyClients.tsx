@@ -124,7 +124,7 @@ const MyClients: React.FC = () => {
     }
   }
 
-  // Adicionar novo cliente
+  // Adicionar novo cliente - VERSÃO CORRIGIDA
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -154,32 +154,48 @@ const MyClients: React.FC = () => {
         return
       }
 
-      // 3. Criar vínculo
-      const { error: linkError } = await supabase
-        .from('client_professionals')
-        .insert({
-          client_id: client.id,
-          professional_id: user.id,
-          status: 'active',
-          notes: newClientNotes || null
-        })
+      // 3. Criar vínculo E atualizar perfil via RPC (NOVA LÓGICA)
+      const { error: linkError } = await supabase.rpc('link_client_and_update_profile', {
+        p_client_id: client.id,
+        p_notes: newClientNotes || null,
+        p_full_name: newClientName || null,
+        p_phone: newClientPhone || null
+      })
 
       if (linkError) {
-        console.error('❌ [MY_CLIENTS] Erro ao criar vínculo:', linkError)
-        showError('Erro ao vincular cliente')
+        console.error('❌ [MY_CLIENTS] Erro ao vincular/atualizar cliente:', linkError)
+        
+        // Tratamento específico de erros
+        if (linkError.message?.includes('já está vinculado')) {
+          showError('Este cliente já está vinculado a este profissional.')
+        } else if (linkError.message?.includes('Cliente não encontrado')) {
+          showError('Cliente não encontrado ou não é um cliente válido.')
+        } else {
+          showError('Erro ao vincular cliente: ' + linkError.message)
+        }
         return
       }
 
-      showSuccess('Cliente adicionado com sucesso!')
+      console.log('✅ [MY_CLIENTS] Cliente vinculado e atualizado com sucesso!')
       
-      // 4. Limpar formulário e fechar diálogo
+      // 4. Sucesso - mostrar mensagem com detalhes
+      let successMessage = 'Cliente adicionado com sucesso!'
+      if (newClientName || newClientPhone) {
+        const details = []
+        if (newClientName) details.push(`nome: "${newClientName}"`)
+        if (newClientPhone) details.push(`telefone: "${newClientPhone}"`)
+        successMessage += ` Dados atualizados: ${details.join(', ')}.`
+      }
+      showSuccess(successMessage)
+      
+      // 5. Limpar formulário e fechar diálogo
       setNewClientEmail('')
       setNewClientName('')
       setNewClientPhone('')
       setNewClientNotes('')
       setIsAddDialogOpen(false)
       
-      // 5. Recarregar lista
+      // 6. Recarregar lista para mostrar dados atualizados
       fetchClients()
       
     } catch (error) {
@@ -310,7 +326,7 @@ const MyClients: React.FC = () => {
                 />
               </div>
               
-              {/* Botão Novo Cliente - AGORA FUNCIONAL */}
+              {/* Botão Novo Cliente - AGORA COM DADOS COMPLETOS */}
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                   <Button>
@@ -340,18 +356,21 @@ const MyClients: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-name">Nome (opcional)</Label>
+                      <Label htmlFor="client-name">Nome Completo</Label>
                       <Input
                         id="client-name"
-                        placeholder="Nome do cliente"
+                        placeholder="João Silva"
                         value={newClientName}
                         onChange={(e) => setNewClientName(e.target.value)}
                         disabled={addLoading}
                       />
+                      <p className="text-xs text-gray-500">
+                        Preencha para atualizar o nome do cliente (opcional)
+                      </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-phone">Telefone (opcional)</Label>
+                      <Label htmlFor="client-phone">Telefone</Label>
                       <Input
                         id="client-phone"
                         placeholder="(00) 00000-0000"
@@ -359,10 +378,13 @@ const MyClients: React.FC = () => {
                         onChange={(e) => setNewClientPhone(e.target.value)}
                         disabled={addLoading}
                       />
+                      <p className="text-xs text-gray-500">
+                        Preencha para atualizar o telefone do cliente (opcional)
+                      </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-notes">Notas (opcional)</Label>
+                      <Label htmlFor="client-notes">Notas</Label>
                       <Textarea
                         id="client-notes"
                         placeholder="Observações sobre este cliente..."
@@ -437,7 +459,7 @@ const MyClients: React.FC = () => {
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado'}
             </h3>
-            <p className="text-gray-600 mb-6 max-w-md">
+            <p className="text-gray-600 mb-4 max-w-md">
               {searchTerm 
                 ? 'Tente ajustar sua busca ou adicione novos clientes.'
                 : 'Comece adicionando seu primeiro cliente para gerenciar os treinos e planos alimentares.'
