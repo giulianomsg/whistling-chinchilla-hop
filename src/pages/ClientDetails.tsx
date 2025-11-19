@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { DatePickerWithRange } from '@/components/ui/date-picker'
+import { useAuth } from '../contexts/AuthContext'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { DatePickerWithRange } from '../components/ui/date-picker'
 import { 
   User, 
   Calendar, 
@@ -29,12 +29,11 @@ import {
   TrendingDown,
   BarChart3,
   CalendarDays,
-  Bell,
-  Compare
+  Bell
 } from 'lucide-react'
-import { supabase } from '@/integrations/supabase/client'
-import { showSuccess, showError } from '@/utils/toast'
-import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
+import { supabase } from '../integrations/supabase/client'
+import { showSuccess, showError } from '../utils/toast'
+import ClientWorkoutHistory from '../components/professional/ClientWorkoutHistory'
 import { format, subDays, startOfDay, endOfDay } from 'date-fns'
 
 interface ClientProfile {
@@ -491,7 +490,6 @@ const ClientDetails: React.FC = () => {
                 onClick={() => setComparisonMode(!comparisonMode)}
                 variant={comparisonMode ? "default" : "outline"}
               >
-                <Compare className="h-4 w-4 mr-2" />
                 Comparar Períodos
               </Button>
             </div>
@@ -815,7 +813,6 @@ const ClientDetails: React.FC = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Compare className="h-5 w-5 text-orange-600" />
                       Comparação de Períodos
                     </CardTitle>
                   </CardHeader>
