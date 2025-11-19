@@ -21,7 +21,8 @@ import {
   Timer,
   Play,
   Pause,
-  AlertCircle
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { format, subDays, isToday, isWithinInterval, subHours } from 'date-fns'
@@ -62,6 +63,7 @@ const ProfessionalDashboard: React.FC = () => {
   })
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([])
   const [pageLoading, setPageLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0) // Forçar refresh
 
   // Buscar métricas do dashboard
   const fetchMetrics = async () => {
@@ -127,18 +129,25 @@ const ProfessionalDashboard: React.FC = () => {
     try {
       console.log('🔍 [DASHBOARD] Buscando atividades recentes...')
 
+      // Query mais simples e direta
       const { data, error } = await supabase
         .from('workout_sessions')
         .select(`
-          *,
-          client:profiles(full_name),
-          workout:workouts(name)
+          id,
+          client_id,
+          workout_id,
+          client_workout_id,
+          started_at,
+          ended_at,
+          duration_seconds,
+          status,
+          created_at,
+          client:profiles!client_id(full_name),
+          workout:workouts!workout_id(name)
         `)
         .eq('professional_id', user.id)
-        // REMOVIDO: .in('status', ['completed', 'abandoned'])
-        // QUERO VER TODOS OS STATUS: started, paused, completed, abandoned
         .order('created_at', { ascending: false })
-        .limit(10) // Aumentado para mostrar mais atividades
+        .limit(15) // Aumentado para mostrar mais atividades
 
       if (error) {
         console.error('❌ [DASHBOARD] Erro ao buscar atividades:', error)
@@ -158,12 +167,21 @@ const ProfessionalDashboard: React.FC = () => {
       if (data && data.length > 0) {
         console.log('🔍 [DASHBOARD] Primeira atividade:', data[0])
         console.log('🔍 [DASHBOARD] Status das atividades:', data.map(a => a.status))
+        console.log('🔍 [DASHBOARD] Clientes:', data.map(a => ({ id: a.client_id, name: a.client?.full_name })))
+      } else {
+        console.log('⚠️ [DASHBOARD] Nenhuma atividade encontrada')
       }
 
       setRecentActivities(data || [])
     } catch (error) {
       console.error('❌ [DASHBOARD] Erro inesperado:', error)
     }
+  }
+
+  // Forçar refresh manual
+  const handleRefresh = () => {
+    console.log('🔄 [DASHBOARD] Forçando refresh manual...')
+    setRefreshKey(prev => prev + 1)
   }
 
   // Carregar todos os dados do dashboard
@@ -193,7 +211,8 @@ const ProfessionalDashboard: React.FC = () => {
       user: !!user, 
       profile: !!profile,
       userId: user?.id,
-      loading: !loading
+      loading: !loading,
+      refreshKey
     })
     
     if (!loading && user) {
@@ -202,7 +221,7 @@ const ProfessionalDashboard: React.FC = () => {
     } else {
       console.log('⏳ [DASHBOARD] Aguardando condições:', { loading, hasUser: !!user })
     }
-  }, [user?.id, loading])
+  }, [user?.id, loading, refreshKey])
 
   // Formatar duração para display
   const formatDuration = (seconds: number | null): string => {
@@ -295,7 +314,13 @@ const ProfessionalDashboard: React.FC = () => {
     hasUser: !!user,
     hasProfile: !!profile,
     activitiesCount: recentActivities.length,
-    metrics
+    metrics,
+    recentActivities: recentActivities.map(a => ({
+      id: a.id,
+      client_name: a.client?.full_name,
+      status: a.status,
+      workout_name: a.workout?.name
+    }))
   })
 
   if (loading || pageLoading) {
@@ -332,6 +357,15 @@ const ProfessionalDashboard: React.FC = () => {
                   {metrics.activeSessions} treinando agora
                 </Badge>
               )}
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleRefresh}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Atualizar
+              </Button>
             </div>
           </div>
         </div>
