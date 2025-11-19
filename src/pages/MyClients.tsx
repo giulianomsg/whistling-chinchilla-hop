@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Input } from '../components/ui/input'
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { 
   Users, 
   Plus, 
+  Search, 
   Mail, 
   Calendar, 
-  Dumbbell, 
-  User, 
   Clock,
   Loader2,
-  UserPlus,
-  Link2,
+  User,
+  ArrowRight,
   CheckCircle,
-  Utensils
+  XCircle,
+  AlertCircle,
+  Filter
 } from 'lucide-react'
-import { showSuccess, showError } from '@/utils/toast'
-import { supabase } from '@/integrations/supabase/client'
+import { supabase } from '../integrations/supabase/client'
+import { showSuccess, showError } from '../utils/toast'
+import { format, subDays } from 'date-fns'
 
 interface ClientProfile {
   id: string
   email: string
   full_name: string | null
+  avatar_url: string | null
+  phone: string | null
   role: string
   created_at: string
 }
@@ -44,413 +46,139 @@ interface ClientProfessional {
   client: ClientProfile
 }
 
-interface Workout {
-  id: string
-  name: string
-  description: string | null
-  objective: string | null
-  duration_weeks: number
-  days_per_week: number | null
-  professional_id: string
-  is_template: boolean
-  created_at: string
-}
-
-interface MealPlan {
-  id: string
-  name: string
-  description: string | null
-  objective: string | null
-  nutritionist_id: string
-  daily_calories_target: number | null
-  daily_protein_target: number | null
-  daily_carbs_target: number | null
-  daily_fat_target: number | null
-  is_template: boolean
-  created_at: string
-}
-
 const MyClients: React.FC = () => {
+  const navigate = useNavigate()
   const { user, profile, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
-  const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [mealPlans, setMealPlans] = useState<MealPlan[]>([])
   const [pageLoading, setPageLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
 
-  // Dialog states
-  const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false)
-  const [isAssignWorkoutDialogOpen, setIsAssignWorkoutDialogOpen] = useState(false)
-  const [isAssignMealPlanDialogOpen, setIsAssignMealPlanDialogOpen] = useState(false)
-  const [selectedClient, setSelectedClient] = useState<ClientProfessional | null>(null)
-
-  // Form states
-  const [addClientEmail, setAddClientEmail] = useState('')
-  const [assignWorkoutData, setAssignWorkoutData] = useState({
-    workout_id: '',
-    start_date: '',
-    notes: ''
-  })
-  const [assignMealPlanData, setAssignMealPlanData] = useState({
-    meal_plan_id: '',
-    start_date: '',
-    notes: ''
-  })
-
-  // Buscar clientes vinculados
+  // Buscar clientes vinculados ao profissional
   const fetchClients = async () => {
     if (!user) {
-      console.log('❌ [CLIENTS] Usuário null, não buscando clientes')
+      console.log('❌ [MY_CLIENTS] Usuário null, não buscando clientes')
       return
     }
 
     try {
-      console.log('🔍 [CLIENTS] Buscando clientes do profissional:', user.id)
+      console.log('🔍 [MY_CLIENTS] Buscando clientes do profissional:', user.id)
       setPageLoading(true)
       
       const { data, error } = await supabase
         .from('client_professionals')
         .select(`
           *,
-          client:profiles!client_id(id, email, full_name, role, created_at)
+          client:profiles!client_id(id, email, full_name, avatar_url, phone, role, created_at)
         `)
         .eq('professional_id', user.id)
-        .eq('status', 'active')
         .order('started_at', { ascending: false })
 
       if (error) {
-        console.error('❌ [CLIENTS] Erro ao buscar clientes:', error)
+        console.error('❌ [MY_CLIENTS] Erro ao buscar clientes:', error)
         showError('Erro ao carregar clientes')
         return
       }
 
-      console.log('🔍 [CLIENTS] Dados brutos recebidos:', data)
-      
-      // ✅ PROTEGER CONTRA NULL: Filtrar itens com client null e logar
-      const filteredData = (data || []).filter(item => {
-        if (!item.client) {
-          console.warn('⚠️ [CLIENTS] Item com client null encontrado, filtrando:', item)
-          return false
-        }
-        return true
-      })
-      
-      console.log('✅ [CLIENTS] Clientes válidos filtrados:', filteredData)
-      setClients(filteredData)
+      console.log('✅ [MY_CLIENTS] Clientes carregados:', data?.length || 0)
+      setClients(data || [])
     } catch (error) {
-      console.error('❌ [CLIENTS] Erro inesperado:', error)
+      console.error('❌ [MY_CLIENTS] Erro inesperado:', error)
       showError('Erro inesperado ao carregar clientes')
     } finally {
       setPageLoading(false)
     }
   }
 
-  // Buscar workouts do profissional
-  const fetchWorkouts = async () => {
-    if (!user) return
-
-    try {
-      const { data, error } = await supabase
-        .from('workouts')
-        .select('*')
-        .eq('professional_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('Erro ao buscar workouts:', error)
-        return
-      }
-
-      console.log('✅ [CLIENTS] Workouts carregados:', data?.length || 0)
-      setWorkouts(data || [])
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-    }
-  }
-
-  // Buscar planos alimentares do profissional
-  const fetchMealPlans = async () => {
-    if (!user) return
-
-    try {
-      const { data, error } = await supabase
-        .from('meal_plans')
-        .select('*')
-        .eq('nutritionist_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('Erro ao buscar planos alimentares:', error)
-        return
-      }
-
-      console.log('✅ [CLIENTS] Planos alimentares carregados:', data?.length || 0)
-      setMealPlans(data || [])
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-    }
-  }
-
   useEffect(() => {
-    console.log('🔍 [CLIENTS] useEffect chamado', { loading: !loading, user: !!user, profile: !!profile })
+    console.log('🔍 [MY_CLIENTS] useEffect chamado', { 
+      user: !!user, 
+      profile: !!profile,
+      userId: user?.id,
+      loading: !loading
+    })
+    
     if (!loading && user) {
       fetchClients()
-      fetchWorkouts()
-      fetchMealPlans()
     }
   }, [user?.id, loading])
 
-  // Adicionar cliente - MELHORADO
-  const handleAddClient = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user || !addClientEmail.trim()) return
+  // Filtrar clientes pelo nome
+  const filteredClients = clients.filter(client => {
+    if (!searchTerm.trim()) return true
+    
+    const searchLower = searchTerm.toLowerCase()
+    const fullName = client.client?.full_name?.toLowerCase() || ''
+    const email = client.client?.email?.toLowerCase() || ''
+    
+    return fullName.includes(searchLower) || email.includes(searchLower)
+  })
 
-    try {
-      console.log('🔍 [CLIENTS] Buscando cliente para adicionar:', addClientEmail.trim())
-      
-      // 🔧 MELHORIA: Usar RPC para buscar cliente de forma segura
-      const { data: clientData, error: clientError } = await supabase.rpc('find_client_by_email', {
-        client_email: addClientEmail.trim()
-      })
+  // Navegar para detalhes do cliente
+  const handleViewClientDetails = (clientId: string) => {
+    console.log('🔗 [MY_CLIENTS] Navegando para detalhes do cliente:', clientId)
+    navigate(`/app/clients/${clientId}`)
+  }
 
-      if (clientError) {
-        console.error('❌ [CLIENTS] Erro ao buscar cliente via RPC:', clientError)
-        showError('Erro ao buscar cliente: ' + clientError.message)
-        return
-      }
+  // Obter iniciais do nome para avatar
+  const getInitials = (fullName: string | null, email: string) => {
+    if (fullName && fullName.trim()) {
+      return fullName
+        .split(' ')
+        .map(name => name[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    }
+    // Fallback para email
+    return email?.[0]?.toUpperCase() || 'U'
+  }
 
-      // ✅ CORREÇÃO: RPC retorna array, pegar primeiro item
-      const client = Array.isArray(clientData) && clientData.length > 0 ? clientData[0] : null
+  // Formatar data para display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
 
-      if (!client) {
-        showError('Cliente não encontrado. Verifique o email e se o usuário tem role "client".')
-        return
-      }
-
-      console.log('✅ [CLIENTS] Cliente encontrado via RPC:', client)
-
-      // 🔧 MELHORIA: Verificar se existe vínculo (ativo ou inativo)
-      const { data: existingLink, error: linkError } = await supabase
-        .from('client_professionals')
-        .select('*')
-        .eq('client_id', client.id)
-        .eq('professional_id', user.id)
-        .single()
-
-      if (existingLink) {
-        if (existingLink.status === 'active') {
-          showError('Este cliente já está vinculado a você.')
-          return
-        } else {
-          // 🔧 MELHORIA: Reativar vínculo existente em vez de criar novo
-          console.log('🔄 [CLIENTS] Reativando vínculo existente:', existingLink.id)
-          
-          const { error: reactivateError } = await supabase
-            .from('client_professionals')
-            .update({ 
-              status: 'active', 
-              ended_at: null,
-              started_at: new Date().toISOString() // Nova data de início
-            })
-            .eq('id', existingLink.id)
-
-          if (reactivateError) {
-            console.error('Erro ao reativar vínculo:', reactivateError)
-            showError('Erro ao reativar vínculo com cliente')
-            return
-          }
-
-          showSuccess('Cliente reativado com sucesso!')
-          setIsAddClientDialogOpen(false)
-          setAddClientEmail('')
-          fetchClients()
-          return
+  // Obter status visual
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case 'active':
+        return {
+          variant: 'default' as const,
+          className: 'bg-green-100 text-green-800 border-green-200',
+          icon: <CheckCircle className="h-3 w-3" />,
+          text: 'Ativo'
         }
-      }
-
-      // Criar novo vínculo se não existir
-      console.log('🆕 [CLIENTS] Criando novo vínculo para cliente:', client.id)
-      
-      const { error: insertError } = await supabase
-        .from('client_professionals')
-        .insert({
-          client_id: client.id,
-          professional_id: user.id,
-          status: 'active'
-        })
-
-      if (insertError) {
-        console.error('Erro ao criar vínculo:', insertError)
-        showError('Erro ao vincular cliente')
-        return
-      }
-
-      showSuccess('Cliente adicionado com sucesso!')
-      setIsAddClientDialogOpen(false)
-      setAddClientEmail('')
-      fetchClients()
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-      showError('Erro inesperado ao adicionar cliente')
+      case 'inactive':
+        return {
+          variant: 'secondary' as const,
+          className: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: <XCircle className="h-3 w-3" />,
+          text: 'Inativo'
+        }
+      default:
+        return {
+          variant: 'secondary' as const,
+          className: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: <Clock className="h-3 w-3" />,
+          text: status
+        }
     }
   }
 
-  // Atribuir plano de treino ao cliente
-  const handleAssignWorkout = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user || !selectedClient || !assignWorkoutData.workout_id || !assignWorkoutData.start_date) return
-
-    try {
-      const workoutAssignment = {
-        client_id: selectedClient.client_id,
-        workout_id: assignWorkoutData.workout_id,
-        professional_id: user.id,
-        start_date: assignWorkoutData.start_date,
-        status: 'active',
-        notes: assignWorkoutData.notes || null
-      }
-
-      const { error } = await supabase
-        .from('client_workouts')
-        .insert(workoutAssignment)
-
-      if (error) {
-        console.error('Erro ao atribuir plano de treino:', error)
-        showError('Erro ao atribuir plano de treino ao cliente')
-        return
-      }
-
-      showSuccess('Plano de treino atribuído com sucesso!')
-      setIsAssignWorkoutDialogOpen(false)
-      setSelectedClient(null)
-      setAssignWorkoutData({
-        workout_id: '',
-        start_date: '',
-        notes: ''
-      })
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-      showError('Erro inesperado ao atribuir plano de treino')
-    }
-  }
-
-  // Atribuir plano alimentar ao cliente
-  const handleAssignMealPlan = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user || !selectedClient || !assignMealPlanData.meal_plan_id || !assignMealPlanData.start_date) return
-
-    try {
-      const mealPlanAssignment = {
-        client_id: selectedClient.client_id,
-        meal_plan_id: assignMealPlanData.meal_plan_id,
-        nutritionist_id: user.id,
-        start_date: assignMealPlanData.start_date,
-        status: 'active',
-        notes: assignMealPlanData.notes || null
-      }
-
-      const { error } = await supabase
-        .from('client_meal_plans')
-        .insert(mealPlanAssignment)
-
-      if (error) {
-        console.error('Erro ao atribuir plano alimentar:', error)
-        showError('Erro ao atribuir plano alimentar ao cliente')
-        return
-      }
-
-      showSuccess('Plano alimentar atribuído com sucesso!')
-      setIsAssignMealPlanDialogOpen(false)
-      setSelectedClient(null)
-      setAssignMealPlanData({
-        meal_plan_id: '',
-        start_date: '',
-        notes: ''
-      })
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-      showError('Erro inesperado ao atribuir plano alimentar')
-    }
-  }
-
-  // 🔧 CORREÇÃO: Remover vínculo E CANCELAR planos de treino
-  const handleRemoveClient = async (clientProfessionalId: string, clientId: string) => {
-    try {
-      console.log('🔄 [CLIENTS] Removendo vínculo e CANCELANDO planos para cliente:', clientId)
-      
-      // 1. Desativar vínculo do cliente
-      const { error: linkError } = await supabase
-        .from('client_professionals')
-        .update({ status: 'inactive', ended_at: new Date().toISOString() })
-        .eq('id', clientProfessionalId)
-
-      if (linkError) {
-        console.error('Erro ao remover vínculo:', linkError)
-        showError('Erro ao remover cliente')
-        return
-      }
-
-      // 2. 🔧 CORREÇÃO: CANCELAR todos os planos de treino ativos do cliente
-      const { error: workoutError } = await supabase
-        .from('client_workouts')
-        .update({ 
-          status: 'cancelled',
-          end_date: new Date().toISOString().split('T')[0] // Data atual
-        })
-        .eq('client_id', clientId)
-        .eq('professional_id', user.id)
-        .eq('status', 'active')
-
-      if (workoutError) {
-        console.error('Erro ao cancelar planos de treino:', workoutError)
-        // Não falhar completamente, apenas logar erro
-        console.warn('⚠️ [CLIENTS] Vínculo removido mas houve erro ao cancelar planos:', workoutError)
-      }
-
-      // 3. 🔧 CORREÇÃO: CANCELAR todos os planos alimentares ativos do cliente
-      const { error: mealPlanError } = await supabase
-        .from('client_meal_plans')
-        .update({ 
-          status: 'cancelled',
-          end_date: new Date().toISOString().split('T')[0] // Data atual
-        })
-        .eq('client_id', clientId)
-        .eq('nutritionist_id', user.id)
-        .eq('status', 'active')
-
-      if (mealPlanError) {
-        console.error('Erro ao cancelar planos alimentares:', mealPlanError)
-        // Não falhar completamente, apenas logar erro
-        console.warn('⚠️ [CLIENTS] Vínculo removido mas houve erro ao cancelar planos alimentares:', mealPlanError)
-      }
-
-      showSuccess('Cliente e todos os planos cancelados com sucesso!')
-      fetchClients()
-    } catch (error) {
-      console.error('Erro inesperado:', error)
-      showError('Erro inesperado ao remover cliente')
-    }
-  }
-
-  // Abrir dialog de atribuir plano de treino
-  const handleOpenAssignWorkoutDialog = (client: ClientProfessional) => {
-    setSelectedClient(client)
-    setAssignWorkoutData({
-      workout_id: '',
-      start_date: '',
-      notes: ''
-    })
-    setIsAssignWorkoutDialogOpen(true)
-  }
-
-  // Abrir dialog de atribuir plano alimentar
-  const handleOpenAssignMealPlanDialog = (client: ClientProfessional) => {
-    setSelectedClient(client)
-    setAssignMealPlanData({
-      meal_plan_id: '',
-      start_date: '',
-      notes: ''
-    })
-    setIsAssignMealPlanDialogOpen(true)
+  if (loading || pageLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Carregando clientes...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -465,350 +193,185 @@ const MyClients: React.FC = () => {
                 Meus Clientes
               </h1>
               <p className="mt-2 text-gray-600">
-                Gerencie seus clientes e atribua planos de treino e alimentares personalizados
+                Gerencie seus alunos e acompanhe o progresso de cada um.
               </p>
             </div>
             
-            <Dialog open={isAddClientDialogOpen} onOpenChange={setIsAddClientDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Adicionar Cliente
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Adicionar Novo Cliente</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleAddClient} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="client-email">Email do Cliente *</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="client-email"
-                        type="email"
-                        placeholder="cliente@exemplo.com"
-                        value={addClientEmail}
-                        onChange={(e) => setAddClientEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      O cliente já deve ter uma conta com role "client" no sistema.
-                    </p>
-                  </div>
+            <div className="flex items-center gap-3">
+              {/* Campo de Busca */}
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Buscar por nome ou email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 w-64"
+                />
+              </div>
+              
+              {/* Botão Novo Cliente */}
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Adicionar Cliente
+              </Button>
+            </div>
+          </div>
 
-                  <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsAddClientDialogOpen(false)}>
-                      Cancelar
-                    </Button>
-                    <Button type="submit" disabled={!addClientEmail.trim()}>
-                      <Link2 className="mr-2 h-4 w-4" />
-                      Vincular Cliente
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
+          {/* Indicadores */}
+          <div className="flex items-center gap-6 mb-6">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">
+                Total:
+              </span>
+              <Badge variant="secondary" className="text-sm">
+                {clients.length}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">
+                Ativos:
+              </span>
+              <Badge variant="default" className="text-sm bg-green-100 text-green-800">
+                {clients.filter(c => c.status === 'active').length}
+              </Badge>
+            </div>
+            {searchTerm && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">
+                  Filtrados:
+                </span>
+                <Badge variant="outline" className="text-sm">
+                  {filteredClients.length}
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Lista de Clientes */}
-        {pageLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="ml-2 text-gray-600">Carregando clientes...</p>
+        {filteredClients.length === 0 ? (
+          <div className="text-center py-12">
+            <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              {searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado'}
+            </h3>
+            <p className="text-gray-600 mb-6 max-w-md">
+              {searchTerm 
+                ? 'Tente ajustar sua busca ou adicione novos clientes.'
+                : 'Comece adicionando seu primeiro cliente para gerenciar os treinos e planos alimentares.'
+              }
+            </p>
+            {!searchTerm && (
+              <Button onClick={() => navigate('/app/clients/add')}>
+                <Plus className="h-4 w-4 mr-2" />
+                Adicionar Primeiro Cliente
+              </Button>
+            )}
           </div>
         ) : (
-          <>
-            <div className="mb-4 text-sm text-gray-600">
-              📊 Debug: {clients.length} clientes encontrados
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {clients.length === 0 ? (
-                <div className="col-span-full text-center py-12">
-                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum cliente encontrado</h3>
-                  <p className="text-gray-600 mb-4">Comece adicionando seu primeiro cliente para gerenciar seus planos.</p>
-                  <Button onClick={() => setIsAddClientDialogOpen(true)}>
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Adicionar Primeiro Cliente
-                  </Button>
-                </div>
-              ) : (
-                clients.map((clientProfessional) => {
-                  console.log('🔍 [CLIENTS] Renderizando cliente:', clientProfessional)
-                  return (
-                    <Card key={clientProfessional.id} className="relative">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            <User className="h-5 w-5 text-blue-600" />
-                            {/* ✅ PROTEÇÃO MÁXIMA CONTRA NULL */}
-                            {clientProfessional.client?.full_name || clientProfessional.client?.email || 'Cliente sem identificação'}
-                          </CardTitle>
-                          <Badge variant="secondary" className="text-xs">
-                            <CheckCircle className="mr-1 h-3 w-3" />
-                            Ativo
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">
-                              {clientProfessional.client?.email || 'Sem email'}
-                            </span>
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">
-                              Vinculado em {new Date(clientProfessional.started_at).toLocaleDateString('pt-BR')}
-                            </span>
-                          </div>
-
-                          {clientProfessional.notes && (
-                            <div className="p-2 bg-gray-50 rounded text-sm text-gray-600">
-                              <strong>Notas:</strong> {clientProfessional.notes}
-                            </div>
-                          )}
-                        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredClients.map((clientProfessional) => {
+              const statusInfo = getStatusInfo(clientProfessional.status)
+              const client = clientProfessional.client
+              
+              return (
+                <Card 
+                  key={clientProfessional.id} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => handleViewClientDetails(client.id)}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        {/* Avatar do Cliente */}
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={client.avatar_url || ''} />
+                          <AvatarFallback className="bg-blue-100 text-blue-600">
+                            {getInitials(client.full_name, client.email)}
+                          </AvatarFallback>
+                        </Avatar>
                         
-                        <div className="mt-4 pt-4 border-t space-y-2">
-                          <Button 
-                            className="w-full" 
-                            variant="outline"
-                            onClick={() => handleOpenAssignWorkoutDialog(clientProfessional)}
-                          >
-                            <Dumbbell className="mr-2 h-4 w-4" />
-                            Atribuir Plano de Treino
-                          </Button>
-                          
-                          <Button 
-                            className="w-full" 
-                            variant="outline"
-                            onClick={() => handleOpenAssignMealPlanDialog(clientProfessional)}
-                          >
-                            <Utensils className="mr-2 h-4 w-4" />
-                            Atribuir Plano Alimentar
-                          </Button>
-                          
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button className="w-full" variant="ghost" size="sm">
-                                Remover Vínculo
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Tem certeza que deseja remover o vínculo com "{clientProfessional.client?.full_name || clientProfessional.client?.email}"? 
-                                  <br /><br />
-                                  <strong>⚠️ Isso também CANCELARÁ todos os planos de treino e alimentares ativos deste cliente.</strong>
-                                  <br /><br />
-                                  O cliente perderá acesso aos seus planos e não poderá mais visualizar os treinos e refeições.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleRemoveClient(clientProfessional.id, clientProfessional.client_id)}>
-                                  Remover Vínculo e Cancelar Todos os Planos
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                        {/* Informações Básicas */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-semibold text-gray-900 truncate">
+                            {client.full_name || 'Cliente sem nome'}
+                          </h3>
+                          <p className="text-sm text-gray-600 truncate">
+                            {client.email}
+                          </p>
                         </div>
-                      </CardContent>
-                    </Card>
-                  )
-                })
-              )}
-            </div>
-          </>
+                      </div>
+                      
+                      {/* Status */}
+                      <Badge
+                        variant={statusInfo.variant}
+                        className={`text-xs ${statusInfo.className}`}
+                      >
+                        <span className="flex items-center gap-1">
+                          {statusInfo.icon}
+                          {statusInfo.text}
+                        </span>
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0">
+                    <div className="space-y-3">
+                      {/* Informações Adicionais */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>Vínculo:</span>
+                        </div>
+                        <span className="font-medium text-gray-900">
+                          {formatDate(clientProfessional.started_at)}
+                        </span>
+                      </div>
+                      
+                      {client.phone && (
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Mail className="h-4 w-4" />
+                            <span>Telefone:</span>
+                          </div>
+                          <span className="font-medium text-gray-900">
+                            {client.phone}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Role */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <User className="h-4 w-4" />
+                          <span>Tipo:</span>
+                        </div>
+                        <span className="font-medium text-gray-900 capitalize">
+                          {client.role === 'client' ? 'Aluno' : client.role}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Botão de Ação */}
+                    <div className="pt-3 border-t">
+                      <Button 
+                        className="w-full" 
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleViewClientDetails(client.id)
+                        }}
+                      >
+                        <ArrowRight className="h-4 w-4 mr-2" />
+                        Ver Detalhes
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
         )}
-
-        {/* Dialog de Atribuir Plano de Treino */}
-        <Dialog open={isAssignWorkoutDialogOpen} onOpenChange={setIsAssignWorkoutDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Atribuir Plano de Treino</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleAssignWorkout} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Cliente</Label>
-                <div className="p-3 bg-gray-50 rounded-md">
-                  <p className="font-medium">
-                    {selectedClient?.client?.full_name || selectedClient?.client?.email}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {selectedClient?.client?.email}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="workout-select">Plano de Treino *</Label>
-                <Select 
-                  value={assignWorkoutData.workout_id} 
-                  onValueChange={(value) => setAssignWorkoutData({ ...assignWorkoutData, workout_id: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um plano de treino" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {workouts.map((workout) => (
-                      <SelectItem key={workout.id} value={workout.id}>
-                        <div>
-                          <p className="font-medium">{workout.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {workout.duration_weeks} semanas • {workout.days_per_week}x por semana
-                          </p>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {workouts.length === 0 && (
-                  <p className="text-sm text-gray-500">
-                    Você ainda não criou nenhum plano. 
-                    <a href="/app/planner" className="text-blue-600 hover:underline ml-1">
-                      Criar plano agora
-                    </a>
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="start-date">Data de Início *</Label>
-                <Input
-                  id="start-date"
-                  type="date"
-                  value={assignWorkoutData.start_date}
-                  onChange={(e) => setAssignWorkoutData({ ...assignWorkoutData, start_date: e.target.value })}
-                  min={new Date().toISOString().split('T')[0]}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="assignment-notes">Notas (opcional)</Label>
-                <textarea
-                  id="assignment-notes"
-                  className="w-full p-2 border rounded-md"
-                  rows={3}
-                  placeholder="Instruções especiais para este cliente..."
-                  value={assignWorkoutData.notes}
-                  onChange={(e) => setAssignWorkoutData({ ...assignWorkoutData, notes: e.target.value })}
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsAssignWorkoutDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={!assignWorkoutData.workout_id || !assignWorkoutData.start_date}>
-                  <Dumbbell className="mr-2 h-4 w-4" />
-                  Atribuir Plano de Treino
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Dialog de Atribuir Plano Alimentar */}
-        <Dialog open={isAssignMealPlanDialogOpen} onOpenChange={setIsAssignMealPlanDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Atribuir Plano Alimentar</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleAssignMealPlan} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Cliente</Label>
-                <div className="p-3 bg-gray-50 rounded-md">
-                  <p className="font-medium">
-                    {selectedClient?.client?.full_name || selectedClient?.client?.email}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {selectedClient?.client?.email}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="meal-plan-select">Plano Alimentar *</Label>
-                <Select 
-                  value={assignMealPlanData.meal_plan_id} 
-                  onValueChange={(value) => setAssignMealPlanData({ ...assignMealPlanData, meal_plan_id: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um plano alimentar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {mealPlans.map((mealPlan) => (
-                      <SelectItem key={mealPlan.id} value={mealPlan.id}>
-                        <div>
-                          <p className="font-medium">{mealPlan.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {mealPlan.daily_calories_target ? `${mealPlan.daily_calories_target} cal/dia` : 'Sem meta calórica'}
-                            {mealPlan.objective && ` • ${mealPlan.objective}`}
-                          </p>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {mealPlans.length === 0 && (
-                  <p className="text-sm text-gray-500">
-                    Você ainda não criou nenhum plano alimentar. 
-                    <a href="/app/meal-planner" className="text-blue-600 hover:underline ml-1">
-                      Criar plano agora
-                    </a>
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="meal-plan-start-date">Data de Início *</Label>
-                <Input
-                  id="meal-plan-start-date"
-                  type="date"
-                  value={assignMealPlanData.start_date}
-                  onChange={(e) => setAssignMealPlanData({ ...assignMealPlanData, start_date: e.target.value })}
-                  min={new Date().toISOString().split('T')[0]}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="meal-plan-assignment-notes">Notas (opcional)</Label>
-                <textarea
-                  id="meal-plan-assignment-notes"
-                  className="w-full p-2 border rounded-md"
-                  rows={3}
-                  placeholder="Instruções especiais para este cliente..."
-                  value={assignMealPlanData.notes}
-                  onChange={(e) => setAssignMealPlanData({ ...assignMealPlanData, notes: e.target.value })}
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsAssignMealPlanDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={!assignMealPlanData.meal_plan_id || !assignMealPlanData.start_date}>
-                  <Utensils className="mr-2 h-4 w-4" />
-                  Atribuir Plano Alimentar
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   )
