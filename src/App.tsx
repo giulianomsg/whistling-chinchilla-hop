@@ -17,6 +17,9 @@ import ClientMealPlan from "./pages/ClientMealPlan";
 import FoodLibrary from "./pages/FoodLibrary";
 import MealPlanner from "./pages/MealPlanner";
 import NotFound from "./pages/NotFound";
+import ProfessionalDashboard from "./pages/ProfessionalDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
+import ClientDetails from "./pages/ClientDetails";
 
 const queryClient = new QueryClient();
 
@@ -54,20 +57,34 @@ const AppRoutes: React.FC = () => {
           user ? <DashboardLayout /> : <Navigate to="/auth" replace />
         }
       >
-        {/* Redirecionamento baseado no role */}
-        <Route index element={
-          profile?.role === 'client' ? 
-            <Navigate to="/app/my-workout" replace /> : 
-            <Navigate to="/app/clients" replace />
-        } />
+        {/* Dashboard principal - redireciona baseado no role */}
+        <Route index element={<Navigate to="/app/dashboard" replace />} />
         
+        {/* Dashboard unificado baseado no role */}
+        <Route 
+          path="dashboard" 
+          element={
+            profile?.role === 'client' ? 
+              <ClientDashboard /> : 
+              <ProfessionalDashboard />
+          } 
+        />
+
         {/* Professional/Admin */}
         <Route 
           path="clients" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <MyClients /> : 
-              <Navigate to="/app/my-workout" replace />
+              <Navigate to="/app/dashboard" replace />
+          } 
+        />
+        <Route 
+          path="clients/:id" 
+          element={
+            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+              <ClientDetails /> : 
+              <Navigate to="/app/dashboard" replace />
           } 
         />
         <Route 
@@ -75,7 +92,7 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <WorkoutPlanner /> : 
-              <Navigate to="/app/my-workout" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
         <Route 
@@ -83,7 +100,7 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <MealPlanner /> : 
-              <Navigate to="/app/my-workout" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
         <Route 
@@ -91,7 +108,7 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <ExerciseLibrary /> : 
-              <Navigate to="/app/my-workout" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
         <Route 
@@ -99,7 +116,7 @@ const AppRoutes: React.FC = () => {
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <FoodLibrary /> : 
-              <Navigate to="/app/my-workout" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
 
@@ -109,7 +126,7 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ? 
               <ClientWorkout /> : 
-              <Navigate to="/app/clients" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
         <Route 
@@ -117,7 +134,7 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ? 
               <ClientMealPlan /> : 
-              <Navigate to="/app/clients" replace />
+              <Navigate to="/app/dashboard" replace />
           } 
         />
       </Route>
