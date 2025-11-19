@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Input } from '../components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
+import { Label } from '../components/ui/label'
+import { Textarea } from '../components/ui/textarea'
 import { 
   Users, 
   Plus, 
@@ -52,6 +55,14 @@ const MyClients: React.FC = () => {
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  
+  // Estados para o diálogo de adicionar cliente
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [addLoading, setAddLoading] = useState(false)
+  const [newClientEmail, setNewClientEmail] = useState('')
+  const [newClientName, setNewClientName] = useState('')
+  const [newClientPhone, setNewClientPhone] = useState('')
+  const [newClientNotes, setNewClientNotes] = useState('')
 
   // Buscar clientes vinculados ao profissional
   const fetchClients = async () => {
@@ -86,6 +97,96 @@ const MyClients: React.FC = () => {
       showError('Erro inesperado ao carregar clientes')
     } finally {
       setPageLoading(false)
+    }
+  }
+
+  // Buscar cliente por email usando a função RPC
+  const findClientByEmail = async (email: string) => {
+    if (!user) return null
+
+    try {
+      console.log('🔍 [MY_CLIENTS] Buscando cliente por email:', email)
+      
+      const { data, error } = await supabase.rpc('find_client_by_email', {
+        client_email: email
+      })
+
+      if (error) {
+        console.error('❌ [MY_CLIENTS] Erro ao buscar cliente por email:', error)
+        return null
+      }
+
+      console.log('✅ [MY_CLIENTS] Cliente encontrado:', data)
+      return data
+    } catch (error) {
+      console.error('❌ [MY_CLIENTS] Erro inesperado ao buscar cliente:', error)
+      return null
+    }
+  }
+
+  // Adicionar novo cliente
+  const handleAddClient = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!user || !newClientEmail.trim()) {
+      showError('Por favor, informe o email do cliente')
+      return
+    }
+
+    setAddLoading(true)
+
+    try {
+      console.log('🚀 [MY_CLIENTS] Adicionando cliente:', newClientEmail)
+
+      // 1. Buscar cliente pelo email
+      const clientData = await findClientByEmail(newClientEmail.trim())
+
+      if (!clientData || clientData.length === 0) {
+        showError('Cliente não encontrado. Verifique se o email está correto.')
+        return
+      }
+
+      const client = clientData[0]
+
+      // 2. Verificar se já está vinculado
+      if (client.existing_link_id && client.existing_link_status === 'active') {
+        showError('Este cliente já está vinculado a você.')
+        return
+      }
+
+      // 3. Criar vínculo
+      const { error: linkError } = await supabase
+        .from('client_professionals')
+        .insert({
+          client_id: client.id,
+          professional_id: user.id,
+          status: 'active',
+          notes: newClientNotes || null
+        })
+
+      if (linkError) {
+        console.error('❌ [MY_CLIENTS] Erro ao criar vínculo:', linkError)
+        showError('Erro ao vincular cliente')
+        return
+      }
+
+      showSuccess('Cliente adicionado com sucesso!')
+      
+      // 4. Limpar formulário e fechar diálogo
+      setNewClientEmail('')
+      setNewClientName('')
+      setNewClientPhone('')
+      setNewClientNotes('')
+      setIsAddDialogOpen(false)
+      
+      // 5. Recarregar lista
+      fetchClients()
+      
+    } catch (error) {
+      console.error('❌ [MY_CLIENTS] Erro inesperado ao adicionar cliente:', error)
+      showError('Erro inesperado ao adicionar cliente')
+    } finally {
+      setAddLoading(false)
     }
   }
 
@@ -209,11 +310,92 @@ const MyClients: React.FC = () => {
                 />
               </div>
               
-              {/* Botão Novo Cliente */}
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Cliente
-              </Button>
+              {/* Botão Novo Cliente - AGORA FUNCIONAL */}
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar Cliente
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleAddClient} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="client-email">Email do Cliente *</Label>
+                      <Input
+                        id="client-email"
+                        type="email"
+                        placeholder="cliente@exemplo.com"
+                        value={newClientEmail}
+                        onChange={(e) => setNewClientEmail(e.target.value)}
+                        required
+                        disabled={addLoading}
+                      />
+                      <p className="text-xs text-gray-500">
+                        Digite o email do cliente que já está cadastrado no sistema
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="client-name">Nome (opcional)</Label>
+                      <Input
+                        id="client-name"
+                        placeholder="Nome do cliente"
+                        value={newClientName}
+                        onChange={(e) => setNewClientName(e.target.value)}
+                        disabled={addLoading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="client-phone">Telefone (opcional)</Label>
+                      <Input
+                        id="client-phone"
+                        placeholder="(00) 00000-0000"
+                        value={newClientPhone}
+                        onChange={(e) => setNewClientPhone(e.target.value)}
+                        disabled={addLoading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="client-notes">Notas (opcional)</Label>
+                      <Textarea
+                        id="client-notes"
+                        placeholder="Observações sobre este cliente..."
+                        value={newClientNotes}
+                        onChange={(e) => setNewClientNotes(e.target.value)}
+                        rows={3}
+                        disabled={addLoading}
+                      />
+                    </div>
+
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsAddDialogOpen(false)}
+                        disabled={addLoading}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button type="submit" disabled={addLoading}>
+                        {addLoading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Adicionando...
+                          </>
+                        ) : (
+                          'Adicionar Cliente'
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -262,7 +444,7 @@ const MyClients: React.FC = () => {
               }
             </p>
             {!searchTerm && (
-              <Button onClick={() => navigate('/app/clients/add')}>
+              <Button onClick={() => setIsAddDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar Primeiro Cliente
               </Button>

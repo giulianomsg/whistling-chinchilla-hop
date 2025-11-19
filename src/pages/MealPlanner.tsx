@@ -19,9 +19,12 @@ import {
   Settings, 
   Calendar, 
   Target,
+  Clock,
   Loader2,
   ChevronRight,
   GripVertical,
+  Search,
+  Filter,
   Apple
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -76,6 +79,10 @@ const MealPlanner: React.FC = () => {
   const [mealPlanItems, setMealPlanItems] = useState<MealPlanItem[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [selectedMealPlan, setSelectedMealPlan] = useState<MealPlan | null>(null)
+  
+  // Estados para busca e filtro
+  const [searchTerm, setSearchTerm] = useState('')
+  const [objectiveFilter, setObjectiveFilter] = useState<string>('all')
 
   // Dialog states
   const [isCreateMealPlanDialogOpen, setIsCreateMealPlanDialogOpen] = useState(false)
@@ -113,17 +120,40 @@ const MealPlanner: React.FC = () => {
     notes: ''
   })
 
+  // Objetivos comuns para filtro
+  const objectives = [
+    'Emagrecimento',
+    'Hipertrofia',
+    'Manutenção',
+    'Definição',
+    'Ganho de Massa',
+    'Performance',
+    'Saúde',
+    'Outros'
+  ]
+
   // Buscar planos alimentares
   const fetchMealPlans = async () => {
     if (!user) return
 
     try {
       setPageLoading(true)
-      const { data, error } = await supabase
+      let query = supabase
         .from('meal_plans')
         .select('*')
         .eq('nutritionist_id', user.id)
         .order('created_at', { ascending: false })
+
+      // Aplicar filtros
+      if (searchTerm) {
+        query = query.ilike('name', `%${searchTerm}%`)
+      }
+
+      if (objectiveFilter !== 'all') {
+        query = query.eq('objective', objectiveFilter)
+      }
+
+      const { data, error } = await query
 
       if (error) {
         console.error('Erro ao buscar planos alimentares:', error)
@@ -193,7 +223,7 @@ const MealPlanner: React.FC = () => {
       fetchMealPlans()
       fetchFoods()
     }
-  }, [user?.id, loading])
+  }, [user?.id, loading, searchTerm, objectiveFilter])
 
   // Resetar formulário de plano alimentar
   const resetMealPlanForm = () => {
@@ -604,6 +634,36 @@ const MealPlanner: React.FC = () => {
           </div>
         </div>
 
+        {/* Filtros */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Buscar planos alimentares..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <div className="w-full sm:w-48">
+            <Select value={objectiveFilter} onValueChange={setObjectiveFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Objetivo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Objetivos</SelectItem>
+                {objectives.map((objective) => (
+                  <SelectItem key={objective} value={objective}>
+                    {objective}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* Lista de Planos Alimentares */}
         {pageLoading ? (
           <div className="flex justify-center py-12">
@@ -837,7 +897,6 @@ const MealPlanner: React.FC = () => {
                                       <span className="flex items-center justify-center w-8 h-8 bg-green-100 text-green-600 rounded-full text-sm font-medium">
                                         {index + 1}
                                       </span>
-                                      <GripVertical className="h-4 w-4 text-gray-400" />
                                     </div>
                                     <div className="flex-1">
                                       <h3 className="text-lg font-semibold text-gray-900 mb-2">

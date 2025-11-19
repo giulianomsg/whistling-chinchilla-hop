@@ -5,12 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Dumbbell, Plus, Edit, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { 
+  Dumbbell, 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Eye, 
+  EyeOff, 
+  Loader2,
+  Search,
+  Filter
+} from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -38,6 +49,11 @@ const ExerciseLibrary: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false)
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
+  
+  // Estados para busca e filtro
+  const [searchTerm, setSearchTerm] = useState('')
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('all')
+  const [muscleGroupFilter, setMuscleGroupFilter] = useState<string>('all')
 
   // Form states
   const [formData, setFormData] = useState({
@@ -50,17 +66,56 @@ const ExerciseLibrary: React.FC = () => {
     is_public: false
   })
 
+  // Dificuldades e grupos musculares para filtro
+  const difficulties = [
+    { value: 'beginner', label: 'Iniciante' },
+    { value: 'intermediate', label: 'Intermediário' },
+    { value: 'advanced', label: 'Avançado' }
+  ]
+
+  const muscleGroups = [
+    'Peito',
+    'Costas',
+    'Ombros',
+    'Bíceps',
+    'Tríceps',
+    'Antebraço',
+    'Abdômen',
+    'Lombar',
+    'Glúteos',
+    'Quadríceps',
+    'Isquiotibiais',
+    'Panturrilhas',
+    'Pernas',
+    'Core'
+  ]
+
   // Buscar exercícios
   const fetchExercises = async () => {
     if (!user) return
 
     try {
       setPageLoading(true)
-      const { data, error } = await supabase
+      let query = supabase
         .from('exercises_library')
         .select('*')
         .or(`created_by.eq.${user.id},is_public.eq.true`)
         .order('created_at', { ascending: false })
+
+      // Aplicar filtros
+      if (searchTerm) {
+        query = query.ilike('name', `%${searchTerm}%`)
+      }
+
+      if (difficultyFilter !== 'all') {
+        query = query.eq('difficulty_level', difficultyFilter)
+      }
+
+      if (muscleGroupFilter !== 'all') {
+        query = query.contains('muscle_groups', `[${muscleGroupFilter}]`)
+      }
+
+      const { data, error } = await query
 
       if (error) {
         console.error('Erro ao buscar exercícios:', error)
@@ -78,11 +133,10 @@ const ExerciseLibrary: React.FC = () => {
   }
 
   useEffect(() => {
-    // A lógica interna (o 'if') permanece a mesma
     if (!loading && user) {
       fetchExercises()
     }
-  }, [user?.id, loading]) // <-- A dependência agora é estável
+  }, [user?.id, loading, searchTerm, difficultyFilter, muscleGroupFilter])
 
   // Resetar formulário
   const resetForm = () => {
@@ -338,6 +392,51 @@ const ExerciseLibrary: React.FC = () => {
           </div>
         </div>
 
+        {/* Filtros */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Buscar exercícios..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <div className="w-full sm:w-48">
+            <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Dificuldade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Dificuldades</SelectItem>
+                {difficulties.map((difficulty) => (
+                  <SelectItem key={difficulty.value} value={difficulty.value}>
+                    {difficulty.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full sm:w-48">
+            <Select value={muscleGroupFilter} onValueChange={setMuscleGroupFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Grupo Muscular" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Grupos</SelectItem>
+                {muscleGroups.map((group) => (
+                  <SelectItem key={group} value={group}>
+                    {group}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* Lista de Exercícios */}
         {pageLoading ? (
           <div className="flex justify-center py-12">
@@ -451,6 +550,18 @@ const ExerciseLibrary: React.FC = () => {
           </div>
         )}
 
+        {exercises.length === 0 && !pageLoading && (
+          <div className="text-center py-12">
+            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum exercício encontrado</h3>
+            <p className="text-gray-600 mb-4">Comece criando seu primeiro exercício personalizado.</p>
+            <Button onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Criar Primeiro Exercício
+            </Button>
+          </div>
+        )}
+
         {/* Sheet de Edição */}
         <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
           <SheetContent className="w-[400px] sm:w-[540px]">
@@ -494,26 +605,27 @@ const ExerciseLibrary: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-muscles">Grupos Musculares</Label>
-                <Input
-                  id="edit-muscles"
-                  value={formData.muscle_groups}
-                  onChange={(e) => setFormData({ ...formData, muscle_groups: e.target.value })}
-                  placeholder="Peito, Ombros, Tríceps"
-                />
-                <p className="text-xs text-gray-500">Separe com vírgula</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-equipment">Equipamentos</Label>
-                <Input
-                  id="edit-equipment"
-                  value={formData.equipment_needed}
-                  onChange={(e) => setFormData({ ...formData, equipment_needed: e.target.value })}
-                  placeholder="Barra, Halteres, Banco"
-                />
-                <p className="text-xs text-gray-500">Separe com vírgula</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-muscles">Grupos Musculares</Label>
+                  <Input
+                    id="edit-muscles"
+                    value={formData.muscle_groups}
+                    onChange={(e) => setFormData({ ...formData, muscle_groups: e.target.value })}
+                    placeholder="Peito, Ombros, Tríceps"
+                  />
+                  <p className="text-xs text-gray-500">Separe com vírgula</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-equipment">Equipamentos</Label>
+                  <Input
+                    id="edit-equipment"
+                    value={formData.equipment_needed}
+                    onChange={(e) => setFormData({ ...formData, equipment_needed: e.target.value })}
+                    placeholder="Barra, Halteres, Banco"
+                  />
+                  <p className="text-xs text-gray-500">Separe com vírgula</p>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -547,18 +659,6 @@ const ExerciseLibrary: React.FC = () => {
             </form>
           </SheetContent>
         </Sheet>
-
-        {exercises.length === 0 && !pageLoading && (
-          <div className="text-center py-12">
-            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum exercício encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece criando seu primeiro exercício personalizado.</p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Criar Primeiro Exercício
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   )

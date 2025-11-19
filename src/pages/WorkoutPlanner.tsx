@@ -22,7 +22,9 @@ import {
   Clock,
   Loader2,
   ChevronRight,
-  GripVertical
+  GripVertical,
+  Search,
+  Filter
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
@@ -71,6 +73,10 @@ const WorkoutPlanner: React.FC = () => {
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
+  
+  // Estados para busca e filtro
+  const [searchTerm, setSearchTerm] = useState('')
+  const [objectiveFilter, setObjectiveFilter] = useState<string>('all')
 
   // Dialog states
   const [isCreateWorkoutDialogOpen, setIsCreateWorkoutDialogOpen] = useState(false)
@@ -108,17 +114,40 @@ const WorkoutPlanner: React.FC = () => {
     notes: ''
   })
 
+  // Objetivos comuns para filtro
+  const objectives = [
+    'Hipertrofia',
+    'Emagrecimento',
+    'Resistência',
+    'Força',
+    'Flexibilidade',
+    'Condicionamento',
+    'Reabilitação',
+    'Outros'
+  ]
+
   // Buscar workouts
   const fetchWorkouts = async () => {
     if (!user) return
 
     try {
       setPageLoading(true)
-      const { data, error } = await supabase
+      let query = supabase
         .from('workouts')
         .select('*')
         .eq('professional_id', user.id)
         .order('created_at', { ascending: false })
+
+      // Aplicar filtros
+      if (searchTerm) {
+        query = query.ilike('name', `%${searchTerm}%`)
+      }
+
+      if (objectiveFilter !== 'all') {
+        query = query.eq('objective', objectiveFilter)
+      }
+
+      const { data, error } = await query
 
       if (error) {
         console.error('Erro ao buscar workouts:', error)
@@ -188,7 +217,7 @@ const WorkoutPlanner: React.FC = () => {
       fetchWorkouts()
       fetchExercises()
     }
-  }, [user?.id, loading])
+  }, [user?.id, loading, searchTerm, objectiveFilter])
 
   // Resetar formulário de workout
   const resetWorkoutForm = () => {
@@ -569,6 +598,36 @@ const WorkoutPlanner: React.FC = () => {
                 </form>
               </DialogContent>
             </Dialog>
+          </div>
+        </div>
+
+        {/* Filtros */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Buscar planos de treino..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <div className="w-full sm:w-48">
+            <Select value={objectiveFilter} onValueChange={setObjectiveFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Objetivo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Objetivos</SelectItem>
+                {objectives.map((objective) => (
+                  <SelectItem key={objective} value={objective}>
+                    {objective}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
