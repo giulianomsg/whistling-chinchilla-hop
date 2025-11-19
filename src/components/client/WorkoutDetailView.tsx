@@ -252,9 +252,18 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       setSessionLoading(true)
       console.log('▶️ [WORKOUT_SESSION] Retomando sessão...')
 
+      // CÁLCULO DE CORREÇÃO TEMPORAL:
+      // Para que a conta (Agora - Inicio) funcione mesmo após pausas e reloads,
+      // precisamos "fingir" que o treino começou (Agora - TempoDecorrido).
+      // Isso desconta o tempo que ficou pausado.
+      const newStartedAt = new Date(Date.now() - elapsedTime * 1000).toISOString()
+
       const { error } = await supabase
         .from('workout_sessions')
-        .update({ status: 'started' })
+        .update({ 
+          status: 'started',
+          started_at: newStartedAt // <--- ATUALIZAÇÃO IMPORTANTE
+        })
         .eq('id', sessionId)
 
       if (error) {
@@ -263,7 +272,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         return
       }
 
-      console.log('✅ [WORKOUT_SESSION] Sessão retomada')
+      console.log('✅ [WORKOUT_SESSION] Sessão retomada com ajuste de tempo')
       setSessionStatus('started')
       showSuccess('Treino retomado')
     } catch (error) {
