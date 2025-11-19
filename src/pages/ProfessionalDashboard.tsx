@@ -129,7 +129,7 @@ const ProfessionalDashboard: React.FC = () => {
     try {
       console.log('🔍 [DASHBOARD] Buscando atividades recentes...')
 
-      // Query mais simples e direta
+      // Query simplificada e direta
       const { data, error } = await supabase
         .from('workout_sessions')
         .select(`
