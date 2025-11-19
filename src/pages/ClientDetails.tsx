@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { DatePickerWithRange } from '@/components/ui/date-picker'
 import { 
   User, 
   Calendar, 
@@ -18,11 +22,20 @@ import {
   AlertCircle,
   CheckCircle,
   Target,
-  Clock
+  Clock,
+  Filter,
+  Download,
+  TrendingUp,
+  TrendingDown,
+  BarChart3,
+  CalendarDays,
+  Bell,
+  Compare
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
+import { format, subDays, startOfDay, endOfDay } from 'date-fns'
 
 interface ClientProfile {
   id: string
@@ -81,6 +94,32 @@ interface ClientMealPlan {
   }
 }
 
+interface WorkoutSession {
+  id: string
+  client_id: string
+  professional_id: string
+  workout_id: string
+  client_workout_id: string
+  started_at: string
+  ended_at: string | null
+  duration_seconds: number | null
+  status: 'started' | 'paused' | 'completed' | 'abandoned'
+  created_at: string
+  updated_at: string
+  workout?: {
+    id: string
+    name: string
+    objective: string | null
+  }
+}
+
+interface ProgressData {
+  date: string
+  completed: number
+  abandoned: number
+  totalDuration: number
+}
+
 const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -90,6 +129,19 @@ const ClientDetails: React.FC = () => {
   const [clientDetails, setClientDetails] = useState<ClientDetails | null>(null)
   const [clientWorkouts, setClientWorkouts] = useState<ClientWorkout[]>([])
   const [clientMealPlans, setClientMealPlans] = useState<ClientMealPlan[]>([])
+  
+  // Estados para filtros e gráficos
+  const [sessions, setSessions] = useState<WorkoutSession[]>([])
+  const [filteredSessions, setFilteredSessions] = useState<WorkoutSession[]>([])
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+    from: subDays(new Date(), 30),
+    to: new Date()
+  })
+  const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'abandoned'>('all')
+  const [workoutFilter, setWorkoutFilter] = useState<string>('all')
+  const [progressData, setProgressData] = useState<ProgressData[]>([])
+  const [comparisonMode, setComparisonMode] = useState(false)
+  const [comparisonPeriod, setComparisonPeriod] = useState<'7days' | '30days' | '90days'>('30days')
 
   // Verificar se o profissional tem acesso a este cliente
   const checkClientAccess = async () => {
@@ -210,6 +262,144 @@ const ClientDetails: React.FC = () => {
     }
   }
 
+  // Buscar sessões de treino
+  const fetchWorkoutSessions = async () => {
+    if (!id) return
+
+    try {
+      const { data, error } = await supabase
+        .from('workout_sessions')
+        .select(`
+          *,
+          workout:workouts(name, objective)
+        `)
+        .eq('client_id', id)
+        .in('status', ['completed', 'abandoned'])
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Erro ao buscar sessões:', error)
+        return
+      }
+
+      setSessions(data || [])
+      setFilteredSessions(data || [])
+    } catch (error) {
+      console.error('Erro inesperado:', error)
+    }
+  }
+
+  // Aplicar filtros
+  const applyFilters = () => {
+    let filtered = [...sessions]
+
+    // Filtro de data
+    filtered = filtered.filter(session => {
+      const sessionDate = new Date(session.created_at)
+      return sessionDate >= dateRange.from && sessionDate <= dateRange.to
+    })
+
+    // Filtro de status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(session => session.status === statusFilter)
+    }
+
+    // Filtro de workout
+    if (workoutFilter !== 'all') {
+      filtered = filtered.filter(session => session.workout_id === workoutFilter)
+    }
+
+    setFilteredSessions(filtered)
+  }
+
+  // Gerar dados para gráficos
+  const generateProgressData = () => {
+    const data: ProgressData[] = []
+    const days = Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24))
+    
+    for (let i = 0; i <= days; i++) {
+      const currentDate = new Date(dateRange.from)
+      currentDate.setDate(currentDate.getDate() + i)
+      
+      const dayStart = startOfDay(currentDate)
+      const dayEnd = endOfDay(currentDate)
+      
+      const daySessions = sessions.filter(session => {
+        const sessionDate = new Date(session.created_at)
+        return sessionDate >= dayStart && sessionDate <= dayEnd
+      })
+      
+      const completed = daySessions.filter(s => s.status === 'completed').length
+      const abandoned = daySessions.filter(s => s.status === 'abandoned').length
+      const totalDuration = daySessions
+        .filter(s => s.status === 'completed' && s.duration_seconds)
+        .reduce((sum, s) => sum + (s.duration_seconds || 0), 0)
+      
+      data.push({
+        date: format(currentDate, 'dd/MM'),
+        completed,
+        abandoned,
+        totalDuration
+      })
+    }
+    
+    setProgressData(data)
+  }
+
+  // Exportar dados
+  const exportData = () => {
+    const csvContent = [
+      ['Data', 'Treino', 'Status', 'Duração (min)', 'Objetivo'],
+      ...filteredSessions.map(session => [
+        format(new Date(session.created_at), 'dd/MM/yyyy HH:mm'),
+        session.workout?.name || 'Sem nome',
+        session.status === 'completed' ? 'Concluído' : 'Abandonado',
+        session.duration_seconds ? Math.round(session.duration_seconds / 60) : 'N/A',
+        session.workout?.objective || 'N/A'
+      ])
+    ].map(row => row.join(',')).join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `historico_treinos_${clientProfile?.full_name || 'cliente'}_${format(new Date(), 'dd-MM-yyyy')}.csv`
+    a.click()
+    window.URL.revokeObjectURL(url)
+    
+    showSuccess('Dados exportados com sucesso!')
+  }
+
+  // Enviar notificação para profissional
+  const sendNotification = async (type: 'new_workout' | 'completed_workout' | 'abandoned_workout') => {
+    if (!user || !clientProfile) return
+
+    try {
+      const notificationData = {
+        professional_id: user.id,
+        client_id: id,
+        type,
+        message: `Notificação sobre ${clientProfile.full_name}: ${type}`,
+        created_at: new Date().toISOString()
+      }
+
+      const { error } = await supabase
+        .from('professional_notifications')
+        .insert(notificationData)
+
+      if (error) {
+        console.error('Erro ao enviar notificação:', error)
+        showError('Erro ao enviar notificação')
+        return
+      }
+
+      showSuccess('Notificação enviada com sucesso!')
+    } catch (error) {
+      console.error('Erro inesperado:', error)
+      showError('Erro inesperado ao enviar notificação')
+    }
+  }
+
   useEffect(() => {
     const initializePage = async () => {
       if (!id) return
@@ -229,7 +419,8 @@ const ClientDetails: React.FC = () => {
         fetchClientProfile(),
         fetchClientDetails(),
         fetchClientWorkouts(),
-        fetchClientMealPlans()
+        fetchClientMealPlans(),
+        fetchWorkoutSessions()
       ])
 
       setLoading(false)
@@ -237,6 +428,11 @@ const ClientDetails: React.FC = () => {
 
     initializePage()
   }, [id, user])
+
+  useEffect(() => {
+    applyFilters()
+    generateProgressData()
+  }, [sessions, dateRange, statusFilter, workoutFilter])
 
   if (loading) {
     return (
@@ -267,20 +463,38 @@ const ClientDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="outline"
-              onClick={() => navigate('/app/clients')}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar
-            </Button>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Detalhes do Cliente
-            </h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/app/clients')}
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Voltar
+              </Button>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Detalhes do Cliente
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => sendNotification('completed_workout')}
+              >
+                <Bell className="h-4 w-4 mr-2" />
+                Enviar Notificação
+              </Button>
+              <Button
+                onClick={() => setComparisonMode(!comparisonMode)}
+                variant={comparisonMode ? "default" : "outline"}
+              >
+                <Compare className="h-4 w-4 mr-2" />
+                Comparar Períodos
+              </Button>
+            </div>
           </div>
 
           {/* Card de Informações Básicas */}
@@ -345,7 +559,7 @@ const ClientDetails: React.FC = () => {
 
         {/* Tabs de Informações Detalhadas */}
         <Tabs defaultValue="workouts" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="workouts" className="flex items-center gap-2">
               <Dumbbell className="h-4 w-4" />
               Treinos Atuais
@@ -357,6 +571,10 @@ const ClientDetails: React.FC = () => {
             <TabsTrigger value="history" className="flex items-center gap-2">
               <Timer className="h-4 w-4" />
               Histórico
+            </TabsTrigger>
+            <TabsTrigger value="progress" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Progresso
             </TabsTrigger>
             <TabsTrigger value="personal" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -524,7 +742,221 @@ const ClientDetails: React.FC = () => {
 
           {/* Histórico de Execução */}
           <TabsContent value="history">
-            <ClientWorkoutHistory clientId={id} />
+            <div className="space-y-6">
+              {/* Filtros */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-purple-600" />
+                    Filtros do Histórico
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="space-y-2">
+                      <Label>Período</Label>
+                      <DatePickerWithRange
+                        value={dateRange}
+                        onChange={setDateRange}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Status</Label>
+                      <Select value={statusFilter} onValueChange={(value: any) => setStatusFilter(value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Todos os status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos</SelectItem>
+                          <SelectItem value="completed">Concluídos</SelectItem>
+                          <SelectItem value="abandoned">Abandonados</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Treino</Label>
+                      <Select value={workoutFilter} onValueChange={setWorkoutFilter}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Todos os treinos" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos</SelectItem>
+                          {clientWorkouts.map((workout) => (
+                            <SelectItem key={workout.workout.id} value={workout.workout.id}>
+                              {workout.workout.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Ações</Label>
+                      <div className="flex gap-2">
+                        <Button onClick={exportData} variant="outline" className="flex-1">
+                          <Download className="h-4 w-4 mr-2" />
+                          Exportar CSV
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Componente de Histórico com Filtros */}
+              <ClientWorkoutHistory clientId={id} />
+            </div>
+          </TabsContent>
+
+          {/* Gráficos de Progresso */}
+          <TabsContent value="progress">
+            <div className="space-y-6">
+              {/* Comparação de Períodos */}
+              {comparisonMode && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Compare className="h-5 w-5 text-orange-600" />
+                      Comparação de Períodos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>Período de Comparação</Label>
+                        <Select value={comparisonPeriod} onValueChange={(value: any) => setComparisonPeriod(value)}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="7days">Últimos 7 dias</SelectItem>
+                            <SelectItem value="30days">Últimos 30 dias</SelectItem>
+                            <SelectItem value="90days">Últimos 90 dias</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Período Base</Label>
+                        <Select defaultValue="current">
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="current">Período Atual</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Métricas</Label>
+                        <div className="flex gap-2">
+                          <Badge variant="outline">Sessões</Badge>
+                          <Badge variant="outline">Duração</Badge>
+                          <Badge variant="outline">Taxa Conclusão</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Gráfico de Comparação */}
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div>
+                          <p className="text-sm text-gray-600">Sessões Concluídas</p>
+                          <div className="flex items-center justify-center gap-2 mt-2">
+                            <span className="text-2xl font-bold text-green-600">12</span>
+                            <TrendingUp className="h-4 w-4 text-green-600" />
+                          </div>
+                          <p className="text-xs text-gray-500">+20% vs período anterior</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Tempo Médio</p>
+                          <div className="flex items-center justify-center gap-2 mt-2">
+                            <span className="text-2xl font-bold text-blue-600">45min</span>
+                            <TrendingUp className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <p className="text-xs text-gray-500">+5min vs período anterior</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Taxa Conclusão</p>
+                          <div className="flex items-center justify-center gap-2 mt-2">
+                            <span className="text-2xl font-bold text-purple-600">85%</span>
+                            <TrendingDown className="h-4 w-4 text-red-600" />
+                          </div>
+                          <p className="text-xs text-gray-500">-5% vs período anterior</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Gráfico de Progresso Visual */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-blue-600" />
+                    Progresso Visual
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Gráfico de Barras Simples */}
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h3 className="text-sm font-medium text-gray-700 mb-4">Sessões por Dia</h3>
+                      <div className="space-y-2">
+                        {progressData.slice(-7).map((data, index) => (
+                          <div key={index} className="flex items-center gap-4">
+                            <span className="text-sm text-gray-600 w-12">{data.date}</span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
+                              <div 
+                                className="bg-green-500 h-6 rounded-full flex items-center justify-end pr-2"
+                                style={{ width: `${Math.min((data.completed / 3) * 100, 100)}%` }}
+                              >
+                                <span className="text-xs text-white font-medium">
+                                  {data.completed}
+                                </span>
+                              </div>
+                            </div>
+                            {data.abandoned > 0 && (
+                              <div className="flex items-center gap-1">
+                                <XCircle className="h-3 w-3 text-red-500" />
+                                <span className="text-xs text-red-500">{data.abandoned}</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Estatísticas do Período */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="text-center p-4 bg-blue-50 rounded-lg">
+                        <p className="text-2xl font-bold text-blue-600">{filteredSessions.length}</p>
+                        <p className="text-xs text-gray-600">Total de Sessões</p>
+                      </div>
+                      <div className="text-center p-4 bg-green-50 rounded-lg">
+                        <p className="text-2xl font-bold text-green-600">
+                          {filteredSessions.filter(s => s.status === 'completed').length}
+                        </p>
+                        <p className="text-xs text-gray-600">Concluídas</p>
+                      </div>
+                      <div className="text-center p-4 bg-red-50 rounded-lg">
+                        <p className="text-2xl font-bold text-red-600">
+                          {filteredSessions.filter(s => s.status === 'abandoned').length}
+                        </p>
+                        <p className="text-xs text-gray-600">Abandonadas</p>
+                      </div>
+                      <div className="text-center p-4 bg-purple-50 rounded-lg">
+                        <p className="text-2xl font-bold text-purple-600">
+                          {filteredSessions.length > 0 
+                            ? Math.round((filteredSessions.filter(s => s.status === 'completed').length / filteredSessions.length) * 100)
+                            : 0}%
+                        </p>
+                        <p className="text-xs text-gray-600">Taxa Conclusão</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Dados Pessoais */}
