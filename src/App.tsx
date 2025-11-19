@@ -5,23 +5,36 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
+import { Suspense, lazy } from "react";
 import { useEffect } from "react";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import DashboardLayout from "./components/layout/DashboardLayout";
-import ExerciseLibrary from "./pages/ExerciseLibrary";
-import WorkoutPlanner from "./pages/WorkoutPlanner";
-import MyClients from "./pages/MyClients";
-import ClientWorkout from "./pages/ClientWorkout";
-import ClientMealPlan from "./pages/ClientMealPlan";
-import FoodLibrary from "./pages/FoodLibrary";
-import MealPlanner from "./pages/MealPlanner";
-import NotFound from "./pages/NotFound";
-import ProfessionalDashboard from "./pages/ProfessionalDashboard";
-import ClientDashboard from "./pages/ClientDashboard";
-import ClientDetails from "./pages/ClientDetails";
+
+// Lazy loading das páginas principais
+const Index = lazy(() => import("./pages/Index"));
+const Auth = lazy(() => import("./pages/Auth"));
+const DashboardLayout = lazy(() => import("./components/layout/DashboardLayout"));
+const ExerciseLibrary = lazy(() => import("./pages/ExerciseLibrary"));
+const WorkoutPlanner = lazy(() => import("./pages/WorkoutPlanner"));
+const MyClients = lazy(() => import("./pages/MyClients"));
+const ClientWorkout = lazy(() => import("./pages/ClientWorkout"));
+const ClientMealPlan = lazy(() => import("./pages/ClientMealPlan"));
+const FoodLibrary = lazy(() => import("./pages/FoodLibrary"));
+const MealPlanner = lazy(() => import("./pages/MealPlanner"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ProfessionalDashboard = lazy(() => import("./pages/ProfessionalDashboard"));
+const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
+const ClientDetails = lazy(() => import("./pages/ClientDetails"));
 
 const queryClient = new QueryClient();
+
+// Componente de Loading para lazy loading
+const PageLoader = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+      <p className="text-gray-600">Carregando...</p>
+    </div>
+  </div>
+);
 
 // Componente interno para lidar com redirecionamentos
 const AppRoutes: React.FC = () => {
@@ -29,14 +42,7 @@ const AppRoutes: React.FC = () => {
 
   // Loading simples
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Carregando...</p>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (
@@ -50,7 +56,7 @@ const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* Rotas Protegidas */}
+      {/* Rotas Protegidas com Lazy Loading */}
       <Route 
         path="/app" 
         element={
@@ -65,8 +71,12 @@ const AppRoutes: React.FC = () => {
           path="dashboard" 
           element={
             profile?.role === 'client' ? 
-              <ClientDashboard /> : 
-              <ProfessionalDashboard />
+              <Suspense fallback={<PageLoader />}>
+                <ClientDashboard />
+              </Suspense> : 
+              <Suspense fallback={<PageLoader />}>
+                <ProfessionalDashboard />
+              </Suspense>
           } 
         />
 
@@ -75,7 +85,9 @@ const AppRoutes: React.FC = () => {
           path="clients" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <MyClients /> : 
+              <Suspense fallback={<PageLoader />}>
+                <MyClients />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -83,7 +95,9 @@ const AppRoutes: React.FC = () => {
           path="clients/:id" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <ClientDetails /> : 
+              <Suspense fallback={<PageLoader />}>
+                <ClientDetails />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -91,7 +105,9 @@ const AppRoutes: React.FC = () => {
           path="planner" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <WorkoutPlanner /> : 
+              <Suspense fallback={<PageLoader />}>
+                <WorkoutPlanner />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -99,7 +115,9 @@ const AppRoutes: React.FC = () => {
           path="meal-planner" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <MealPlanner /> : 
+              <Suspense fallback={<PageLoader />}>
+                <MealPlanner />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -107,7 +125,9 @@ const AppRoutes: React.FC = () => {
           path="library" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <ExerciseLibrary /> : 
+              <Suspense fallback={<PageLoader />}>
+                <ExerciseLibrary />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -115,7 +135,9 @@ const AppRoutes: React.FC = () => {
           path="foods" 
           element={
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
-              <FoodLibrary /> : 
+              <Suspense fallback={<PageLoader />}>
+                <FoodLibrary />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -125,7 +147,9 @@ const AppRoutes: React.FC = () => {
           path="my-workout" 
           element={
             profile?.role === 'client' ? 
-              <ClientWorkout /> : 
+              <Suspense fallback={<PageLoader />}>
+                <ClientWorkout />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
@@ -133,7 +157,9 @@ const AppRoutes: React.FC = () => {
           path="my-meal-plan" 
           element={
             profile?.role === 'client' ? 
-              <ClientMealPlan /> : 
+              <Suspense fallback={<PageLoader />}>
+                <ClientMealPlan />
+              </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 
         />
