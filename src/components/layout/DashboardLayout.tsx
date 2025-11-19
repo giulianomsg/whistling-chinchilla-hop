@@ -11,7 +11,9 @@ import {
   LogOut,
   Menu,
   Apple,
-  Utensils
+  Utensils,
+  LayoutDashboard,
+  Home
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
@@ -29,6 +31,12 @@ const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
   const menuItems: MenuItem[] = [
+    {
+      title: 'Início',
+      href: '/app/dashboard',
+      icon: <LayoutDashboard className="h-5 w-5" />,
+      roles: ['admin', 'professional', 'client']
+    },
     {
       title: 'Meus Clientes',
       href: '/app/clients',
