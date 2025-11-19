@@ -15,9 +15,14 @@ import {
   Timer,
   BarChart3,
   PlayCircle,
-  Youtube
+  Youtube,
+  Play,
+  Pause,
+  Square,
+  RotateCcw
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import { showSuccess, showError } from '@/utils/toast'
 
 interface Workout {
   id: string
@@ -68,6 +73,20 @@ interface ClientWorkout {
   workout: Workout
 }
 
+interface WorkoutSession {
+  id: string
+  client_id: string
+  professional_id: string
+  workout_id: string
+  client_workout_id: string
+  started_at: string
+  ended_at: string | null
+  duration_seconds: number | null
+  status: 'started' | 'paused' | 'completed' | 'abandoned'
+  created_at: string
+  updated_at: string
+}
+
 interface WorkoutDetailViewProps {
   clientWorkout: ClientWorkout
 }
@@ -76,6 +95,13 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([])
   const [loading, setLoading] = useState(true)
   const [openVideoId, setOpenVideoId] = useState<string | null>(null)
+  
+  // Estados da sessão de treino
+  const [isSessionActive, setIsSessionActive] = useState(false)
+  const [sessionStatus, setSessionStatus] = useState<'idle' | 'started' | 'paused' | 'completed'>('idle')
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const [sessionLoading, setSessionLoading] = useState(false)
 
   // Função helper para converter URLs do YouTube em embed
   const getEmbedUrl = (url: string): string | null => {
@@ -88,13 +114,223 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       if (urlObj.hostname === 'youtu.be') {
         return `https://www.youtube.com/embed/${urlObj.pathname.substring(1)}`
       }
-      // Adicionar outros provedores como Vimeo se desejar
-      return url // Retorna a URL original se for de outro host (assumindo que já é um embed)
+      return url
     } catch (e) {
       console.error('URL de vídeo inválida:', e)
       return null
     }
   }
+
+  // Formatar tempo para display HH:MM:SS
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
+
+  // Verificar sessão existente ao montar componente
+  const checkExistingSession = async () => {
+    try {
+      console.log('🔍 [WORKOUT_SESSION] Verificando sessão existente...')
+      
+      const { data, error } = await supabase
+        .from('workout_sessions')
+        .select('*')
+        .eq('client_workout_id', clientWorkout.id)
+        .in('status', ['started', 'paused'])
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ [WORKOUT_SESSION] Erro ao verificar sessão:', error)
+        return
+      }
+
+      if (data) {
+        console.log('✅ [WORKOUT_SESSION] Sessão existente encontrada:', data)
+        setSessionId(data.id)
+        setSessionStatus(data.status)
+        setIsSessionActive(true)
+        
+        // Calcular tempo decorrido
+        if (data.status === 'started') {
+          const startedAt = new Date(data.started_at)
+          const now = new Date()
+          const elapsed = Math.floor((now.getTime() - startedAt.getTime()) / 1000)
+          setElapsedTime(elapsed)
+        } else if (data.status === 'paused' && data.duration_seconds) {
+          setElapsedTime(data.duration_seconds)
+        }
+      }
+    } catch (error) {
+      console.error('❌ [WORKOUT_SESSION] Erro inesperado:', error)
+    }
+  }
+
+  // Iniciar treino
+  const handleStartWorkout = async () => {
+    if (!clientWorkout) return
+
+    try {
+      setSessionLoading(true)
+      console.log('🚀 [WORKOUT_SESSION] Iniciando nova sessão...')
+
+      const sessionData = {
+        client_id: clientWorkout.client_id,
+        professional_id: clientWorkout.professional_id,
+        workout_id: clientWorkout.workout_id,
+        client_workout_id: clientWorkout.id,
+        status: 'started' as const
+      }
+
+      const { data, error } = await supabase
+        .from('workout_sessions')
+        .insert(sessionData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ [WORKOUT_SESSION] Erro ao iniciar sessão:', error)
+        showError('Erro ao iniciar treino')
+        return
+      }
+
+      console.log('✅ [WORKOUT_SESSION] Sessão iniciada:', data)
+      setSessionId(data.id)
+      setSessionStatus('started')
+      setIsSessionActive(true)
+      setElapsedTime(0)
+      showSuccess('Treino iniciado com sucesso!')
+    } catch (error) {
+      console.error('❌ [WORKOUT_SESSION] Erro inesperado:', error)
+      showError('Erro inesperado ao iniciar treino')
+    } finally {
+      setSessionLoading(false)
+    }
+  }
+
+  // Pausar treino
+  const handlePauseWorkout = async () => {
+    if (!sessionId) return
+
+    try {
+      setSessionLoading(true)
+      console.log('⏸️ [WORKOUT_SESSION] Pausando sessão...')
+
+      const { error } = await supabase
+        .from('workout_sessions')
+        .update({ 
+          status: 'paused',
+          duration_seconds: elapsedTime
+        })
+        .eq('id', sessionId)
+
+      if (error) {
+        console.error('❌ [WORKOUT_SESSION] Erro ao pausar sessão:', error)
+        showError('Erro ao pausar treino')
+        return
+      }
+
+      console.log('✅ [WORKOUT_SESSION] Sessão pausada')
+      setSessionStatus('paused')
+      showSuccess('Treino pausado')
+    } catch (error) {
+      console.error('❌ [WORKOUT_SESSION] Erro inesperado:', error)
+      showError('Erro inesperado ao pausar treino')
+    } finally {
+      setSessionLoading(false)
+    }
+  }
+
+  // Retomar treino
+  const handleResumeWorkout = async () => {
+    if (!sessionId) return
+
+    try {
+      setSessionLoading(true)
+      console.log('▶️ [WORKOUT_SESSION] Retomando sessão...')
+
+      const { error } = await supabase
+        .from('workout_sessions')
+        .update({ status: 'started' })
+        .eq('id', sessionId)
+
+      if (error) {
+        console.error('❌ [WORKOUT_SESSION] Erro ao retomar sessão:', error)
+        showError('Erro ao retomar treino')
+        return
+      }
+
+      console.log('✅ [WORKOUT_SESSION] Sessão retomada')
+      setSessionStatus('started')
+      showSuccess('Treino retomado')
+    } catch (error) {
+      console.error('❌ [WORKOUT_SESSION] Erro inesperado:', error)
+      showError('Erro inesperado ao retomar treino')
+    } finally {
+      setSessionLoading(false)
+    }
+  }
+
+  // Finalizar treino
+  const handleFinishWorkout = async () => {
+    if (!sessionId) return
+
+    try {
+      setSessionLoading(true)
+      console.log('🏁 [WORKOUT_SESSION] Finalizando sessão...')
+
+      const { error } = await supabase
+        .from('workout_sessions')
+        .update({ 
+          status: 'completed',
+          ended_at: new Date().toISOString()
+        })
+        .eq('id', sessionId)
+
+      if (error) {
+        console.error('❌ [WORKOUT_SESSION] Erro ao finalizar sessão:', error)
+        showError('Erro ao finalizar treino')
+        return
+      }
+
+      console.log('✅ [WORKOUT_SESSION] Sessão finalizada')
+      setSessionStatus('completed')
+      setIsSessionActive(false)
+      showSuccess(`Parabéns! Treino finalizado em ${formatTime(elapsedTime)}`)
+      
+      // Resetar estados após 3 segundos
+      setTimeout(() => {
+        setSessionId(null)
+        setElapsedTime(0)
+        setSessionStatus('idle')
+      }, 3000)
+    } catch (error) {
+      console.error('❌ [WORKOUT_SESSION] Erro inesperado:', error)
+      showError('Erro inesperado ao finalizar treino')
+    } finally {
+      setSessionLoading(false)
+    }
+  }
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null
+
+    if (sessionStatus === 'started') {
+      interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1)
+      }, 1000)
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
+  }, [sessionStatus])
 
   // Buscar exercícios do treino
   const fetchWorkoutExercises = async () => {
@@ -117,7 +353,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         return
       }
 
-      // ✅ PROTEGER CONTRA NULL: Filtrar itens com exercise null
       const filteredData = (data || []).filter(item => item.exercise !== null)
       console.log('✅ [WORKOUT_DETAIL] Exercícios carregados:', filteredData.length)
       setWorkoutExercises(filteredData)
@@ -131,6 +366,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   useEffect(() => {
     if (clientWorkout?.workout_id) {
       fetchWorkoutExercises()
+      checkExistingSession()
     }
   }, [clientWorkout?.workout_id])
 
@@ -180,7 +416,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24">
       {/* Cabeçalho do Treino */}
       <Card>
         <CardHeader>
@@ -219,7 +455,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
               <CheckCircle className="h-4 w-4 text-green-600" />
               <span className="text-sm text-gray-600">Status:</span>
               <Badge variant="secondary" className="text-xs">
-                Ativo
+                {isSessionActive ? 'Em Andamento' : 'Ativo'}
               </Badge>
             </div>
           </div>
@@ -427,6 +663,91 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           </CardContent>
         </Card>
       )}
+
+      {/* Barra Fixa de Controle da Sessão */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between">
+            {/* Timer */}
+            <div className="flex items-center gap-3">
+              <Timer className="h-5 w-5 text-blue-600" />
+              <div className="text-center">
+                <p className="text-sm text-gray-600">Tempo de Treino</p>
+                <p className="text-2xl font-bold text-gray-900 font-mono">
+                  {formatTime(elapsedTime)}
+                </p>
+              </div>
+            </div>
+
+            {/* Botões de Controle */}
+            <div className="flex items-center gap-3">
+              {!isSessionActive ? (
+                <Button
+                  onClick={handleStartWorkout}
+                  disabled={sessionLoading}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  size="lg"
+                >
+                  {sessionLoading ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Play className="h-4 w-4 mr-2" />
+                  )}
+                  Iniciar Treino
+                </Button>
+              ) : (
+                <>
+                  {sessionStatus === 'started' ? (
+                    <Button
+                      onClick={handlePauseWorkout}
+                      disabled={sessionLoading}
+                      variant="outline"
+                      className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
+                      size="lg"
+                    >
+                      {sessionLoading ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Pause className="h-4 w-4 mr-2" />
+                      )}
+                      Pausar
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleResumeWorkout}
+                      disabled={sessionLoading}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      size="lg"
+                    >
+                      {sessionLoading ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Play className="h-4 w-4 mr-2" />
+                      )}
+                      Retomar
+                    </Button>
+                  )}
+
+                  <Button
+                    onClick={handleFinishWorkout}
+                    disabled={sessionLoading}
+                    variant="outline"
+                    className="border-red-500 text-red-600 hover:bg-red-50"
+                    size="lg"
+                  >
+                    {sessionLoading ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Square className="h-4 w-4 mr-2" />
+                    )}
+                    Finalizar
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
