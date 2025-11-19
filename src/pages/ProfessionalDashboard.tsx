@@ -18,10 +18,13 @@ import {
   Utensils,
   ArrowRight,
   User,
-  Timer
+  Timer,
+  Play,
+  Pause,
+  AlertCircle
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
-import { format, subDays } from 'date-fns'
+import { format, subDays, isToday, isWithinInterval, subHours } from 'date-fns'
 
 interface RecentActivity {
   id: string
@@ -45,6 +48,7 @@ interface DashboardMetrics {
   totalClients: number
   activeWorkouts: number
   completedSessions: number
+  activeSessions: number
 }
 
 const ProfessionalDashboard: React.FC = () => {
@@ -53,7 +57,8 @@ const ProfessionalDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalClients: 0,
     activeWorkouts: 0,
-    completedSessions: 0
+    completedSessions: 0,
+    activeSessions: 0
   })
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([])
   const [pageLoading, setPageLoading] = useState(true)
@@ -69,7 +74,8 @@ const ProfessionalDashboard: React.FC = () => {
       const [
         clientsResult,
         workoutsResult,
-        sessionsResult
+        completedSessionsResult,
+        activeSessionsResult
       ] = await Promise.all([
         // Total de alunos ativos
         supabase
@@ -90,13 +96,21 @@ const ProfessionalDashboard: React.FC = () => {
           .from('workout_sessions')
           .select('id')
           .eq('professional_id', user.id)
-          .eq('status', 'completed')
+          .eq('status', 'completed'),
+        
+        // Sessões ativas (started ou paused)
+        supabase
+          .from('workout_sessions')
+          .select('id')
+          .eq('professional_id', user.id)
+          .in('status', ['started', 'paused'])
       ])
 
       const newMetrics: DashboardMetrics = {
         totalClients: clientsResult.data?.length || 0,
         activeWorkouts: workoutsResult.data?.length || 0,
-        completedSessions: sessionsResult.data?.length || 0
+        completedSessions: completedSessionsResult.data?.length || 0,
+        activeSessions: activeSessionsResult.data?.length || 0
       }
 
       console.log('✅ [DASHBOARD] Métricas carregadas:', newMetrics)
@@ -106,7 +120,7 @@ const ProfessionalDashboard: React.FC = () => {
     }
   }
 
-  // Buscar atividades recentes
+  // Buscar atividades recentes (TODOS os status)
   const fetchRecentActivities = async () => {
     if (!user) return
 
@@ -121,16 +135,17 @@ const ProfessionalDashboard: React.FC = () => {
           workout:workouts(name)
         `)
         .eq('professional_id', user.id)
-        .in('status', ['completed', 'abandoned'])
+        // REMOVIDO: .in('status', ['completed', 'abandoned'])
+        // QUERO VER TODOS OS STATUS: started, paused, completed, abandoned
         .order('created_at', { ascending: false })
-        .limit(5)
+        .limit(10) // Aumentado para mostrar mais atividades
 
       if (error) {
         console.error('❌ [DASHBOARD] Erro ao buscar atividades:', error)
         return
       }
 
-      console.log('✅ [DASHBOARD] Atividades recentes carregadas:', data?.length || 0)
+      console.log('✅ [DASHBOARD] Atividades recentes carregadas:', data?.length || 0, 'sessões')
       setRecentActivities(data || [])
     } catch (error) {
       console.error('❌ [DASHBOARD] Erro inesperado:', error)
@@ -192,6 +207,47 @@ const ProfessionalDashboard: React.FC = () => {
     }
   }
 
+  // Obter status visual e texto
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case 'started':
+        return {
+          variant: 'default' as const,
+          className: 'bg-green-100 text-green-800 border-green-200',
+          icon: <Play className="h-3 w-3" />,
+          text: 'Treinando Agora'
+        }
+      case 'paused':
+        return {
+          variant: 'secondary' as const,
+          className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          icon: <Pause className="h-3 w-3" />,
+          text: 'Pausado'
+        }
+      case 'completed':
+        return {
+          variant: 'default' as const,
+          className: 'bg-blue-100 text-blue-800 border-blue-200',
+          icon: <CheckCircle className="h-3 w-3" />,
+          text: 'Concluído'
+        }
+      case 'abandoned':
+        return {
+          variant: 'destructive' as const,
+          className: 'bg-red-100 text-red-800 border-red-200',
+          icon: <AlertCircle className="h-3 w-3" />,
+          text: 'Abandonado'
+        }
+      default:
+        return {
+          variant: 'secondary' as const,
+          className: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: <Clock className="h-3 w-3" />,
+          text: status
+        }
+    }
+  }
+
   // Navegar para detalhes do cliente
   const handleViewClientDetails = (clientId: string) => {
     console.log('🔗 [DASHBOARD] Navegando para detalhes do cliente:', clientId)
@@ -225,19 +281,24 @@ const ProfessionalDashboard: React.FC = () => {
                 Olá, {getDisplayName()}! 👋
               </h1>
               <p className="mt-2 text-gray-600">
-                Bem-vindo ao seu painel de controle. Aqui está o resumo das suas atividades.
+                Bem-vindo ao seu painel de controle. Aqui está o resumo das suas atividades em tempo real.
               </p>
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-sm">
                 {format(new Date(), 'EEEE, dd/MM/yyyy')}
               </Badge>
+              {metrics.activeSessions > 0 && (
+                <Badge variant="default" className="text-sm bg-green-100 text-green-800">
+                  {metrics.activeSessions} treinando agora
+                </Badge>
+              )}
             </div>
           </div>
         </div>
 
         {/* Cards de Métricas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* Total de Alunos */}
           <Card className="border-l-4 border-l-blue-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -291,6 +352,24 @@ const ProfessionalDashboard: React.FC = () => {
               </p>
             </CardContent>
           </Card>
+
+          {/* NOVO: Sessões Ativas */}
+          <Card className="border-l-4 border-l-orange-500">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">
+                Treinando Agora
+              </CardTitle>
+              <Activity className="h-4 w-4 text-orange-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {metrics.activeSessions}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Em tempo real
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Conteúdo Principal: Atividades Recentes e Ações Rápidas */}
@@ -301,10 +380,10 @@ const ProfessionalDashboard: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-orange-600" />
-                  Atividade Recente
+                  Atividade em Tempo Real
                 </CardTitle>
                 <p className="text-sm text-gray-600">
-                  Últimas sessões de treino dos seus alunos
+                  Todas as sessões dos seus alunos (incluindo quem está treinando agora)
                 </p>
               </CardHeader>
               <CardContent>
@@ -323,62 +402,89 @@ const ProfessionalDashboard: React.FC = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {recentActivities.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() => handleViewClientDetails(activity.client_id)}
-                      >
-                        <div className="flex items-center gap-4">
-                          {/* Avatar do Cliente */}
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <User className="h-5 w-5 text-blue-600" />
-                          </div>
-                          
-                          {/* Informações da Atividade */}
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-medium text-gray-900">
-                                {activity.client?.full_name || 'Aluno sem nome'}
-                              </h4>
-                              <Badge
-                                variant={activity.status === 'completed' ? 'default' : 'destructive'}
-                                className="text-xs"
-                              >
-                                {activity.status === 'completed' ? 'Concluído' : 'Abandonado'}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm text-gray-600">
-                              <div className="flex items-center gap-1">
-                                <Dumbbell className="h-3 w-3" />
-                                <span>{activity.workout?.name || 'Treino sem nome'}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                <span>{formatDuration(activity.duration_seconds)}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3" />
-                                <span>{formatDate(activity.created_at)}</span>
-                              </div>
-                            </div>
-                          </div>
+                  <>
+                    {/* Indicador de quem está treinando agora */}
+                    {metrics.activeSessions > 0 && (
+                      <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Activity className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-800">
+                            {metrics.activeSessions} aluno(s) treinando agora
+                          </span>
                         </div>
-                        
-                        {/* Botão de Ação */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleViewClientDetails(activity.client_id)
-                          }}
-                        >
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
                       </div>
-                    ))}
+                    )}
+                    
+                    <div className="space-y-4">
+                      {recentActivities.map((activity) => {
+                        const statusInfo = getStatusInfo(activity.status)
+                        return (
+                          <div
+                            key={activity.id}
+                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                            onClick={() => handleViewClientDetails(activity.client_id)}
+                          >
+                            <div className="flex items-center gap-3">
+                              {/* Avatar do Cliente */}
+                              <div className="flex items-center justify-center w-10 h-10 rounded-full">
+                                <User className="h-5 w-5 text-blue-600" />
+                              </div>
+                              
+                              {/* Informações da Atividade */}
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h4 className="font-medium text-gray-900">
+                                    {activity.client?.full_name || 'Aluno sem nome'}
+                                  </h4>
+                                  <Badge
+                                    variant={statusInfo.variant}
+                                    className={`text-xs ${statusInfo.className}`}
+                                  >
+                                    <span className="flex items-center gap-1">
+                                      {statusInfo.icon}
+                                      {statusInfo.text}
+                                    </span>
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <Dumbbell className="h-3 w-3" />
+                                    <span>{activity.workout?.name || 'Treino sem nome'}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    <span>{formatDuration(activity.duration_seconds)}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Calendar className="h-3 w-3" />
+                                    <span>{formatDate(activity.created_at)}</span>
+                                  </div>
+                                </div>
+                                {activity.workout?.objective && (
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Objetivo: {activity.workout.objective}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* Botão de Ação */}
+                            <div className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleViewClientDetails(activity.client_id)
+                                }}
+                              >
+                                <ArrowRight className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
                     
                     {/* Botão Ver Todas */}
                     <div className="pt-4 border-t">
@@ -391,7 +497,7 @@ const ProfessionalDashboard: React.FC = () => {
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
-                  </div>
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -502,7 +608,7 @@ const ProfessionalDashboard: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-800">
                 <Activity className="h-5 w-5" />
-                Performance
+                Performance em Tempo Real
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -520,6 +626,16 @@ const ProfessionalDashboard: React.FC = () => {
                   <p className="text-xs text-green-700">Com Treino</p>
                 </div>
               </div>
+              {metrics.activeSessions > 0 && (
+                <div className="mt-3 pt-3 border-t border-green-200">
+                  <div className="flex items-center justify-center gap-2">
+                    <Activity className="h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700">
+                      {metrics.activeSessions} aluno(s) treinando agora!
+                    </span>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
