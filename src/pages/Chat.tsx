@@ -1,6 +1,6 @@
 // ATENÇÃO: Este arquivo DEVE ser salvo como "Chat.tsx" (com C maiúsculo) para funcionar no Linux/Vercel
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Input } from '../components/ui/input'
@@ -214,6 +214,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   onlineUsers
 }) => {
   const { user } = useAuth()
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll para baixo quando novas mensagens chegarem
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages])
 
   const formatMessageTime = (dateString: string) => {
     try {
@@ -267,7 +276,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
 
           {/* Messages */}
           <CardContent className="flex-1 p-4">
-            <ScrollArea className="h-[calc(100vh-280px)]">
+            <ScrollArea ref={scrollAreaRef} className="h-[calc(100vh-280px)]">
               {messagesLoading ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin" />
@@ -319,6 +328,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           </div>
                         )
                       })}
+                      {/* Ref para auto-scroll */}
+                      <div ref={messagesEndRef} />
                     </div>
                   )}
                 </>
@@ -652,15 +663,22 @@ const Chat: React.FC = () => {
     channel
       .on('presence', { event: 'sync' }, (payload) => {
         console.log('🔄 [PRESENCE] Sync recebido:', payload)
+        // Criar novo Set para garantir renderização
         const newOnlineUsers = new Set(payload.presences?.map((p: any) => p.user_id) || [])
         setOnlineUsers(newOnlineUsers)
       })
       .on('presence', { event: 'join' }, (payload) => {
         console.log('👋 [PRESENCE] User joined:', payload)
-        setOnlineUsers(prev => new Set([...prev, payload.new_presences?.[0]?.user_id]))
+        // Criar novo Set e adicionar usuário
+        setOnlineUsers(prev => {
+          const newSet = new Set(prev)
+          payload.new_presences?.forEach((p: any) => newSet.add(p.user_id))
+          return newSet
+        })
       })
       .on('presence', { event: 'leave' }, (payload) => {
         console.log('👋 [PRESENCE] User left:', payload)
+        // Criar novo Set e remover usuário
         setOnlineUsers(prev => {
           const newSet = new Set(prev)
           payload.left_presences?.forEach((p: any) => newSet.delete(p.user_id))
@@ -686,6 +704,7 @@ const Chat: React.FC = () => {
           // FILTRAGEM NO CLIENTE - Verificar se a mensagem é para o usuário atual
           if (newMessage.receiver_id === user.id || newMessage.sender_id === user.id) {
             console.log('📬 [REALTIME] Mensagem relevante para mim recebida!')
+            console.log('🔍 [REALTIME] Verificando IDs - Remetente:', newMessage.sender_id, 'Destinatário:', newMessage.receiver_id, 'Meu ID:', user.id)
             
             // Som de notificação (opcional)
             try {
@@ -697,10 +716,14 @@ const Chat: React.FC = () => {
               console.log('🔇 [REALTIME] Erro ao tocar som:', error)
             }
             
-            // Atualizar lista de contatos
+            // Atualizar lista de contatos - criar novo array para garantir renderização
             setContacts(prevContacts => {
+              console.log('🔄 [REALTIME] Atualizando contatos. Contatos atuais:', prevContacts.length)
+              console.log('🔍 [REALTIME] Procurando contato com ID:', newMessage.sender_id, 'ou', newMessage.receiver_id)
+              
               const updatedContacts = prevContacts.map(contact => {
                 if (contact.id === newMessage.sender_id || contact.id === newMessage.receiver_id) {
+                  console.log('✅ [REALTIME] Contato encontrado para atualizar:', contact.full_name || contact.email)
                   return {
                     ...contact,
                     last_message: newMessage.content,
@@ -714,6 +737,7 @@ const Chat: React.FC = () => {
               // Mover o contato que enviou mensagem para o topo
               const senderContact = updatedContacts.find(c => c.id === newMessage.sender_id || c.id === newMessage.receiver_id)
               if (senderContact) {
+                console.log('📈 [REALTIME] Movendo contato para o topo:', senderContact.full_name || senderContact.email)
                 const otherContacts = updatedContacts.filter(c => c.id !== newMessage.sender_id && c.id !== newMessage.receiver_id)
                 return [senderContact, ...otherContacts]
               }
