@@ -217,12 +217,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll para baixo quando novas mensagens chegarem - CORRIGIDO
+  // Auto-scroll para baixo quando novas mensagens chegarem - CORRIGIDO COM CLEANUP
   useEffect(() => {
-    // Usar setTimeout para garantir que o DOM seja atualizado antes do scroll
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, 100)
+    const timeoutId = setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 100) // Delay para garantir renderização
+
+    return () => clearTimeout(timeoutId)
   }, [messages])
 
   const formatMessageTime = (dateString: string) => {
