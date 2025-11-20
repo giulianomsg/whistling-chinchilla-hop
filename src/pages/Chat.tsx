@@ -217,11 +217,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll para baixo quando novas mensagens chegarem
+  // Auto-scroll para baixo quando novas mensagens chegarem - CORRIGIDO
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
+    // Usar setTimeout para garantir que o DOM seja atualizado antes do scroll
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   }, [messages])
 
   const formatMessageTime = (dateString: string) => {
@@ -388,6 +389,17 @@ const Chat: React.FC = () => {
   const [sendingMessage, setSendingMessage] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
+
+  // Função auxiliar para limpar contador de não lidas
+  const clearUnread = (contactId: string) => {
+    setContacts(prevContacts => 
+      prevContacts.map(contact => 
+        contact.id === contactId 
+          ? { ...contact, unread_count: 0 }
+          : contact
+      )
+    )
+  }
 
   // Buscar contatos (conversas)
   const fetchContacts = async () => {
@@ -643,10 +655,14 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Selecionar contato
+  // Selecionar contato - CORRIGIDO para limpar badges
   const handleSelectContact = (contact: Contact) => {
     console.log('👤 [CHAT] Selecionado contato:', contact.full_name || contact.email)
     setSelectedContact(contact)
+    
+    // Limpar contador de não lidas imediatamente
+    clearUnread(contact.id)
+    
     fetchMessages(contact.id)
   }
 
@@ -659,17 +675,28 @@ const Chat: React.FC = () => {
     // Canal unificado para tudo
     const channel = supabase.channel('capifit_chat_global')
     
-    // Configurar Presence
+    // Configurar Presence - CORRIGIDO
     channel
-      .on('presence', { event: 'sync' }, (payload) => {
-        console.log('🔄 [PRESENCE] Sync recebido:', payload)
-        // Criar novo Set para garantir renderização
-        const newOnlineUsers = new Set(payload.presences?.map((p: any) => p.user_id) || [])
-        setOnlineUsers(newOnlineUsers)
+      .on('presence', { event: 'sync' }, () => {
+        console.log('🔄 [PRESENCE] Sync recebido')
+        // CORREÇÃO: Usar presenceState() para obter estado atual
+        const newState = channel.presenceState()
+        const onlineIds = new Set<string>()
+
+        // O state retorna objetos { [id]: [ { user_id: ... } ] }
+        for (const id in newState) {
+          const presence = newState[id][0] as any // Pegar o primeiro device
+          if (presence?.user_id) {
+            onlineIds.add(presence.user_id)
+          }
+        }
+        
+        console.log('👥 [PRESENCE] Usuários online:', Array.from(onlineIds))
+        setOnlineUsers(onlineIds)
       })
       .on('presence', { event: 'join' }, (payload) => {
         console.log('👋 [PRESENCE] User joined:', payload)
-        // Criar novo Set e adicionar usuário
+        // CORREÇÃO: Criar novo Set e adicionar usuário
         setOnlineUsers(prev => {
           const newSet = new Set(prev)
           payload.new_presences?.forEach((p: any) => newSet.add(p.user_id))
@@ -678,7 +705,7 @@ const Chat: React.FC = () => {
       })
       .on('presence', { event: 'leave' }, (payload) => {
         console.log('👋 [PRESENCE] User left:', payload)
-        // Criar novo Set e remover usuário
+        // CORREÇÃO: Criar novo Set e remover usuário
         setOnlineUsers(prev => {
           const newSet = new Set(prev)
           payload.left_presences?.forEach((p: any) => newSet.delete(p.user_id))
@@ -716,7 +743,7 @@ const Chat: React.FC = () => {
               console.log('🔇 [REALTIME] Erro ao tocar som:', error)
             }
             
-            // Atualizar lista de contatos - criar novo array para garantir renderização
+            // CORREÇÃO: Atualizar lista de contatos com lógica de badges
             setContacts(prevContacts => {
               console.log('🔄 [REALTIME] Atualizando contatos. Contatos atuais:', prevContacts.length)
               console.log('🔍 [REALTIME] Procurando contato com ID:', newMessage.sender_id, 'ou', newMessage.receiver_id)
@@ -724,11 +751,17 @@ const Chat: React.FC = () => {
               const updatedContacts = prevContacts.map(contact => {
                 if (contact.id === newMessage.sender_id || contact.id === newMessage.receiver_id) {
                   console.log('✅ [REALTIME] Contato encontrado para atualizar:', contact.full_name || contact.email)
+                  
+                  // CORREÇÃO: Lógica de unread_count
+                  const shouldIncrementUnread = 
+                    contact.id === newMessage.sender_id && // Mensagem recebida
+                    contact.id !== selectedContact?.id // Contato não está selecionado
+                  
                   return {
                     ...contact,
                     last_message: newMessage.content,
                     last_message_time: newMessage.created_at,
-                    unread_count: contact.id === selectedContact?.id ? 0 : (contact.unread_count || 0) + 1
+                    unread_count: shouldIncrementUnread ? (contact.unread_count || 0) + 1 : 0
                   }
                 }
                 return contact
