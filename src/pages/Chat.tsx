@@ -217,8 +217,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll para baixo quando novas mensagens chegarem - CORRIGIDO COM CLEANUP
+  // Auto-scroll para baixo quando novas mensagens chegarem ou quando loading terminar
   useEffect(() => {
+    // Pequeno delay para garantir que o DOM pintou as novas mensagens
     const timeoutId = setTimeout(() => {
       if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -226,7 +227,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
     }, 100) // Delay para garantir renderização
 
     return () => clearTimeout(timeoutId)
-  }, [messages])
+  }, [messages, messagesLoading]) // Adicionado messagesLoading
 
   const formatMessageTime = (dateString: string) => {
     try {
@@ -544,13 +545,16 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Buscar histórico de mensagens - USANDO RPC
-  const fetchMessages = async (contactId: string) => {
+  // Buscar histórico de mensagens - USANDO RPC com parâmetro opcional
+  const fetchMessages = async (contactId: string, showLoading: boolean = true) => {
     if (!user || !contactId) return
 
     try {
-      console.log('🔍 [CHAT] Buscando mensagens com:', contactId, 'via RPC')
-      setMessagesLoading(true)
+      console.log('🔍 [CHAT] Buscando mensagens com:', contactId, 'via RPC, showLoading:', showLoading)
+      
+      if (showLoading) {
+        setMessagesLoading(true)
+      }
 
       // Usando RPC get_conversation em vez da query complexa
       const { data, error } = await supabase.rpc('get_conversation', {
@@ -584,7 +588,9 @@ const Chat: React.FC = () => {
       console.error('❌ [CHAT] Erro inesperado ao buscar mensagens:', error)
       setMessages([])
     } finally {
-      setMessagesLoading(false)
+      if (showLoading) {
+        setMessagesLoading(false)
+      }
     }
   }
 
@@ -644,8 +650,8 @@ const Chat: React.FC = () => {
       console.log('✅ [CHAT] Mensagem enviada com sucesso')
       setNewMessage('')
       
-      // Recarregar mensagens
-      await fetchMessages(selectedContact.id)
+      // Recarregar mensagens sem mostrar loading
+      await fetchMessages(selectedContact.id, false)
       
       // Recarregar contatos para atualizar última mensagem
       await fetchContacts()
