@@ -100,7 +100,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
     }
   }
 
-  // Filtrar contatos pelo termo de busca
+  // Filtrar contatos pelo termo de busca - CORRIGIDO
   const filteredContacts = contacts.filter(contact => {
     if (!searchTerm.trim()) return true
     
@@ -110,6 +110,9 @@ const ContactsList: React.FC<ContactsListProps> = ({
     
     return fullName.includes(searchLower) || email.includes(searchLower)
   })
+
+  console.log('🔍 [CONTACTS_LIST] Contatos filtrados:', filteredContacts.length, 'de', contacts.length)
+  console.log('📋 [CONTACTS_LIST] Termo de busca:', searchTerm)
 
   return (
     <div className="w-full md:w-80 border-r bg-white">
@@ -316,7 +319,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 disabled={sendingMessage}
               />
               <Button 
-                onClick={sendMessage} 
+                onClick={onSendMessage} 
                 disabled={!newMessage.trim() || sendingMessage}
                 size="icon"
               >
@@ -565,8 +568,10 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Enviar mensagem
-  const sendMessage = async () => {
+  // Enviar mensagem - CORRIGIDO
+  const sendMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    
     if (!user || !selectedContact || !newMessage.trim()) return
 
     try {
