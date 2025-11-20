@@ -16,7 +16,8 @@ import {
   Loader2,
   Check,
   CheckCheck,
-  Clock
+  Clock,
+  Circle
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { showSuccess, showError } from '../utils/toast'
@@ -61,6 +62,7 @@ interface ContactsListProps {
   onSelectContact: (contact: Contact) => void
   searchTerm: string
   onSearchChange: (value: string) => void
+  onlineUsers: Set<string>
 }
 
 interface ChatAreaProps {
@@ -71,6 +73,7 @@ interface ChatAreaProps {
   sendingMessage: boolean
   onSendMessage: () => void
   onNewMessageChange: (value: string) => void
+  onlineUsers: Set<string>
 }
 
 // Componente ContactsList - FORA DO COMPONENTE PRINCIPAL
@@ -80,7 +83,8 @@ const ContactsList: React.FC<ContactsListProps> = ({
   selectedContact, 
   onSelectContact, 
   searchTerm, 
-  onSearchChange 
+  onSearchChange,
+  onlineUsers
 }) => {
   const formatMessageTime = (dateString: string) => {
     try {
@@ -100,7 +104,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
     }
   }
 
-  // Filtrar contatos pelo termo de busca - CORRIGIDO
+  // Filtrar contatos pelo termo de busca
   const filteredContacts = contacts.filter(contact => {
     if (!searchTerm.trim()) return true
     
@@ -110,9 +114,6 @@ const ContactsList: React.FC<ContactsListProps> = ({
     
     return fullName.includes(searchLower) || email.includes(searchLower)
   })
-
-  console.log('🔍 [CONTACTS_LIST] Contatos filtrados:', filteredContacts.length, 'de', contacts.length)
-  console.log('📋 [CONTACTS_LIST] Termo de busca:', searchTerm)
 
   return (
     <div className="w-full md:w-80 border-r bg-white">
@@ -155,12 +156,20 @@ const ContactsList: React.FC<ContactsListProps> = ({
                       : 'hover:bg-gray-50'
                   }`}
                 >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={contact.avatar_url || ''} />
-                    <AvatarFallback>
-                      {contact.full_name?.[0]?.toUpperCase() || contact.email[0]?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="relative">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={contact.avatar_url || ''} />
+                      <AvatarFallback>
+                        {contact.full_name?.[0]?.toUpperCase() || contact.email[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    {/* Indicador Online */}
+                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                      onlineUsers.has(contact.id) 
+                        ? 'bg-green-500' 
+                        : 'bg-gray-400'
+                    }`} />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className="font-medium text-gray-900 truncate">
@@ -201,7 +210,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   newMessage, 
   sendingMessage, 
   onSendMessage, 
-  onNewMessageChange 
+  onNewMessageChange,
+  onlineUsers
 }) => {
   const { user } = useAuth()
 
@@ -230,18 +240,26 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           {/* Header */}
           <CardHeader className="border-b pb-3">
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={selectedContact.avatar_url || ''} />
-                <AvatarFallback>
-                  {selectedContact.full_name?.[0]?.toUpperCase() || selectedContact.email[0]?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
+              <div className="relative">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={selectedContact.avatar_url || ''} />
+                  <AvatarFallback>
+                    {selectedContact.full_name?.[0]?.toUpperCase() || selectedContact.email[0]?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                {/* Indicador Online */}
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                  onlineUsers.has(selectedContact.id) 
+                    ? 'bg-green-500' 
+                    : 'bg-gray-400'
+                }`} />
+              </div>
+              <div className="flex-1">
                 <p className="font-medium text-gray-900">
                   {selectedContact.full_name || selectedContact.email}
                 </p>
                 <p className="text-sm text-gray-500 capitalize">
-                  {selectedContact.role}
+                  {onlineUsers.has(selectedContact.id) ? 'Online' : 'Offline'}
                 </p>
               </div>
             </div>
@@ -358,6 +376,7 @@ const Chat: React.FC = () => {
   const [messagesLoading, setMessagesLoading] = useState(false)
   const [sendingMessage, setSendingMessage] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
 
   // Buscar contatos (conversas)
   const fetchContacts = async () => {
@@ -568,7 +587,7 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Enviar mensagem - CORRIGIDO
+  // Enviar mensagem
   const sendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     
@@ -620,6 +639,108 @@ const Chat: React.FC = () => {
     fetchMessages(contact.id)
   }
 
+  // Efeito para Presence (usuários online)
+  useEffect(() => {
+    if (!user) return
+
+    console.log('🌐 [CHAT] Configurando Presence para usuário:', user.id)
+
+    const channel = supabase.channel('global-presence')
+    
+    channel
+      .on('sync', (payload) => {
+        console.log('🔄 [PRESENCE] Sync recebido:', payload)
+        const newOnlineUsers = new Set(payload.new_online_users || [])
+        setOnlineUsers(newOnlineUsers)
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ [PRESENCE] Inscrito no canal')
+          
+          // Enviar status online
+          const presenceStatus = await channel.track({
+            user_id: user.id
+          })
+          
+          console.log('📡 [PRESENCE] Status enviado:', presenceStatus)
+        }
+      })
+
+    return () => {
+      console.log('🔌 [PRESENCE] Limpando canal')
+      channel.unsubscribe()
+    }
+  }, [user])
+
+  // Efeito para Realtime de mensagens
+  useEffect(() => {
+    if (!user) return
+
+    console.log('🔄 [CHAT] Configurando Realtime para mensagens')
+
+    const channel = supabase
+      .channel('chat_messages')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        (payload) => {
+          console.log('📨 [REALTIME] Nova mensagem recebida:', payload)
+          
+          const newMessage = payload.new as ChatMessage
+          
+          // Verificar se a mensagem é para o usuário atual
+          if (newMessage.receiver_id === user.id) {
+            console.log('📬 [REALTIME] Mensagem para mim recebida!')
+            
+            // Som de notificação (opcional)
+            try {
+              const audio = new Audio('/notification.mp3')
+              audio.play().catch(() => {
+                console.log('🔇 [REALTIME] Não foi possível tocar som de notificação')
+              })
+            } catch (error) {
+              console.log('🔇 [REALTIME] Erro ao tocar som:', error)
+            }
+            
+            // Atualizar lista de contatos
+            setContacts(prevContacts => {
+              const updatedContacts = prevContacts.map(contact => {
+                if (contact.id === newMessage.sender_id) {
+                  return {
+                    ...contact,
+                    last_message: newMessage.content,
+                    last_message_time: newMessage.created_at,
+                    unread_count: contact.id === selectedContact?.id ? 0 : (contact.unread_count || 0) + 1
+                  }
+                }
+                return contact
+              })
+              
+              // Mover o contato que enviou mensagem para o topo
+              const senderContact = updatedContacts.find(c => c.id === newMessage.sender_id)
+              if (senderContact) {
+                const otherContacts = updatedContacts.filter(c => c.id !== newMessage.sender_id)
+                return [senderContact, ...otherContacts]
+              }
+              
+              return updatedContacts
+            })
+            
+            // Se a mensagem for do contato selecionado, adicionar ao chat
+            if (selectedContact && newMessage.sender_id === selectedContact.id) {
+              setMessages(prevMessages => [...prevMessages, newMessage])
+            }
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      console.log('🔌 [REALTIME] Limpando canal de mensagens')
+      supabase.channel('chat_messages').unsubscribe()
+    }
+  }, [user, selectedContact])
+
   useEffect(() => {
     if (user) {
       fetchContacts()
@@ -635,6 +756,7 @@ const Chat: React.FC = () => {
         onSelectContact={handleSelectContact}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        onlineUsers={onlineUsers}
       />
       <ChatArea
         selectedContact={selectedContact}
@@ -644,6 +766,7 @@ const Chat: React.FC = () => {
         sendingMessage={sendingMessage}
         onSendMessage={sendMessage}
         onNewMessageChange={setNewMessage}
+        onlineUsers={onlineUsers}
       />
     </div>
   )
