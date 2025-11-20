@@ -1,10 +1,10 @@
 import React from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { useChat } from '@/contexts/ChatContext' // Novo import
+import { useChat } from '@/contexts/ChatContext'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge' // Novo import
+import { Badge } from '@/components/ui/badge'
 import { 
   Users, 
   Calendar, 
@@ -30,7 +30,7 @@ interface MenuItem {
 
 const DashboardLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth()
-  const { totalUnreadCount } = useChat() // Novo hook
+  const { totalUnreadCount } = useChat()
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
@@ -85,7 +85,7 @@ const DashboardLayout: React.FC = () => {
     },
     {
       title: 'Meu Plano Alimentar',
-      href: '/app/meal-plan',
+      href: '/app/my-meal-plan', // CORREÇÃO: Link corrigido para a rota correta
       icon: <Utensils className="h-5 w-5" />,
       roles: ['client']
     }
