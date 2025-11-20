@@ -54,13 +54,34 @@ interface Contact {
   unread_count?: number
 }
 
-// Componente ContactsList - EXTRAÍDO FORA DO COMPONENTE PRINCIPAL
-const ContactsList: React.FC<{
+interface ContactsListProps {
   contacts: Contact[]
   loading: boolean
   selectedContact: Contact | null
   onSelectContact: (contact: Contact) => void
-}> = ({ contacts, loading, selectedContact, onSelectContact }) => {
+  searchTerm: string
+  onSearchChange: (value: string) => void
+}
+
+interface ChatAreaProps {
+  selectedContact: Contact | null
+  messages: ChatMessage[]
+  messagesLoading: boolean
+  newMessage: string
+  sendingMessage: boolean
+  onSendMessage: () => void
+  onNewMessageChange: (value: string) => void
+}
+
+// Componente ContactsList - FORA DO COMPONENTE PRINCIPAL
+const ContactsList: React.FC<ContactsListProps> = ({ 
+  contacts, 
+  loading, 
+  selectedContact, 
+  onSelectContact, 
+  searchTerm, 
+  onSearchChange 
+}) => {
   const formatMessageTime = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -79,6 +100,17 @@ const ContactsList: React.FC<{
     }
   }
 
+  // Filtrar contatos pelo termo de busca
+  const filteredContacts = contacts.filter(contact => {
+    if (!searchTerm.trim()) return true
+    
+    const searchLower = searchTerm.toLowerCase()
+    const fullName = contact.full_name?.toLowerCase() || ''
+    const email = contact.email?.toLowerCase() || ''
+    
+    return fullName.includes(searchLower) || email.includes(searchLower)
+  })
+
   return (
     <div className="w-full md:w-80 border-r bg-white">
       <CardHeader className="pb-3">
@@ -91,6 +123,8 @@ const ContactsList: React.FC<{
           <Input
             placeholder="Buscar conversas..."
             className="pl-10"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
       </CardHeader>
@@ -101,14 +135,14 @@ const ContactsList: React.FC<{
             <div className="flex justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin" />
             </div>
-          ) : contacts.length === 0 ? (
+          ) : filteredContacts.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p>Nenhuma conversa ainda</p>
+              <p>{searchTerm ? 'Nenhuma conversa encontrada' : 'Nenhuma conversa ainda'}</p>
             </div>
           ) : (
             <div className="space-y-1 p-2">
-              {contacts.map((contact) => (
+              {filteredContacts.map((contact) => (
                 <div
                   key={contact.id}
                   onClick={() => onSelectContact(contact)}
@@ -156,16 +190,8 @@ const ContactsList: React.FC<{
   )
 }
 
-// Componente ChatArea - EXTRAÍDO FORA DO COMPONENTE PRINCIPAL
-const ChatArea: React.FC<{
-  selectedContact: Contact | null
-  messages: ChatMessage[]
-  messagesLoading: boolean
-  newMessage: string
-  sendingMessage: boolean
-  onSendMessage: () => void
-  onNewMessageChange: (value: string) => void
-}> = ({ 
+// Componente ChatArea - FORA DO COMPONENTE PRINCIPAL
+const ChatArea: React.FC<ChatAreaProps> = ({ 
   selectedContact, 
   messages, 
   messagesLoading, 
@@ -290,7 +316,7 @@ const ChatArea: React.FC<{
                 disabled={sendingMessage}
               />
               <Button 
-                onClick={onSendMessage} 
+                onClick={sendMessage} 
                 disabled={!newMessage.trim() || sendingMessage}
                 size="icon"
               >
@@ -328,6 +354,7 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [messagesLoading, setMessagesLoading] = useState(false)
   const [sendingMessage, setSendingMessage] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   // Buscar contatos (conversas)
   const fetchContacts = async () => {
@@ -345,10 +372,7 @@ const Chat: React.FC = () => {
         
         const { data: clientProfessionals, error: clientError } = await supabase
           .from('client_professionals')
-          .select(`
-            *,
-            professional:profiles!professional_id(id, email, full_name, avatar_url, role, created_at)
-          `)
+          .select(`*, professional:profiles!professional_id(*)`)
           .eq('client_id', user.id)
           .eq('status', 'active')
 
@@ -480,7 +504,7 @@ const Chat: React.FC = () => {
       console.log('🔍 [CHAT] Buscando mensagens com:', contactId, 'via RPC')
       setMessagesLoading(true)
 
-      // Usando RPC get_conversation
+      // Usando RPC get_conversation em vez da query complexa
       const { data, error } = await supabase.rpc('get_conversation', {
         user1_id: user.id,
         user2_id: contactId,
@@ -494,6 +518,7 @@ const Chat: React.FC = () => {
       }
 
       console.log('✅ [CHAT] Mensagens carregadas via RPC:', data?.length || 0)
+      console.log('📋 [CHAT] Dados das mensagens:', data)
       
       // Proteção de dados
       if (!data || !Array.isArray(data)) {
@@ -603,6 +628,8 @@ const Chat: React.FC = () => {
         loading={loading}
         selectedContact={selectedContact}
         onSelectContact={handleSelectContact}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
       />
       <ChatArea
         selectedContact={selectedContact}
