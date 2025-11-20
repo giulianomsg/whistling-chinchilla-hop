@@ -71,7 +71,7 @@ const Chat: React.FC = () => {
     if (!user) return
 
     try {
-      console.log('🔍 [CHAT] Buscando contatos...')
+      console.log('🔍 [CHAT] Buscando contatos para usuário:', user.id, 'role:', profile?.role)
       setLoading(true)
 
       // Buscar perfis com quem o usuário já conversou
@@ -92,6 +92,8 @@ const Chat: React.FC = () => {
         if (msg.receiver_id !== user.id) contactIds.add(msg.receiver_id)
       })
 
+      console.log('📋 [CHAT] IDs de contatos encontrados:', Array.from(contactIds))
+
       if (contactIds.size === 0) {
         console.log('📭 [CHAT] Nenhuma conversa encontrada')
         setContacts([])
@@ -108,6 +110,9 @@ const Chat: React.FC = () => {
         console.error('❌ [CHAT] Erro ao buscar perfis:', profilesError)
         return
       }
+
+      console.log('👥 [CHAT] Perfis encontrados:', profiles?.length || 0)
+      console.log('🔍 [CHAT] Dados brutos dos perfis:', profiles)
 
       // Para cada contato, buscar última mensagem e contar não lidas
       const contactsData: Contact[] = await Promise.all(
@@ -142,7 +147,17 @@ const Chat: React.FC = () => {
         })
       )
 
-      console.log('✅ [CHAT] Contatos carregados:', contactsData.length)
+      console.log('✅ [CHAT] Contatos processados:', contactsData.length)
+      console.log('📊 [CHAT] Dados dos contatos:', contactsData)
+
+      // Verificar se o array está vazio e logar detalhes
+      if (contactsData.length === 0) {
+        console.log('⚠️ [CHAT] Array de contatos vazio após processamento')
+        console.log('🔍 [CHAT] Verificando se há problema com os dados...')
+        console.log('📋 [CHAT] ContactIds originais:', Array.from(contactIds))
+        console.log('👥 [CHAT] Perfis brutos:', profiles)
+      }
+
       setContacts(contactsData.sort((a, b) => 
         new Date(b.last_message_time || 0).getTime() - new Date(a.last_message_time || 0).getTime()
       ))
@@ -153,28 +168,38 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Buscar histórico de mensagens
+  // Buscar histórico de mensagens - USANDO RPC
   const fetchMessages = async (contactId: string) => {
     if (!user || !contactId) return
 
     try {
-      console.log('🔍 [CHAT] Buscando mensagens com:', contactId)
+      console.log('🔍 [CHAT] Buscando mensagens com:', contactId, 'via RPC')
       setMessagesLoading(true)
 
-      const { data, error } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${contactId}),and(sender_id.eq.${contactId},receiver_id.eq.${user.id})`)
-        .order('created_at', { ascending: true })
+      // Usando RPC get_conversation em vez da query complexa
+      const { data, error } = await supabase.rpc('get_conversation', {
+        user1_id: user.id,
+        user2_id: contactId,
+        limit_count: 50
+      })
 
       if (error) {
-        console.error('❌ [CHAT] Erro ao buscar mensagens:', error)
+        console.error('❌ [CHAT] Erro ao buscar mensagens via RPC:', error)
         setMessages([])
         return
       }
 
-      console.log('✅ [CHAT] Mensagens carregadas:', data?.length || 0)
-      setMessages(data || [])
+      console.log('✅ [CHAT] Mensagens carregadas via RPC:', data?.length || 0)
+      console.log('📋 [CHAT] Dados das mensagens:', data)
+      
+      // Proteção de dados
+      if (!data || !Array.isArray(data)) {
+        console.log('⚠️ [CHAT] Dados inválidos recebidos:', data)
+        setMessages([])
+        return
+      }
+
+      setMessages(data)
 
       // Marcar mensagens como lidas
       await markMessagesAsRead(contactId)
