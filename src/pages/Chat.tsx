@@ -639,58 +639,53 @@ const Chat: React.FC = () => {
     fetchMessages(contact.id)
   }
 
-  // Efeito para Presence (usuários online)
+  // Efeito UNIFICADO para Realtime (Presence + Mensagens)
   useEffect(() => {
     if (!user) return
 
-    console.log('🌐 [CHAT] Configurando Presence para usuário:', user.id)
+    console.log('🔄 [CHAT] Configurando canal unificado Realtime para usuário:', user.id)
 
-    const channel = supabase.channel('global-presence')
+    // Canal unificado para tudo
+    const channel = supabase.channel('capifit_chat_global')
     
+    // Configurar Presence
     channel
-      .on('sync', (payload) => {
+      .on('presence', { event: 'sync' }, (payload) => {
         console.log('🔄 [PRESENCE] Sync recebido:', payload)
-        const newOnlineUsers = new Set(payload.new_online_users || [])
+        const newOnlineUsers = new Set(payload.presences?.map((p: any) => p.user_id) || [])
         setOnlineUsers(newOnlineUsers)
       })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ [PRESENCE] Inscrito no canal')
-          
-          // Enviar status online
-          const presenceStatus = await channel.track({
-            user_id: user.id
-          })
-          
-          console.log('📡 [PRESENCE] Status enviado:', presenceStatus)
-        }
+      .on('presence', { event: 'join' }, (payload) => {
+        console.log('👋 [PRESENCE] User joined:', payload)
+        setOnlineUsers(prev => new Set([...prev, payload.new_presences?.[0]?.user_id]))
+      })
+      .on('presence', { event: 'leave' }, (payload) => {
+        console.log('👋 [PRESENCE] User left:', payload)
+        setOnlineUsers(prev => {
+          const newSet = new Set(prev)
+          payload.left_presences?.forEach((p: any) => newSet.delete(p.user_id))
+          return newSet
+        })
       })
 
-    return () => {
-      console.log('🔌 [PRESENCE] Limpando canal')
-      channel.unsubscribe()
-    }
-  }, [user])
-
-  // Efeito para Realtime de mensagens
-  useEffect(() => {
-    if (!user) return
-
-    console.log('🔄 [CHAT] Configurando Realtime para mensagens')
-
-    const channel = supabase
-      .channel('chat_messages')
+    // Configurar Mensagens - SEM FILTRO, escuta todos os INSERTs
+    channel
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'chat_messages'
+          // Removido o filtro para escutar todos os inserts
+        },
         (payload) => {
-          console.log('📨 [REALTIME] Nova mensagem recebida:', payload)
+          console.log('📨 [REALTIME] Nova mensagem recebida (sem filtro):', payload)
           
           const newMessage = payload.new as ChatMessage
           
-          // Verificar se a mensagem é para o usuário atual
-          if (newMessage.receiver_id === user.id) {
-            console.log('📬 [REALTIME] Mensagem para mim recebida!')
+          // FILTRAGEM NO CLIENTE - Verificar se a mensagem é para o usuário atual
+          if (newMessage.receiver_id === user.id || newMessage.sender_id === user.id) {
+            console.log('📬 [REALTIME] Mensagem relevante para mim recebida!')
             
             // Som de notificação (opcional)
             try {
@@ -705,7 +700,7 @@ const Chat: React.FC = () => {
             // Atualizar lista de contatos
             setContacts(prevContacts => {
               const updatedContacts = prevContacts.map(contact => {
-                if (contact.id === newMessage.sender_id) {
+                if (contact.id === newMessage.sender_id || contact.id === newMessage.receiver_id) {
                   return {
                     ...contact,
                     last_message: newMessage.content,
@@ -717,9 +712,9 @@ const Chat: React.FC = () => {
               })
               
               // Mover o contato que enviou mensagem para o topo
-              const senderContact = updatedContacts.find(c => c.id === newMessage.sender_id)
+              const senderContact = updatedContacts.find(c => c.id === newMessage.sender_id || c.id === newMessage.receiver_id)
               if (senderContact) {
-                const otherContacts = updatedContacts.filter(c => c.id !== newMessage.sender_id)
+                const otherContacts = updatedContacts.filter(c => c.id !== newMessage.sender_id && c.id !== newMessage.receiver_id)
                 return [senderContact, ...otherContacts]
               }
               
@@ -727,17 +722,34 @@ const Chat: React.FC = () => {
             })
             
             // Se a mensagem for do contato selecionado, adicionar ao chat
-            if (selectedContact && newMessage.sender_id === selectedContact.id) {
-              setMessages(prevMessages => [...prevMessages, newMessage])
+            if (selectedContact && (newMessage.sender_id === selectedContact.id || newMessage.receiver_id === selectedContact.id)) {
+              console.log('💬 [REALTIME] Adicionando mensagem ao chat atual')
+              setMessages(prev => [...prev, newMessage])
             }
+          } else {
+            console.log('🚫 [REALTIME] Mensagem não é para mim, ignorando')
           }
         }
       )
-      .subscribe()
+
+    // Inscrever no canal e enviar status online
+    channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ [REALTIME] Inscrito no canal unificado')
+        
+        // Enviar status online
+        const presenceStatus = await channel.track({
+          user_id: user.id,
+          online_at: new Date().toISOString()
+        })
+        
+        console.log('📡 [REALTIME] Status online enviado:', presenceStatus)
+      }
+    })
 
     return () => {
-      console.log('🔌 [REALTIME] Limpando canal de mensagens')
-      supabase.channel('chat_messages').unsubscribe()
+      console.log('🔌 [REALTIME] Limpando canal unificado')
+      channel.unsubscribe()
     }
   }, [user, selectedContact])
 
