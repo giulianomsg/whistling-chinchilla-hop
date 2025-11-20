@@ -23,6 +23,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const ProfessionalDashboard = lazy(() => import("./pages/ProfessionalDashboard"));
 const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
 const ClientDetails = lazy(() => import("./pages/ClientDetails"));
+const Chat = lazy(() => import("./pages/Chat"));
 
 const queryClient = new QueryClient();
 
@@ -137,6 +138,16 @@ const AppRoutes: React.FC = () => {
             (profile?.role === 'professional' || profile?.role === 'admin') ? 
               <Suspense fallback={<PageLoader />}>
                 <FoodLibrary />
+              </Suspense> : 
+              <Navigate to="/app/dashboard" replace />
+          } 
+        />
+        <Route 
+          path="chat" 
+          element={
+            (profile?.role === 'professional' || profile?.role === 'client') ? 
+              <Suspense fallback={<PageLoader />}>
+                <Chat />
               </Suspense> : 
               <Navigate to="/app/dashboard" replace />
           } 

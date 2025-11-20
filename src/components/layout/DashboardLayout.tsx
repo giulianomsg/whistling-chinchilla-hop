@@ -13,7 +13,8 @@ import {
   Apple,
   Utensils,
   LayoutDashboard,
-  Home
+  Home,
+  MessageSquare
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
@@ -38,7 +39,7 @@ const DashboardLayout: React.FC = () => {
       roles: ['admin', 'professional', 'client']
     },
     {
-      title: 'Meus Clientes',
+      title: 'Meusos Clientes',
       href: '/app/clients',
       icon: <Users className="h-5 w-5" />,
       roles: ['admin', 'professional']
@@ -66,6 +67,12 @@ const DashboardLayout: React.FC = () => {
       href: '/app/foods',
       icon: <Apple className="h-5 w-5" />,
       roles: ['admin', 'professional']
+    },
+    {
+      title: 'Chat',
+      href: '/app/chat',
+      icon: <MessageSquare className="h-5 w-5" />,
+      roles: ['professional', 'client']
     },
     {
       title: 'Meu Treino',
