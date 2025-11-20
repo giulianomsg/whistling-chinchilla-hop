@@ -48,49 +48,43 @@ const DashboardLayout: React.FC = () => {
       title: 'Meusos Clientes',
       href: '/app/clients',
       icon: <Users className="h-5 w-5" />,
-      permissions: ['admin', 'professional']
+      roles: ['admin', 'professional']
     },
     {
       title: 'Planos de Treino',
-      href: '/app/planer',
+      href: '/app/planner',
       icon: <Calendar className="h-5 w-5" />,
-      permissions: ['admin', 'professional']
+      roles: ['admin', 'professional']
     },
     {
       title: 'Planos Alimentares',
       href: '/app/meal-planner',
       icon: <Utensils className="h-5 w-5" />,
-      permissions: ['admin', 'professional']
-    },
-    {
-      title: chatMessages',
-      href: '/app/chat',
-      icon: <MessageSquare className="h-5 w-5" />,
-      roles: ['professional', 'client']
+      roles: ['admin', 'professional']
     },
     {
       title: 'Biblioteca de Exercícios',
       href: '/app/library',
       icon: <BookOpen className="h-5 w-5" />,
-      permissions: ['admin', 'professional']
+      roles: ['admin', 'professional']
     },
     {
       title: 'Biblioteca de Alimentos',
       href: '/app/foods',
       icon: <Apple className="h-5 w-5" />,
-      permissions: ['admin', 'professional']
+      roles: ['admin', 'professional']
     },
     {
       title: 'Meu Treino',
       href: '/app/my-workout',
       icon: <Dumbbell className="h-5 w-5" />,
-      permissions: ['client']
+      roles: ['client']
     },
     {
       title: 'Meu Plano Alimentar',
-      href: '/app/my-meal-plan',
+      href: '/app/meal-plan',
       icon: <Utensils className="h-5 w-5" />,
-      permissions: ['client']
+      roles: ['client']
     }
   ]
 
@@ -134,7 +128,6 @@ const DashboardLayout: React.FC = () => {
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900">CapiFit</h2>
-           -based menu item configuration
             <p className="text-xs text-gray-500 capitalize">{profile?.role || 'carregando...'}</p>
           </div>
         </div>
@@ -142,7 +135,6 @@ const DashboardLayout: React.FC = () => {
 
       {/* User Info */}
       <div className="p-4 border-b">
-        < menuItems array with proper role-based filtering
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile?.avatar_url || ''} />
@@ -229,7 +221,7 @@ const DashboardLayout: React.FC = () => {
               <div className="p-1 bg-blue-600 rounded">
                 <Dumbbell className="h-4 w-4 text-white" />
               </div>
-              <span className="font-bold text-gray-900">CapiFit</</span>
+              <span className="font-bold text-gray-900">CapiFit</span>
             </div>
           </div>
           <Avatar className="h-8 w-8">
