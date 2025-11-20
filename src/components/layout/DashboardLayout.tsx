@@ -1,8 +1,10 @@
 import React from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { useChat } from '@/contexts/ChatContext' // Novo import
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge' // Novo import
 import { 
   Users, 
   Calendar, 
@@ -28,6 +30,7 @@ interface MenuItem {
 
 const DashboardLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth()
+  const { totalUnreadCount } = useChat() // Novo hook
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
@@ -45,7 +48,7 @@ const DashboardLayout: React.FC = () => {
       roles: ['professional', 'client']
     },
     {
-      title: 'Meusos Clientes',
+      title: 'Meus Clientes',
       href: '/app/clients',
       icon: <Users className="h-5 w-5" />,
       roles: ['admin', 'professional']
@@ -157,13 +160,16 @@ const DashboardLayout: React.FC = () => {
       <nav className="flex-1 p-4 space-y-1">
         {filteredMenuItems.map((item) => {
           const isActive = location.pathname === item.href
+          const isMessages = item.title === 'Mensagens'
+          const showBadge = isMessages && totalUnreadCount > 0
+          
           return (
             <Link
               key={item.href}
               to={item.href}
               onClick={() => mobile && setSidebarOpen(false)}
               className={`
-                flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative
                 ${isActive 
                   ? 'bg-blue-50 text-blue-700 border border-blue-200' 
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
@@ -172,6 +178,16 @@ const DashboardLayout: React.FC = () => {
             >
               {item.icon}
               <span>{item.title}</span>
+              
+              {/* Badge de notificação para Mensagens */}
+              {showBadge && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 border-2 border-white"
+                >
+                  {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+                </Badge>
+              )}
             </Link>
           )
         })}
