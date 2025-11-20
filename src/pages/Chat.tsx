@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/ui/button'
@@ -18,10 +18,13 @@ import {
   User,
   Users,
   Clock,
-  CheckCircle
+  CheckCircle,
+  CheckCheck
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { useIsMobile } from '../hooks/use-mobile'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 interface Profile {
   id: string
@@ -45,6 +48,19 @@ interface ClientProfessional {
   professional?: Profile
 }
 
+interface Message {
+  id: string
+  sender_id: string
+  receiver_id: string
+  content: string
+  message_type: string
+  file_url: string | null
+  is_read: boolean
+  read_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 interface UnreadCount {
   [userId: string]: number
 }
@@ -60,6 +76,15 @@ const Chat: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [pageLoading, setPageLoading] = useState(true)
   const [unreadCounts, setUnreadCounts] = useState<UnreadCount>({})
+  
+  // Estados de mensagens
+  const [messages, setMessages] = useState<Message[]>([])
+  const [messageInput, setMessageInput] = useState('')
+  const [messagesLoading, setMessagesLoading] = useState(false)
+  const [sendingMessage, setSendingMessage] = useState(false)
+  
+  // Ref para auto-scroll
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Buscar contatos baseado no role do usuário
   const fetchContacts = async () => {
@@ -154,6 +179,124 @@ const Chat: React.FC = () => {
     }
   }
 
+  // Buscar histórico de mensagens
+  const fetchMessages = async (contactId: string) => {
+    if (!user || !contactId) return
+
+    try {
+      console.log('🔍 [CHAT] Buscando mensagens com:', contactId)
+      setMessagesLoading(true)
+
+      const { data, error } = await supabase
+        .from('chat_messages')
+        .select('*')
+        .or(`(sender_id.eq.${user.id},receiver_id.eq.${contactId}),(sender_id.eq.${contactId},receiver_id.eq.${user.id})`)
+        .order('created_at', { ascending: true })
+
+      if (error) {
+        console.error('❌ [CHAT] Erro ao buscar mensagens:', error)
+        setMessages([])
+        return
+      }
+
+      console.log('✅ [CHAT] Mensagens carregadas:', data?.length || 0)
+      setMessages(data || [])
+
+      // Marcar mensagens como lidas
+      await markMessagesAsRead(contactId)
+
+    } catch (error) {
+      console.error('❌ [CHAT] Erro inesperado ao buscar mensagens:', error)
+      setMessages([])
+    } finally {
+      setMessagesLoading(false)
+    }
+  }
+
+  // Marcar mensagens como lidas
+  const markMessagesAsRead = async (contactId: string) => {
+    if (!user || !contactId) return
+
+    try {
+      console.log('📖 [CHAT] Marcando mensagens como lidas de:', contactId)
+
+      const { error } = await supabase
+        .from('chat_messages')
+        .update({ 
+          is_read: true, 
+          read_at: new Date().toISOString() 
+        })
+        .eq('receiver_id', user.id)
+        .eq('sender_id', contactId)
+        .eq('is_read', false)
+
+      if (error) {
+        console.error('❌ [CHAT] Erro ao marcar mensagens como lidas:', error)
+      } else {
+        console.log('✅ [CHAT] Mensagens marcadas como lidas')
+        // Atualizar contagem de não lidas
+        setUnreadCounts(prev => ({
+          ...prev,
+          [contactId]: 0
+        }))
+      }
+
+    } catch (error) {
+      console.error('❌ [CHAT] Erro inesperado ao marcar mensagens como lidas:', error)
+    }
+  }
+
+  // Enviar mensagem
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!user || !selectedUser || !messageInput.trim()) return
+
+    const messageContent = messageInput.trim()
+    setSendingMessage(true)
+
+    try {
+      console.log('📤 [CHAT] Enviando mensagem para:', selectedUser.id)
+
+      const { data, error } = await supabase
+        .from('chat_messages')
+        .insert({
+          sender_id: user.id,
+          receiver_id: selectedUser.id,
+          content: messageContent,
+          message_type: 'text'
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ [CHAT] Erro ao enviar mensagem:', error)
+        return
+      }
+
+      console.log('✅ [CHAT] Mensagem enviada:', data)
+      
+      // Limpar input
+      setMessageInput('')
+      
+      // A mensagem será adicionada automaticamente pelo listener do Realtime
+      // Mas podemos adicionar localmente para feedback instantâneo
+      if (data) {
+        setMessages(prev => [...prev, data])
+      }
+
+    } catch (error) {
+      console.error('❌ [CHAT] Erro inesperado ao enviar mensagem:', error)
+    } finally {
+      setSendingMessage(false)
+    }
+  }
+
+  // Auto-scroll para a última mensagem
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   // Filtrar contatos pelo termo de busca
   const filteredContacts = contacts.filter(contact => {
     if (!searchTerm.trim()) return true
@@ -213,20 +356,98 @@ const Chat: React.FC = () => {
     }
   }
 
+  // Formatar hora da mensagem
+  const formatMessageTime = (dateString: string): string => {
+    const date = new Date(dateString)
+    return format(date, 'HH:mm', { locale: ptBR })
+  }
+
+  // Verificar se a mensagem é do usuário atual
+  const isMyMessage = (message: Message): boolean => {
+    return message.sender_id === user?.id
+  }
+
   // Selecionar usuário para conversa
   const handleSelectUser = (contact: ClientProfessional) => {
     const contactInfo = getContactInfo(contact)
     if (contactInfo) {
       setSelectedUser(contactInfo)
       console.log('🔗 [CHAT] Usuário selecionado:', contactInfo.full_name)
+      
+      // Buscar histórico de mensagens
+      fetchMessages(contactInfo.id)
     }
   }
 
   // Voltar para lista de contatos (mobile)
   const handleBackToList = () => {
     setSelectedUser(null)
+    setMessages([])
   }
 
+  // Efeito para buscar mensagens quando selectedUser mudar
+  useEffect(() => {
+    if (selectedUser) {
+      fetchMessages(selectedUser.id)
+    } else {
+      setMessages([])
+    }
+  }, [selectedUser?.id])
+
+  // Efeito para auto-scroll quando novas mensagens chegarem
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  // Efeito para Realtime - escutar novas mensagens
+  useEffect(() => {
+    if (!user) return
+
+    console.log('🔄 [CHAT] Configurando listener Realtime')
+
+    const channel = supabase
+      .channel('chat_messages')
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `receiver_id=eq.${user.id}`
+        }, 
+        (payload) => {
+          console.log('📨 [CHAT] Nova mensagem recebida:', payload.new)
+          
+          const newMessage = payload.new as Message
+          
+          // Verificar se a mensagem é da conversa ativa
+          if (selectedUser && (
+            newMessage.sender_id === selectedUser.id || 
+            newMessage.receiver_id === selectedUser.id
+          )) {
+            setMessages(prev => [...prev, newMessage])
+            
+            // Marcar como lida após um pequeno delay
+            setTimeout(() => {
+              markMessagesAsRead(newMessage.sender_id)
+            }, 1000)
+          }
+          
+          // Atualizar contagem de não lidas
+          setUnreadCounts(prev => ({
+            ...prev,
+            [newMessage.sender_id]: (prev[newMessage.sender_id] || 0) + 1
+          }))
+        }
+      )
+      .subscribe()
+
+    return () => {
+      console.log('🔌 [CHAT] Desconectando listener Realtime')
+      supabase.removeChannel(channel)
+    }
+  }, [user?.id, selectedUser?.id])
+
+  // Efeito principal para carregar contatos
   useEffect(() => {
     if (!loading && user && profile) {
       fetchContacts()
@@ -440,36 +661,81 @@ const Chat: React.FC = () => {
           </div>
         </div>
 
-        {/* Área de mensagens (placeholder) */}
-        <div className="flex-1 flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <Send className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Conversa com {selectedUser.full_name || 'este usuário'}
-            </h3>
-            <p className="text-gray-600 max-w-md">
-              O sistema de mensagens está sendo implementado. Em breve você poderá enviar e receber mensagens em tempo real.
-            </p>
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>Status:</strong> Interface criada ✅ | Envio de mensagens 🔄 Em desenvolvimento
+        {/* Área de mensagens */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messagesLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="text-center py-8">
+              <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">
+                Nenhuma mensagem nesta conversa ainda. Seja o primeiro a dizer olá!
               </p>
             </div>
-          </div>
+          ) : (
+            <>
+              {messages.map((message) => {
+                const isMyMsg = isMyMessage(message)
+                
+                return (
+                  <div
+                    key={message.id}
+                    className={`flex ${isMyMsg ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                        isMyMsg 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-900'
+                      }`}
+                    >
+                      <p className="text-sm break-words">{message.content}</p>
+                      <div className={`flex items-center gap-1 mt-1 text-xs ${
+                        isMyMsg ? 'text-blue-100 justify-end' : 'text-gray-500'
+                      }`}>
+                        <span>{formatMessageTime(message.created_at)}</span>
+                        {isMyMsg && (
+                          <span>
+                            {message.is_read ? (
+                              <CheckCheck className="h-3 w-3" />
+                            ) : (
+                              <CheckCircle className="h-3 w-3" />
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+              <div ref={messagesEndRef} />
+            </>
+          )}
         </div>
 
-        {/* Input de mensagem (placeholder) */}
+        {/* Input de mensagem */}
         <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center gap-2">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
             <Input
               placeholder="Digite sua mensagem..."
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
               className="flex-1"
-              disabled
+              disabled={sendingMessage}
             />
-            <Button disabled>
-              <Send className="h-4 w-4" />
+            <Button 
+              type="submit" 
+              disabled={!messageInput.trim() || sendingMessage}
+            >
+              {sendingMessage ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
-          </div>
+          </form>
         </div>
       </div>
     )
