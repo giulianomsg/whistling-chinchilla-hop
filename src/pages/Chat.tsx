@@ -742,15 +742,7 @@ const Chat: React.FC = () => {
             console.log('📬 [REALTIME] Mensagem relevante para mim recebida!')
             console.log('🔍 [REALTIME] Verificando IDs - Remetente:', newMessage.sender_id, 'Destinatário:', newMessage.receiver_id, 'Meu ID:', user.id)
             
-            // Som de notificação (opcional)
-            try {
-              const audio = new Audio('/notification.mp3')
-              audio.play().catch(() => {
-                console.log('🔇 [REALTIME] Não foi possível tocar som de notificação')
-              })
-            } catch (error) {
-              console.log('🔇 [REALTIME] Erro ao tocar som:', error)
-            }
+            // REMOVIDO: Som de notificação local (já é tratado no ChatContext global)
             
             // CORREÇÃO: Atualizar lista de contatos com lógica de badges
             setContacts(prevContacts => {
