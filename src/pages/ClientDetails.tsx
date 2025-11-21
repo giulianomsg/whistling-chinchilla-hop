@@ -30,7 +30,8 @@ import {
   BarChart3,
   CalendarDays,
   Bell,
-  XCircle
+  XCircle,
+  ArrowRight
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { showSuccess, showError } from '../utils/toast'
