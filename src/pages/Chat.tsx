@@ -526,6 +526,6 @@ const Chat: React.FC = () => {
       )}
     </div>
   )
-} 
+}
 
 export default Chat
