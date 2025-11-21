@@ -29,9 +29,7 @@ import {
   TrendingDown,
   BarChart3,
   CalendarDays,
-  Bell,
-  XCircle,
-  ArrowRight
+  Bell
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { showSuccess, showError } from '../utils/toast'
@@ -268,8 +266,6 @@ const ClientDetails: React.FC = () => {
     if (!id) return
 
     try {
-      console.log('🔍 [CLIENT_DETAILS] Buscando sessões recentes...')
-
       const { data, error } = await supabase
         .from('workout_sessions')
         .select(`
@@ -281,15 +277,14 @@ const ClientDetails: React.FC = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('❌ [CLIENT_DETAILS] Erro ao buscar sessões:', error)
+        console.error('Erro ao buscar sessões:', error)
         return
       }
 
-      console.log('✅ [CLIENT_DETAILS] Sessões recentes carregadas:', data?.length || 0, 'sessões')
       setSessions(data || [])
       setFilteredSessions(data || [])
     } catch (error) {
-      console.error('❌ [CLIENT_DETAILS] Erro inesperado:', error)
+      console.error('Erro inesperado:', error)
     }
   }
 
@@ -440,10 +435,10 @@ const ClientDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-300">Carregando detalhes do cliente...</p>
+          <p className="text-gray-600">Carregando detalhes do cliente...</p>
         </div>
       </div>
     )
@@ -451,11 +446,11 @@ const ClientDetails: React.FC = () => {
 
   if (!clientProfile) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Cliente não encontrado</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">O cliente que você está procurando não existe ou não está disponível.</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Cliente não encontrado</h2>
+          <p className="text-gray-600 mb-4">O cliente que você está procurando não existe ou não está disponível.</p>
           <Button onClick={() => navigate('/app/clients')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar para Clientes
@@ -466,7 +461,7 @@ const ClientDetails: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-background py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -479,7 +474,7 @@ const ClientDetails: React.FC = () => {
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Voltar
               </Button>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-bold text-gray-900">
                 Detalhes do Cliente
               </h1>
             </div>
@@ -501,7 +496,7 @@ const ClientDetails: React.FC = () => {
           </div>
 
           {/* Card de Informações Básicas */}
-          <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5 text-blue-600" />
@@ -515,8 +510,8 @@ const ClientDetails: React.FC = () => {
                     <User className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Nome</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm text-gray-600">Nome</p>
+                    <p className="font-medium text-gray-900">
                       {clientProfile.full_name || 'Não informado'}
                     </p>
                   </div>
@@ -527,8 +522,8 @@ const ClientDetails: React.FC = () => {
                     <Mail className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Email</p>
-                    <p className="font-medium text-gray-900 dark:text-white">{clientProfile.email}</p>
+                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="font-medium text-gray-900">{clientProfile.email}</p>
                   </div>
                 </div>
 
@@ -537,8 +532,8 @@ const ClientDetails: React.FC = () => {
                     <Phone className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Telefone</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm text-gray-600">Telefone</p>
+                    <p className="font-medium text-gray-900">
                       {clientProfile.phone || 'Não informado'}
                     </p>
                   </div>
@@ -549,8 +544,8 @@ const ClientDetails: React.FC = () => {
                     <Calendar className="h-6 w-6 text-orange-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Cliente desde</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm text-gray-600">Cliente desde</p>
+                    <p className="font-medium text-gray-900">
                       {new Date(clientProfile.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -587,7 +582,7 @@ const ClientDetails: React.FC = () => {
 
           {/* Treinos Atuais */}
           <TabsContent value="workouts">
-            <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Dumbbell className="h-5 w-5 text-blue-600" />
@@ -598,8 +593,8 @@ const ClientDetails: React.FC = () => {
                 {clientWorkouts.length === 0 ? (
                   <div className="text-center py-12">
                     <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum treino atribuído</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum treino atribuído</h3>
+                    <p className="text-gray-600 mb-4">
                       Este cliente ainda não possui treinos atribuídos.
                     </p>
                     <Button onClick={() => navigate('/app/planner')}>
@@ -609,18 +604,18 @@ const ClientDetails: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     {clientWorkouts.map((clientWorkout) => (
-                      <div key={clientWorkout.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                      <div key={clientWorkout.id} className="border rounded-lg p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
                               {clientWorkout.workout.name}
                             </h3>
                             {clientWorkout.workout.description && (
-                              <p className="text-gray-600 dark:text-gray-300 mb-3">
+                              <p className="text-gray-600 mb-3">
                                 {clientWorkout.workout.description}
                               </p>
                             )}
-                            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div className="flex items-center gap-4 text-sm text-gray-600">
                               <div className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
                                 <span>Início: {new Date(clientWorkout.start_date).toLocaleDateString('pt-BR')}</span>
@@ -667,7 +662,7 @@ const ClientDetails: React.FC = () => {
 
           {/* Planos Alimentares */}
           <TabsContent value="meal-plans">
-            <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Utensils className="h-5 w-5 text-green-600" />
@@ -678,8 +673,8 @@ const ClientDetails: React.FC = () => {
                 {clientMealPlans.length === 0 ? (
                   <div className="text-center py-12">
                     <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum plano alimentar atribuído</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano alimentar atribuído</h3>
+                    <p className="text-gray-600 mb-4">
                       Este cliente ainda não possui planos alimentares atribuídos.
                     </p>
                     <Button onClick={() => navigate('/app/meal-planner')}>
@@ -689,18 +684,18 @@ const ClientDetails: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     {clientMealPlans.map((clientMealPlan) => (
-                      <div key={clientMealPlan.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                      <div key={clientMealPlan.id} className="border rounded-lg p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
                               {clientMealPlan.meal_plan.name}
                             </h3>
                             {clientMealPlan.meal_plan.description && (
-                              <p className="text-gray-600 dark:text-gray-300 mb-3">
+                              <p className="text-gray-600 mb-3">
                                 {clientMealPlan.meal_plan.description}
                               </p>
                             )}
-                            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div className="flex items-center gap-4 text-sm text-gray-600">
                               <div className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
                                 <span>Início: {new Date(clientMealPlan.start_date).toLocaleDateString('pt-BR')}</span>
@@ -747,7 +742,7 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="history">
             <div className="space-y-6">
               {/* Filtros */}
-              <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Filter className="h-5 w-5 text-purple-600" />
@@ -815,7 +810,7 @@ const ClientDetails: React.FC = () => {
             <div className="space-y-6">
               {/* Comparação de Períodos */}
               {comparisonMode && (
-                <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       Comparação de Períodos
@@ -858,10 +853,10 @@ const ClientDetails: React.FC = () => {
                     </div>
                     
                     {/* Gráfico de Comparação */}
-                    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Sessões Concluídas</p>
+                          <p className="text-sm text-gray-600">Sessões Concluídas</p>
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <span className="text-2xl font-bold text-green-600">12</span>
                             <TrendingUp className="h-4 w-4 text-green-600" />
@@ -869,7 +864,7 @@ const ClientDetails: React.FC = () => {
                           <p className="text-xs text-gray-500">+20% vs período anterior</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Tempo Médio</p>
+                          <p className="text-sm text-gray-600">Tempo Médio</p>
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <span className="text-2xl font-bold text-blue-600">45min</span>
                             <TrendingUp className="h-4 w-4 text-blue-600" />
@@ -877,7 +872,7 @@ const ClientDetails: React.FC = () => {
                           <p className="text-xs text-gray-500">+5min vs período anterior</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Taxa Conclusão</p>
+                          <p className="text-sm text-gray-600">Taxa Conclusão</p>
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <span className="text-2xl font-bold text-purple-600">85%</span>
                             <TrendingDown className="h-4 w-4 text-red-600" />
@@ -891,7 +886,7 @@ const ClientDetails: React.FC = () => {
               )}
 
               {/* Gráfico de Progresso Visual */}
-              <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-blue-600" />
@@ -901,13 +896,13 @@ const ClientDetails: React.FC = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {/* Gráfico de Barras Simples */}
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Sessões por Dia</h3>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h3 className="text-sm font-medium text-gray-700 mb-4">Sessões por Dia</h3>
                       <div className="space-y-2">
                         {progressData.slice(-7).map((data, index) => (
                           <div key={index} className="flex items-center gap-4">
-                            <span className="text-sm text-gray-600 dark:text-gray-300 w-12">{data.date}</span>
-                            <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6 relative">
+                            <span className="text-sm text-gray-600 w-12">{data.date}</span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                               <div 
                                 className="bg-green-500 h-6 rounded-full flex items-center justify-end pr-2"
                                 style={{ width: `${Math.min((data.completed / 3) * 100, 100)}%` }}
@@ -930,29 +925,29 @@ const ClientDetails: React.FC = () => {
 
                     {/* Estatísticas do Período */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <p className="text-2xl font-bold text-blue-600">{filteredSessions.length}</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">Total de Sessões</p>
+                        <p className="text-xs text-gray-600">Total de Sessões</p>
                       </div>
-                      <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <div className="text-center p-4 bg-green-50 rounded-lg">
                         <p className="text-2xl font-bold text-green-600">
                           {filteredSessions.filter(s => s.status === 'completed').length}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">Concluídas</p>
+                        <p className="text-xs text-gray-600">Concluídas</p>
                       </div>
-                      <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                      <div className="text-center p-4 bg-red-50 rounded-lg">
                         <p className="text-2xl font-bold text-red-600">
                           {filteredSessions.filter(s => s.status === 'abandoned').length}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">Abandonadas</p>
+                        <p className="text-xs text-gray-600">Abandonadas</p>
                       </div>
-                      <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                      <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <p className="text-2xl font-bold text-purple-600">
                           {filteredSessions.length > 0 
                             ? Math.round((filteredSessions.filter(s => s.status === 'completed').length / filteredSessions.length) * 100)
                             : 0}%
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">Taxa Conclusão</p>
+                        <p className="text-xs text-gray-600">Taxa Conclusão</p>
                       </div>
                     </div>
                   </div>
@@ -965,7 +960,7 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="personal">
             <div className="space-y-6">
               {/* Objetivos */}
-              <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Target className="h-5 w-5 text-purple-600" />
@@ -974,15 +969,15 @@ const ClientDetails: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   {clientDetails?.goals ? (
-                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{clientDetails.goals}</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{clientDetails.goals}</p>
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400 italic">Nenhum objetivo informado</p>
+                    <p className="text-gray-500 italic">Nenhum objetivo informado</p>
                   )}
                 </CardContent>
               </Card>
 
               {/* Restrições de Saúde */}
-              <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <AlertCircle className="h-5 w-5 text-red-600" />
@@ -991,16 +986,16 @@ const ClientDetails: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   {clientDetails?.health_restrictions ? (
-                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{clientDetails.health_restrictions}</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{clientDetails.health_restrictions}</p>
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400 italic">Nenhuma restrição informada</p>
+                    <p className="text-gray-500 italic">Nenhuma restrição informada</p>
                   )}
                 </CardContent>
               </Card>
 
               {/* Contato de Emergência */}
               {clientDetails?.emergency_contact && (
-                <Card className="bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Phone className="h-5 w-5 text-orange-600" />
@@ -1011,20 +1006,20 @@ const ClientDetails: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {clientDetails.emergency_contact.name && (
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Nome</p>
-                          <p className="font-medium text-gray-900 dark:text-white">{clientDetails.emergency_contact.name}</p>
+                          <p className="text-sm text-gray-600">Nome</p>
+                          <p className="font-medium">{clientDetails.emergency_contact.name}</p>
                         </div>
                       )}
                       {clientDetails.emergency_contact.phone && (
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Telefone</p>
-                          <p className="font-medium text-gray-900 dark:text-white">{clientDetails.emergency_contact.phone}</p>
+                          <p className="text-sm text-gray-600">Telefone</p>
+                          <p className="font-medium">{clientDetails.emergency_contact.phone}</p>
                         </div>
                       )}
                       {clientDetails.emergency_contact.relationship && (
                         <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">Relação</p>
-                          <p className="font-medium text-gray-900 dark:text-white">{clientDetails.emergency_contact.relationship}</p>
+                          <p className="text-sm text-gray-600">Relação</p>
+                          <p className="font-medium">{clientDetails.emergency_contact.relationship}</p>
                         </div>
                       )}
                     </div>
