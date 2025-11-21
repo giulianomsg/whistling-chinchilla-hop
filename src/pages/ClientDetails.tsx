@@ -29,7 +29,8 @@ import {
   TrendingDown,
   BarChart3,
   CalendarDays,
-  Bell
+  Bell,
+  XCircle
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { showSuccess, showError } from '../utils/toast'
@@ -953,9 +954,9 @@ const ClientDetails: React.FC = () => {
                         <p className="text-xs text-gray-600 dark:text-gray-300">Taxa Conclusão</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 

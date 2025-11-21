@@ -116,7 +116,7 @@ const MyClients: React.FC = () => {
         return null
       }
 
-      console.log('✅ [MY_CLIENTS] Cliente encontrado:', data)
+      console.log('✅ [ dark:text-gray-300MY_CLIENTS] Cliente encontrado:', data)
       return data
     } catch (error) {
       console.error('❌ [MY_CLIENTS] Erro inesperado ao buscar cliente:', error)
@@ -289,7 +289,7 @@ const MyClients: React.FC = () => {
 
   if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-gray-600 dark:text-gray-300">Carregando clientes...</p>
@@ -350,7 +350,7 @@ const MyClients: React.FC = () => {
                         required
                         disabled={addLoading}
                       />
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Digite o email do cliente que já está cadastrado no sistema
                       </p>
                     </div>
@@ -364,7 +364,7 @@ const MyClients: React.FC = () => {
                         onChange={(e) => setNewClientName(e.target.value)}
                         disabled={addLoading}
                       />
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Preencha para atualizar o nome do cliente (opcional)
                       </p>
                     </div>
@@ -378,7 +378,7 @@ const MyClients: React.FC = () => {
                         onChange={(e) => setNewClientPhone(e.target.value)}
                         disabled={addLoading}
                       />
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Preencha para atualizar o telefone do cliente (opcional)
                       </p>
                     </div>
@@ -481,7 +481,7 @@ const MyClients: React.FC = () => {
               return (
                 <Card 
                   key={clientProfessional.id} 
-                  className="hover:shadow-lg transition-shadow cursor-pointer bg-white/50 dark:bg-card/30 backdrop-blur-md border-white/20 dark:border-white/10"
+                  className="hover:shadow-lg transition-shadow cursor-pointer bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm"
                   onClick={() => handleViewClientDetails(client.id)}
                 >
                   <CardHeader className="pb-3">
@@ -557,7 +557,7 @@ const MyClients: React.FC = () => {
                     </div>
                     
                     {/* Botão de Ação */}
-                    <div className="pt-3 border-t">
+                    <div className="pt-3 border-t border-gray-200 dark:border-white/10">
                       <Button 
                         className="w-full" 
                         variant="outline"
