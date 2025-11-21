@@ -23,25 +23,11 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Aumentar limite para evitar warnings, mas deixar o Vite decidir os chunks
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1600, // Aumentado para acomodar o vendor único sem avisos
     rollupOptions: {
       output: {
-        // Vamos deixar o Vite decidir a melhor forma de dividir o código
-        // Isso corrige o erro de dependência circular/inicialização
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Separar bibliotecas grandes em chunks de vendor
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            if (id.includes('@tanstack') || id.includes('date-fns')) {
-              return 'vendor-utils';
-            }
-            // O restante vai para um vendor genérico
             return 'vendor';
           }
         }
