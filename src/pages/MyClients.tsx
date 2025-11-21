@@ -289,27 +289,27 @@ const MyClients: React.FC = () => {
 
   if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Carregando clientes...</p>
+          <p className="text-gray-600 dark:text-gray-300">Carregando clientes...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                 <Users className="h-8 w-8 text-blue-600" />
                 Meus Clientes
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Gerencie seus alunos e acompanhe o progresso de cada um.
               </p>
             </div>
@@ -424,7 +424,7 @@ const MyClients: React.FC = () => {
           {/* Indicadores */}
           <div className="flex items-center gap-6 mb-6">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 Total:
               </span>
               <Badge variant="secondary" className="text-sm">
@@ -432,7 +432,7 @@ const MyClients: React.FC = () => {
               </Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 Ativos:
               </span>
               <Badge variant="default" className="text-sm bg-green-100 text-green-800">
@@ -441,7 +441,7 @@ const MyClients: React.FC = () => {
             </div>
             {searchTerm && (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   Filtrados:
                 </span>
                 <Badge variant="outline" className="text-sm">
@@ -456,10 +456,10 @@ const MyClients: React.FC = () => {
         {filteredClients.length === 0 ? (
           <div className="text-center py-12">
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               {searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado'}
             </h3>
-            <p className="text-gray-600 mb-4 max-w-md">
+            <p className="text-gray-600 dark:text-gray-300 mb-4 max-w-md">
               {searchTerm 
                 ? 'Tente ajustar sua busca ou adicione novos clientes.'
                 : 'Comece adicionando seu primeiro cliente para gerenciar os treinos e planos alimentares.'
@@ -481,7 +481,7 @@ const MyClients: React.FC = () => {
               return (
                 <Card 
                   key={clientProfessional.id} 
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  className="hover:shadow-lg transition-shadow cursor-pointer bg-white/50 dark:bg-card/30 backdrop-blur-md border-white/20 dark:border-white/10"
                   onClick={() => handleViewClientDetails(client.id)}
                 >
                   <CardHeader className="pb-3">
@@ -497,10 +497,10 @@ const MyClients: React.FC = () => {
                         
                         {/* Informações Básicas */}
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold text-gray-900 truncate">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
                             {client.full_name || 'Cliente sem nome'}
                           </h3>
-                          <p className="text-sm text-gray-600 truncate">
+                          <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
                             {client.email}
                           </p>
                         </div>
@@ -523,22 +523,22 @@ const MyClients: React.FC = () => {
                     <div className="space-y-3">
                       {/* Informações Adicionais */}
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                           <Calendar className="h-4 w-4" />
                           <span>Vínculo:</span>
                         </div>
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-gray-900 dark:text-white">
                           {formatDate(clientProfessional.started_at)}
                         </span>
                       </div>
                       
                       {client.phone && (
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                             <Mail className="h-4 w-4" />
                             <span>Telefone:</span>
                           </div>
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-gray-900 dark:text-white">
                             {client.phone}
                           </span>
                         </div>
@@ -546,11 +546,11 @@ const MyClients: React.FC = () => {
                       
                       {/* Role */}
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                           <User className="h-4 w-4" />
                           <span>Tipo:</span>
                         </div>
-                        <span className="font-medium text-gray-900 capitalize">
+                        <span className="font-medium text-gray-900 dark:text-white capitalize">
                           {client.role === 'client' ? 'Aluno' : client.role}
                         </span>
                       </div>
