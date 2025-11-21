@@ -4,8 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { ChatProvider } from "@/contexts/ChatContext";
-import { ThemeProvider } from "./components/theme-provider"; // Novo import
+import { ChatProvider } from "@/contexts/ChatContext"; // Novo import
 import { Loader2 } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { useEffect } from "react";
@@ -190,13 +189,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <AuthProvider>
-            <ChatProvider>
-              <AppRoutes />
-            </ChatProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ChatProvider>
+            <AppRoutes />
+          </ChatProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
