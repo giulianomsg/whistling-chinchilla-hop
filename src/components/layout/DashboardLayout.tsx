@@ -107,7 +107,7 @@ const DashboardLayout: React.FC = () => {
   }
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   const getUserInitials = () => {
@@ -130,9 +130,9 @@ const DashboardLayout: React.FC = () => {
   }
 
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white dark:bg-gray-900 border-r dark:border-gray-800`}>
+    <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white dark:bg-card/20 backdrop-blur-xl border-r dark:border-white/5`}>
       {/* Header */}
-      <div className="p-6 border-b dark:border-gray-800">
+      <div className="p-6 border-b dark:border-white/5">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600 rounded-lg">
             <Dumbbell className="h-6 w-6 text-white" />
@@ -145,7 +145,7 @@ const DashboardLayout: React.FC = () => {
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-b dark:border-gray-800">
+      <div className="p-4 border-b dark:border-white/5">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile?.avatar_url || ''} />
@@ -179,7 +179,7 @@ const DashboardLayout: React.FC = () => {
               className={`
                 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative
                 ${isActive 
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800' 
+                  ? 'bg-blue-50 dark:bg-primary/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
                 }
               `}
@@ -202,7 +202,7 @@ const DashboardLayout: React.FC = () => {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t dark:border-gray-800 space-y-2">
+      <div className="p-4 border-t dark:border-white/5 space-y-2">
         {/* Botão de Alternar Tema */}
         <Button
           variant="ghost"
@@ -247,7 +247,7 @@ const DashboardLayout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-gray-900 border-b dark:border-gray-800">
+        <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-card/20 backdrop-blur-sm border-b dark:border-white/5">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
