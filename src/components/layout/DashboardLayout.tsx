@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useChat } from '@/contexts/ChatContext'
+import { useTheme } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -16,7 +17,9 @@ import {
   Utensils,
   LayoutDashboard,
   Home,
-  MessageSquare
+  MessageSquare,
+  Sun,
+  Moon
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { showSuccess } from '@/utils/toast'
@@ -31,6 +34,7 @@ interface MenuItem {
 const DashboardLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth()
   const { totalUnreadCount } = useChat()
+  const { theme, setTheme } = useTheme()
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
@@ -102,6 +106,10 @@ const DashboardLayout: React.FC = () => {
     window.location.href = '/auth'
   }
 
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
+
   const getUserInitials = () => {
     // ✅ PROTEÇÃO CONTRA NULL
     if (profile?.full_name && profile.full_name.trim()) {
@@ -122,22 +130,22 @@ const DashboardLayout: React.FC = () => {
   }
 
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white border-r`}>
+    <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white dark:bg-gray-900 border-r dark:border-gray-800`}>
       {/* Header */}
-      <div className="p-6 border-b">
+      <div className="p-6 border-b dark:border-gray-800">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600 rounded-lg">
             <Dumbbell className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-900">CapiFit</h2>
-            <p className="text-xs text-gray-500 capitalize">{profile?.role || 'carregando...'}</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">CapiFit</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{profile?.role || 'carregando...'}</p>
           </div>
         </div>
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-b">
+      <div className="p-4 border-b dark:border-gray-800">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile?.avatar_url || ''} />
@@ -146,10 +154,10 @@ const DashboardLayout: React.FC = () => {
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
               {getDisplayName()}
             </p>
-            <p className="text-xs text-gray-500 truncate">
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
               {user?.email || 'carregando...'}
             </p>
           </div>
@@ -171,8 +179,8 @@ const DashboardLayout: React.FC = () => {
               className={`
                 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative
                 ${isActive 
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800' 
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
                 }
               `}
             >
@@ -194,7 +202,22 @@ const DashboardLayout: React.FC = () => {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t dark:border-gray-800 space-y-2">
+        {/* Botão de Alternar Tema */}
+        <Button
+          variant="ghost"
+          className="w-full justify-start"
+          onClick={toggleTheme}
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-4 w-4 mr-3" />
+          ) : (
+            <Moon className="h-4 w-4 mr-3" />
+          )}
+          Alternar Tema
+        </Button>
+        
+        {/* Botão de Logout */}
         <Button
           variant="ghost"
           className="w-full justify-start"
@@ -208,7 +231,7 @@ const DashboardLayout: React.FC = () => {
   )
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex">
         <Sidebar />
@@ -224,7 +247,7 @@ const DashboardLayout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-4 bg-white border-b">
+        <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-gray-900 border-b dark:border-gray-800">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
@@ -237,7 +260,7 @@ const DashboardLayout: React.FC = () => {
               <div className="p-1 bg-blue-600 rounded">
                 <Dumbbell className="h-4 w-4 text-white" />
               </div>
-              <span className="font-bold text-gray-900">CapiFit</span>
+              <span className="font-bold text-gray-900 dark:text-white">CapiFit</span>
             </div>
           </div>
           <Avatar className="h-8 w-8">
