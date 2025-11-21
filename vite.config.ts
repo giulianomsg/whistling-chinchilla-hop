@@ -23,36 +23,28 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Aumentar limite de aviso de chunk (KB)
+    // Aumentar limite para evitar warnings, mas deixar o Vite decidir os chunks
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Bibliotecas Core
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-
-          // Bibliotecas de UI (shadcn)
-          ui: [
-            '@/components/ui/button',
-            '@/components/ui/card',
-            '@/components/ui/input',
-            '@/components/ui/label',
-            '@/components/ui/avatar',
-            '@/components/ui/badge',
-            '@/components/ui/dialog',
-            '@/components/ui/sheet',
-            '@/components/ui/tabs',
-            '@/components/ui/select',
-            '@/components/ui/scroll-area',
-            '@/components/ui/toast',
-            '@/components/ui/sonner'
-          ],
-
-          // Utilitários e Contextos
-          utils: ['@/lib/utils', '@/contexts/AuthContext', '@/contexts/ChatContext']
-
-          // NOTA: Não agrupar 'pages'. Deixar o code-splitting automático.
-        },
+        // Vamos deixar o Vite decidir a melhor forma de dividir o código
+        // Isso corrige o erro de dependência circular/inicialização
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // Separar bibliotecas grandes em chunks de vendor
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('@tanstack') || id.includes('date-fns')) {
+              return 'vendor-utils';
+            }
+            // O restante vai para um vendor genérico
+            return 'vendor';
+          }
+        }
       },
     },
   },
