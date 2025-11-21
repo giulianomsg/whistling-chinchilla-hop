@@ -26,69 +26,62 @@ import { supabase } from '../integrations/supabase/client'
 import { format, isToday, isYesterday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-interface Message {
+interface ChatMessage {
   id: string
-  chat_id: string
   sender_id: string
+  receiver_id: string
   content: string
+  message_type: string
+  file_url: string | null
+  is_read: boolean
+  read_at: string | null
+  sent_at: string
   created_at: string
+  updated_at: string
   sender: {
     id: string
     full_name: string | null
     avatar_url: string | null
+    email: string
   }
 }
 
-interface Chat {
+interface Contact {
   id: string
-  client_id: string
-  professional_id: string
+  full_name: string | null
+  avatar_url: string | null
+  email: string
+  role: string
   last_message_at: string | null
-  created_at: string
-  client: {
-    id: string
-    full_name: string | null
-    avatar_url: string | null
-    email: string
-  }
-  professional: {
-    id: string
-    full_name: string | null
-    avatar_url: string | null
-    email: string
-  }
-  _count: {
-    messages: number
-  }
+  unread_count: number
 }
 
 // Componente da Lista de Contatos
 const ContactsList: React.FC<{
-  chats: Chat[]
-  selectedChat: Chat | null
-  onSelectChat: (chat: Chat) => void
+  contacts: Contact[]
+  selectedContact: Contact | null
+  onSelectContact: (contact: Contact) => void
   searchTerm: string
   setSearchTerm: (term: string) => void
   profile: any
   getInitials: (fullName: string | null, email: string) => string
   formatMessageDate: (date: string) => string
 }> = ({ 
-  chats, 
-  selectedChat, 
-  onSelectChat, 
+  contacts, 
+  selectedContact, 
+  onSelectContact, 
   searchTerm, 
   setSearchTerm, 
   profile,
   getInitials,
   formatMessageDate
 }) => {
-  const filteredChats = chats.filter(chat => {
+  const filteredContacts = contacts.filter(contact => {
     if (!searchTerm.trim()) return true
     
     const searchLower = searchTerm.toLowerCase()
-    const otherUser = profile?.role === 'professional' ? chat.client : chat.professional
-    const fullName = otherUser?.full_name?.toLowerCase() || ''
-    const email = otherUser?.email?.toLowerCase() || ''
+    const fullName = contact?.full_name?.toLowerCase() || ''
+    const email = contact?.email?.toLowerCase() || ''
     
     return fullName.includes(searchLower) || email.includes(searchLower)
   })
@@ -116,9 +109,9 @@ const ContactsList: React.FC<{
         </div>
       </div>
 
-      {/* Lista de Chats */}
+      {/* Lista de Contatos */}
       <div className="flex-1 overflow-y-auto">
-        {filteredChats.length === 0 ? (
+        {filteredContacts.length === 0 ? (
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
               <User className="h-8 w-8 text-gray-400" />
@@ -134,56 +127,57 @@ const ContactsList: React.FC<{
             </p>
           </div>
         ) : (
-          filteredChats.map((chat) => {
-            const otherUser = profile?.role === 'professional' ? chat.client : chat.professional
-            
-            return (
-              <div
-                key={chat.id}
-                onClick={() => onSelectChat(chat)}
-                className={`flex items-center gap-3 p-4 cursor-pointer transition-colors ${
-                  selectedChat?.id === chat.id
-                    ? 'bg-blue-50 dark:bg-primary/10 border-l-4 border-l-blue-600 dark:border-l-primary'
-                    : 'hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
-              >
-                {/* Avatar */}
-                <div className="relative">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={otherUser?.avatar_url || ''} />
-                    <AvatarFallback className="bg-blue-100 text-blue-600">
-                      {getInitials(otherUser?.full_name, otherUser?.email)}
-                    </AvatarFallback>
-                  </Avatar>
+          filteredContacts.map((contact) => (
+            <div
+              key={contact.id}
+              onClick={() => onSelectContact(contact)}
+              className={`flex items-center gap-3 p-4 cursor-pointer transition-colors ${
+                selectedContact?.id === contact.id
+                  ? 'bg-blue-50 dark:bg-primary/10 border-l-4 border-l-blue-600 dark:border-l-primary'
+                  : 'hover:bg-gray-50 dark:hover:bg-white/5'
+              }`}
+            >
+              {/* Avatar */}
+              <div className="relative">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={contact?.avatar_url || ''} />
+                  <AvatarFallback className="bg-blue-100 text-blue-600">
+                    {getInitials(contact?.full_name, contact?.email)}
+                  </AvatarFallback>
+                </Avatar>
+                {contact.unread_count > 0 && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs border-2 border-white">
+                    {contact.unread_count > 99 ? '99+' : contact.unread_count}
+                  </div>
+                )}
+              </div>
+              
+              {/* Informações */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-gray-900 dark:text-white truncate">
+                    {contact?.full_name || 'Usuário sem nome'}
+                  </h3>
+                  {contact.last_message_at && (
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatMessageDate(contact.last_message_at)}
+                    </span>
+                  )}
                 </div>
-                
-                {/* Informações */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium text-gray-900 dark:text-white truncate">
-                      {otherUser?.full_name || 'Usuário sem nome'}
-                    </h3>
-                    {chat.last_message_at && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatMessageDate(chat.last_message_at)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
-                      {chat.last_message_at 
-                        ? `Última mensagem em ${formatMessageDate(chat.last_message_at)}`
-                        : 'Nenhuma mensagem'
-                      }
-                    </p>
-                    <Badge variant="secondary" className="text-xs">
-                      {chat._count.messages}
-                    </Badge>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                    {contact.last_message_at 
+                      ? `Última mensagem em ${formatMessageDate(contact.last_message_at)}`
+                      : 'Nenhuma mensagem'
+                    }
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    {contact.role === 'client' ? 'Aluno' : 'Profissional'}
+                  </Badge>
                 </div>
               </div>
-            )
-          })
+            </div>
+          ))
         )}
       </div>
     </div>
@@ -192,8 +186,8 @@ const ContactsList: React.FC<{
 
 // Componente da Área de Chat
 const ChatArea: React.FC<{
-  selectedChat: Chat | null
-  messages: Message[]
+  selectedContact: Contact | null
+  messages: ChatMessage[]
   newMessage: string
   setNewMessage: (message: string) => void
   sendingMessage: boolean
@@ -203,7 +197,7 @@ const ChatArea: React.FC<{
   getInitials: (fullName: string | null, email: string) => string
   formatMessageDate: (date: string) => string
 }> = ({ 
-  selectedChat,
+  selectedContact,
   messages,
   newMessage,
   setNewMessage,
@@ -214,7 +208,7 @@ const ChatArea: React.FC<{
   getInitials,
   formatMessageDate
 }) => {
-  if (!selectedChat) {
+  if (!selectedContact) {
     return (
       <div className="flex-1 flex items-center justify-center bg-white/50 dark:bg-background/40 backdrop-blur-sm">
         <div className="text-center">
@@ -232,8 +226,6 @@ const ChatArea: React.FC<{
     )
   }
 
-  const otherUser = user?.role === 'professional' ? selectedChat.professional : selectedChat.client
-
   return (
     <div className="flex-1 flex flex-col bg-white/50 dark:bg-background/40 backdrop-blur-sm">
       {/* Header do Chat */}
@@ -249,15 +241,15 @@ const ChatArea: React.FC<{
             </Button>
             
             <Avatar className="h-10 w-10">
-              <AvatarImage src={otherUser?.avatar_url || ''} />
+              <AvatarImage src={selectedContact?.avatar_url || ''} />
               <AvatarFallback className="bg-blue-100 text-blue-600">
-                {getInitials(otherUser?.full_name, otherUser?.email)}
+                {getInitials(selectedContact?.full_name, selectedContact?.email)}
               </AvatarFallback>
             </Avatar>
             
             <div>
               <h3 className="font-medium text-gray-900 dark:text-white">
-                {otherUser?.full_name || 'Usuário sem nome'}
+                {selectedContact?.full_name || 'Usuário sem nome'}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Online
@@ -315,7 +307,7 @@ const ChatArea: React.FC<{
                   <p className={`text-xs text-gray-500 dark:text-gray-400 mt-1 ${
                     isMyMessage ? 'text-right' : 'text-left'
                   }`}>
-                    {formatMessageDate(message.created_at)}
+                    {formatMessageDate(message.sent_at)}
                   </p>
                 </div>
               </div>
@@ -359,63 +351,126 @@ const Chat: React.FC = () => {
   const { user, profile } = useAuth()
   const { refreshUnreadCount } = useChat()
   const [loading, setLoading] = useState(true)
-  const [chats, setChats] = useState<Chat[]>([])
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [contacts, setContacts] = useState<Contact[]>([])
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [sendingMessage, setSendingMessage] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Buscar chats do usuário
-  const fetchChats = async () => {
+  // Buscar contatos do usuário
+  const fetchContacts = async () => {
     if (!user) return
 
     try {
-      console.log('🔍 [CHAT] Buscando chats do usuário:', user.id)
+      console.log('🔍 [CHAT] Buscando contatos do usuário:', user.id)
       
-      let query = supabase
-        .from('chats')
-        .select(`
-          *,
-          client:profiles!client_id(id, full_name, avatar_url, email),
-          professional:profiles!professional_id(id, full_name, avatar_url, email),
-          _count: messages(count)
-        `)
-        .order('last_message_at', { ascending: false, nullsFirst: false })
-
-      // Se for profissional, buscar apenas seus chats
       if (profile?.role === 'professional') {
-        query = query.eq('professional_id', user.id)
+        // Profissional: buscar clientes vinculados
+        const { data: clientLinks, error: linksError } = await supabase
+          .from('client_professionals')
+          .select(`
+            client_id,
+            status,
+            client:profiles!client_id(id, full_name, avatar_url, email, role)
+          `)
+          .eq('professional_id', user.id)
+          .eq('status', 'active')
+
+        if (linksError) {
+          console.error('❌ [CHAT] Erro ao buscar clientes:', linksError)
+          return
+        }
+
+        // Para cada cliente, buscar última mensagem e contar não lidas
+        const contactsData = await Promise.all(
+          (clientLinks || []).map(async (link) => {
+            const { data: lastMessage } = await supabase
+              .from('chat_messages')
+              .select('sent_at')
+              .or(`(sender_id.eq.${user.id},receiver_id.eq.${link.client_id}),(sender_id.eq.${link.client_id},receiver_id.eq.${user.id})`)
+              .order('sent_at', { ascending: false })
+              .limit(1)
+              .single()
+
+            const { data: unreadCount } = await supabase
+              .rpc('count_unread_messages', { user_id: user.id })
+
+            return {
+              id: link.client_id,
+              full_name: link.client?.full_name,
+              avatar_url: link.client?.avatar_url,
+              email: link.client?.email,
+              role: link.client?.role,
+              last_message_at: lastMessage?.sent_at,
+              unread_count: unreadCount || 0
+            }
+          })
+        )
+
+        console.log('✅ [CHAT] Contatos (profissional) carregados:', contactsData.length)
+        setContacts(contactsData.filter(Boolean))
+        
       } else {
-        // Se for cliente, buscar apenas seus chats
-        query = query.eq('client_id', user.id)
+        // Cliente: buscar profissional vinculado
+        const { data: clientLinks, error: linksError } = await supabase
+          .from('client_professionals')
+          .select(`
+            professional_id,
+            status,
+            professional:profiles!professional_id(id, full_name, avatar_url, email, role)
+          `)
+          .eq('client_id', user.id)
+          .eq('status', 'active')
+          .single()
+
+        if (linksError) {
+          console.error('❌ [CHAT] Erro ao buscar profissional:', linksError)
+          return
+        }
+
+        if (clientLinks?.professional) {
+          const { data: lastMessage } = await supabase
+            .from('chat_messages')
+            .select('sent_at')
+            .or(`(sender_id.eq.${user.id},receiver_id.eq.${clientLinks.professional_id}),(sender_id.eq.${clientLinks.professional_id},receiver_id.eq.${user.id})`)
+            .order('sent_at', { ascending: false })
+            .limit(1)
+            .single()
+
+          const { data: unreadCount } = await supabase
+            .rpc('count_unread_messages', { user_id: user.id })
+
+          const contactData = {
+            id: clientLinks.professional_id,
+            full_name: clientLinks.professional?.full_name,
+            avatar_url: clientLinks.professional?.avatar_url,
+            email: clientLinks.professional?.email,
+            role: clientLinks.professional?.role,
+            last_message_at: lastMessage?.sent_at,
+            unread_count: unreadCount || 0
+          }
+
+          console.log('✅ [CHAT] Contato (cliente) carregado')
+          setContacts([contactData])
+        }
       }
-
-      const { data, error } = await query
-
-      if (error) {
-        console.error('❌ [CHAT] Erro ao buscar chats:', error)
-        return
-      }
-
-      console.log('✅ [CHAT] Chats carregados:', data?.length || 0)
-      setChats(data || [])
     } catch (error) {
       console.error('❌ [CHAT] Erro inesperado:', error)
     }
   }
 
-  // Buscar mensagens do chat selecionado usando RPC
-  const fetchMessages = async (chatId: string) => {
-    if (!user) return
+  // Buscar mensagens do contato selecionado usando RPC
+  const fetchMessages = async () => {
+    if (!user || !selectedContact) return
 
     try {
-      console.log('🔍 [CHAT] Buscando mensagens do chat:', chatId)
+      console.log('🔍 [CHAT] Buscando mensagens do contato:', selectedContact.id)
       
       const { data, error } = await supabase.rpc('get_conversation', {
         user1_id: user.id,
-        user2_id: selectedChat?.client_id === user.id ? selectedChat.professional_id : selectedChat?.client_id
+        user2_id: selectedContact.id
       })
 
       if (error) {
@@ -434,7 +489,7 @@ const Chat: React.FC = () => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!newMessage.trim() || !selectedChat || !user) return
+    if (!newMessage.trim() || !selectedContact || !user) return
 
     setSendingMessage(true)
     const messageContent = newMessage.trim()
@@ -443,13 +498,14 @@ const Chat: React.FC = () => {
     try {
       console.log('📤 [CHAT] Enviando mensagem:', messageContent)
 
-      // 1. Inserir mensagem
+      // Inserir mensagem na tabela chat_messages
       const { data: messageData, error: messageError } = await supabase
-        .from('messages')
+        .from('chat_messages')
         .insert({
-          chat_id: selectedChat.id,
           sender_id: user.id,
-          content: messageContent
+          receiver_id: selectedContact.id,
+          content: messageContent,
+          message_type: 'text'
         })
         .select()
         .single()
@@ -462,22 +518,12 @@ const Chat: React.FC = () => {
 
       console.log('✅ [CHAT] Mensagem enviada com sucesso!')
 
-      // 2. Atualizar last_message_at do chat
-      const { error: chatError } = await supabase
-        .from('chats')
-        .update({ last_message_at: new Date().toISOString() })
-        .eq('id', selectedChat.id)
-
-      if (chatError) {
-        console.error('❌ [CHAT] Erro ao atualizar chat:', chatError)
-      }
-
-      // 3. Buscar mensagem completa com dados do remetente
+      // Buscar mensagem completa com dados do remetente
       const { data: fullMessage, error: fullMessageError } = await supabase
-        .from('messages')
+        .from('chat_messages')
         .select(`
           *,
-          sender:profiles!sender_id(id, full_name, avatar_url)
+          sender:profiles!sender_id(id, full_name, avatar_url, email)
         `)
         .eq('id', messageData.id)
         .single()
@@ -487,11 +533,11 @@ const Chat: React.FC = () => {
         return
       }
 
-      // 4. Adicionar mensagem à lista
+      // Adicionar mensagem à lista
       setMessages(prev => [...prev, fullMessage])
 
-      // 5. Atualizar lista de chats para mover este chat para o topo
-      await fetchChats()
+      // Atualizar lista de contatos para mover este contato para o topo
+      await fetchContacts()
 
     } catch (error) {
       console.error('❌ [CHAT] Erro inesperado ao enviar mensagem:', error)
@@ -501,22 +547,20 @@ const Chat: React.FC = () => {
     }
   }
 
-  // Selecionar chat
-  const handleSelectChat = async (chat: Chat) => {
-    setSelectedChat(chat)
-    await fetchMessages(chat.id)
+  // Selecionar contato
+  const handleSelectContact = async (contact: Contact) => {
+    setSelectedContact(contact)
+    await fetchMessages()
   }
 
   // Marcar mensagens como lidas
   const clearUnread = async () => {
-    if (!selectedChat || !user) return
+    if (!selectedContact || !user) return
 
     try {
-      const otherUserId = selectedChat.client_id === user.id ? selectedChat.professional_id : selectedChat.client_id
-      
       const { error } = await supabase.rpc('mark_conversation_as_read', {
         current_user_id: user.id,
-        other_user_id: otherUserId
+        other_user_id: selectedContact.id
       })
 
       if (error) {
@@ -565,10 +609,10 @@ const Chat: React.FC = () => {
     }, 100)
   }, [messages])
 
-  // Buscar chats ao carregar
+  // Buscar contatos ao carregar
   useEffect(() => {
     if (!loading && user) {
-      fetchChats()
+      fetchContacts()
     }
   }, [user, loading])
 
@@ -587,7 +631,7 @@ const Chat: React.FC = () => {
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'messages'
+          table: 'chat_messages'
         },
         async (payload) => {
           const newMessage = payload.new as any
@@ -597,16 +641,15 @@ const Chat: React.FC = () => {
             console.log('🔔 [CHAT] Nova mensagem recebida:', newMessage)
             
             // Se estamos no chat correspondente, adicionar mensagem à lista
-            if (selectedChat && (
-              (selectedChat.id === newMessage.chat_id) ||
-              (selectedChat.client_id === newMessage.sender_id || selectedChat.professional_id === newMessage.sender_id)
+            if (selectedContact && (
+              newMessage.sender_id === selectedContact.id || newMessage.receiver_id === selectedContact.id
             )) {
               // Buscar mensagem completa
               const { data: fullMessage } = await supabase
-                .from('messages')
+                .from('chat_messages')
                 .select(`
                   *,
-                  sender:profiles!sender_id(id, full_name, avatar_url)
+                  sender:profiles!sender_id(id, full_name, avatar_url, email)
                 `)
                 .eq('id', newMessage.id)
                 .single()
@@ -616,8 +659,8 @@ const Chat: React.FC = () => {
               }
             }
             
-            // Atualizar lista de chats
-            await fetchChats()
+            // Atualizar lista de contatos
+            await fetchContacts()
           }
         }
       )
@@ -631,14 +674,14 @@ const Chat: React.FC = () => {
       console.log('🔌 [CHAT] Limpando canal de notificações')
       channel.unsubscribe()
     }
-  }, [user?.id, selectedChat?.id])
+  }, [user?.id, selectedContact?.id])
 
-  // Marcar mensagens como lidas quando selecionar um chat
+  // Marcar mensagens como lidas quando selecionar um contato
   useEffect(() => {
-    if (selectedChat) {
+    if (selectedContact) {
       clearUnread()
     }
-  }, [selectedChat?.id])
+  }, [selectedContact?.id])
 
   if (loading) {
     return (
@@ -656,9 +699,9 @@ const Chat: React.FC = () => {
       <div className="flex h-[calc(100vh-4rem)]">
         {/* Sidebar - Lista de Conversas */}
         <ContactsList
-          chats={chats}
-          selectedChat={selectedChat}
-          onSelectChat={handleSelectChat}
+          contacts={contacts}
+          selectedContact={selectedContact}
+          onSelectContact={handleSelectContact}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           profile={profile}
@@ -668,7 +711,7 @@ const Chat: React.FC = () => {
 
         {/* Área de Chat */}
         <ChatArea
-          selectedChat={selectedChat}
+          selectedContact={selectedContact}
           messages={messages}
           newMessage={newMessage}
           setNewMessage={setNewMessage}
