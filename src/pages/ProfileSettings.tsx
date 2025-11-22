@@ -15,18 +15,18 @@ const ProfileSettings: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  // Estado Base (Tabela: profiles)
+  // Tabela profiles
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   
-  // Estado Profissional (Tabela: professional_details)
+  // Tabela professional_details
   const [bio, setBio] = useState('')
   const [specialty, setSpecialty] = useState('')
-  const [consultationPrice, setConsultationPrice] = useState('') // Corrigido para consultation_price
-  const [certifications, setCertifications] = useState('') // Mapeado para JSONB
+  const [consultationPrice, setConsultationPrice] = useState('')
+  const [certifications, setCertifications] = useState('')
 
-  // Estado Aluno (Tabela: client_details)
+  // Tabela client_details
   const [goals, setGoals] = useState('')
   const [restrictions, setRestrictions] = useState('')
 
@@ -48,7 +48,7 @@ const ProfileSettings: React.FC = () => {
           setBio(data.bio || '')
           setSpecialty(data.specialty || '')
           setConsultationPrice(data.consultation_price?.toString() || '')
-          // Extrair texto do JSONB certifications
+          // certifications é JSONB no banco
           const certData = data.certifications as any
           setCertifications(certData?.raw_text || '') 
         }
@@ -74,7 +74,6 @@ const ProfileSettings: React.FC = () => {
       const fileName = `${user!.id}-${Date.now()}.${fileExt}`
       const filePath = `${fileName}`
 
-      // Upload para bucket 'avatars' (verificado em storage.buckets no SQL)
       const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
       if (uploadError) throw uploadError
 
@@ -98,26 +97,19 @@ const ProfileSettings: React.FC = () => {
     setLoading(true)
 
     try {
-      // 1. Atualizar Profiles
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ 
-          full_name: fullName,
-          phone: phone,
-          updated_at: new Date().toISOString()
-        })
+      const { error: profileError } = await supabase.from('profiles')
+        .update({ full_name: fullName, phone: phone, updated_at: new Date().toISOString() })
         .eq('id', user.id)
       
       if (profileError) throw profileError
 
-      // 2. Atualizar Detalhes Específicos
       if (profile?.role === 'professional') {
         const { error } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio,
           specialty,
           consultation_price: parseFloat(consultationPrice) || 0,
-          certifications: { raw_text: certifications }, // Salvando como JSON
+          certifications: { raw_text: certifications },
           updated_at: new Date().toISOString()
         })
         if (error) throw error
@@ -134,7 +126,6 @@ const ProfileSettings: React.FC = () => {
       showSuccess('Perfil salvo com sucesso!')
     } catch (error) {
       showError('Erro ao salvar perfil')
-      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -150,7 +141,6 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          {/* Avatar & Info Básica */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="text-white">Informações Públicas</CardTitle>
@@ -161,7 +151,7 @@ const ProfileSettings: React.FC = () => {
                 <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl">
                   <AvatarImage src={avatarUrl || ''} className="object-cover" />
                   <AvatarFallback className="text-2xl bg-slate-800 text-primary font-bold">
-                    {fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
+                    {fullName?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="relative">
@@ -195,56 +185,32 @@ const ProfileSettings: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Campos Profissionais */}
           {profile?.role === 'professional' && (
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Perfil Profissional</CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Perfil Profissional</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300">Especialidade</Label>
-                    <Input value={specialty} onChange={e => setSpecialty(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" placeholder="Ex: Hipertrofia"/>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Preço Consulta (R$)</Label>
-                    <Input type="number" value={consultationPrice} onChange={e => setConsultationPrice(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
-                  </div>
+                  <div><Label className="text-gray-300">Especialidade</Label><Input value={specialty} onChange={e => setSpecialty(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={consultationPrice} onChange={e => setConsultationPrice(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
                 </div>
-                <div>
-                  <Label className="text-gray-300">Biografia</Label>
-                  <Textarea value={bio} onChange={e => setBio(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"/>
-                </div>
-                <div>
-                  <Label className="text-gray-300">Certificações</Label>
-                  <Textarea value={certifications} onChange={e => setCertifications(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" placeholder="CREF, Cursos..."/>
-                </div>
+                <div><Label className="text-gray-300">Biografia</Label><Textarea value={bio} onChange={e => setBio(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"/></div>
+                <div><Label className="text-gray-300">Certificações</Label><Textarea value={certifications} onChange={e => setCertifications(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
               </CardContent>
             </Card>
           )}
 
-          {/* Campos Aluno */}
           {profile?.role === 'client' && (
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha do Aluno</CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha do Aluno</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label className="text-gray-300">Objetivos</Label>
-                  <Textarea value={goals} onChange={e => setGoals(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
-                </div>
-                <div>
-                  <Label className="text-gray-300">Restrições de Saúde</Label>
-                  <Textarea value={restrictions} onChange={e => setRestrictions(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
-                </div>
+                <div><Label className="text-gray-300">Objetivos</Label><Textarea value={goals} onChange={e => setGoals(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                <div><Label className="text-gray-300">Restrições</Label><Textarea value={restrictions} onChange={e => setRestrictions(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
               </CardContent>
             </Card>
           )}
 
-          <div className="flex justify-end pt-4">
-            <Button type="submit" disabled={loading} className="bg-primary text-black hover:bg-primary/80 font-bold px-8 shadow-lg transition-all hover:scale-105">
+          <div className="flex justify-end pt-4 border-t border-white/10">
+            <Button type="submit" disabled={loading} className="bg-primary text-black hover:bg-primary/80 font-bold px-8">
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               Salvar Alterações
             </Button>
