@@ -24,14 +24,16 @@ const ExerciseLibrary: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   
-  const [formData, setFormData] = useState({ 
+  const initialFormState = { 
     id: '', name: '', description: '', 
     muscles: '', equipment: '', 
     difficulty: 'beginner', video_url: '', gif_url: '',
-    instructions: '', tips: '', // Textareas que serão convertidos para array
+    instructions: '', tips: '',
     is_public: false
-  })
+  }
+  const [formData, setFormData] = useState(initialFormState)
 
+  // ... (manter fetchExercises e useEffect iguais) ...
   const fetchExercises = async () => {
     if (!user) return
     setPageLoading(true)
@@ -46,6 +48,12 @@ const ExerciseLibrary: React.FC = () => {
   }
 
   useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, searchTerm, difficultyFilter])
+
+  // FUNÇÃO DE RESET CORRIGIDA
+  const openCreateDialog = () => {
+    setFormData(initialFormState)
+    setIsCreateDialogOpen(true)
+  }
 
   const handleSave = async (e: React.FormEvent, mode: 'create' | 'update') => {
     e.preventDefault()
@@ -104,6 +112,7 @@ const ExerciseLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
+  // ... (ExerciseForm component mantido igual) ...
   const ExerciseForm = ({ mode }: { mode: 'create' | 'update' }) => (
     <form onSubmit={(e) => handleSave(e, mode)} className="space-y-4 h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
       <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
@@ -158,8 +167,13 @@ const ExerciseLibrary: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Dumbbell className="text-blue-400"/> Exercícios</h1>
+          
+          {/* AQUI ESTÁ O BOTÃO CORRIGIDO */}
+          <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500">
+            <Plus className="mr-2 h-4 w-4"/> Novo
+          </Button>
+
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild><Button className="bg-blue-600 text-white"><Plus className="mr-2 h-4 w-4"/> Novo</Button></DialogTrigger>
             <DialogContent className="bg-slate-900 border-white/10 text-white max-w-2xl">
               <DialogHeader><DialogTitle>Novo Exercício</DialogTitle></DialogHeader>
               <ExerciseForm mode="create" />
@@ -196,7 +210,7 @@ const ExerciseLibrary: React.FC = () => {
                         <AlertDialog>
                           <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400 h-8 w-8"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
                           <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
+                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
                             <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
