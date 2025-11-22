@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { 
-  Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3, Trophy
+  Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -93,50 +93,40 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime }).eq('id', sessionId)
         setSessionStatus('paused'); showSuccess('Pausado')
       } else if (action === 'resume' && sessionId) {
-        // Ajuste de tempo para compensar a pausa
         const newStart = new Date(Date.now() - elapsedTime * 1000).toISOString()
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
-        // --- GAMIFICAÇÃO ---
-        const xpBase = 100 // Base por concluir
+        // --- UPDATE GAMIFICATION ---
+        const xpBase = 100
         const xpDurationBonus = Math.floor(elapsedTime / 60) // 1 XP por minuto
         const totalXpGained = xpBase + xpDurationBonus
 
-        // 1. Atualizar Sessão
         const { error: sessionError } = await supabase.from('workout_sessions')
-          .update({ 
-            status: 'completed', 
-            ended_at: new Date().toISOString(), 
-            duration_seconds: elapsedTime 
-          }).eq('id', sessionId)
+          .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime }).eq('id', sessionId)
         
         if (sessionError) throw sessionError
 
-        // 2. Buscar perfil atual para calcular nível
+        // Fetch profile stats
         const { data: profileData } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
         
         if (profileData) {
           const currentXP = profileData.current_xp || 0
           const newXP = currentXP + totalXpGained
           const xpPerLevel = 1000
-          // Nível começa em 1. Se 0-999 XP -> Lvl 1. 1000 XP -> Lvl 2.
           const newLevel = Math.max(1, Math.floor(newXP / xpPerLevel) + 1)
           
-          // 3. Atualizar Profile
+          // Atualizar Profile
           await supabase.from('profiles').update({
             current_xp: newXP,
             level: newLevel
           }).eq('id', clientWorkout.client_id)
 
-          // 4. Feedback Visual
           if (newLevel > (profileData.level || 1)) {
-            showSuccess(`PARABÉNS! Você alcançou o Nível ${newLevel}! 🏆`)
+            showSuccess(`LEVEL UP! Parabéns pelo Nível ${newLevel}! 🏆`)
           } else {
-            showSuccess(`Treino finalizado! +${totalXpGained} XP ganhos! 🚀`)
+            showSuccess(`Treino finalizado! +${totalXpGained} XP!`)
           }
-        } else {
-          showSuccess('Treino finalizado!')
         }
 
         setSessionStatus('completed'); setIsSessionActive(false)
