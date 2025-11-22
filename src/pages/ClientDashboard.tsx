@@ -15,12 +15,12 @@ import {
   Target,
   Timer,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Trophy
 } from 'lucide-react'
 import { supabase } from '../integrations/supabase/client'
 import { format } from 'date-fns'
 
-// Interfaces mantidas (sem alteração lógica)
 interface ClientWorkout {
   id: string
   client_id: string
@@ -93,7 +93,7 @@ const ClientDashboard: React.FC = () => {
     try {
       const { data } = await supabase.from('client_workouts')
         .select(`*, workout:workouts(id, name, description, objective, duration_weeks, days_per_week)`)
-        .eq('client_id', user.id).eq('status', 'active').single()
+        .eq('client_id', user.id).eq('status', 'active').maybeSingle()
       setClientWorkout(data)
     } catch (error) { console.error(error) }
   }
@@ -103,7 +103,7 @@ const ClientDashboard: React.FC = () => {
     try {
       const { data } = await supabase.from('client_meal_plans')
         .select(`*, meal_plan:meal_plans(id, name, description, objective, daily_calories_target, daily_protein_target, daily_carbs_target, daily_fat_target)`)
-        .eq('client_id', user.id).eq('status', 'active').single()
+        .eq('client_id', user.id).eq('status', 'active').maybeSingle()
       setClientMealPlan(data)
     } catch (error) { console.error(error) }
   }
@@ -160,6 +160,17 @@ const ClientDashboard: React.FC = () => {
 
   const stats = getStats()
 
+  // Lógica de Gamificação Visual
+  const currentXP = profile?.current_xp || 0
+  const xpPerLevel = 1000
+  const currentLevel = profile?.level || Math.max(1, Math.floor(currentXP / xpPerLevel) + 1)
+  const xpForNextLevel = currentLevel * xpPerLevel
+  // XP acumulado para o nível atual seria (currentLevel - 1) * 1000. 
+  // O XP dentro do nível é currentXP - ((currentLevel - 1) * 1000)
+  const xpInThisLevel = currentXP - ((currentLevel - 1) * xpPerLevel)
+  // Porcentagem para a barra de progresso (XP neste nivel / 1000)
+  const xpProgress = Math.min(Math.max((xpInThisLevel / xpPerLevel) * 100, 0), 100)
+
   if (loading || pageLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -180,6 +191,47 @@ const ClientDashboard: React.FC = () => {
             <p className="mt-2 text-gray-400">Este é o seu resumo de hoje.</p>
           </div>
           <Badge variant="secondary" className="bg-white/10 text-gray-200 border-none">{format(new Date(), 'EEEE, dd/MM/yyyy')}</Badge>
+        </div>
+
+        {/* Seção de Gamificação */}
+        <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
+          <Card className="bg-gradient-to-r from-indigo-900/80 to-blue-900/80 border-white/10 border shadow-2xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl"></div>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-6">
+                <div className="relative flex-shrink-0">
+                  <div className="w-20 h-20 rounded-full bg-black/40 border-2 border-primary flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                    <span className="text-3xl font-black text-white">{currentLevel}</span>
+                  </div>
+                  <Badge className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-black font-bold border-none uppercase text-[10px] px-2">
+                    Nível
+                  </Badge>
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-end mb-2">
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2"><Trophy className="h-5 w-5 text-yellow-400"/> Progresso de XP</h3>
+                    <span className="text-sm text-primary font-mono">{currentXP} Total XP</span>
+                  </div>
+                  
+                  {/* Barra de Progresso Customizada */}
+                  <div className="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
+                    <div 
+                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] transition-all duration-1000 ease-out relative"
+                      style={{ width: `${xpProgress}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 animate-pulse-fast"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between mt-2 text-xs text-gray-400">
+                    <span>Nível {currentLevel}</span>
+                    <span>Faltam {xpPerLevel - xpInThisLevel} XP para o Nível {currentLevel + 1}</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Cards de Status */}
