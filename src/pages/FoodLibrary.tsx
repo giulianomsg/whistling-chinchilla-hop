@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Apple, Plus, Search, Edit, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -29,7 +29,6 @@ const FoodLibrary: React.FC = () => {
   }
   const [formData, setFormData] = useState(initialFormState)
 
-  // ... fetchFoods igual ...
   const fetchFoods = async () => {
     if (!user) return
     setPageLoading(true)
@@ -44,7 +43,7 @@ const FoodLibrary: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchFoods() }, [user, loading, searchTerm])
 
-  // FUNÇÃO DE RESET CORRIGIDA
+  // Resetar antes de abrir
   const openCreateDialog = () => {
     setFormData(initialFormState)
     setIsCreateDialogOpen(true)
@@ -74,7 +73,7 @@ const FoodLibrary: React.FC = () => {
     }
 
     if (!error) { 
-      showSuccess(mode === 'create' ? 'Alimento criado!' : 'Atualizado!')
+      showSuccess(mode === 'create' ? 'Criado!' : 'Atualizado!')
       setIsCreateDialogOpen(false)
       setIsEditDialogOpen(false)
       fetchFoods() 
@@ -100,48 +99,6 @@ const FoodLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
-  // ... FoodForm igual ...
-  const FoodForm = ({ mode }: { mode: 'create' | 'update' }) => (
-    <form onSubmit={(e) => handleSave(e, mode)} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
-        <div><Label>Marca</Label><Input className="bg-black/20 border-white/10" value={formData.brand} onChange={e=>setFormData({...formData, brand: e.target.value})}/></div>
-      </div>
-      
-      <div className="grid grid-cols-3 gap-2">
-        <div><Label>Porção</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.serving_size} onChange={e=>setFormData({...formData, serving_size: +e.target.value})}/></div>
-        <div><Label>Unidade</Label><Input className="bg-black/20 border-white/10" value={formData.serving_unit} onChange={e=>setFormData({...formData, serving_unit: e.target.value})}/></div>
-        <div><Label>Categoria</Label><Input className="bg-black/20 border-white/10" value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})}/></div>
-      </div>
-
-      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-        <Label className="text-green-400 mb-2 block">Macronutrientes</Label>
-        <div className="grid grid-cols-4 gap-2">
-          <div><Label>Kcal</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.kcal} onChange={e=>setFormData({...formData, kcal: +e.target.value})}/></div>
-          <div><Label>Prot</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.prot} onChange={e=>setFormData({...formData, prot: +e.target.value})}/></div>
-          <div><Label>Carb</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.carb} onChange={e=>setFormData({...formData, carb: +e.target.value})}/></div>
-          <div><Label>Gord</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fat} onChange={e=>setFormData({...formData, fat: +e.target.value})}/></div>
-        </div>
-      </div>
-
-      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-        <Label className="text-blue-400 mb-2 block">Micronutrientes (Opcional)</Label>
-        <div className="grid grid-cols-3 gap-2">
-          <div><Label>Fibras (g)</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fiber} onChange={e=>setFormData({...formData, fiber: +e.target.value})}/></div>
-          <div><Label>Açúcar (g)</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sugar} onChange={e=>setFormData({...formData, sugar: +e.target.value})}/></div>
-          <div><Label>Sódio (mg)</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sodium} onChange={e=>setFormData({...formData, sodium: +e.target.value})}/></div>
-        </div>
-      </div>
-
-      <div className="flex items-center space-x-2 py-2">
-        <Checkbox id="public" checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-green-500" />
-        <Label htmlFor="public" className="cursor-pointer">Tornar público</Label>
-      </div>
-
-      <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar Alimento</Button>
-    </form>
-  )
-
   if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary"/></div>
 
   return (
@@ -149,17 +106,7 @@ const FoodLibrary: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Apple className="text-green-400"/> Alimentos</h1>
-          {/* BOTÃO DE CRIAÇÃO CORRIGIDO */}
-          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500">
-            <Plus className="mr-2 h-4 w-4"/> Novo
-          </Button>
-
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogContent className="bg-slate-900 border-white/10 text-white max-w-lg">
-              <DialogHeader><DialogTitle>Novo Alimento</DialogTitle></DialogHeader>
-              <FoodForm mode="create" />
-            </DialogContent>
-          </Dialog>
+          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Novo</Button>
         </div>
 
         <div className="relative mb-6">
@@ -172,10 +119,7 @@ const FoodLibrary: React.FC = () => {
             <Card key={food.id} className="bg-white/5 border-white/10 hover:bg-white/10 transition-all group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-white text-lg">{food.name}</CardTitle>
-                    <p className="text-sm text-gray-400">{food.brand} • {food.serving_size}{food.serving_unit}</p>
-                  </div>
+                  <div><CardTitle className="text-white text-lg">{food.name}</CardTitle><p className="text-sm text-gray-400">{food.brand}</p></div>
                   <div className="flex gap-1">
                     {food.created_by === user?.id && (
                       <>
@@ -199,21 +143,56 @@ const FoodLibrary: React.FC = () => {
                   <div className="bg-yellow-500/20 p-1 rounded text-yellow-300">{food.carbs}C</div>
                   <div className="bg-red-500/20 p-1 rounded text-red-300">{food.fat}G</div>
                 </div>
-                <div className="flex justify-between items-center text-[10px] text-gray-500 mt-2 border-t border-white/5 pt-2">
-                  <span>Fib: {food.fiber || 0}g • Açú: {food.sugar || 0}g • Sód: {food.sodium || 0}mg</span>
-                  {food.is_public && <Eye className="h-3 w-3 text-green-500" />}
-                </div>
+                {food.is_public && <div className="text-right"><Eye className="h-3 w-3 text-green-500 inline"/></div>}
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="bg-slate-900 border-white/10 text-white max-w-lg">
-            <DialogHeader><DialogTitle>Editar Alimento</DialogTitle></DialogHeader>
-            <FoodForm mode="update" />
-          </DialogContent>
-        </Dialog>
+        {/* DIALOGS COM FORM INLINE PARA EVITAR PERDA DE FOCO */}
+        {[
+          { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Alimento', mode: 'create' as const },
+          { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Alimento', mode: 'update' as const }
+        ].map((d, i) => (
+          <Dialog key={i} open={d.open} onOpenChange={d.change}>
+            <DialogContent className="bg-slate-900 border-white/10 text-white max-w-lg">
+              <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
+              <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
+                  <div><Label>Marca</Label><Input className="bg-black/20 border-white/10" value={formData.brand} onChange={e=>setFormData({...formData, brand: e.target.value})}/></div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div><Label>Porção</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.serving_size} onChange={e=>setFormData({...formData, serving_size: +e.target.value})}/></div>
+                  <div><Label>Unidade</Label><Input className="bg-black/20 border-white/10" value={formData.serving_unit} onChange={e=>setFormData({...formData, serving_unit: e.target.value})}/></div>
+                  <div><Label>Categoria</Label><Input className="bg-black/20 border-white/10" value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})}/></div>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                  <Label className="text-green-400 mb-2 block">Macronutrientes</Label>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div><Label>Kcal</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.kcal} onChange={e=>setFormData({...formData, kcal: +e.target.value})}/></div>
+                    <div><Label>Prot</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.prot} onChange={e=>setFormData({...formData, prot: +e.target.value})}/></div>
+                    <div><Label>Carb</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.carb} onChange={e=>setFormData({...formData, carb: +e.target.value})}/></div>
+                    <div><Label>Gord</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fat} onChange={e=>setFormData({...formData, fat: +e.target.value})}/></div>
+                  </div>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                  <Label className="text-blue-400 mb-2 block">Micronutrientes</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div><Label>Fibras</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fiber} onChange={e=>setFormData({...formData, fiber: +e.target.value})}/></div>
+                    <div><Label>Açúcar</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sugar} onChange={e=>setFormData({...formData, sugar: +e.target.value})}/></div>
+                    <div><Label>Sódio</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sodium} onChange={e=>setFormData({...formData, sodium: +e.target.value})}/></div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 py-2">
+                  <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-green-500" />
+                  <Label htmlFor={`public-${d.mode}`} className="cursor-pointer">Público</Label>
+                </div>
+                <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar</Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        ))}
       </div>
     </div>
   )
