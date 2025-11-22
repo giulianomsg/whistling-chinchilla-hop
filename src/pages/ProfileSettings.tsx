@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import Cropper from 'react-easy-crop' // Import da biblioteca
+import Cropper from 'react-easy-crop'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -10,16 +10,54 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
-import { Slider } from '@/components/ui/slider' // Certifique-se de ter este componente do shadcn ou use input range
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle, Move, ZoomIn } from 'lucide-react'
+import { Slider } from '@/components/ui/slider'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, RotateCcw, ZoomIn } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
-import getCroppedImg from '@/utils/cropImage' // Import do utilitário criado acima
 
-// Função auxiliar para nome do arquivo
-const sanitizeFileName = (fileName: string): string => {
-  const name = fileName.substring(0, fileName.lastIndexOf('.'))
-  const sanitized = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
-  return `${sanitized}-${Date.now()}.jpg` // Sempre salvamos como JPG após o recorte
+// --- UTILITÁRIOS DE IMAGEM INTEGRADOS ---
+
+const createImage = (url: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new Image()
+    image.addEventListener('load', () => resolve(image))
+    image.addEventListener('error', (error) => reject(error))
+    image.setAttribute('crossOrigin', 'anonymous')
+    image.src = url
+  })
+
+// Função principal que gera o arquivo recortado
+async function getCroppedImg(
+  imageSrc: string,
+  pixelCrop: { x: number; y: number; width: number; height: number }
+): Promise<Blob> {
+  const image = await createImage(imageSrc)
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  if (!ctx) throw new Error('No 2d context')
+
+  // Configura o canvas para o tamanho exato do recorte
+  canvas.width = pixelCrop.width
+  canvas.height = pixelCrop.height
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  )
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob)
+      else reject(new Error('Canvas is empty'))
+    }, 'image/jpeg', 0.95) // Alta qualidade
+  })
 }
 
 const ProfileSettings: React.FC = () => {
@@ -41,7 +79,7 @@ const ProfileSettings: React.FC = () => {
   })
   const [userRole, setUserRole] = useState<string>('')
 
-  // --- Estados do Recorte (Cropper) ---
+  // --- Estados do Recorte ---
   const [imageSrc, setImageSrc] = useState<string | null>(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
@@ -49,7 +87,7 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Carregar dados ao iniciar
+  // Carregar dados
   useEffect(() => {
     if (user) fetchFreshData()
   }, [user])
@@ -57,13 +95,8 @@ const ProfileSettings: React.FC = () => {
   const fetchFreshData = async () => {
     if (!user) return
     try {
-      setLoading(true)
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
+      // Busca profile
+      const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileError) throw profileError
 
       const newForm = { ...formData }
@@ -72,6 +105,7 @@ const ProfileSettings: React.FC = () => {
       newForm.avatarUrl = profile.avatar_url || ''
       setUserRole(profile.role)
 
+      // Busca detalhes
       if (profile.role === 'professional') {
         const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (profData) {
@@ -90,9 +124,7 @@ const ProfileSettings: React.FC = () => {
       }
       setFormData(newForm)
     } catch (error) {
-      console.error('Erro ao carregar:', error)
-    } finally {
-      setLoading(false)
+      console.error(error)
     }
   }
 
@@ -100,7 +132,7 @@ const ProfileSettings: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  // --- Lógica de Seleção de Imagem ---
+  // --- Seleção de Arquivo ---
   const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
@@ -108,73 +140,75 @@ const ProfileSettings: React.FC = () => {
       reader.addEventListener('load', () => {
         setImageSrc(reader.result?.toString() || null)
         setIsCropDialogOpen(true)
-        setZoom(1) // Reset zoom
-        setCrop({ x: 0, y: 0 }) // Reset posição
+        setZoom(1)
+        setCrop({ x: 0, y: 0 })
       })
       reader.readAsDataURL(file)
-      event.target.value = '' // Reset input para permitir selecionar o mesmo arquivo
+      event.target.value = '' // Limpa input
     }
   }
 
-  // Callback do Cropper quando o recorte muda
   const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
 
-  // --- Confirmação e Upload ---
+  // --- Processamento e Upload ---
   const handleConfirmUpload = async () => {
     if (!imageSrc || !croppedAreaPixels || !user) return
     
     try {
       setUploading(true)
       
-      // 1. Gerar o Blob da imagem recortada
+      // 1. Processa o recorte no Canvas e gera Blob
       const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
-      const fileName = sanitizeFileName('avatar.jpg')
+      
+      // 2. Prepara arquivo para Upload
+      const fileName = `avatar-${Date.now()}.jpg`
       const filePath = `${user.id}/${fileName}`
       const processedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' })
 
-      // 2. Upload para Supabase
+      // 3. Upload Supabase
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, processedFile, { upsert: true })
 
       if (uploadError) throw uploadError
 
-      // 3. Obter URL Pública com timestamp
+      // 4. URL Pública
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
-      
-      // 4. Atualizar Banco
+      const finalUrl = `${publicUrl}?t=${Date.now()}` // Cache busting
+
+      // 5. Atualiza Banco
       const { error: dbError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
+        .update({ avatar_url: finalUrl, updated_at: new Date().toISOString() })
         .eq('id', user.id)
 
       if (dbError) throw dbError
 
-      // 5. Sincronizar e Fechar
-      setFormData(prev => ({ ...prev, avatarUrl: publicUrl }))
-      await supabase.auth.updateUser({ data: { avatar_url: publicUrl } })
+      // 6. Atualiza Estado Local
+      setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
+      await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
       
       setIsCropDialogOpen(false)
-      showSuccess('Foto de perfil atualizada!')
+      showSuccess('Foto atualizada com sucesso!')
     } catch (error: any) {
       console.error('Erro upload:', error)
-      showError(error.message || 'Erro ao recortar e enviar foto')
+      showError('Erro ao salvar foto. Tente novamente.')
     } finally {
       setUploading(false)
     }
   }
 
-  // --- Salvar Dados do Formulário ---
+  // --- Salvar Dados de Texto ---
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     setLoading(true)
 
     try {
-      const { error: profileError } = await supabase
-        .from('profiles')
+      // 1. Profiles
+      const { error: profileError } = await supabase.from('profiles')
         .update({ 
           full_name: formData.fullName,
           phone: formData.phone,
@@ -182,14 +216,17 @@ const ProfileSettings: React.FC = () => {
         })
         .eq('id', user.id)
       
-      if (profileError) throw new Error(profileError.message)
+      if (profileError) throw profileError
 
+      // 2. Auth Metadata Sync
       await supabase.auth.updateUser({
         data: { full_name: formData.fullName, phone: formData.phone }
       })
 
+      // 3. Detalhes Específicos
       if (userRole === 'professional') {
-        if (!formData.specialty) throw new Error('Especialidade é obrigatória.')
+        if (!formData.specialty) throw new Error('Selecione o Tipo de Profissional')
+        
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
         
         const { error: profError } = await supabase.from('professional_details').upsert({
@@ -199,8 +236,9 @@ const ProfileSettings: React.FC = () => {
           consultation_price: price,
           certifications: { raw_text: formData.certifications },
           updated_at: new Date().toISOString()
-        })
-        if (profError) throw new Error(profError.message)
+        }, { onConflict: 'profile_id' })
+        
+        if (profError) throw profError
 
       } else if (userRole === 'client') {
         const { error: clientError } = await supabase.from('client_details').upsert({
@@ -208,14 +246,17 @@ const ProfileSettings: React.FC = () => {
           goals: formData.goals,
           health_restrictions: formData.restrictions,
           updated_at: new Date().toISOString()
-        })
-        if (clientError) throw new Error(clientError.message)
+        }, { onConflict: 'profile_id' })
+        
+        if (clientError) throw clientError
       }
 
-      showSuccess('Perfil salvo com sucesso!')
+      showSuccess('Dados salvos com sucesso!')
+      // Recarrega para garantir sincronia
       await fetchFreshData()
 
     } catch (error: any) {
+      console.error(error)
       showError(error.message || 'Erro ao salvar')
     } finally {
       setLoading(false)
@@ -223,18 +264,6 @@ const ProfileSettings: React.FC = () => {
   }
 
   if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
-
-  const renderAvatar = () => {
-    const src = formData.avatarUrl ? `${formData.avatarUrl}?t=${Date.now()}` : ''
-    return (
-      <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
-        <AvatarImage src={src} className="object-cover" />
-        <AvatarFallback className="text-3xl bg-slate-800 text-primary font-bold">
-          {formData.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -244,37 +273,32 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          {/* Identidade */}
+          {/* Info Pessoal */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
-              <CardTitle className="text-white">Informações Pessoais</CardTitle>
+              <CardTitle className="text-white">Informações Públicas</CardTitle>
               <CardDescription className="text-gray-400">Dados visíveis na plataforma.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row gap-8 items-start">
+              
+              {/* Avatar */}
               <div className="flex flex-col items-center gap-4">
-                {renderAvatar()}
+                <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
+                  <AvatarImage src={formData.avatarUrl} className="object-cover" />
+                  <AvatarFallback className="text-3xl bg-slate-800 text-primary font-bold">
+                    {formData.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
                 <div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onChange={onFileSelect}
-                    className="hidden"
-                    disabled={uploading}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                    className="bg-white/5 border-white/10 hover:bg-white/10 text-white gap-2"
-                  >
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" disabled={uploading} />
+                  <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-white/5 border-white/10 hover:bg-white/10 text-white gap-2">
                     {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                     Alterar Foto
                   </Button>
                 </div>
               </div>
 
+              {/* Inputs */}
               <div className="flex-1 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -285,7 +309,7 @@ const ProfileSettings: React.FC = () => {
                     <Label className="text-gray-300">Telefone</Label>
                     <div className="relative mt-1.5">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                      <Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10"/>
+                      <Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10" placeholder="(00) 00000-0000"/>
                     </div>
                   </div>
                 </div>
@@ -297,14 +321,14 @@ const ProfileSettings: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Profissional */}
+          {/* Campos Condicionais */}
           {userRole === 'professional' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Perfil Profissional</CardTitle></CardHeader>
+            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
+              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Dados Profissionais</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-300">Área de Atuação <span className="text-red-400">*</span></Label>
+                    <Label className="text-gray-300">Tipo de Profissional <span className="text-red-400">*</span></Label>
                     <Select onValueChange={(v) => handleInputChange('specialty', v)} value={formData.specialty}>
                       <SelectTrigger className="bg-black/20 border-white/10 text-white mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
                       <SelectContent className="bg-slate-900 border-white/10 text-white">
@@ -313,10 +337,7 @@ const ProfileSettings: React.FC = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label className="text-gray-300">Preço Consulta (R$)</Label>
-                    <Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
-                  </div>
+                  <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
                 </div>
                 <div><Label className="text-gray-300">Biografia</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"/></div>
                 <div><Label className="text-gray-300">Certificações</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
@@ -324,9 +345,8 @@ const ProfileSettings: React.FC = () => {
             </Card>
           )}
 
-          {/* Cliente */}
           {userRole === 'client' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
+            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
               <CardHeader><CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha do Aluno</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div><Label className="text-gray-300">Objetivos</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
@@ -343,51 +363,53 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        {/* DIALOG DE RECORTE REAL */}
-        <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) { setIsCropDialogOpen(false); setImageSrc(null); } }}>
-          <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[500px] flex flex-col">
+        {/* DIALOG DE RECORTE (CROPPER) */}
+        <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) setIsCropDialogOpen(false) }}>
+          <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[550px] flex flex-col">
             <DialogHeader>
               <DialogTitle>Ajustar Foto de Perfil</DialogTitle>
-              <DialogDescription>Arraste e zoom para enquadrar seu rosto.</DialogDescription>
+              <DialogDescription>Arraste e aplique zoom para enquadrar seu rosto.</DialogDescription>
             </DialogHeader>
             
-            <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4">
+            <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4 border border-white/10">
               {imageSrc && (
                 <Cropper
                   image={imageSrc}
                   crop={crop}
                   zoom={zoom}
-                  aspect={1} // Avatar quadrado/redondo
+                  aspect={1} // Quadrado 1:1
                   onCropChange={setCrop}
                   onCropComplete={onCropComplete}
                   onZoomChange={setZoom}
-                  cropShape="round" // Visual arredondado
-                  showGrid={false}
+                  cropShape="round" // Visual redondo para avatar
+                  showGrid={true}
                 />
               )}
             </div>
 
-            <div className="flex items-center gap-4 mb-4 px-2">
-              <ZoomIn className="h-4 w-4 text-gray-400" />
-              <Slider 
-                value={[zoom]} 
-                min={1} 
-                max={3} 
-                step={0.1} 
-                onValueChange={(val) => setZoom(val[0])}
-                className="flex-1"
-              />
+            <div className="space-y-4 px-2">
+              <div className="flex items-center gap-4">
+                <ZoomIn className="h-4 w-4 text-gray-400" />
+                <Slider 
+                  value={[zoom]} 
+                  min={1} 
+                  max={3} 
+                  step={0.1} 
+                  onValueChange={(val) => setZoom(val[0])}
+                  className="flex-1 cursor-pointer"
+                />
+              </div>
+              
+              <DialogFooter className="flex gap-2 justify-between sm:justify-end mt-2">
+                <Button variant="ghost" onClick={() => { setIsCropDialogOpen(false); setImageSrc(null); }} className="text-gray-400 hover:text-white">
+                  Cancelar
+                </Button>
+                <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90 font-bold px-6">
+                  {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                  Confirmar e Salvar
+                </Button>
+              </DialogFooter>
             </div>
-
-            <DialogFooter className="flex gap-2 justify-between sm:justify-end">
-              <Button variant="ghost" onClick={() => setIsCropDialogOpen(false)} className="text-gray-400 hover:text-white">
-                Cancelar
-              </Button>
-              <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90 font-bold px-6">
-                {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                Salvar Foto
-              </Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
 
