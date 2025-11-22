@@ -1,281 +1,192 @@
-import React from 'react'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { useChat } from '@/contexts/ChatContext'
-import { useTheme } from '@/components/theme-provider'
+import { 
+  LayoutDashboard, 
+  Users, 
+  Dumbbell, 
+  Utensils, 
+  BookOpen, 
+  MessageSquare, 
+  Menu, 
+  X, 
+  LogOut, 
+  User, 
+  MoreVertical,
+  Settings
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { 
-  Users, 
-  Calendar, 
-  BookOpen, 
-  Dumbbell, 
-  LogOut,
-  Menu,
-  Apple,
-  Utensils,
-  LayoutDashboard,
-  Home,
-  MessageSquare,
-  Sun,
-  Moon
-} from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { showSuccess } from '@/utils/toast'
-
-interface MenuItem {
-  title: string
-  href: string
-  icon: React.ReactNode
-  roles: ('admin' | 'professional' | 'client')[]
-}
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const DashboardLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth()
-  const { totalUnreadCount } = useChat()
-  const { theme, setTheme } = useTheme()
+  const navigate = useNavigate()
   const location = useLocation()
-  const [sidebarOpen, setSidebarOpen] = React.useState(false)
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
 
-  const menuItems: MenuItem[] = [
-    {
-      title: 'Início',
-      href: '/app/dashboard',
-      icon: <LayoutDashboard className="h-5 w-5" />,
-      roles: ['admin', 'professional', 'client']
-    },
-    {
-      title: 'Mensagens',
-      href: '/app/chat',
-      icon: <MessageSquare className="h-5 w-5" />,
-      roles: ['professional', 'client']
-    },
-    {
-      title: 'Meus Clientes',
-      href: '/app/clients',
-      icon: <Users className="h-5 w-5" />,
-      roles: ['admin', 'professional']
-    },
-    {
-      title: 'Planos de Treino',
-      href: '/app/planner',
-      icon: <Calendar className="h-5 w-5" />,
-      roles: ['admin', 'professional']
-    },
-    {
-      title: 'Planos Alimentares',
-      href: '/app/meal-planner',
-      icon: <Utensils className="h-5 w-5" />,
-      roles: ['admin', 'professional']
-    },
-    {
-      title: 'Biblioteca de Exercícios',
-      href: '/app/library',
-      icon: <BookOpen className="h-5 w-5" />,
-      roles: ['admin', 'professional']
-    },
-    {
-      title: 'Biblioteca de Alimentos',
-      href: '/app/foods',
-      icon: <Apple className="h-5 w-5" />,
-      roles: ['admin', 'professional']
-    },
-    {
-      title: 'Meu Treino',
-      href: '/app/my-workout',
-      icon: <Dumbbell className="h-5 w-5" />,
-      roles: ['client']
-    },
-    {
-      title: 'Meu Plano Alimentar',
-      href: '/app/my-meal-plan', // CORREÇÃO: Link corrigido para a rota correta
-      icon: <Utensils className="h-5 w-5" />,
-      roles: ['client']
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/auth')
+  }
+
+  // Definição dos menus baseados na Role
+  const getMenuItems = () => {
+    const commonItems = [
+      { label: 'Dashboard', icon: LayoutDashboard, path: '/app/dashboard' },
+      { label: 'Chat', icon: MessageSquare, path: '/app/chat' },
+    ]
+
+    if (profile?.role === 'professional' || profile?.role === 'admin') {
+      return [
+        ...commonItems,
+        { label: 'Meus Alunos', icon: Users, path: '/app/clients' },
+        { label: 'Planejador de Treinos', icon: Dumbbell, path: '/app/planner' },
+        { label: 'Planejador de Dietas', icon: Utensils, path: '/app/meal-planner' },
+        { label: 'Biblioteca de Exercícios', icon: BookOpen, path: '/app/library' },
+        { label: 'Biblioteca de Alimentos', icon: Utensils, path: '/app/foods' },
+      ]
     }
-  ]
 
-  const filteredMenuItems = menuItems.filter(item => 
-    profile?.role && item.roles.includes(profile.role as any)
+    if (profile?.role === 'client') {
+      return [
+        ...commonItems,
+        { label: 'Meu Treino', icon: Dumbbell, path: '/app/my-workout' },
+        { label: 'Minha Dieta', icon: Utensils, path: '/app/my-meal-plan' },
+      ]
+    }
+
+    return commonItems
+  }
+
+  const menuItems = getMenuItems()
+
+  const isActive = (path: string) => location.pathname === path
+
+  // Componente de Link da Sidebar
+  const SidebarLink = ({ item, mobile = false }: { item: any, mobile?: boolean }) => (
+    <Link
+      to={item.path}
+      onClick={() => mobile && setIsMobileOpen(false)}
+      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
+        isActive(item.path)
+          ? 'bg-primary/20 text-primary border border-primary/20'
+          : 'text-gray-400 hover:text-white hover:bg-white/5'
+      }`}
+    >
+      <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-primary' : 'text-gray-500 group-hover:text-white'}`} />
+      <span className="font-medium">{item.label}</span>
+    </Link>
   )
 
-  const handleLogout = async () => {
-    await signOut()
-    showSuccess('Logout realizado com sucesso!')
-    // Forçar reload para limpar estados
-    window.location.href = '/auth'
-  }
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
-
-  const getUserInitials = () => {
-    // ✅ PROTEÇÃO CONTRA NULL
-    if (profile?.full_name && profile.full_name.trim()) {
-      return profile.full_name
-        .split(' ')
-        .map(name => name[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    }
-    // Fallback para email
-    return user?.email?.[0]?.toUpperCase() || 'U'
-  }
-
-  const getDisplayName = () => {
-    // ✅ PROTEÇÃO CONTRA NULL
-    return profile?.full_name || 'Usuário'
-  }
-
-  const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={`flex flex-col h-full ${mobile ? 'w-full' : 'w-64'} bg-white dark:bg-card/20 backdrop-blur-xl border-r dark:border-white/5`}>
-      {/* Header */}
-      <div className="p-6 border-b dark:border-white/5">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-600 rounded-lg">
-            <Dumbbell className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">CapiFit</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{profile?.role || 'carregando...'}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* User Info */}
-      <div className="p-4 border-b dark:border-white/5">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={profile?.avatar_url || ''} />
-            <AvatarFallback className="bg-blue-100 text-blue-600">
-              {getUserInitials()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-              {getDisplayName()}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-              {user?.email || 'carregando...'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
-        {filteredMenuItems.map((item) => {
-          const isActive = location.pathname === item.href
-          const isMessages = item.title === 'Mensagens'
-          const showBadge = isMessages && totalUnreadCount > 0
-          
-          return (
-            <Link
-              key={item.href}
-              to={item.href}
-              onClick={() => mobile && setSidebarOpen(false)}
-              className={`
-                flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative
-                ${isActive 
-                  ? 'bg-blue-50 dark:bg-primary/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800' 
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
-                }
-              `}
-            >
-              {item.icon}
-              <span>{item.title}</span>
-              
-              {/* Badge de notificação para Mensagens */}
-              {showBadge && (
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 border-2 border-white"
-                >
-                  {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
-                </Badge>
-              )}
-            </Link>
-          )
-        })}
-      </nav>
-
-      {/* Footer */}
-      <div className="p-4 border-t dark:border-white/5 space-y-2">
-        {/* Botão de Alternar Tema */}
-        <Button
-          variant="ghost"
-          className="w-full justify-start"
-          onClick={toggleTheme}
-        >
-          {theme === 'dark' ? (
-            <Sun className="h-4 w-4 mr-3" />
-          ) : (
-            <Moon className="h-4 w-4 mr-3" />
-          )}
-          Alternar Tema
-        </Button>
-        
-        {/* Botão de Logout */}
-        <Button
-          variant="ghost"
-          className="w-full justify-start"
-          onClick={handleLogout}
-        >
-          <LogOut className="h-4 w-4 mr-3" />
-          Sair
-        </Button>
-      </div>
+  // Menu de Usuário (Três Pontos)
+  const UserMenu = () => (
+    <div className="p-4 border-t border-white/10 mt-auto">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="w-full flex items-center justify-between p-2 h-auto hover:bg-white/5 rounded-lg group">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-9 w-9 border border-white/10">
+                <AvatarImage src={profile?.avatar_url || ''} />
+                <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs">
+                  {profile?.full_name?.[0]?.toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="text-left hidden md:block overflow-hidden">
+                <p className="text-sm font-medium text-white truncate w-28">{profile?.full_name || 'Usuário'}</p>
+                <p className="text-xs text-gray-500 truncate capitalize">{profile?.role === 'professional' ? 'Profissional' : 'Aluno'}</p>
+              </div>
+            </div>
+            <MoreVertical className="h-4 w-4 text-gray-500 group-hover:text-white" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56 bg-slate-900 border-white/10 text-white backdrop-blur-xl">
+          <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-white/10" />
+          <DropdownMenuItem onClick={() => navigate('/app/profile')} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 focus:text-white">
+            <User className="mr-2 h-4 w-4" />
+            <span>Editar Perfil</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/app/settings')} disabled className="cursor-pointer hover:bg-white/10 text-gray-500">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Configurações (Breve)</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className="bg-white/10" />
+          <DropdownMenuItem onClick={handleSignOut} className="text-red-400 cursor-pointer hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10 focus:text-red-400">
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Sair</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
-        <Sidebar />
-      </div>
-
-      {/* Mobile Sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="p-0 w-64">
-          <Sidebar mobile />
-        </SheetContent>
-      </Sheet>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-card/20 backdrop-blur-sm border-b dark:border-white/5">
-          <div className="flex items-center gap-3">
-            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-            </Sheet>
-            <div className="flex items-center gap-2">
-              <div className="p-1 bg-blue-600 rounded">
-                <Dumbbell className="h-4 w-4 text-white" />
-              </div>
-              <span className="font-bold text-gray-900 dark:text-white">CapiFit</span>
-            </div>
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar Desktop */}
+      <aside className="hidden md:flex w-64 flex-col fixed h-full border-r border-white/10 bg-slate-950/50 backdrop-blur-xl z-20">
+        <div className="p-6 flex items-center gap-2">
+          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+            <Dumbbell className="h-5 w-5 text-black" />
           </div>
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={profile?.avatar_url || ''} />
-            <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-              {getUserInitials()}
-            </AvatarFallback>
-          </Avatar>
+          <span className="text-xl font-bold text-white tracking-tight">CapiFit<span className="text-primary">.</span></span>
         </div>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto">
-          <Outlet />
-        </main>
+        <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+          {menuItems.map((item) => (
+            <SidebarLink key={item.path} item={item} />
+          ))}
+        </nav>
+
+        <UserMenu />
+      </aside>
+
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 w-full h-16 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl z-30 flex items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
+            <Dumbbell className="h-5 w-5 text-black" />
+          </div>
+          <span className="text-xl font-bold text-white">CapiFit</span>
+        </div>
+        
+        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-white">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 bg-slate-950 border-r border-white/10 p-0 flex flex-col">
+            <div className="p-6 flex items-center justify-between border-b border-white/10">
+              <span className="text-xl font-bold text-white">Menu</span>
+              <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(false)} className="text-gray-400">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              {menuItems.map((item) => (
+                <SidebarLink key={item.path} item={item} mobile />
+              ))}
+            </nav>
+            <UserMenu />
+          </SheetContent>
+        </Sheet>
       </div>
+
+      {/* Main Content */}
+      <main className="flex-1 md:pl-64 pt-16 md:pt-0 min-h-screen transition-all duration-300">
+        <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
+          <Outlet />
+        </div>
+      </main>
     </div>
   )
 }
