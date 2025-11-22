@@ -1,44 +1,29 @@
-// ATENÇÃO: Salvar como Chat.tsx (com C maiúsculo)
-
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useChat } from '@/contexts/ChatContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { 
   Send, 
   Search, 
   MoreVertical, 
   Phone, 
   Video, 
-  Info, 
   ArrowLeft, 
   Loader2, 
-  User, 
-  Smile, 
-  Paperclip,
   MessageCircle,
   Check,
-  CheckCheck
+  CheckCheck,
+  Paperclip
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { format, isToday, isYesterday } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useIsMobile } from '@/hooks/use-mobile'
 
-interface Profile {
-  id: string
-  email: string
-  full_name: string | null
-  avatar_url: string | null
-  role: string
-}
-
+// Interfaces mantidas (sem alteração na tipagem)
 interface ChatMessage {
   id: string
   sender_id: string
@@ -63,6 +48,7 @@ interface Contact {
   unread_count?: number
 }
 
+// --- Componente da Lista de Contatos (Com Visual Nexus) ---
 interface ContactsListProps {
   contacts: Contact[]
   loading: boolean
@@ -71,20 +57,6 @@ interface ContactsListProps {
   searchTerm: string
   onSearchChange: (value: string) => void
   onlineUsers: Set<string>
-}
-
-interface ChatAreaProps {
-  selectedContact: Contact | null
-  messages: ChatMessage[]
-  messagesLoading: boolean
-  newMessage: string
-  sendingMessage: boolean
-  onSendMessage: (e?: React.FormEvent) => void
-  onNewMessageChange: (value: string) => void
-  onlineUsers: Set<string>
-  user: any
-  onBackToList: () => void
-  isMobile: boolean
 }
 
 const ContactsList: React.FC<ContactsListProps> = ({ 
@@ -122,68 +94,74 @@ const ContactsList: React.FC<ContactsListProps> = ({
   })
 
   return (
-    <div className="w-full md:w-80 bg-white/80 dark:bg-card/20 backdrop-blur-xl border-r border-gray-200 dark:border-white/5 flex flex-col h-full">
-      <div className="p-4 border-b border-gray-200 dark:border-white/5">
+    // Glassmorphism Sidebar
+    <div className="w-full md:w-80 bg-slate-900/80 backdrop-blur-xl border-r border-white/10 flex flex-col h-full">
+      <div className="p-4 border-b border-white/10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Conversas</h2>
-          <Button variant="ghost" size="sm">
+          <h2 className="text-xl font-bold text-white tracking-tight">Mensagens</h2>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white hover:bg-white/10">
             <MoreVertical className="h-4 w-4" />
           </Button>
         </div>
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
           <Input
-            placeholder="Buscar..."
+            placeholder="Buscar conversa..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white"
+            className="pl-10 bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-primary/50"
           />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20">
         {loading ? (
-          <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-blue-600" /></div>
+          <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
         ) : filteredContacts.length === 0 ? (
           <div className="text-center py-8">
-            <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Nenhuma conversa encontrada</p>
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
+               <MessageCircle className="h-6 w-6 text-gray-500" />
+            </div>
+            <p className="text-gray-500 text-sm">Nenhuma conversa encontrada</p>
           </div>
         ) : (
           filteredContacts.map((contact) => (
             <div
               key={contact.id}
               onClick={() => onSelectContact(contact)}
-              className={`flex items-center gap-3 p-4 cursor-pointer transition-colors border-b border-gray-100 dark:border-white/5 ${
+              className={`flex items-center gap-3 p-4 cursor-pointer transition-all border-b border-white/5 ${
                 selectedContact?.id === contact.id
-                  ? 'bg-blue-50 dark:bg-primary/10 border-l-4 border-l-blue-600 dark:border-l-primary'
-                  : 'hover:bg-gray-50 dark:hover:bg-white/5'
+                  ? 'bg-primary/10 border-l-4 border-l-primary'
+                  : 'hover:bg-white/5 border-l-4 border-l-transparent'
               }`}
             >
               <div className="relative">
-                <Avatar>
+                <Avatar className="border-2 border-white/10">
                   <AvatarImage src={contact.avatar_url || ''} />
-                  <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
+                  <AvatarFallback className="bg-slate-800 text-primary font-bold">
                     {getInitials(contact.full_name, contact.email)}
                   </AvatarFallback>
                 </Avatar>
-                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white dark:border-gray-900 ${
-                  onlineUsers.has(contact.id) ? 'bg-green-500' : 'bg-gray-400'
+                {/* Status Dot com brilho neon */}
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-slate-900 ${
+                  onlineUsers.has(contact.id) ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-gray-500'
                 }`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-1">
-                  <h3 className="font-medium text-gray-900 dark:text-white truncate">{contact.full_name || contact.email}</h3>
+                  <h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-white' : 'text-gray-200'}`}>
+                    {contact.full_name || contact.email}
+                  </h3>
                   {contact.last_message_time && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{formatMessageDate(contact.last_message_time)}</span>
+                    <span className="text-[10px] text-gray-500">{formatMessageDate(contact.last_message_time)}</span>
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[140px]">
+                  <p className="text-xs text-gray-400 truncate max-w-[140px]">
                     {contact.last_message || 'Iniciar conversa...'}
                   </p>
                   {contact.unread_count ? (
-                    <Badge variant="destructive" className="h-5 min-w-[20px] flex items-center justify-center px-1 text-[10px]">
+                    <Badge className="h-5 min-w-[20px] flex items-center justify-center px-1 text-[10px] bg-primary text-black font-bold border-none">
                       {contact.unread_count}
                     </Badge>
                   ) : null}
@@ -195,6 +173,21 @@ const ContactsList: React.FC<ContactsListProps> = ({
       </div>
     </div>
   )
+}
+
+// --- Componente da Área de Chat (Com Visual Nexus) ---
+interface ChatAreaProps {
+  selectedContact: Contact | null
+  messages: ChatMessage[]
+  messagesLoading: boolean
+  newMessage: string
+  sendingMessage: boolean
+  onSendMessage: (e?: React.FormEvent) => void
+  onNewMessageChange: (value: string) => void
+  onlineUsers: Set<string>
+  user: any
+  onBackToList: () => void
+  isMobile: boolean
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({
@@ -232,67 +225,75 @@ const ChatArea: React.FC<ChatAreaProps> = ({
 
   if (!selectedContact) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-background/40 backdrop-blur-sm">
+      <div className="flex-1 flex flex-col items-center justify-center bg-background/50 backdrop-blur-sm">
         <div className="text-center p-8">
-          <div className="w-20 h-20 bg-blue-100 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <MessageCircle className="h-10 w-10 text-blue-600 dark:text-primary" />
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-2xl shadow-primary/10">
+            <MessageCircle className="h-12 w-12 text-primary" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Bem-vindo ao Chat</h3>
-          <p className="text-gray-600 dark:text-gray-300">Selecione um contato para começar a conversar.</p>
+          <h3 className="text-2xl font-bold text-white mb-2">Bem-vindo ao Chat CapiFit</h3>
+          <p className="text-gray-400 max-w-md">
+            Selecione um aluno ou profissional ao lado para iniciar uma conversa em tempo real.
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white/50 dark:bg-background/40 backdrop-blur-sm h-full">
-      <div className="p-4 border-b border-gray-200 dark:border-white/5 bg-white/80 dark:bg-card/20 flex justify-between items-center">
+    <div className="flex-1 flex flex-col h-full bg-gradient-to-b from-slate-900/50 to-black/50">
+      {/* Header do Chat */}
+      <div className="p-4 border-b border-white/10 bg-slate-900/80 backdrop-blur-md flex justify-between items-center z-10">
         <div className="flex items-center gap-3">
           {isMobile && (
-            <Button variant="ghost" size="icon" onClick={onBackToList}>
+            <Button variant="ghost" size="icon" onClick={onBackToList} className="text-gray-400 hover:text-white">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           )}
-          <Avatar>
+          <Avatar className="border border-white/20">
             <AvatarImage src={selectedContact.avatar_url || ''} />
-            <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
+            <AvatarFallback className="bg-slate-800 text-primary font-bold">
               {getInitials(selectedContact.full_name, selectedContact.email)}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">{selectedContact.full_name || selectedContact.email}</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-              <span className={`w-2 h-2 rounded-full ${onlineUsers.has(selectedContact.id) ? 'bg-green-500' : 'bg-gray-400'}`} />
-              {onlineUsers.has(selectedContact.id) ? 'Online' : 'Offline'}
-            </p>
+            <h3 className="font-semibold text-white">{selectedContact.full_name || selectedContact.email}</h3>
+            <div className="flex items-center gap-1.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${onlineUsers.has(selectedContact.id) ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`} />
+              <p className="text-xs text-gray-400">
+                {onlineUsers.has(selectedContact.id) ? 'Online' : 'Offline'}
+              </p>
+            </div>
           </div>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon"><Phone className="h-5 w-5 text-gray-500" /></Button>
-          <Button variant="ghost" size="icon"><Video className="h-5 w-5 text-gray-500" /></Button>
+          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-primary hover:bg-white/5"><Phone className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-primary hover:bg-white/5"><Video className="h-5 w-5" /></Button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Área de Mensagens */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
         {messagesLoading ? (
-          <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-blue-500" /></div>
+          <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
         ) : messages.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            <p>Nenhuma mensagem ainda. Diga olá! 👋</p>
+          <div className="text-center py-12">
+            <p className="text-gray-500 bg-white/5 inline-block px-4 py-2 rounded-full text-sm">
+              Inicie a conversa com um "Olá" 👋
+            </p>
           </div>
         ) : (
           messages.map((msg) => {
             const isOwn = msg.sender_id === user?.id
             return (
               <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] rounded-2xl px-4 py-2 shadow-sm ${
+                <div className={`max-w-[80%] md:max-w-[65%] rounded-2xl px-5 py-3 shadow-lg ${
                   isOwn 
-                    ? 'bg-blue-600 text-white dark:bg-primary dark:text-primary-foreground rounded-br-none' 
-                    : 'bg-white dark:bg-card border border-gray-100 dark:border-white/10 text-gray-900 dark:text-gray-100 rounded-bl-none'
+                    ? 'bg-primary/20 border border-primary/30 text-white rounded-br-none backdrop-blur-sm' 
+                    : 'bg-white/10 border border-white/10 text-gray-100 rounded-bl-none backdrop-blur-sm'
                 }`}>
                   <p className="text-sm leading-relaxed">{msg.content}</p>
-                  <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-blue-100' : 'text-gray-400'}`}>
-                    <span className="text-[10px]">{formatTime(msg.created_at)}</span>
+                  <div className={`flex items-center justify-end gap-1 mt-1.5 ${isOwn ? 'text-primary/70' : 'text-gray-500'}`}>
+                    <span className="text-[10px] font-medium">{formatTime(msg.created_at)}</span>
                     {isOwn && (msg.is_read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
                   </div>
                 </div>
@@ -303,17 +304,25 @@ const ChatArea: React.FC<ChatAreaProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-200 dark:border-white/5 bg-white/80 dark:bg-card/20">
-        <form onSubmit={(e) => onSendMessage(e)} className="flex gap-2 items-end">
-          <Button type="button" variant="ghost" size="icon" className="text-gray-500"><Paperclip className="h-5 w-5" /></Button>
+      {/* Área de Input */}
+      <div className="p-4 border-t border-white/10 bg-slate-900/90 backdrop-blur-lg">
+        <form onSubmit={(e) => onSendMessage(e)} className="flex gap-3 items-end">
+          <Button type="button" variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-white/10">
+            <Paperclip className="h-5 w-5" />
+          </Button>
           <Input
             placeholder="Digite sua mensagem..."
             value={newMessage}
             onChange={(e) => onNewMessageChange(e.target.value)}
-            className="flex-1 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 focus-visible:ring-blue-500"
+            className="flex-1 bg-black/30 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-primary/50 min-h-[44px]"
             disabled={sendingMessage}
           />
-          <Button type="submit" disabled={!newMessage.trim() || sendingMessage} size="icon" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10">
+          <Button 
+            type="submit" 
+            disabled={!newMessage.trim() || sendingMessage} 
+            size="icon" 
+            className="bg-primary hover:bg-primary/80 text-black rounded-xl w-11 h-11 shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all hover:scale-105"
+          >
             {sendingMessage ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </Button>
         </form>
@@ -337,11 +346,13 @@ const Chat: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
 
+  // Lógica de limpeza de contagem (mantida)
   const clearUnreadLocal = (contactId: string) => {
     setContacts(prev => prev.map(c => c.id === contactId ? { ...c, unread_count: 0 } : c))
     refreshUnreadCount()
   }
 
+  // Busca de contatos (mantida)
   const fetchContacts = async () => {
     if (!user) return
     try {
@@ -371,7 +382,6 @@ const Chat: React.FC = () => {
           if (c.receiver_id !== user.id) ids.add(c.receiver_id)
         })
 
-        // Busca clientes vinculados também, caso não tenham conversado ainda
         const { data: clientLinks } = await supabase.from('client_professionals')
           .select('client_id').eq('professional_id', user.id).eq('status', 'active')
         
@@ -447,6 +457,7 @@ const Chat: React.FC = () => {
     finally { setSendingMessage(false) }
   }
 
+  // Realtime Effect (mantido)
   useEffect(() => {
     if (!user) return
     const channel = supabase.channel('global_chat')
@@ -479,8 +490,9 @@ const Chat: React.FC = () => {
 
   useEffect(() => { fetchContacts() }, [user])
 
+  // Layout Responsivo
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-background">
+    <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-white/10 shadow-2xl">
       {isMobile ? (
         selectedContact ? (
           <ChatArea 
