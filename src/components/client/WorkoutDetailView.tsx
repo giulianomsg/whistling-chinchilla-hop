@@ -8,12 +8,14 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
+import { useAuth } from '@/contexts/AuthContext' // Importar contexto
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
 }
 
 const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) => {
+  const { refreshProfile } = useAuth() // Se o seu contexto tiver refresh, senão o fetch abaixo resolve
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [openVideoId, setOpenVideoId] = useState<string | null>(null)
@@ -44,13 +46,11 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
-      // Carregar exercícios
       const { data } = await supabase.from('workout_exercises')
         .select(`*, exercise:exercises_library(*)`).eq('workout_id', clientWorkout.workout_id)
         .order('day_number').order('order_index')
       setWorkoutExercises((data || []).filter(i => i.exercise !== null))
 
-      // Verificar sessão existente
       const { data: session } = await supabase.from('workout_sessions')
         .select('*').eq('client_workout_id', clientWorkout.id)
         .in('status', ['started', 'paused']).order('created_at', { ascending: false }).limit(1).maybeSingle()
@@ -69,7 +69,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     loadData()
   }, [clientWorkout])
 
-  // Timer Logic
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (sessionStatus === 'started') {
@@ -97,35 +96,47 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
-        // --- UPDATE GAMIFICATION ---
-        const xpBase = 100
-        const xpDurationBonus = Math.floor(elapsedTime / 60) // 1 XP por minuto
-        const totalXpGained = xpBase + xpDurationBonus
-
-        const { error: sessionError } = await supabase.from('workout_sessions')
-          .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime }).eq('id', sessionId)
+        // --- LÓGICA DE XP CORRIGIDA ---
         
-        if (sessionError) throw sessionError
+        // 1. Finalizar Sessão
+        await supabase.from('workout_sessions')
+          .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
+          .eq('id', sessionId)
 
-        // Fetch profile stats
-        const { data: profileData } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
-        
-        if (profileData) {
-          const currentXP = profileData.current_xp || 0
-          const newXP = currentXP + totalXpGained
-          const xpPerLevel = 1000
-          const newLevel = Math.max(1, Math.floor(newXP / xpPerLevel) + 1)
+        // 2. Buscar dados FRESH do banco (não usar cache/contexto aqui para evitar erro de cálculo)
+        const { data: freshProfile, error: fetchError } = await supabase
+          .from('profiles')
+          .select('current_xp, level')
+          .eq('id', clientWorkout.client_id)
+          .single()
+
+        if (!fetchError && freshProfile) {
+          const xpBase = 100
+          const xpDurationBonus = Math.floor(elapsedTime / 60)
+          const xpGained = xpBase + xpDurationBonus
           
-          // Atualizar Profile
-          await supabase.from('profiles').update({
-            current_xp: newXP,
+          const currentXP = freshProfile.current_xp || 0
+          const newTotalXP = currentXP + xpGained
+          const newLevel = Math.floor(newTotalXP / 1000) + 1 // Regra: 1000 XP por nível
+
+          // 3. Atualizar Banco
+          const { error: updateError } = await supabase.from('profiles').update({ 
+            current_xp: newTotalXP,
             level: newLevel
           }).eq('id', clientWorkout.client_id)
 
-          if (newLevel > (profileData.level || 1)) {
-            showSuccess(`LEVEL UP! Parabéns pelo Nível ${newLevel}! 🏆`)
+          if (!updateError) {
+            // 4. Feedback
+            if (newLevel > (freshProfile.level || 1)) {
+              showSuccess(`PARABÉNS! Você subiu para o Nível ${newLevel}! 🏆`)
+            } else {
+              showSuccess(`Treino finalizado! +${xpGained} XP ganhos!`)
+            }
+            
+            // Tenta atualizar o contexto global se existir a função
+            if (refreshProfile) refreshProfile() 
           } else {
-            showSuccess(`Treino finalizado! +${totalXpGained} XP!`)
+            console.error('Erro update XP:', updateError)
           }
         }
 
@@ -138,7 +149,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto"/></div>
 
-  // Group by day
   const exercisesByDay = workoutExercises.reduce((acc: any, curr) => {
     if (!acc[curr.day_number]) acc[curr.day_number] = []
     acc[curr.day_number].push(curr)
@@ -147,7 +157,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   return (
     <div className="space-y-6 pb-24">
-      {/* Estatísticas */}
+      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white/5 border border-white/10 p-4 rounded-lg text-center">
           <p className="text-2xl font-bold text-blue-400">{workoutExercises.length}</p>
@@ -167,7 +177,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         </div>
       </div>
 
-      {/* Tabs dos Dias */}
+      {/* Tabs */}
       <Card className="bg-white/5 border-white/10 backdrop-blur-md">
         <CardHeader><CardTitle className="text-white">Exercícios</CardTitle></CardHeader>
         <CardContent>
@@ -217,7 +227,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         </CardContent>
       </Card>
 
-      {/* Player Fixo no Rodapé */}
+      {/* Player Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
