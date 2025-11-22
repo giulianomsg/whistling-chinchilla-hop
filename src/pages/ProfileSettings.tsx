@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import Cropper from 'react-easy-crop' // Import da biblioteca
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -9,48 +10,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle } from 'lucide-react'
+import { Slider } from '@/components/ui/slider' // Certifique-se de ter este componente do shadcn ou use input range
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle, Move, ZoomIn } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import getCroppedImg from '@/utils/cropImage' // Import do utilitário criado acima
 
-// --- Utilitários de Imagem ---
+// Função auxiliar para nome do arquivo
 const sanitizeFileName = (fileName: string): string => {
   const name = fileName.substring(0, fileName.lastIndexOf('.'))
-  const ext = fileName.substring(fileName.lastIndexOf('.') + 1)
   const sanitized = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
-  return `${sanitized}-${Date.now()}.${ext}`
-}
-
-const resizeImage = (file: File, maxWidth = 800, maxHeight = 800): Promise<Blob> => {
-  return new Promise((resolve, reject) => {
-    const image = new Image()
-    image.src = URL.createObjectURL(file)
-    image.onload = () => {
-      const canvas = document.createElement('canvas')
-      let width = image.width
-      let height = image.height
-      if (width > height) {
-        if (width > maxWidth) {
-          height *= maxWidth / width
-          width = maxWidth
-        }
-      } else {
-        if (height > maxHeight) {
-          width *= maxHeight / height
-          height = maxHeight
-        }
-      }
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      if (!ctx) { reject(new Error('Falha canvas')); return }
-      ctx.drawImage(image, 0, 0, width, height)
-      canvas.toBlob((blob) => {
-        if (blob) resolve(blob)
-        else reject(new Error('Falha blob'))
-      }, file.type, 0.85)
-    }
-    image.onerror = (error) => reject(error)
-  })
+  return `${sanitized}-${Date.now()}.jpg` // Sempre salvamos como JPG após o recorte
 }
 
 const ProfileSettings: React.FC = () => {
@@ -58,31 +27,29 @@ const ProfileSettings: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  // Estado unificado para garantir integridade
+  // --- Estados do Formulário ---
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     avatarUrl: '',
-    // Profissional
     bio: '',
     specialty: '',
     consultationPrice: '',
     certifications: '',
-    // Cliente
     goals: '',
     restrictions: ''
   })
-  
-  // Estado para Role (para evitar depender do profile context que pode estar desatualizado)
   const [userRole, setUserRole] = useState<string>('')
 
-  // Preview Imagem
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  // --- Estados do Recorte (Cropper) ---
+  const [imageSrc, setImageSrc] = useState<string | null>(null)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Carregar dados DIRETAMENTE do banco ao montar (Bypass Context)
+  // Carregar dados ao iniciar
   useEffect(() => {
     if (user) fetchFreshData()
   }, [user])
@@ -91,8 +58,6 @@ const ProfileSettings: React.FC = () => {
     if (!user) return
     try {
       setLoading(true)
-      
-      // 1. Busca Profile Base
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -104,24 +69,17 @@ const ProfileSettings: React.FC = () => {
       const newForm = { ...formData }
       newForm.fullName = profile.full_name || ''
       newForm.phone = profile.phone || ''
-      newForm.avatarUrl = profile.avatar_url || '' // Cache bust será adicionado na renderização
+      newForm.avatarUrl = profile.avatar_url || ''
       setUserRole(profile.role)
 
-      // 2. Busca Dados Específicos
       if (profile.role === 'professional') {
         const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (profData) {
           newForm.bio = profData.bio || ''
           newForm.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
           newForm.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
-          
-          // Tratamento JSONB certifications
-          let certText = ''
-          if (profData.certifications) {
-            if (typeof profData.certifications === 'string') certText = profData.certifications
-            else if (typeof profData.certifications === 'object') certText = (profData.certifications as any).raw_text || ''
-          }
-          newForm.certifications = certText
+          const certData = profData.certifications as any
+          newForm.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
         }
       } else if (profile.role === 'client') {
         const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
@@ -130,7 +88,6 @@ const ProfileSettings: React.FC = () => {
           newForm.restrictions = clientData.health_restrictions || ''
         }
       }
-
       setFormData(newForm)
     } catch (error) {
       console.error('Erro ao carregar:', error)
@@ -143,40 +100,51 @@ const ProfileSettings: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  // --- Lógica de Imagem ---
-  const onFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // --- Lógica de Seleção de Imagem ---
+  const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
-      const objectUrl = URL.createObjectURL(file)
-      setPreviewImage(objectUrl)
-      setSelectedFile(file)
-      setIsCropDialogOpen(true)
-      event.target.value = ''
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        setImageSrc(reader.result?.toString() || null)
+        setIsCropDialogOpen(true)
+        setZoom(1) // Reset zoom
+        setCrop({ x: 0, y: 0 }) // Reset posição
+      })
+      reader.readAsDataURL(file)
+      event.target.value = '' // Reset input para permitir selecionar o mesmo arquivo
     }
   }
 
+  // Callback do Cropper quando o recorte muda
+  const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
+
+  // --- Confirmação e Upload ---
   const handleConfirmUpload = async () => {
-    if (!selectedFile || !user) return
+    if (!imageSrc || !croppedAreaPixels || !user) return
+    
     try {
       setUploading(true)
-      setIsCropDialogOpen(false)
-
-      const blob = await resizeImage(selectedFile, 800, 800)
-      const processedFile = new File([blob], selectedFile.name, { type: selectedFile.type })
-      const fileName = sanitizeFileName(selectedFile.name)
+      
+      // 1. Gerar o Blob da imagem recortada
+      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
+      const fileName = sanitizeFileName('avatar.jpg')
       const filePath = `${user.id}/${fileName}`
+      const processedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' })
 
-      // 1. Upload Storage
+      // 2. Upload para Supabase
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, processedFile, { upsert: true })
 
       if (uploadError) throw uploadError
 
-      // 2. Get URL
+      // 3. Obter URL Pública com timestamp
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
       
-      // 3. Update Profile
+      // 4. Atualizar Banco
       const { error: dbError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
@@ -184,30 +152,27 @@ const ProfileSettings: React.FC = () => {
 
       if (dbError) throw dbError
 
+      // 5. Sincronizar e Fechar
       setFormData(prev => ({ ...prev, avatarUrl: publicUrl }))
-      
-      // Forçar atualização no Auth User Metadata também (opcional, mas bom para sync)
       await supabase.auth.updateUser({ data: { avatar_url: publicUrl } })
-
-      showSuccess('Foto atualizada com sucesso!')
+      
+      setIsCropDialogOpen(false)
+      showSuccess('Foto de perfil atualizada!')
     } catch (error: any) {
-      console.error(error)
-      showError('Erro no upload: ' + error.message)
+      console.error('Erro upload:', error)
+      showError(error.message || 'Erro ao recortar e enviar foto')
     } finally {
       setUploading(false)
-      setPreviewImage(null)
-      setSelectedFile(null)
     }
   }
 
-  // --- Salvar Geral ---
+  // --- Salvar Dados do Formulário ---
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     setLoading(true)
 
     try {
-      // 1. Atualizar Tabela PUBLIC.PROFILES (Fonte da verdade do app)
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ 
@@ -217,20 +182,16 @@ const ProfileSettings: React.FC = () => {
         })
         .eq('id', user.id)
       
-      if (profileError) throw new Error('Erro perfil: ' + profileError.message)
+      if (profileError) throw new Error(profileError.message)
 
-      // 2. Atualizar AUTH.USERS (Para manter metadados sincronizados)
-      const { error: authError } = await supabase.auth.updateUser({
+      await supabase.auth.updateUser({
         data: { full_name: formData.fullName, phone: formData.phone }
       })
-      if (authError) console.warn('Aviso: Metadados de auth não sincronizados', authError)
 
-      // 3. Atualizar Detalhes Específicos
       if (userRole === 'professional') {
         if (!formData.specialty) throw new Error('Especialidade é obrigatória.')
-        
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
-
+        
         const { error: profError } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio: formData.bio,
@@ -239,7 +200,7 @@ const ProfileSettings: React.FC = () => {
           certifications: { raw_text: formData.certifications },
           updated_at: new Date().toISOString()
         })
-        if (profError) throw new Error('Erro dados profissionais: ' + profError.message)
+        if (profError) throw new Error(profError.message)
 
       } else if (userRole === 'client') {
         const { error: clientError } = await supabase.from('client_details').upsert({
@@ -248,14 +209,13 @@ const ProfileSettings: React.FC = () => {
           health_restrictions: formData.restrictions,
           updated_at: new Date().toISOString()
         })
-        if (clientError) throw new Error('Erro ficha aluno: ' + clientError.message)
+        if (clientError) throw new Error(clientError.message)
       }
 
       showSuccess('Perfil salvo com sucesso!')
-      await fetchFreshData() // Recarrega dados para garantir visualização correta
+      await fetchFreshData()
 
     } catch (error: any) {
-      console.error(error)
       showError(error.message || 'Erro ao salvar')
     } finally {
       setLoading(false)
@@ -264,7 +224,6 @@ const ProfileSettings: React.FC = () => {
 
   if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
 
-  // Helper para renderizar Avatar com cache bust
   const renderAvatar = () => {
     const src = formData.avatarUrl ? `${formData.avatarUrl}?t=${Date.now()}` : ''
     return (
@@ -285,14 +244,13 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
+          {/* Identidade */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="text-white">Informações Pessoais</CardTitle>
               <CardDescription className="text-gray-400">Dados visíveis na plataforma.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row gap-8 items-start">
-              
-              {/* Avatar */}
               <div className="flex flex-col items-center gap-4">
                 {renderAvatar()}
                 <div>
@@ -317,27 +275,17 @@ const ProfileSettings: React.FC = () => {
                 </div>
               </div>
 
-              {/* Dados Básicos */}
               <div className="flex-1 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-gray-300">Nome Completo</Label>
-                    <Input 
-                      value={formData.fullName} 
-                      onChange={e => handleInputChange('fullName', e.target.value)} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5"
-                    />
+                    <Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
                   </div>
                   <div>
                     <Label className="text-gray-300">Telefone</Label>
                     <div className="relative mt-1.5">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                      <Input 
-                        value={formData.phone} 
-                        onChange={e => handleInputChange('phone', e.target.value)} 
-                        className="bg-black/20 border-white/10 text-white pl-10"
-                        placeholder="(00) 00000-0000"
-                      />
+                      <Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10"/>
                     </div>
                   </div>
                 </div>
@@ -395,30 +343,54 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        {/* Dialog Preview */}
-        <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
-          <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[425px]">
+        {/* DIALOG DE RECORTE REAL */}
+        <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) { setIsCropDialogOpen(false); setImageSrc(null); } }}>
+          <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[500px] flex flex-col">
             <DialogHeader>
-              <DialogTitle>Nova Foto</DialogTitle>
-              <DialogDescription>Confirme para atualizar sua foto de perfil.</DialogDescription>
+              <DialogTitle>Ajustar Foto de Perfil</DialogTitle>
+              <DialogDescription>Arraste e zoom para enquadrar seu rosto.</DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col items-center justify-center py-6">
-              {previewImage && (
-                <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-primary/30">
-                  <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
-                </div>
+            
+            <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4">
+              {imageSrc && (
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1} // Avatar quadrado/redondo
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                  cropShape="round" // Visual arredondado
+                  showGrid={false}
+                />
               )}
-              <p className="text-xs text-gray-400 mt-4 flex items-center gap-2"><AlertTriangle className="h-3 w-3 text-yellow-500"/> A imagem será otimizada.</p>
             </div>
-            <DialogFooter className="flex gap-2">
-              <Button variant="ghost" onClick={() => setIsCropDialogOpen(false)} className="text-gray-400 hover:text-white">Cancelar</Button>
-              <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90">
+
+            <div className="flex items-center gap-4 mb-4 px-2">
+              <ZoomIn className="h-4 w-4 text-gray-400" />
+              <Slider 
+                value={[zoom]} 
+                min={1} 
+                max={3} 
+                step={0.1} 
+                onValueChange={(val) => setZoom(val[0])}
+                className="flex-1"
+              />
+            </div>
+
+            <DialogFooter className="flex gap-2 justify-between sm:justify-end">
+              <Button variant="ghost" onClick={() => setIsCropDialogOpen(false)} className="text-gray-400 hover:text-white">
+                Cancelar
+              </Button>
+              <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90 font-bold px-6">
                 {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                Confirmar
+                Salvar Foto
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
       </div>
     </div>
   )
