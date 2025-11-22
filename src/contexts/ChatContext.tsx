@@ -28,7 +28,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return
       }
 
-      console.log('✅ [CHAT_CONTEXT] Contagem de não lidas:', data)
       setTotalUnreadCount(data || 0)
     } catch (error) {
       console.error('❌ [CHAT_CONTEXT] Erro inesperado ao buscar contagem:', error)
@@ -71,14 +70,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Incrementar contador
             setTotalUnreadCount(prev => prev + 1)
             
-            // Tocar som de notificação
-            try {
-              const audio = new Audio('/notification.mp3')
-              audio.play().catch(() => {
-                console.log('🔇 [CHAT_CONTEXT] Não foi possível tocar som de notificação')
-              })
-            } catch (error) {
-              console.log('🔇 [CHAT_CONTEXT] Erro ao tocar som:', error)
+            // Tocar som de notificação APENAS se eu não for o remetente (segurança extra)
+            if (newMessage.sender_id !== user.id) {
+                try {
+                  const audio = new Audio('/notification.mp3')
+                  audio.play().catch(() => {
+                    console.log('🔇 [CHAT_CONTEXT] Não foi possível tocar som de notificação (interação necessária)')
+                  })
+                } catch (error) {
+                  console.log('🔇 [CHAT_CONTEXT] Erro ao tocar som:', error)
+                }
             }
             
             // Buscar nome do remetente para o toast
@@ -93,29 +94,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
               
               // Mostrar toast rápido
               toast(`Nova mensagem de ${senderName}`, {
-                duration: 3000,
+                duration: 4000,
                 action: {
-                  label: 'Ver',
+                  label: 'Responder',
                   onClick: () => {
-                    // Navegar para o chat
                     window.location.href = '/app/chat'
                   }
                 }
               })
             } catch (error) {
               console.error('❌ [CHAT_CONTEXT] Erro ao buscar perfil do remetente:', error)
-              toast('Nova mensagem recebida', {
-                duration: 3000
-              })
             }
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ [CHAT_CONTEXT] Inscrito no canal global de notificações')
-        }
-      })
+      .subscribe()
 
     return () => {
       console.log('🔌 [CHAT_CONTEXT] Limpando canal global de notificações')
