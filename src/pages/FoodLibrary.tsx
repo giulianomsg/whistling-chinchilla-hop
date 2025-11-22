@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Apple, Plus, Search, Edit, Trash2, Eye, EyeOff, Loader2, Check } from 'lucide-react'
+import { Apple, Plus, Search, Edit, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -20,15 +20,16 @@ const FoodLibrary: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   
-  // State expandido com campos do banco
-  const [formData, setFormData] = useState({ 
+  const initialFormState = { 
     id: '', name: '', brand: '', category: '',
     serving_size: 100, serving_unit: 'g',
     kcal: 0, prot: 0, carb: 0, fat: 0,
-    fiber: 0, sugar: 0, sodium: 0, // Novos campos
+    fiber: 0, sugar: 0, sodium: 0,
     is_public: false
-  })
+  }
+  const [formData, setFormData] = useState(initialFormState)
 
+  // ... fetchFoods igual ...
   const fetchFoods = async () => {
     if (!user) return
     setPageLoading(true)
@@ -43,23 +44,22 @@ const FoodLibrary: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchFoods() }, [user, loading, searchTerm])
 
+  // FUNÇÃO DE RESET CORRIGIDA
+  const openCreateDialog = () => {
+    setFormData(initialFormState)
+    setIsCreateDialogOpen(true)
+  }
+
   const handleSave = async (e: React.FormEvent, mode: 'create' | 'update') => {
     e.preventDefault()
     if (!user) return
 
     const payload = {
-      name: formData.name, 
-      brand: formData.brand,
+      name: formData.name, brand: formData.brand,
       category: formData.category,
-      serving_size: formData.serving_size,
-      serving_unit: formData.serving_unit,
-      calories_per_serving: formData.kcal, 
-      protein: formData.prot, 
-      carbs: formData.carb, 
-      fat: formData.fat,
-      fiber: formData.fiber,
-      sugar: formData.sugar,
-      sodium: formData.sodium,
+      serving_size: formData.serving_size, serving_unit: formData.serving_unit,
+      calories_per_serving: formData.kcal, protein: formData.prot, carbs: formData.carb, fat: formData.fat,
+      fiber: formData.fiber, sugar: formData.sugar, sodium: formData.sodium,
       is_public: formData.is_public,
       created_by: user.id
     }
@@ -79,7 +79,7 @@ const FoodLibrary: React.FC = () => {
       setIsEditDialogOpen(false)
       fetchFoods() 
     } else {
-      showError('Erro ao salvar alimento')
+      showError('Erro ao salvar')
     }
   }
 
@@ -100,7 +100,7 @@ const FoodLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
-  // Form Component reutilizável
+  // ... FoodForm igual ...
   const FoodForm = ({ mode }: { mode: 'create' | 'update' }) => (
     <form onSubmit={(e) => handleSave(e, mode)} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
@@ -135,7 +135,7 @@ const FoodLibrary: React.FC = () => {
 
       <div className="flex items-center space-x-2 py-2">
         <Checkbox id="public" checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-green-500" />
-        <Label htmlFor="public" className="cursor-pointer">Tornar público para todos os usuários</Label>
+        <Label htmlFor="public" className="cursor-pointer">Tornar público</Label>
       </div>
 
       <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar Alimento</Button>
@@ -149,8 +149,12 @@ const FoodLibrary: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Apple className="text-green-400"/> Alimentos</h1>
+          {/* BOTÃO DE CRIAÇÃO CORRIGIDO */}
+          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500">
+            <Plus className="mr-2 h-4 w-4"/> Novo
+          </Button>
+
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild><Button className="bg-green-600 text-white"><Plus className="mr-2 h-4 w-4"/> Novo</Button></DialogTrigger>
             <DialogContent className="bg-slate-900 border-white/10 text-white max-w-lg">
               <DialogHeader><DialogTitle>Novo Alimento</DialogTitle></DialogHeader>
               <FoodForm mode="create" />
