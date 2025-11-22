@@ -10,11 +10,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Slider } from '@/components/ui/slider'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, RotateCcw, ZoomIn } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle, ZoomIn, HeartPulse, Activity, Apple } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
-// --- UTILITÁRIOS DE IMAGEM INTEGRADOS ---
+// --- UTILITÁRIOS DE IMAGEM ---
+const sanitizeFileName = (fileName: string): string => {
+  const name = fileName.substring(0, fileName.lastIndexOf('.'))
+  const sanitized = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
+  return `${sanitized}-${Date.now()}.jpg`
+}
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -25,7 +32,6 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
     image.src = url
   })
 
-// Função principal que gera o arquivo recortado
 async function getCroppedImg(
   imageSrc: string,
   pixelCrop: { x: number; y: number; width: number; height: number }
@@ -36,7 +42,6 @@ async function getCroppedImg(
 
   if (!ctx) throw new Error('No 2d context')
 
-  // Configura o canvas para o tamanho exato do recorte
   canvas.width = pixelCrop.width
   canvas.height = pixelCrop.height
 
@@ -56,7 +61,7 @@ async function getCroppedImg(
     canvas.toBlob((blob) => {
       if (blob) resolve(blob)
       else reject(new Error('Canvas is empty'))
-    }, 'image/jpeg', 0.95) // Alta qualidade
+    }, 'image/jpeg', 0.95)
   })
 }
 
@@ -65,7 +70,7 @@ const ProfileSettings: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  // --- Estados do Formulário ---
+  // --- Estados do Formulário Geral ---
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -74,9 +79,38 @@ const ProfileSettings: React.FC = () => {
     specialty: '',
     consultationPrice: '',
     certifications: '',
+    // Campos simples legados (mantidos para compatibilidade se necessário)
     goals: '',
     restrictions: ''
   })
+  
+  // --- Estado da Anamnese Completa (JSONB) ---
+  const [anamnesisForm, setAnamnesisForm] = useState({
+    // Dados Médicos
+    medical_history: '',
+    medications: '',
+    surgeries: '',
+    injuries: '',
+    allergies: '',
+    
+    // Estilo de Vida
+    occupation: '',
+    sleep_hours: '',
+    sleep_quality: '',
+    stress_level: '',
+    smoker: false,
+    alcohol: '',
+    
+    // Nutricional
+    water_intake: '',
+    diet_history: '',
+    food_aversions: '',
+    supplements: '',
+    
+    // Físico
+    activity_level: ''
+  })
+
   const [userRole, setUserRole] = useState<string>('')
 
   // --- Estados do Recorte ---
@@ -95,7 +129,7 @@ const ProfileSettings: React.FC = () => {
   const fetchFreshData = async () => {
     if (!user) return
     try {
-      // Busca profile
+      setLoading(true)
       const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileError) throw profileError
 
@@ -105,7 +139,6 @@ const ProfileSettings: React.FC = () => {
       newForm.avatarUrl = profile.avatar_url || ''
       setUserRole(profile.role)
 
-      // Busca detalhes
       if (profile.role === 'professional') {
         const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (profData) {
@@ -118,13 +151,24 @@ const ProfileSettings: React.FC = () => {
       } else if (profile.role === 'client') {
         const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (clientData) {
+          // Carrega campos legados
           newForm.goals = clientData.goals || ''
           newForm.restrictions = clientData.health_restrictions || ''
+          
+          // Carrega Anamnese JSONB
+          if (clientData.anamnesis_data) {
+            const data = typeof clientData.anamnesis_data === 'string' 
+              ? JSON.parse(clientData.anamnesis_data) 
+              : clientData.anamnesis_data
+            setAnamnesisForm(prev => ({ ...prev, ...data }))
+          }
         }
       }
       setFormData(newForm)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -132,7 +176,11 @@ const ProfileSettings: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  // --- Seleção de Arquivo ---
+  const updateAnamnesis = (field: string, value: any) => {
+    setAnamnesisForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  // --- Seleção e Upload de Imagem (Mantido igual) ---
   const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
@@ -144,7 +192,7 @@ const ProfileSettings: React.FC = () => {
         setCrop({ x: 0, y: 0 })
       })
       reader.readAsDataURL(file)
-      event.target.value = '' // Limpa input
+      event.target.value = ''
     }
   }
 
@@ -152,81 +200,52 @@ const ProfileSettings: React.FC = () => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
 
-  // --- Processamento e Upload ---
   const handleConfirmUpload = async () => {
     if (!imageSrc || !croppedAreaPixels || !user) return
-    
     try {
       setUploading(true)
-      
-      // 1. Processa o recorte no Canvas e gera Blob
       const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
-      
-      // 2. Prepara arquivo para Upload
-      const fileName = `avatar-${Date.now()}.jpg`
+      const fileName = sanitizeFileName('avatar.jpg')
       const filePath = `${user.id}/${fileName}`
       const processedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' })
 
-      // 3. Upload Supabase
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, processedFile, { upsert: true })
-
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, processedFile, { upsert: true })
       if (uploadError) throw uploadError
 
-      // 4. URL Pública
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
-      const finalUrl = `${publicUrl}?t=${Date.now()}` // Cache busting
+      const finalUrl = `${publicUrl}?t=${Date.now()}`
 
-      // 5. Atualiza Banco
-      const { error: dbError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: finalUrl, updated_at: new Date().toISOString() })
-        .eq('id', user.id)
-
-      if (dbError) throw dbError
-
-      // 6. Atualiza Estado Local
+      await supabase.from('profiles').update({ avatar_url: finalUrl, updated_at: new Date().toISOString() }).eq('id', user.id)
+      
       setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
       await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
       
       setIsCropDialogOpen(false)
-      showSuccess('Foto atualizada com sucesso!')
+      showSuccess('Foto atualizada!')
     } catch (error: any) {
-      console.error('Erro upload:', error)
-      showError('Erro ao salvar foto. Tente novamente.')
+      showError('Erro ao salvar foto.')
     } finally {
       setUploading(false)
     }
   }
 
-  // --- Salvar Dados de Texto ---
+  // --- Salvar Geral ---
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     setLoading(true)
 
     try {
-      // 1. Profiles
       const { error: profileError } = await supabase.from('profiles')
-        .update({ 
-          full_name: formData.fullName,
-          phone: formData.phone,
-          updated_at: new Date().toISOString()
-        })
+        .update({ full_name: formData.fullName, phone: formData.phone, updated_at: new Date().toISOString() })
         .eq('id', user.id)
       
       if (profileError) throw profileError
 
-      // 2. Auth Metadata Sync
-      await supabase.auth.updateUser({
-        data: { full_name: formData.fullName, phone: formData.phone }
-      })
+      await supabase.auth.updateUser({ data: { full_name: formData.fullName, phone: formData.phone } })
 
-      // 3. Detalhes Específicos
       if (userRole === 'professional') {
         if (!formData.specialty) throw new Error('Selecione o Tipo de Profissional')
-        
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
         
         const { error: profError } = await supabase.from('professional_details').upsert({
@@ -241,22 +260,22 @@ const ProfileSettings: React.FC = () => {
         if (profError) throw profError
 
       } else if (userRole === 'client') {
+        // Salva Anamnese Completa no JSONB e mantem compatibilidade com colunas antigas se quiser
         const { error: clientError } = await supabase.from('client_details').upsert({
           profile_id: user.id,
-          goals: formData.goals,
-          health_restrictions: formData.restrictions,
+          goals: formData.goals, // Mantém compatibilidade
+          health_restrictions: formData.restrictions, // Mantém compatibilidade
+          anamnesis_data: anamnesisForm, // NOVA FICHA COMPLETA
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
         
         if (clientError) throw clientError
       }
 
-      showSuccess('Dados salvos com sucesso!')
-      // Recarrega para garantir sincronia
+      showSuccess('Perfil salvo com sucesso!')
       await fetchFreshData()
 
     } catch (error: any) {
-      console.error(error)
       showError(error.message || 'Erro ao salvar')
     } finally {
       setLoading(false)
@@ -264,6 +283,18 @@ const ProfileSettings: React.FC = () => {
   }
 
   if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
+
+  const renderAvatar = () => {
+    const src = formData.avatarUrl ? `${formData.avatarUrl}?t=${Date.now()}` : ''
+    return (
+      <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
+        <AvatarImage src={src} className="object-cover" />
+        <AvatarFallback className="text-3xl bg-slate-800 text-primary font-bold">
+          {formData.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -273,22 +304,15 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          {/* Info Pessoal */}
+          {/* Identidade */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
-              <CardTitle className="text-white">Informações Públicas</CardTitle>
+              <CardTitle className="text-white">Informações Pessoais</CardTitle>
               <CardDescription className="text-gray-400">Dados visíveis na plataforma.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row gap-8 items-start">
-              
-              {/* Avatar */}
               <div className="flex flex-col items-center gap-4">
-                <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
-                  <AvatarImage src={formData.avatarUrl} className="object-cover" />
-                  <AvatarFallback className="text-3xl bg-slate-800 text-primary font-bold">
-                    {formData.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                {renderAvatar()}
                 <div>
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" disabled={uploading} />
                   <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-white/5 border-white/10 hover:bg-white/10 text-white gap-2">
@@ -297,44 +321,27 @@ const ProfileSettings: React.FC = () => {
                   </Button>
                 </div>
               </div>
-
-              {/* Inputs */}
               <div className="flex-1 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300">Nome Completo</Label>
-                    <Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Telefone</Label>
-                    <div className="relative mt-1.5">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                      <Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10" placeholder="(00) 00000-0000"/>
-                    </div>
-                  </div>
+                  <div><Label className="text-gray-300">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div><Label className="text-gray-300">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10"/></div></div>
                 </div>
-                <div>
-                  <Label className="text-gray-300">Email</Label>
-                  <Input value={user?.email || ''} disabled className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed"/>
-                </div>
+                <div><Label className="text-gray-300">Email</Label><Input value={user?.email || ''} disabled className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed"/></div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Campos Condicionais */}
+          {/* ÁREA DO PROFISSIONAL */}
           {userRole === 'professional' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
+            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
               <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Dados Profissionais</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-300">Tipo de Profissional <span className="text-red-400">*</span></Label>
+                    <Label className="text-gray-300">Área de Atuação <span className="text-red-400">*</span></Label>
                     <Select onValueChange={(v) => handleInputChange('specialty', v)} value={formData.specialty}>
                       <SelectTrigger className="bg-black/20 border-white/10 text-white mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent className="bg-slate-900 border-white/10 text-white">
-                        <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
-                        <SelectItem value="nutritionist">Nutricionista</SelectItem>
-                      </SelectContent>
+                      <SelectContent className="bg-slate-900 border-white/10 text-white"><SelectItem value="personal_trainer">Personal Trainer</SelectItem><SelectItem value="nutritionist">Nutricionista</SelectItem></SelectContent>
                     </Select>
                   </div>
                   <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
@@ -345,14 +352,79 @@ const ProfileSettings: React.FC = () => {
             </Card>
           )}
 
+          {/* ÁREA DO ALUNO (ANAMNESE COMPLETA) */}
           {userRole === 'client' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha do Aluno</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div><Label className="text-gray-300">Objetivos</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
-                <div><Label className="text-gray-300">Restrições</Label><Textarea value={formData.restrictions} onChange={e => handleInputChange('restrictions', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha de Anamnese</CardTitle>
+                  <CardDescription className="text-gray-400">Preencha com atenção. Seus dados ajudam a montar o treino ideal.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="medical" className="w-full">
+                    <TabsList className="bg-black/20 border border-white/10 w-full justify-start mb-6">
+                      <TabsTrigger value="medical" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Saúde</TabsTrigger>
+                      <TabsTrigger value="lifestyle" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Estilo de Vida</TabsTrigger>
+                      <TabsTrigger value="nutri" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutrição</TabsTrigger>
+                    </TabsList>
+
+                    {/* Aba Saúde */}
+                    <TabsContent value="medical" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><Label className="text-gray-300">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div><Label className="text-gray-300">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div><Label className="text-gray-300">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div><Label className="text-gray-300">Cirurgias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                      </div>
+                    </TabsContent>
+
+                    {/* Aba Estilo de Vida */}
+                    <TabsContent value="lifestyle" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><Label className="text-gray-300">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div><Label className="text-gray-300">Sono (h)</Label><Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                          <div>
+                            <Label className="text-gray-300">Qualidade</Label>
+                            <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
+                              <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="..."/></SelectTrigger>
+                              <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="good">Boa</SelectItem><SelectItem value="average">Média</SelectItem><SelectItem value="bad">Ruim</SelectItem></SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between bg-black/20 p-3 rounded border border-white/5">
+                          <Label className="text-gray-300">Fumante?</Label>
+                          <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
+                        </div>
+                        <div>
+                          <Label className="text-gray-300">Nível de Atividade</Label>
+                          <Select value={anamnesisForm.activity_level} onValueChange={v => updateAnamnesis('activity_level', v)}>
+                            <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="..."/></SelectTrigger>
+                            <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="sedentary">Sedentário</SelectItem><SelectItem value="active">Ativo</SelectItem><SelectItem value="athlete">Atleta</SelectItem></SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {/* Aba Nutrição */}
+                    <TabsContent value="nutri" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><Label className="text-gray-300">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div><Label className="text-gray-300">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div className="md:col-span-2"><Label className="text-gray-300">Resumo da Alimentação</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+
+              {/* Objetivos Rápidos */}
+              <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
+                <CardContent className="space-y-4 pt-6">
+                  <div><Label className="text-gray-300">Objetivo Principal</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           <div className="flex justify-end pt-4 border-t border-white/10">
@@ -363,56 +435,19 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        {/* DIALOG DE RECORTE (CROPPER) */}
+        {/* DIALOG RECORTE */}
         <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) setIsCropDialogOpen(false) }}>
           <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[550px] flex flex-col">
-            <DialogHeader>
-              <DialogTitle>Ajustar Foto de Perfil</DialogTitle>
-              <DialogDescription>Arraste e aplique zoom para enquadrar seu rosto.</DialogDescription>
-            </DialogHeader>
-            
+            <DialogHeader><DialogTitle>Ajustar Foto</DialogTitle><DialogDescription>Enquadre seu rosto.</DialogDescription></DialogHeader>
             <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4 border border-white/10">
-              {imageSrc && (
-                <Cropper
-                  image={imageSrc}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1} // Quadrado 1:1
-                  onCropChange={setCrop}
-                  onCropComplete={onCropComplete}
-                  onZoomChange={setZoom}
-                  cropShape="round" // Visual redondo para avatar
-                  showGrid={true}
-                />
-              )}
+              {imageSrc && <Cropper image={imageSrc} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onCropComplete={onCropComplete} onZoomChange={setZoom} cropShape="round" showGrid={true} />}
             </div>
-
             <div className="space-y-4 px-2">
-              <div className="flex items-center gap-4">
-                <ZoomIn className="h-4 w-4 text-gray-400" />
-                <Slider 
-                  value={[zoom]} 
-                  min={1} 
-                  max={3} 
-                  step={0.1} 
-                  onValueChange={(val) => setZoom(val[0])}
-                  className="flex-1 cursor-pointer"
-                />
-              </div>
-              
-              <DialogFooter className="flex gap-2 justify-between sm:justify-end mt-2">
-                <Button variant="ghost" onClick={() => { setIsCropDialogOpen(false); setImageSrc(null); }} className="text-gray-400 hover:text-white">
-                  Cancelar
-                </Button>
-                <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90 font-bold px-6">
-                  {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                  Confirmar e Salvar
-                </Button>
-              </DialogFooter>
+              <div className="flex items-center gap-4"><ZoomIn className="h-4 w-4 text-gray-400" /><Slider value={[zoom]} min={1} max={3} step={0.1} onValueChange={(val) => setZoom(val[0])} className="flex-1 cursor-pointer" /></div>
+              <DialogFooter className="flex gap-2 justify-between sm:justify-end mt-2"><Button variant="ghost" onClick={() => { setIsCropDialogOpen(false); setImageSrc(null); }} className="text-gray-400 hover:text-white">Cancelar</Button><Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90 font-bold px-6">{uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />} Confirmar e Salvar</Button></DialogFooter>
             </div>
           </DialogContent>
         </Dialog>
-
       </div>
     </div>
   )
