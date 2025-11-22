@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Utensils, Plus, Edit, Trash2, Settings, Target, Loader2, Search, Apple, Flame } from 'lucide-react'
+import { 
+  Utensils, Plus, Edit, Trash2, Settings, Target, Loader2, Search, Apple, Flame
+} from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -45,7 +47,7 @@ const MealPlanner: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchData() }, [user])
 
-  // RESET AO ABRIR NOVO
+  // Resetar form ao abrir criação
   const openCreateDialog = () => {
     setPlanForm(initialPlanState)
     setIsCreateDialogOpen(true)
@@ -126,7 +128,7 @@ const MealPlanner: React.FC = () => {
 
         <div className="relative mb-6">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-          <Input placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/>
+          <Input placeholder="Buscar planos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -141,7 +143,7 @@ const MealPlanner: React.FC = () => {
                     <AlertDialog>
                       <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
                       <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
-                        <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
+                        <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Essa ação não pode ser desfeita.</AlertDialogDescription></AlertDialogHeader>
                         <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeletePlan(plan.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
@@ -156,7 +158,6 @@ const MealPlanner: React.FC = () => {
           ))}
         </div>
 
-        {/* DIALOGS UNIFICADOS COM FORM INLINE */}
         {[
           { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Plano', handler: handleCreatePlan },
           { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Plano', handler: handleUpdatePlan }
@@ -179,7 +180,6 @@ const MealPlanner: React.FC = () => {
           </Dialog>
         ))}
 
-        {/* Sheet de Gerenciamento (Mantida igual) */}
         <Sheet open={isManageSheetOpen} onOpenChange={setIsManageSheetOpen}>
           <SheetContent className="bg-slate-900 border-l border-white/10 text-white w-[90%] sm:w-[600px] overflow-y-auto">
             <SheetHeader><SheetTitle className="text-white">Refeições</SheetTitle></SheetHeader>
@@ -189,7 +189,8 @@ const MealPlanner: React.FC = () => {
                 <Dialog open={isAddMealDialogOpen} onOpenChange={setIsAddMealDialogOpen}>
                   <DialogTrigger asChild><Button size="sm" className="bg-white/10 text-white"><Plus className="h-4 w-4 mr-2"/> Add</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
-                    <div className="space-y-4">
+                    <DialogHeader><DialogTitle>Adicionar Refeição</DialogTitle></DialogHeader>
+                    <div className="space-y-4 mt-4">
                       <Select onValueChange={v => setNewMeal({...newMeal, foodId: v})}>
                         <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Alimento..."/></SelectTrigger>
                         <SelectContent className="bg-slate-800 border-white/10 text-white">
