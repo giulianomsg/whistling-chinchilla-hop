@@ -5,10 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ChatProvider } from "@/contexts/ChatContext";
-import { ThemeProvider } from "./components/theme-provider"; // Novo import
+import { ThemeProvider } from "./components/theme-provider";
 import { Loader2 } from "lucide-react";
 import { Suspense, lazy } from "react";
-import { useEffect } from "react";
 
 // Lazy loading das páginas principais
 const Index = lazy(() => import("./pages/Index"));
@@ -26,15 +25,16 @@ const ProfessionalDashboard = lazy(() => import("./pages/ProfessionalDashboard")
 const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
 const ClientDetails = lazy(() => import("./pages/ClientDetails"));
 const Chat = lazy(() => import("./pages/Chat"));
+const ProfileSettings = lazy(() => import("./pages/ProfileSettings")); // Nova Página
 
 const queryClient = new QueryClient();
 
 // Componente de Loading para lazy loading
 const PageLoader = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  <div className="min-h-screen bg-background flex items-center justify-center">
     <div className="text-center">
-      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-      <p>Carregando...</p>
+      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+      <p className="text-muted-foreground">Carregando...</p>
     </div>
   </div>
 );
@@ -80,6 +80,16 @@ const AppRoutes: React.FC = () => {
               <Suspense fallback={<PageLoader />}>
                 <ProfessionalDashboard />
               </Suspense>
+          } 
+        />
+
+        {/* Rota de Perfil (Acessível a todos) */}
+        <Route 
+          path="profile" 
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ProfileSettings />
+            </Suspense>
           } 
         />
 
