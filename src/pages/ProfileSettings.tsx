@@ -7,10 +7,51 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
-import { resizeImage, sanitizeFileName } from '@/utils/imageUtils' // Importe as funções criadas acima
+
+// --- Utilitários de Imagem Locais (para garantir que funcionem sem dependência externa) ---
+const sanitizeFileName = (fileName: string): string => {
+  const name = fileName.substring(0, fileName.lastIndexOf('.'))
+  const ext = fileName.substring(fileName.lastIndexOf('.') + 1)
+  const sanitized = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
+  return `${sanitized}-${Date.now()}.${ext}`
+}
+
+const resizeImage = (file: File, maxWidth = 800, maxHeight = 800): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.src = URL.createObjectURL(file)
+    image.onload = () => {
+      const canvas = document.createElement('canvas')
+      let width = image.width
+      let height = image.height
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width
+          width = maxWidth
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height
+          height = maxHeight
+        }
+      }
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) { reject(new Error('Falha canvas')); return }
+      ctx.drawImage(image, 0, 0, width, height)
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob)
+        else reject(new Error('Falha blob'))
+      }, file.type, 0.85)
+    }
+    image.onerror = (error) => reject(error)
+  })
+}
 
 const ProfileSettings: React.FC = () => {
   const { user, profile, loading: authLoading } = useAuth()
@@ -24,7 +65,8 @@ const ProfileSettings: React.FC = () => {
   
   // Estados Profissional
   const [bio, setBio] = useState('')
-  const [specialty, setSpecialty] = useState('')
+  // O valor inicial deve ser válido para o Select ou vazio
+  const [specialty, setSpecialty] = useState<string>('') 
   const [consultationPrice, setConsultationPrice] = useState('')
   const [certifications, setCertifications] = useState('')
 
@@ -32,7 +74,7 @@ const ProfileSettings: React.FC = () => {
   const [goals, setGoals] = useState('')
   const [restrictions, setRestrictions] = useState('')
 
-  // Estado para Preview da Imagem (Simulação de Recorte/Confirmação)
+  // Estado para Preview da Imagem
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
@@ -54,9 +96,12 @@ const ProfileSettings: React.FC = () => {
         const { data } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (data) {
           setBio(data.bio || '')
-          setSpecialty(data.specialty || '')
-          // Garante que não seja null ou undefined ao converter para string
+          // Garante que o valor vindo do banco seja um dos permitidos, senão fica vazio
+          const validSpecialty = ['personal_trainer', 'nutritionist'].includes(data.specialty) ? data.specialty : ''
+          setSpecialty(validSpecialty)
+          
           setConsultationPrice(data.consultation_price ? data.consultation_price.toString() : '')
+          
           // Tratamento robusto para o JSONB
           let certText = ''
           if (data.certifications) {
@@ -81,50 +126,45 @@ const ProfileSettings: React.FC = () => {
   const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
-      // Cria URL temporária para preview
       const objectUrl = URL.createObjectURL(file)
       setPreviewImage(objectUrl)
       setSelectedFile(file)
       setIsCropDialogOpen(true)
-      // Reseta o input para permitir selecionar o mesmo arquivo novamente se cancelar
-      event.target.value = ''
+      event.target.value = '' // Reset input
     }
   }
 
-  // 2. Confirmação e Upload (Processamento)
+  // 2. Upload da Foto
   const handleConfirmUpload = async () => {
     if (!selectedFile || !user) return
     
     try {
       setUploading(true)
-      setIsCropDialogOpen(false) // Fecha modal
+      setIsCropDialogOpen(false) 
 
-      // Redimensiona para evitar erro 400 (Payload Too Large)
       const blob = await resizeImage(selectedFile, 800, 800)
       const processedFile = new File([blob], selectedFile.name, { type: selectedFile.type })
-
-      // Sanitiza nome do arquivo
       const fileName = sanitizeFileName(selectedFile.name)
-      const filePath = `${user.id}/${fileName}` // Organiza por pasta do usuário
+      const filePath = `${user.id}/${fileName}`
 
-      // Upload com upsert para sobrescrever se houver conflito de nome
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, processedFile, { upsert: true })
 
       if (uploadError) throw uploadError
 
+      // Adiciona timestamp para evitar cache do navegador
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
+      const publicUrlWithTimestamp = `${publicUrl}?t=${Date.now()}`
 
-      // Atualiza profile
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
+        .update({ avatar_url: publicUrlWithTimestamp, updated_at: new Date().toISOString() })
         .eq('id', user.id)
 
       if (updateError) throw updateError
 
-      setAvatarUrl(publicUrl)
+      setAvatarUrl(publicUrlWithTimestamp)
       showSuccess('Foto de perfil atualizada!')
     } catch (error: any) {
       console.error('Erro upload:', error)
@@ -142,7 +182,7 @@ const ProfileSettings: React.FC = () => {
     setLoading(true)
 
     try {
-      // 1. Atualizar Tabela Base (profiles)
+      // 1. Atualizar Profiles
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ 
@@ -152,30 +192,25 @@ const ProfileSettings: React.FC = () => {
         })
         .eq('id', user.id)
       
-      if (profileError) {
-        console.error('Erro profile:', profileError)
-        throw new Error('Falha ao salvar dados básicos')
-      }
+      if (profileError) throw new Error('Erro ao salvar dados básicos: ' + profileError.message)
 
       // 2. Atualizar Tabelas Específicas
       if (profile?.role === 'professional') {
-        // Conversão segura de preço
+        // Validação da Constraint do Banco
+        if (!specialty) throw new Error('Selecione o Tipo de Profissional (obrigatório pelo sistema).')
+
         const priceNumber = consultationPrice === '' ? null : parseFloat(consultationPrice.replace(',', '.'))
         
-        // Upsert explícito com onConflict
         const { error } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio: bio,
-          specialty: specialty,
+          specialty: specialty, // Aqui vai 'personal_trainer' ou 'nutritionist'
           consultation_price: priceNumber,
-          certifications: { raw_text: certifications }, // Salva como Objeto JSON
+          certifications: { raw_text: certifications }, 
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 
-        if (error) {
-          console.error('Erro professional_details:', error)
-          throw error
-        }
+        if (error) throw new Error('Erro ao salvar dados profissionais: ' + error.message)
 
       } else if (profile?.role === 'client') {
         const { error } = await supabase.from('client_details').upsert({
@@ -185,14 +220,12 @@ const ProfileSettings: React.FC = () => {
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 
-        if (error) {
-          console.error('Erro client_details:', error)
-          throw error
-        }
+        if (error) throw new Error('Erro ao salvar ficha do aluno: ' + error.message)
       }
 
       showSuccess('Perfil salvo com sucesso!')
     } catch (error: any) {
+      console.error(error)
       showError(error.message || 'Erro ao salvar perfil')
     } finally {
       setLoading(false)
@@ -295,13 +328,18 @@ const ProfileSettings: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-300">Especialidade</Label>
-                    <Input 
-                      value={specialty} 
-                      onChange={e => setSpecialty(e.target.value)} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5"
-                      placeholder="Ex: Musculação"
-                    />
+                    <Label className="text-gray-300">Tipo de Profissional <span className="text-red-400">*</span></Label>
+                    {/* CORREÇÃO DO ERRO DE CONSTRAINT: Usando Select com valores fixos do banco */}
+                    <Select onValueChange={setSpecialty} value={specialty}>
+                      <SelectTrigger className="bg-black/20 border-white/10 text-white mt-1.5">
+                        <SelectValue placeholder="Selecione sua área..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-900 border-white/10 text-white">
+                        <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
+                        <SelectItem value="nutritionist">Nutricionista</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[10px] text-gray-500 mt-1">Campo obrigatório para registro no sistema.</p>
                   </div>
                   <div>
                     <Label className="text-gray-300">Preço Consulta (R$)</Label>
@@ -316,12 +354,12 @@ const ProfileSettings: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <Label className="text-gray-300">Biografia</Label>
+                  <Label className="text-gray-300">Biografia & Especialidades</Label>
                   <Textarea 
                     value={bio} 
                     onChange={e => setBio(e.target.value)} 
                     className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"
-                    placeholder="Descreva sua experiência..."
+                    placeholder="Descreva suas especialidades (ex: Hipertrofia, Yoga), metodologia e experiência..."
                   />
                 </div>
                 <div>
@@ -381,12 +419,12 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        {/* Dialog de Preview/Recorte de Imagem */}
+        {/* Dialog de Preview/Recorte de Imagem - CORRIGIDO com DialogTitle */}
         <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
           <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Nova Foto de Perfil</DialogTitle>
-              <DialogDescription>Pré-visualização da sua nova imagem.</DialogDescription>
+              <DialogDescription>Pré-visualização da sua nova imagem. Ela será redimensionada automaticamente.</DialogDescription>
             </DialogHeader>
             
             <div className="flex flex-col items-center justify-center py-6">
@@ -401,7 +439,7 @@ const ProfileSettings: React.FC = () => {
               )}
               <p className="text-xs text-gray-400 mt-4 flex items-center gap-2">
                 <AlertTriangle className="h-3 w-3 text-yellow-500"/>
-                A imagem será redimensionada automaticamente.
+                Confirme para salvar.
               </p>
             </div>
 
