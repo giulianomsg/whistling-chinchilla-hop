@@ -335,5 +335,5 @@ const ProfileSettings: React.FC = () => {
       </div>
     </div>
   )
-} 
+}
 export default ProfileSettings
