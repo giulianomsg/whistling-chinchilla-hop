@@ -18,10 +18,10 @@ import {
   Trash2, 
   Settings, 
   Calendar, 
-  Target,
-  Clock,
-  Loader2,
-  ChevronRight,
+  Target, 
+  Clock, 
+  Loader2, 
+  ChevronRight, 
   GripVertical,
   Search,
   Filter
@@ -502,47 +502,48 @@ const WorkoutPlanner: React.FC = () => {
   const exercisesByDay = getExercisesByDay()
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Dumbbell className="h-8 w-8 text-blue-600" />
-                Montador de Planos de Treino
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <Dumbbell className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                Planos de Treino
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Crie e gerencie planos de treino personalizados
               </p>
             </div>
             
             <Dialog open={isCreateWorkoutDialogOpen} onOpenChange={setIsCreateWorkoutDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary dark:text-primary-foreground">
                   <Plus className="mr-2 h-4 w-4" />
                   Novo Plano
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl bg-white dark:bg-card border-gray-200 dark:border-white/10">
                 <DialogHeader>
-                  <DialogTitle>Criar Novo Plano de Treino</DialogTitle>
+                  <DialogTitle className="text-gray-900 dark:text-white">Criar Novo Plano de Treino</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateWorkout} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="workout-name">Nome do Plano *</Label>
+                    <Label htmlFor="workout-name" className="dark:text-gray-200">Nome do Plano *</Label>
                     <Input
                       id="workout-name"
                       value={workoutFormData.name}
                       onChange={(e) => setWorkoutFormData({ ...workoutFormData, name: e.target.value })}
                       placeholder="Plano de Hipertrofia"
                       required
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="duration">Duração (semanas)</Label>
+                      <Label htmlFor="duration" className="dark:text-gray-200">Duração (semanas)</Label>
                       <Input
                         id="duration"
                         type="number"
@@ -550,48 +551,52 @@ const WorkoutPlanner: React.FC = () => {
                         max="52"
                         value={workoutFormData.duration_weeks}
                         onChange={(e) => setWorkoutFormData({ ...workoutFormData, duration_weeks: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="days-per-week">Dias por semana</Label>
+                      <Label htmlFor="days-per-week" className="dark:text-gray-200">Dias por semana</Label>
                       <Input
                         id="days-per-week"
                         type="number"
                         min="1"
                         max="7"
-                        value={workoutFormData.days_per_week}
+                        value={workoutFormData.days_per_week || 3}
                         onChange={(e) => setWorkoutFormData({ ...workoutFormData, days_per_week: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="objective">Objetivo</Label>
+                    <Label htmlFor="objective" className="dark:text-gray-200">Objetivo</Label>
                     <Textarea
                       id="objective"
                       value={workoutFormData.objective}
                       onChange={(e) => setWorkoutFormData({ ...workoutFormData, objective: e.target.value })}
                       placeholder="Hipertrofia, emagrecimento, resistência..."
                       rows={2}
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="description">Descrição</Label>
+                    <Label htmlFor="description" className="dark:text-gray-200">Descrição</Label>
                     <Textarea
                       id="description"
                       value={workoutFormData.description}
                       onChange={(e) => setWorkoutFormData({ ...workoutFormData, description: e.target.value })}
                       placeholder="Descrição detalhada do plano..."
                       rows={3}
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateWorkoutDialogOpen(false)}>
+                    <Button type="button" variant="outline" onClick={() => setIsCreateWorkoutDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                       Cancelar
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary">
                       Criar Plano
                     </Button>
                   </div>
@@ -610,13 +615,13 @@ const WorkoutPlanner: React.FC = () => {
                 placeholder="Buscar planos de treino..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white"
               />
             </div>
           </div>
           <div className="w-full sm:w-48">
             <Select value={objectiveFilter} onValueChange={setObjectiveFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white">
                 <SelectValue placeholder="Objetivo" />
               </SelectTrigger>
               <SelectContent>
@@ -634,20 +639,21 @@ const WorkoutPlanner: React.FC = () => {
         {/* Lista de Workouts */}
         {pageLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workouts.map((workout) => (
-              <Card key={workout.id} className="relative">
+              <Card key={workout.id} className="relative bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{workout.name}</CardTitle>
+                    <CardTitle className="text-lg text-gray-900 dark:text-white">{workout.name}</CardTitle>
                     <div className="flex gap-1">
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => handleManageExercises(workout)}
+                        className="dark:text-gray-400 dark:hover:text-white"
                       >
                         <Settings className="h-4 w-4" />
                       </Button>
@@ -655,6 +661,7 @@ const WorkoutPlanner: React.FC = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleEditWorkout(workout)}
+                        className="dark:text-gray-400 dark:hover:text-white"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -664,16 +671,16 @@ const WorkoutPlanner: React.FC = () => {
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogTitle className="dark:text-white">Confirmar Exclusão</AlertDialogTitle>
+                            <AlertDialogDescription className="dark:text-gray-400">
                               Tem certeza que deseja deletar o plano "{workout.name}"? Esta ação não pode ser desfeita.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)}>
+                            <AlertDialogCancel className="dark:border-white/10 dark:text-gray-300">Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)} className="bg-red-600 hover:bg-red-700 text-white">
                               Deletar
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -684,34 +691,34 @@ const WorkoutPlanner: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   {workout.description && (
-                    <p className="text-sm text-gray-600 mb-3">{workout.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{workout.description}</p>
                   )}
                   
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">
+                      <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
                         {workout.duration_weeks} semanas
                       </span>
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">
+                      <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
                         {workout.days_per_week}x por semana
                       </span>
                     </div>
 
                     {workout.objective && (
                       <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">{workout.objective}</span>
+                        <Target className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                        <span className="text-sm text-gray-600 dark:text-gray-300">{workout.objective}</span>
                       </div>
                     )}
                   </div>
                   
                   <Button 
-                    className="w-full mt-4" 
+                    className="w-full mt-4 dark:border-white/10 dark:text-gray-300 dark:hover:bg-white/10" 
                     variant="outline"
                     onClick={() => handleManageExercises(workout)}
                   >
@@ -727,10 +734,10 @@ const WorkoutPlanner: React.FC = () => {
         {/* Empty State */}
         {workouts.length === 0 && !pageLoading && (
           <div className="text-center py-12">
-            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece criando seu primeiro plano de treino personalizado.</p>
-            <Button onClick={() => setIsCreateWorkoutDialogOpen(true)}>
+            <Dumbbell className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum plano encontrado</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Comece criando seu primeiro plano de treino personalizado.</p>
+            <Button onClick={() => setIsCreateWorkoutDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="mr-2 h-4 w-4" />
               Criar Primeiro Plano
             </Button>
@@ -739,32 +746,32 @@ const WorkoutPlanner: React.FC = () => {
 
         {/* Sheet de Gerenciamento de Exercícios */}
         <Sheet open={isManageExercisesSheetOpen} onOpenChange={setIsManageExercisesSheetOpen}>
-          <SheetContent className="w-[800px] sm:w-[1000px]">
+          <SheetContent className="w-[800px] sm:w-[1000px] bg-white dark:bg-card border-l border-gray-200 dark:border-white/10">
             <SheetHeader>
-              <SheetTitle>Gerenciar Exercícios - {selectedWorkout?.name}</SheetTitle>
+              <SheetTitle className="text-gray-900 dark:text-white">Gerenciar Exercícios - {selectedWorkout?.name}</SheetTitle>
             </SheetHeader>
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Exercícios do Plano</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Exercícios do Plano</h3>
                 <Dialog open={isAddExerciseDialogOpen} onOpenChange={setIsAddExerciseDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                       <Plus className="mr-2 h-4 w-4" />
                       Adicionar Exercício
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                     <DialogHeader>
-                      <DialogTitle>Adicionar Exercício ao Plano</DialogTitle>
+                      <DialogTitle className="text-gray-900 dark:text-white">Adicionar Exercício ao Plano</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleAddExercise} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="exercise-select">Exercício *</Label>
+                        <Label htmlFor="exercise-select" className="dark:text-gray-200">Exercício *</Label>
                         <Select 
                           value={exerciseFormData.exercise_id} 
                           onValueChange={(value) => setExerciseFormData({ ...exerciseFormData, exercise_id: value })}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="dark:bg-background/50 dark:border-white/10 dark:text-white">
                             <SelectValue placeholder="Selecione um exercício" />
                           </SelectTrigger>
                           <SelectContent>
@@ -779,7 +786,7 @@ const WorkoutPlanner: React.FC = () => {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="day-number">Dia *</Label>
+                          <Label htmlFor="day-number" className="dark:text-gray-200">Dia *</Label>
                           <Input
                             id="day-number"
                             type="number"
@@ -788,10 +795,11 @@ const WorkoutPlanner: React.FC = () => {
                             value={exerciseFormData.day_number}
                             onChange={(e) => setExerciseFormData({ ...exerciseFormData, day_number: parseInt(e.target.value) })}
                             required
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="sets">Séries *</Label>
+                          <Label htmlFor="sets" className="dark:text-gray-200">Séries *</Label>
                           <Input
                             id="sets"
                             type="number"
@@ -800,49 +808,53 @@ const WorkoutPlanner: React.FC = () => {
                             value={exerciseFormData.sets}
                             onChange={(e) => setExerciseFormData({ ...exerciseFormData, sets: parseInt(e.target.value) })}
                             required
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="reps">Repetições</Label>
+                          <Label htmlFor="reps" className="dark:text-gray-200">Repetições</Label>
                           <Input
                             id="reps"
                             value={exerciseFormData.reps}
                             onChange={(e) => setExerciseFormData({ ...exerciseFormData, reps: e.target.value })}
                             placeholder="8-12"
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="rest">Descanso (segundos)</Label>
+                          <Label htmlFor="rest" className="dark:text-gray-200">Descanso (segundos)</Label>
                           <Input
                             id="rest"
                             type="number"
                             min="0"
                             max="600"
-                            value={exerciseFormData.rest_time_seconds}
+                            value={exerciseFormData.rest_time_seconds || 60}
                             onChange={(e) => setExerciseFormData({ ...exerciseFormData, rest_time_seconds: parseInt(e.target.value) })}
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="exercise-notes">Notas</Label>
+                        <Label htmlFor="exercise-notes" className="dark:text-gray-200">Notas</Label>
                         <Textarea
                           id="exercise-notes"
                           value={exerciseFormData.notes}
                           onChange={(e) => setExerciseFormData({ ...exerciseFormData, notes: e.target.value })}
                           placeholder="Instruções especiais..."
                           rows={2}
+                          className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                         />
                       </div>
 
                       <div className="flex justify-end space-x-2">
-                        <Button type="button" variant="outline" onClick={() => setIsAddExerciseDialogOpen(false)}>
+                        <Button type="button" variant="outline" onClick={() => setIsAddExerciseDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                           Cancelar
                         </Button>
-                        <Button type="submit" disabled={!exerciseFormData.exercise_id}>
+                        <Button type="submit" disabled={!exerciseFormData.exercise_id} className="bg-blue-600 hover:bg-blue-700 text-white">
                           Adicionar Exercício
                         </Button>
                       </div>
@@ -854,9 +866,13 @@ const WorkoutPlanner: React.FC = () => {
               {/* Exercícios por Dia */}
               {workoutExercises.length > 0 && (
                 <Tabs defaultValue="day-1" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
+                  <TabsList className="grid w-full grid-cols-4 dark:bg-card/50">
                     {Array.from({ length: selectedWorkout?.days_per_week || 3 }, (_, i) => (
-                      <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
+                      <TabsTrigger 
+                        key={i + 1} 
+                        value={`day-${i + 1}`}
+                        className="data-[state=active]:dark:bg-primary/20 data-[state=active]:dark:text-primary"
+                      >
                         Dia {i + 1}
                       </TabsTrigger>
                     ))}
@@ -869,23 +885,23 @@ const WorkoutPlanner: React.FC = () => {
                     return (
                       <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
                         {dayExercises.length === 0 ? (
-                          <div className="text-center py-8 text-gray-500">
+                          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                             <p>Nenhum exercício para este dia</p>
                           </div>
                         ) : (
                           <div className="space-y-4">
                             {dayExercises.map((workoutExercise, index) => (
-                              <Card key={workoutExercise.id}>
+                              <Card key={workoutExercise.id} className="bg-white/50 dark:bg-card/20 border border-gray-200 dark:border-white/5">
                                 <CardContent className="p-6">
                                   <div className="flex items-start gap-4">
                                     <div className="flex items-center gap-2 mt-1">
-                                      <span className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
+                                      <span className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-200 rounded-full text-sm font-medium">
                                         {index + 1}
                                       </span>
                                       <GripVertical className="h-4 w-4 text-gray-400" />
                                     </div>
                                     <div className="flex-1">
-                                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                         {workoutExercise.exercise?.name}
                                       </h3>
                                       
@@ -893,24 +909,24 @@ const WorkoutPlanner: React.FC = () => {
                                         <Badge variant="secondary">
                                           {workoutExercise.sets} séries
                                         </Badge>
-                                        <Badge variant="outline">
+                                        <Badge variant="outline" className="dark:border-white/20 dark:text-gray-300">
                                           {workoutExercise.reps} reps
                                         </Badge>
                                         {workoutExercise.weight && (
-                                          <Badge variant="outline">
+                                          <Badge variant="outline" className="dark:border-white/20 dark:text-gray-300">
                                             {workoutExercise.weight} kg
                                           </Badge>
                                         )}
                                         {workoutExercise.rest_time_seconds && (
-                                          <Badge variant="outline">
+                                          <Badge variant="outline" className="dark:border-white/20 dark:text-gray-300">
                                             {workoutExercise.rest_time_seconds}s descanso
                                           </Badge>
                                         )}
                                       </div>
 
                                       {workoutExercise.notes && (
-                                        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                                          <p className="text-sm text-yellow-800">
+                                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded">
+                                          <p className="text-sm text-yellow-800 dark:text-yellow-200">
                                             <strong>Nota:</strong> {workoutExercise.notes}
                                           </p>
                                         </div>
@@ -921,6 +937,7 @@ const WorkoutPlanner: React.FC = () => {
                                         size="sm"
                                         variant="ghost"
                                         onClick={() => handleEditWorkoutExercise(workoutExercise)}
+                                        className="dark:text-gray-400 dark:hover:text-white"
                                       >
                                         <Edit className="h-4 w-4" />
                                       </Button>
@@ -930,16 +947,16 @@ const WorkoutPlanner: React.FC = () => {
                                             <Trash2 className="h-4 w-4 text-red-600" />
                                           </Button>
                                         </AlertDialogTrigger>
-                                        <AlertDialogContent>
+                                        <AlertDialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                                           <AlertDialogHeader>
-                                            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                                            <AlertDialogDescription>
+                                            <AlertDialogTitle className="dark:text-white">Confirmar Exclusão</AlertDialogTitle>
+                                            <AlertDialogDescription className="dark:text-gray-400">
                                               Tem certeza que deseja remover "{workoutExercise.exercise?.name}" do plano?
                                             </AlertDialogDescription>
                                           </AlertDialogHeader>
                                           <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteWorkoutExercise(workoutExercise.id)}>
+                                            <AlertDialogCancel className="dark:border-white/10 dark:text-gray-300">Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteWorkoutExercise(workoutExercise.id)} className="bg-red-600 hover:bg-red-700 text-white">
                                               Remover
                                             </AlertDialogAction>
                                           </AlertDialogFooter>
@@ -963,14 +980,14 @@ const WorkoutPlanner: React.FC = () => {
 
         {/* Dialog de Edição de Exercício */}
         <Dialog open={isEditExerciseDialogOpen} onOpenChange={setIsEditExerciseDialogOpen}>
-          <DialogContent>
+          <DialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
             <DialogHeader>
-              <DialogTitle>Editar Exercício</DialogTitle>
+              <DialogTitle className="text-gray-900 dark:text-white">Editar Exercício</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleUpdateWorkoutExercise} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-sets">Séries *</Label>
+                  <Label htmlFor="edit-sets" className="dark:text-gray-200">Séries *</Label>
                   <Input
                     id="edit-sets"
                     type="number"
@@ -979,22 +996,24 @@ const WorkoutPlanner: React.FC = () => {
                     value={editExerciseFormData.sets}
                     onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, sets: parseInt(e.target.value) })}
                     required
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-reps">Repetições</Label>
+                  <Label htmlFor="edit-reps" className="dark:text-gray-200">Repetições</Label>
                   <Input
                     id="edit-reps"
                     value={editExerciseFormData.reps}
                     onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, reps: e.target.value })}
                     placeholder="8-12"
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-weight">Peso (kg)</Label>
+                  <Label htmlFor="edit-weight" className="dark:text-gray-200">Peso (kg)</Label>
                   <Input
                     id="edit-weight"
                     type="number"
@@ -1002,10 +1021,11 @@ const WorkoutPlanner: React.FC = () => {
                     step="0.5"
                     value={editExerciseFormData.weight || ''}
                     onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, weight: e.target.value ? parseFloat(e.target.value) : null })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-rest">Descanso (segundos)</Label>
+                  <Label htmlFor="edit-rest" className="dark:text-gray-200">Descanso (segundos)</Label>
                   <Input
                     id="edit-rest"
                     type="number"
@@ -1013,26 +1033,28 @@ const WorkoutPlanner: React.FC = () => {
                     max="600"
                     value={editExerciseFormData.rest_time_seconds}
                     onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, rest_time_seconds: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-notes">Notas</Label>
+                <Label htmlFor="edit-notes" className="dark:text-gray-200">Notas</Label>
                 <Textarea
                   id="edit-notes"
                   value={editExerciseFormData.notes}
                   onChange={(e) => setEditExerciseFormData({ ...editExerciseFormData, notes: e.target.value })}
                   placeholder="Instruções especiais..."
                   rows={2}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditExerciseDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditExerciseDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
                   Atualizar Exercício
                 </Button>
               </div>
@@ -1042,25 +1064,26 @@ const WorkoutPlanner: React.FC = () => {
 
         {/* Dialog de Edição de Workout */}
         <Dialog open={isEditWorkoutDialogOpen} onOpenChange={setIsEditWorkoutDialogOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-white dark:bg-card border-gray-200 dark:border-white/10">
             <DialogHeader>
-              <DialogTitle>Editar Plano de Treino</DialogTitle>
+              <DialogTitle className="text-gray-900 dark:text-white">Editar Plano de Treino</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleUpdateWorkout} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-workout-name">Nome do Plano *</Label>
+                <Label htmlFor="edit-workout-name" className="dark:text-gray-200">Nome do Plano *</Label>
                 <Input
                   id="edit-workout-name"
                   value={workoutFormData.name}
                   onChange={(e) => setWorkoutFormData({ ...workoutFormData, name: e.target.value })}
                   placeholder="Plano de Hipertrofia"
                   required
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-duration">Duração (semanas)</Label>
+                  <Label htmlFor="edit-duration" className="dark:text-gray-200">Duração (semanas)</Label>
                   <Input
                     id="edit-duration"
                     type="number"
@@ -1068,10 +1091,11 @@ const WorkoutPlanner: React.FC = () => {
                     max="52"
                     value={workoutFormData.duration_weeks}
                     onChange={(e) => setWorkoutFormData({ ...workoutFormData, duration_weeks: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-days-per-week">Dias por semana</Label>
+                  <Label htmlFor="edit-days-per-week" className="dark:text-gray-200">Dias por semana</Label>
                   <Input
                     id="edit-days-per-week"
                     type="number"
@@ -1079,37 +1103,40 @@ const WorkoutPlanner: React.FC = () => {
                     max="7"
                     value={workoutFormData.days_per_week}
                     onChange={(e) => setWorkoutFormData({ ...workoutFormData, days_per_week: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-objective">Objetivo</Label>
+                <Label htmlFor="edit-objective" className="dark:text-gray-200">Objetivo</Label>
                 <Textarea
                   id="edit-objective"
                   value={workoutFormData.objective}
                   onChange={(e) => setWorkoutFormData({ ...workoutFormData, objective: e.target.value })}
                   placeholder="Hipertrofia, emagrecimento, resistência..."
                   rows={2}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-description">Descrição</Label>
+                <Label htmlFor="edit-description" className="dark:text-gray-200">Descrição</Label>
                 <Textarea
                   id="edit-description"
                   value={workoutFormData.description}
                   onChange={(e) => setWorkoutFormData({ ...workoutFormData, description: e.target.value })}
                   placeholder="Descrição detalhada do plano..."
                   rows={3}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditWorkoutDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditWorkoutDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
                   Atualizar Plano
                 </Button>
               </div>
