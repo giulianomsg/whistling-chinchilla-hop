@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
-import { Button } from '../components/ui/button'
-import { Badge } from '../components/ui/badge'
+import { useAuth } from '@/contexts/AuthContext'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { 
   Dumbbell, 
   Utensils, 
@@ -16,11 +16,12 @@ import {
   Timer,
   CheckCircle,
   AlertCircle,
-  Trophy
+  Trophy // Novo Ícone
 } from 'lucide-react'
-import { supabase } from '../integrations/supabase/client'
+import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
 
+// Interfaces... (mantidas do original)
 interface ClientWorkout {
   id: string
   client_id: string
@@ -160,24 +161,18 @@ const ClientDashboard: React.FC = () => {
 
   const stats = getStats()
 
-  // Lógica de Gamificação Visual
+  // --- LÓGICA DE GAMIFICAÇÃO VISUAL ---
   const currentXP = profile?.current_xp || 0
   const xpPerLevel = 1000
   const currentLevel = profile?.level || Math.max(1, Math.floor(currentXP / xpPerLevel) + 1)
-  const xpForNextLevel = currentLevel * xpPerLevel
-  // XP acumulado para o nível atual seria (currentLevel - 1) * 1000. 
-  // O XP dentro do nível é currentXP - ((currentLevel - 1) * 1000)
+  // Cálculo: XP atual dentro do nível corrente
   const xpInThisLevel = currentXP - ((currentLevel - 1) * xpPerLevel)
-  // Porcentagem para a barra de progresso (XP neste nivel / 1000)
   const xpProgress = Math.min(Math.max((xpInThisLevel / xpPerLevel) * 100, 0), 100)
 
   if (loading || pageLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-gray-400">Carregando dashboard...</p>
-        </div>
+        <div className="text-center"><Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" /><p className="text-gray-400">Carregando dashboard...</p></div>
       </div>
     )
   }
@@ -193,7 +188,7 @@ const ClientDashboard: React.FC = () => {
           <Badge variant="secondary" className="bg-white/10 text-gray-200 border-none">{format(new Date(), 'EEEE, dd/MM/yyyy')}</Badge>
         </div>
 
-        {/* Seção de Gamificação */}
+        {/* --- CARD DE GAMIFICAÇÃO (NOVO) --- */}
         <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
           <Card className="bg-gradient-to-r from-indigo-900/80 to-blue-900/80 border-white/10 border shadow-2xl overflow-hidden relative">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl"></div>
@@ -203,18 +198,13 @@ const ClientDashboard: React.FC = () => {
                   <div className="w-20 h-20 rounded-full bg-black/40 border-2 border-primary flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
                     <span className="text-3xl font-black text-white">{currentLevel}</span>
                   </div>
-                  <Badge className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-black font-bold border-none uppercase text-[10px] px-2">
-                    Nível
-                  </Badge>
+                  <Badge className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-black font-bold border-none uppercase text-[10px] px-2">Nível</Badge>
                 </div>
-                
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-end mb-2">
                     <h3 className="text-lg font-bold text-white flex items-center gap-2"><Trophy className="h-5 w-5 text-yellow-400"/> Progresso de XP</h3>
                     <span className="text-sm text-primary font-mono">{currentXP} Total XP</span>
                   </div>
-                  
-                  {/* Barra de Progresso Customizada */}
                   <div className="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
                     <div 
                       className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] transition-all duration-1000 ease-out relative"
@@ -223,7 +213,6 @@ const ClientDashboard: React.FC = () => {
                       <div className="absolute inset-0 bg-white/20 animate-pulse-fast"></div>
                     </div>
                   </div>
-                  
                   <div className="flex justify-between mt-2 text-xs text-gray-400">
                     <span>Nível {currentLevel}</span>
                     <span>Faltam {xpPerLevel - xpInThisLevel} XP para o Nível {currentLevel + 1}</span>
@@ -234,9 +223,7 @@ const ClientDashboard: React.FC = () => {
           </Card>
         </div>
 
-        {/* Cards de Status */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Treino Ativo */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 border-l-4 border-l-green-500 shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Treino Ativo</CardTitle>
@@ -248,7 +235,6 @@ const ClientDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Plano Alimentar */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 border-l-4 border-l-orange-500 shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Plano Alimentar</CardTitle>
@@ -256,15 +242,10 @@ const ClientDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white truncate">{clientMealPlan ? clientMealPlan.meal_plan.name : 'Nenhum'}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                {clientMealPlan && clientMealPlan.meal_plan.daily_calories_target 
-                  ? `${clientMealPlan.meal_plan.daily_calories_target} cal/dia` 
-                  : 'Aguardando plano'}
-              </p>
+              <p className="text-xs text-gray-500 mt-1">{clientMealPlan ? `${clientMealPlan.meal_plan.daily_calories_target} cal/dia` : 'Aguardando plano'}</p>
             </CardContent>
           </Card>
 
-          {/* Taxa de Conclusão */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 border-l-4 border-l-purple-500 shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Taxa de Conclusão</CardTitle>
@@ -278,87 +259,33 @@ const ClientDashboard: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Ações Rápidas */}
           <div className="lg:col-span-2">
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Target className="h-5 w-5 text-primary" /> Ações Rápidas
-                </CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Target className="h-5 w-5 text-primary" /> Ações Rápidas</CardTitle></CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Button onClick={() => navigate('/app/my-workout')} className="h-24 flex-col bg-white/5 hover:bg-white/10 border border-white/10" variant="ghost">
                     <Dumbbell className="h-8 w-8 mb-2 text-green-400" />
-                    <div className="text-center">
-                      <div className="font-medium text-white">Meu Treino</div>
-                      <div className="text-xs text-gray-500">{clientWorkout ? 'Ver plano' : 'Aguardando'}</div>
-                    </div>
+                    <div className="text-center"><div className="font-medium text-white">Meu Treino</div><div className="text-xs text-gray-500">{clientWorkout ? 'Ver plano' : 'Aguardando'}</div></div>
                   </Button>
-
                   <Button onClick={() => navigate('/app/my-meal-plan')} className="h-24 flex-col bg-white/5 hover:bg-white/10 border border-white/10" variant="ghost">
                     <Utensils className="h-8 w-8 mb-2 text-orange-400" />
-                    <div className="text-center">
-                      <div className="font-medium text-white">Minha Dieta</div>
-                      <div className="text-xs text-gray-500">{clientMealPlan ? 'Ver plano' : 'Aguardando'}</div>
-                    </div>
+                    <div className="text-center"><div className="font-medium text-white">Minha Dieta</div><div className="text-xs text-gray-500">{clientMealPlan ? 'Ver plano' : 'Aguardando'}</div></div>
                   </Button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                  <Card className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-blue-500/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-blue-300 text-base">
-                        <TrendingUp className="h-5 w-5" /> Seu Progresso
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-blue-200/70">Sessões recentes:</span>
-                        <span className="font-bold text-blue-100">{stats.completedSessions}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-blue-200/70">Tempo médio:</span>
-                        <span className="font-bold text-blue-100">{stats.averageDuration} min</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border-green-500/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-green-300 text-base">
-                        <Activity className="h-5 w-5" /> Motivação
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-green-200/70 text-sm">
-                        Você está indo muito bem! Mantenha o foco e os resultados virão.
-                      </p>
-                    </CardContent>
-                  </Card>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Atividade Recente */}
           <div className="lg:col-span-1">
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Timer className="h-5 w-5 text-orange-400" /> Histórico Recente
-                </CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Timer className="h-5 w-5 text-orange-400" /> Histórico Recente</CardTitle></CardHeader>
               <CardContent>
                 {recentSessions.length === 0 ? (
                   <div className="text-center py-8">
                     <AlertCircle className="h-8 w-8 text-gray-600 mx-auto mb-3" />
                     <p className="text-sm text-gray-400 mb-3">Nenhuma atividade ainda</p>
-                    {clientWorkout && (
-                      <Button onClick={() => navigate('/app/my-workout')} size="sm" className="bg-primary text-black hover:bg-primary/80">
-                        Iniciar Treino
-                      </Button>
-                    )}
+                    {clientWorkout && <Button onClick={() => navigate('/app/my-workout')} size="sm" className="bg-primary text-black hover:bg-primary/80">Iniciar Treino</Button>}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -366,9 +293,7 @@ const ClientDashboard: React.FC = () => {
                       <div key={session.id} className="p-3 border border-white/5 rounded-lg bg-white/5">
                         <div className="flex items-center justify-between mb-1">
                           <h4 className="text-sm font-medium text-white truncate">{session.workout?.name}</h4>
-                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="text-[10px] h-5">
-                            {session.status === 'completed' ? 'Concluído' : 'Abandonado'}
-                          </Badge>
+                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="text-[10px] h-5">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-400">
                           <div className="flex items-center gap-1"><Clock className="h-3 w-3" /><span>{formatDuration(session.duration_seconds)}</span></div>
