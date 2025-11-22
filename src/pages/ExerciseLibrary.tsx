@@ -271,51 +271,52 @@ const ExerciseLibrary: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Dumbbell className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <Dumbbell className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 Biblioteca de Exercícios
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Gerencie sua biblioteca pessoal de exercícios
               </p>
             </div>
             
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary dark:text-primary-foreground">
                   <Plus className="mr-2 h-4 w-4" />
                   Novo Exercício
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl bg-white dark:bg-card border-gray-200 dark:border-white/10">
                 <DialogHeader>
-                  <DialogTitle>Criar Novo Exercício</DialogTitle>
+                  <DialogTitle className="text-gray-900 dark:text-white">Criar Novo Exercício</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateExercise} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Nome do Exercício *</Label>
+                      <Label htmlFor="name" className="dark:text-gray-200">Nome do Exercício *</Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Supino Reto"
                         required
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="difficulty">Nível de Dificuldade</Label>
+                      <Label htmlFor="difficulty" className="dark:text-gray-200">Nível de Dificuldade</Label>
                       <select
                         id="difficulty"
                         value={formData.difficulty_level}
                         onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}
-                        className="w-full p-2 border rounded-md"
+                        className="w-full p-2 border rounded-md dark:bg-background/50 dark:border-white/10 dark:text-white"
                       >
                         <option value="beginner">Iniciante</option>
                         <option value="intermediate">Intermediário</option>
@@ -325,47 +326,51 @@ const ExerciseLibrary: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="description">Descrição</Label>
+                    <Label htmlFor="description" className="dark:text-gray-200">Descrição</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="Descreva como realizar o exercício..."
                       rows={3}
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="muscles">Grupos Musculares</Label>
+                      <Label htmlFor="muscles" className="dark:text-gray-200">Grupos Musculares</Label>
                       <Input
                         id="muscles"
                         value={formData.muscle_groups}
                         onChange={(e) => setFormData({ ...formData, muscle_groups: e.target.value })}
                         placeholder="Peito, Ombros, Tríceps"
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
-                      <p className="text-xs text-gray-500">Separe com vírgula</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Separe com vírgula</p>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="equipment">Equipamentos</Label>
+                      <Label htmlFor="equipment" className="dark:text-gray-200">Equipamentos</Label>
                       <Input
                         id="equipment"
                         value={formData.equipment_needed}
                         onChange={(e) => setFormData({ ...formData, equipment_needed: e.target.value })}
                         placeholder="Barra, Halteres, Banco"
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
-                      <p className="text-xs text-gray-500">Separe com vírgula</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Separe com vírgula</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="video">URL do Vídeo</Label>
+                    <Label htmlFor="video" className="dark:text-gray-200">URL do Vídeo</Label>
                     <Input
                       id="video"
                       type="url"
                       value={formData.video_url}
                       onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
                       placeholder="https://youtube.com/watch?v=..."
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
@@ -374,15 +379,16 @@ const ExerciseLibrary: React.FC = () => {
                       id="public"
                       checked={formData.is_public}
                       onCheckedChange={(checked) => setFormData({ ...formData, is_public: checked as boolean })}
+                      className="dark:border-white/30"
                     />
-                    <Label htmlFor="public">Tornar este exercício público</Label>
+                    <Label htmlFor="public" className="dark:text-gray-200">Tornar este exercício público</Label>
                   </div>
 
                   <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                    <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                       Cancelar
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary">
                       Criar Exercício
                     </Button>
                   </div>
@@ -401,13 +407,13 @@ const ExerciseLibrary: React.FC = () => {
                 placeholder="Buscar exercícios..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white"
               />
             </div>
           </div>
           <div className="w-full sm:w-48">
             <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white">
                 <SelectValue placeholder="Dificuldade" />
               </SelectTrigger>
               <SelectContent>
@@ -422,7 +428,7 @@ const ExerciseLibrary: React.FC = () => {
           </div>
           <div className="w-full sm:w-48">
             <Select value={muscleGroupFilter} onValueChange={setMuscleGroupFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white">
                 <SelectValue placeholder="Grupo Muscular" />
               </SelectTrigger>
               <SelectContent>
@@ -440,18 +446,18 @@ const ExerciseLibrary: React.FC = () => {
         {/* Lista de Exercícios */}
         {pageLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {exercises.map((exercise) => (
-              <Card key={exercise.id} className="relative">
+              <Card key={exercise.id} className="relative bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{exercise.name}</CardTitle>
+                    <CardTitle className="text-lg text-gray-900 dark:text-white">{exercise.name}</CardTitle>
                     <div className="flex items-center gap-1">
                       {exercise.is_public ? (
-                        <Eye className="h-4 w-4 text-green-600" title="Público" />
+                        <Eye className="h-4 w-4 text-green-600 dark:text-green-400" title="Público" />
                       ) : (
                         <EyeOff className="h-4 w-4 text-gray-400" title="Privado" />
                       )}
@@ -461,25 +467,26 @@ const ExerciseLibrary: React.FC = () => {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleEditExercise(exercise)}
+                            className="dark:text-gray-400 dark:hover:text-white"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="ghost">
+                              <Button size="sm" variant="ghost" className="dark:text-gray-400 dark:hover:text-white">
                                 <Trash2 className="h-4 w-4 text-red-600" />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
+                            <AlertDialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogTitle className="dark:text-white">Confirmar Exclusão</AlertDialogTitle>
+                                <AlertDialogDescription className="dark:text-gray-400">
                                   Tem certeza que deseja deletar o exercício "{exercise.name}"? Esta ação não pode ser desfeita.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeleteExercise(exercise.id)}>
+                                <AlertDialogCancel className="dark:border-white/10 dark:text-gray-300">Cancelar</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteExercise(exercise.id)} className="bg-red-600 hover:bg-red-700 text-white">
                                   Deletar
                                 </AlertDialogAction>
                               </AlertDialogFooter>
@@ -492,13 +499,13 @@ const ExerciseLibrary: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   {exercise.description && (
-                    <p className="text-sm text-gray-600 mb-3">{exercise.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{exercise.description}</p>
                   )}
                   
                   <div className="space-y-2">
                     {exercise.muscle_groups && exercise.muscle_groups.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 mb-1">Músculos:</p>
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Músculos:</p>
                         <div className="flex flex-wrap gap-1">
                           {exercise.muscle_groups.map((muscle, index) => (
                             <Badge key={index} variant="secondary" className="text-xs">
@@ -511,10 +518,10 @@ const ExerciseLibrary: React.FC = () => {
                     
                     {exercise.equipment_needed && exercise.equipment_needed.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 mb-1">Equipamentos:</p>
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Equipamentos:</p>
                         <div className="flex flex-wrap gap-1">
                           {exercise.equipment_needed.map((equipment, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <Badge key={index} variant="outline" className="text-xs dark:border-white/20 dark:text-gray-300">
                               {equipment}
                             </Badge>
                           ))}
@@ -524,7 +531,7 @@ const ExerciseLibrary: React.FC = () => {
                     
                     {exercise.difficulty_level && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 mb-1">Dificuldade:</p>
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Dificuldade:</p>
                         <Badge 
                           variant={
                             exercise.difficulty_level === 'beginner' ? 'default' :
@@ -539,8 +546,8 @@ const ExerciseLibrary: React.FC = () => {
                     )}
                   </div>
                   
-                  <div className="mt-3 pt-3 border-t">
-                    <p className="text-xs text-gray-400">
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/10">
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
                       {canEditExercise(exercise) ? 'Seu exercício' : 'Exercício público'}
                     </p>
                   </div>
@@ -552,10 +559,10 @@ const ExerciseLibrary: React.FC = () => {
 
         {exercises.length === 0 && !pageLoading && (
           <div className="text-center py-12">
-            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum exercício encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece criando seu primeiro exercício personalizado.</p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Dumbbell className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum exercício encontrado</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Comece criando seu primeiro exercício personalizado.</p>
+            <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary">
               <Plus className="mr-2 h-4 w-4" />
               Criar Primeiro Exercício
             </Button>
@@ -564,29 +571,30 @@ const ExerciseLibrary: React.FC = () => {
 
         {/* Sheet de Edição */}
         <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
-          <SheetContent className="w-[400px] sm:w-[540px]">
+          <SheetContent className="w-[400px] sm:w-[540px] bg-white dark:bg-card border-l border-gray-200 dark:border-white/10">
             <SheetHeader>
-              <SheetTitle>Editar Exercício</SheetTitle>
+              <SheetTitle className="text-gray-900 dark:text-white">Editar Exercício</SheetTitle>
             </SheetHeader>
             <form onSubmit={handleUpdateExercise} className="space-y-4 mt-6">
               <div className="space-y-2">
-                <Label htmlFor="edit-name">Nome do Exercício *</Label>
+                <Label htmlFor="edit-name" className="dark:text-gray-200">Nome do Exercício *</Label>
                 <Input
                   id="edit-name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Supino Reto"
                   required
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-difficulty">Nível de Dificuldade</Label>
+                <Label htmlFor="edit-difficulty" className="dark:text-gray-200">Nível de Dificuldade</Label>
                 <select
                   id="edit-difficulty"
                   value={formData.difficulty_level}
                   onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md dark:bg-background/50 dark:border-white/10 dark:text-white"
                 >
                   <option value="beginner">Iniciante</option>
                   <option value="intermediate">Intermediário</option>
@@ -595,47 +603,51 @@ const ExerciseLibrary: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-description">Descrição</Label>
+                <Label htmlFor="edit-description" className="dark:text-gray-200">Descrição</Label>
                 <Textarea
                   id="edit-description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Descreva como realizar o exercício..."
                   rows={3}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-muscles">Grupos Musculares</Label>
+                  <Label htmlFor="edit-muscles" className="dark:text-gray-200">Grupos Musculares</Label>
                   <Input
                     id="edit-muscles"
                     value={formData.muscle_groups}
                     onChange={(e) => setFormData({ ...formData, muscle_groups: e.target.value })}
                     placeholder="Peito, Ombros, Tríceps"
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
-                  <p className="text-xs text-gray-500">Separe com vírgula</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Separe com vírgula</p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-equipment">Equipamentos</Label>
+                  <Label htmlFor="edit-equipment" className="dark:text-gray-200">Equipamentos</Label>
                   <Input
                     id="edit-equipment"
                     value={formData.equipment_needed}
                     onChange={(e) => setFormData({ ...formData, equipment_needed: e.target.value })}
                     placeholder="Barra, Halteres, Banco"
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
-                  <p className="text-xs text-gray-500">Separe com vírgula</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Separe com vírgula</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-video">URL do Vídeo</Label>
+                <Label htmlFor="edit-video" className="dark:text-gray-200">URL do Vídeo</Label>
                 <Input
                   id="edit-video"
                   type="url"
                   value={formData.video_url}
                   onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
                   placeholder="https://youtube.com/watch?v=..."
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
@@ -644,15 +656,16 @@ const ExerciseLibrary: React.FC = () => {
                   id="edit-public"
                   checked={formData.is_public}
                   onCheckedChange={(checked) => setFormData({ ...formData, is_public: checked as boolean })}
+                  className="dark:border-white/30"
                 />
-                <Label htmlFor="edit-public">Tornar este exercício público</Label>
+                <Label htmlFor="edit-public" className="dark:text-gray-200">Tornar este exercício público</Label>
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditSheetOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditSheetOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary">
                   Atualizar Exercício
                 </Button>
               </div>
