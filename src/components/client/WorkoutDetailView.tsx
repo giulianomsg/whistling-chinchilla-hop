@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { 
-  Dumbbell, Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3
+  Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3, Trophy
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -53,7 +53,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       // Verificar sessão existente
       const { data: session } = await supabase.from('workout_sessions')
         .select('*').eq('client_workout_id', clientWorkout.id)
-        .in('status', ['started', 'paused']).order('created_at', { ascending: false }).limit(1).single()
+        .in('status', ['started', 'paused']).order('created_at', { ascending: false }).limit(1).maybeSingle()
       
       if (session) {
         setSessionId(session.id); setSessionStatus(session.status); setIsSessionActive(true)
@@ -98,11 +98,51 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
-        await supabase.from('workout_sessions').update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime }).eq('id', sessionId)
-        setSessionStatus('completed'); setIsSessionActive(false); showSuccess(`Treino finalizado em ${formatTime(elapsedTime)}`)
+        // --- GAMIFICAÇÃO ---
+        const xpBase = 100 // Base por concluir
+        const xpDurationBonus = Math.floor(elapsedTime / 60) // 1 XP por minuto
+        const totalXpGained = xpBase + xpDurationBonus
+
+        // 1. Atualizar Sessão
+        const { error: sessionError } = await supabase.from('workout_sessions')
+          .update({ 
+            status: 'completed', 
+            ended_at: new Date().toISOString(), 
+            duration_seconds: elapsedTime 
+          }).eq('id', sessionId)
+        
+        if (sessionError) throw sessionError
+
+        // 2. Buscar perfil atual para calcular nível
+        const { data: profileData } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
+        
+        if (profileData) {
+          const currentXP = profileData.current_xp || 0
+          const newXP = currentXP + totalXpGained
+          const xpPerLevel = 1000
+          // Nível começa em 1. Se 0-999 XP -> Lvl 1. 1000 XP -> Lvl 2.
+          const newLevel = Math.max(1, Math.floor(newXP / xpPerLevel) + 1)
+          
+          // 3. Atualizar Profile
+          await supabase.from('profiles').update({
+            current_xp: newXP,
+            level: newLevel
+          }).eq('id', clientWorkout.client_id)
+
+          // 4. Feedback Visual
+          if (newLevel > (profileData.level || 1)) {
+            showSuccess(`PARABÉNS! Você alcançou o Nível ${newLevel}! 🏆`)
+          } else {
+            showSuccess(`Treino finalizado! +${totalXpGained} XP ganhos! 🚀`)
+          }
+        } else {
+          showSuccess('Treino finalizado!')
+        }
+
+        setSessionStatus('completed'); setIsSessionActive(false)
         setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle') }, 3000)
       }
-    } catch (error) { showError('Erro na sessão') }
+    } catch (error) { showError('Erro na sessão'); console.error(error) }
     finally { setSessionLoading(false) }
   }
 
