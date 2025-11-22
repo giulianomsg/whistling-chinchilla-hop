@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { Button } from '../components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
-import { Badge } from '../components/ui/badge'
-import { Input } from '../components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
-import { Label } from '../components/ui/label'
-import { Textarea } from '../components/ui/textarea'
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { 
   Users, 
   Plus, 
   Search, 
   Mail, 
   Calendar, 
-  Clock,
-  Loader2,
-  User,
-  ArrowRight,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Filter
+  Clock, 
+  Loader2, 
+  User, 
+  ArrowRight, 
+  CheckCircle, 
+  XCircle, 
+  AlertCircle
 } from 'lucide-react'
-import { supabase } from '../integrations/supabase/client'
-import { showSuccess, showError } from '../utils/toast'
-import { format, subDays } from 'date-fns'
+import { supabase } from '@/integrations/supabase/client'
+import { showSuccess, showError } from '@/utils/toast'
 
 interface ClientProfile {
   id: string
@@ -51,7 +49,7 @@ interface ClientProfessional {
 
 const MyClients: React.FC = () => {
   const navigate = useNavigate()
-  const { user, profile, loading } = useAuth()
+  const { user, loading } = useAuth()
   const [clients, setClients] = useState<ClientProfessional[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -66,13 +64,9 @@ const MyClients: React.FC = () => {
 
   // Buscar clientes vinculados ao profissional
   const fetchClients = async () => {
-    if (!user) {
-      console.log('❌ [MY_CLIENTS] Usuário null, não buscando clientes')
-      return
-    }
+    if (!user) return
 
     try {
-      console.log('🔍 [MY_CLIENTS] Buscando clientes do profissional:', user.id)
       setPageLoading(true)
       
       const { data, error } = await supabase
@@ -85,15 +79,15 @@ const MyClients: React.FC = () => {
         .order('started_at', { ascending: false })
 
       if (error) {
-        console.error('❌ [MY_CLIENTS] Erro ao buscar clientes:', error)
+        console.error('Erro ao buscar clientes:', error)
         showError('Erro ao carregar clientes')
         return
       }
 
-      console.log('✅ [MY_CLIENTS] Clientes carregados:', data?.length || 0)
-      setClients(data || [])
+      // Cast seguro sabendo que o join foi feito
+      setClients((data as any) || [])
     } catch (error) {
-      console.error('❌ [MY_CLIENTS] Erro inesperado:', error)
+      console.error('Erro inesperado:', error)
       showError('Erro inesperado ao carregar clientes')
     } finally {
       setPageLoading(false)
@@ -105,26 +99,23 @@ const MyClients: React.FC = () => {
     if (!user) return null
 
     try {
-      console.log('🔍 [MY_CLIENTS] Buscando cliente por email:', email)
-      
       const { data, error } = await supabase.rpc('find_client_by_email', {
         client_email: email
       })
 
       if (error) {
-        console.error('❌ [MY_CLIENTS] Erro ao buscar cliente por email:', error)
+        console.error('Erro ao buscar cliente por email:', error)
         return null
       }
 
-      console.log('✅ [ dark:text-gray-300MY_CLIENTS] Cliente encontrado:', data)
-      return data
+      return data?.[0] // Retorna o primeiro (e único) resultado ou undefined
     } catch (error) {
-      console.error('❌ [MY_CLIENTS] Erro inesperado ao buscar cliente:', error)
+      console.error('Erro inesperado ao buscar cliente:', error)
       return null
     }
   }
 
-  // Adicionar novo cliente - VERSÃO CORRIGIDA
+  // Adicionar novo cliente
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -136,17 +127,13 @@ const MyClients: React.FC = () => {
     setAddLoading(true)
 
     try {
-      console.log('🚀 [MY_CLIENTS] Adicionando cliente:', newClientEmail)
-
       // 1. Buscar cliente pelo email
-      const clientData = await findClientByEmail(newClientEmail.trim())
+      const client = await findClientByEmail(newClientEmail.trim())
 
-      if (!clientData || clientData.length === 0) {
+      if (!client) {
         showError('Cliente não encontrado. Verifique se o email está correto.')
         return
       }
-
-      const client = clientData[0]
 
       // 2. Verificar se já está vinculado
       if (client.existing_link_id && client.existing_link_status === 'active') {
@@ -154,7 +141,7 @@ const MyClients: React.FC = () => {
         return
       }
 
-      // 3. Criar vínculo E atualizar perfil via RPC (NOVA LÓGICA)
+      // 3. Criar vínculo E atualizar perfil via RPC
       const { error: linkError } = await supabase.rpc('link_client_and_update_profile', {
         p_client_id: client.id,
         p_notes: newClientNotes || null,
@@ -163,57 +150,35 @@ const MyClients: React.FC = () => {
       })
 
       if (linkError) {
-        console.error('❌ [MY_CLIENTS] Erro ao vincular/atualizar cliente:', linkError)
-        
-        // Tratamento específico de erros
-        if (linkError.message?.includes('já está vinculado')) {
-          showError('Este cliente já está vinculado a este profissional.')
-        } else if (linkError.message?.includes('Cliente não encontrado')) {
-          showError('Cliente não encontrado ou não é um cliente válido.')
-        } else {
-          showError('Erro ao vincular cliente: ' + linkError.message)
-        }
-        return
+        throw linkError
       }
 
-      console.log('✅ [MY_CLIENTS] Cliente vinculado e atualizado com sucesso!')
+      showSuccess('Cliente adicionado com sucesso!')
       
-      // 4. Sucesso - mostrar mensagem com detalhes
-      let successMessage = 'Cliente adicionado com sucesso!'
-      if (newClientName || newClientPhone) {
-        const details = []
-        if (newClientName) details.push(`nome: "${newClientName}"`)
-        if (newClientPhone) details.push(`telefone: "${newClientPhone}"`)
-        successMessage += ` Dados atualizados: ${details.join(', ')}.`
-      }
-      showSuccess(successMessage)
-      
-      // 5. Limpar formulário e fechar diálogo
+      // Limpar formulário
       setNewClientEmail('')
       setNewClientName('')
       setNewClientPhone('')
       setNewClientNotes('')
       setIsAddDialogOpen(false)
       
-      // 6. Recarregar lista para mostrar dados atualizados
       fetchClients()
       
-    } catch (error) {
-      console.error('❌ [MY_CLIENTS] Erro inesperado ao adicionar cliente:', error)
-      showError('Erro inesperado ao adicionar cliente')
+    } catch (error: any) {
+      console.error('Erro ao adicionar cliente:', error)
+      const msg = error?.message || 'Erro inesperado ao adicionar cliente'
+      
+      if (msg.includes('já está vinculado')) {
+        showError('Este cliente já está vinculado a este profissional.')
+      } else {
+        showError(msg)
+      }
     } finally {
       setAddLoading(false)
     }
   }
 
   useEffect(() => {
-    console.log('🔍 [MY_CLIENTS] useEffect chamado', { 
-      user: !!user, 
-      profile: !!profile,
-      userId: user?.id,
-      loading: !loading
-    })
-    
     if (!loading && user) {
       fetchClients()
     }
@@ -230,27 +195,17 @@ const MyClients: React.FC = () => {
     return fullName.includes(searchLower) || email.includes(searchLower)
   })
 
-  // Navegar para detalhes do cliente
   const handleViewClientDetails = (clientId: string) => {
-    console.log('🔗 [MY_CLIENTS] Navegando para detalhes do cliente:', clientId)
     navigate(`/app/clients/${clientId}`)
   }
 
-  // Obter iniciais do nome para avatar
   const getInitials = (fullName: string | null, email: string) => {
     if (fullName && fullName.trim()) {
-      return fullName
-        .split(' ')
-        .map(name => name[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+      return fullName.split(' ').map(name => name[0]).join('').toUpperCase().slice(0, 2)
     }
-    // Fallback para email
     return email?.[0]?.toUpperCase() || 'U'
   }
 
-  // Formatar data para display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('pt-BR', {
@@ -260,27 +215,26 @@ const MyClients: React.FC = () => {
     })
   }
 
-  // Obter status visual
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'active':
         return {
           variant: 'default' as const,
-          className: 'bg-green-100 text-green-800 border-green-200',
+          className: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800',
           icon: <CheckCircle className="h-3 w-3" />,
           text: 'Ativo'
         }
       case 'inactive':
         return {
           variant: 'secondary' as const,
-          className: 'bg-gray-100 text-gray-800 border-gray-200',
+          className: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700',
           icon: <XCircle className="h-3 w-3" />,
           text: 'Inativo'
         }
       default:
         return {
           variant: 'secondary' as const,
-          className: 'bg-gray-100 text-gray-800 border-gray-200',
+          className: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700',
           icon: <Clock className="h-3 w-3" />,
           text: status
         }
@@ -291,7 +245,7 @@ const MyClients: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600 dark:text-blue-400" />
           <p className="text-gray-600 dark:text-gray-300">Carregando clientes...</p>
         </div>
       </div>
@@ -303,10 +257,10 @@ const MyClients: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <Users className="h-8 w-8 text-blue-600" />
+                <Users className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 Meus Clientes
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-300">
@@ -315,32 +269,30 @@ const MyClients: React.FC = () => {
             </div>
             
             <div className="flex items-center gap-3">
-              {/* Campo de Busca */}
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar por nome ou email..."
+                  placeholder="Buscar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-64"
+                  className="pl-10 w-64 bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white"
                 />
               </div>
               
-              {/* Botão Novo Cliente - AGORA COM DADOS COMPLETOS */}
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary dark:text-primary-foreground">
                     <Plus className="h-4 w-4 mr-2" />
-                    Adicionar Cliente
+                    Adicionar
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-md bg-white dark:bg-card border-gray-200 dark:border-white/10">
                   <DialogHeader>
-                    <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+                    <DialogTitle className="text-gray-900 dark:text-white">Adicionar Novo Cliente</DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleAddClient} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="client-email">Email do Cliente *</Label>
+                      <Label htmlFor="client-email" className="dark:text-gray-200">Email do Cliente *</Label>
                       <Input
                         id="client-email"
                         type="email"
@@ -349,6 +301,7 @@ const MyClients: React.FC = () => {
                         onChange={(e) => setNewClientEmail(e.target.value)}
                         required
                         disabled={addLoading}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         Digite o email do cliente que já está cadastrado no sistema
@@ -356,35 +309,31 @@ const MyClients: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-name">Nome Completo</Label>
+                      <Label htmlFor="client-name" className="dark:text-gray-200">Nome Completo</Label>
                       <Input
                         id="client-name"
                         placeholder="João Silva"
                         value={newClientName}
                         onChange={(e) => setNewClientName(e.target.value)}
                         disabled={addLoading}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Preencha para atualizar o nome do cliente (opcional)
-                      </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-phone">Telefone</Label>
+                      <Label htmlFor="client-phone" className="dark:text-gray-200">Telefone</Label>
                       <Input
                         id="client-phone"
                         placeholder="(00) 00000-0000"
                         value={newClientPhone}
                         onChange={(e) => setNewClientPhone(e.target.value)}
                         disabled={addLoading}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Preencha para atualizar o telefone do cliente (opcional)
-                      </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="client-notes">Notas</Label>
+                      <Label htmlFor="client-notes" className="dark:text-gray-200">Notas</Label>
                       <Textarea
                         id="client-notes"
                         placeholder="Observações sobre este cliente..."
@@ -392,6 +341,7 @@ const MyClients: React.FC = () => {
                         onChange={(e) => setNewClientNotes(e.target.value)}
                         rows={3}
                         disabled={addLoading}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
 
@@ -401,10 +351,11 @@ const MyClients: React.FC = () => {
                         variant="outline"
                         onClick={() => setIsAddDialogOpen(false)}
                         disabled={addLoading}
+                        className="dark:border-white/10 dark:text-gray-300 dark:hover:bg-white/10"
                       >
                         Cancelar
                       </Button>
-                      <Button type="submit" disabled={addLoading}>
+                      <Button type="submit" disabled={addLoading} className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary">
                         {addLoading ? (
                           <>
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -424,42 +375,26 @@ const MyClients: React.FC = () => {
           {/* Indicadores */}
           <div className="flex items-center gap-6 mb-6">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-300">
-                Total:
-              </span>
-              <Badge variant="secondary" className="text-sm">
-                {clients.length}
-              </Badge>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total:</span>
+              <Badge variant="secondary" className="dark:bg-white/10 dark:text-white">{clients.length}</Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-300">
-                Ativos:
-              </span>
-              <Badge variant="default" className="text-sm bg-green-100 text-green-800">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Ativos:</span>
+              <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
                 {clients.filter(c => c.status === 'active').length}
               </Badge>
             </div>
-            {searchTerm && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  Filtrados:
-                </span>
-                <Badge variant="outline" className="text-sm">
-                  {filteredClients.length}
-                </Badge>
-              </div>
-            )}
           </div>
         </div>
 
         {/* Lista de Clientes */}
         {filteredClients.length === 0 ? (
           <div className="text-center py-12">
-            <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <Users className="h-16 w-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               {searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado'}
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4 max-w-md">
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               {searchTerm 
                 ? 'Tente ajustar sua busca ou adicione novos clientes.'
                 : 'Comece adicionando seu primeiro cliente para gerenciar os treinos e planos alimentares.'
@@ -487,27 +422,24 @@ const MyClients: React.FC = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        {/* Avatar do Cliente */}
-                        <Avatar className="h-12 w-12">
+                        <Avatar className="h-12 w-12 border-2 border-white dark:border-white/10 shadow-sm">
                           <AvatarImage src={client.avatar_url || ''} />
-                          <AvatarFallback className="bg-blue-100 text-blue-600">
+                          <AvatarFallback className="bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-200">
                             {getInitials(client.full_name, client.email)}
                           </AvatarFallback>
                         </Avatar>
                         
-                        {/* Informações Básicas */}
                         <div className="flex-1 min-w-0">
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
                             {client.full_name || 'Cliente sem nome'}
                           </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                             {client.email}
                           </p>
                         </div>
                       </div>
                       
-                      {/* Status */}
-                      <Badge
+                      <Badge 
                         variant={statusInfo.variant}
                         className={`text-xs ${statusInfo.className}`}
                       >
@@ -521,9 +453,8 @@ const MyClients: React.FC = () => {
                   
                   <CardContent className="pt-0">
                     <div className="space-y-3">
-                      {/* Informações Adicionais */}
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <Calendar className="h-4 w-4" />
                           <span>Vínculo:</span>
                         </div>
@@ -534,7 +465,7 @@ const MyClients: React.FC = () => {
                       
                       {client.phone && (
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                             <Mail className="h-4 w-4" />
                             <span>Telefone:</span>
                           </div>
@@ -544,9 +475,8 @@ const MyClients: React.FC = () => {
                         </div>
                       )}
                       
-                      {/* Role */}
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <User className="h-4 w-4" />
                           <span>Tipo:</span>
                         </div>
@@ -556,10 +486,9 @@ const MyClients: React.FC = () => {
                       </div>
                     </div>
                     
-                    {/* Botão de Ação */}
-                    <div className="pt-3 border-t border-gray-200 dark:border-white/10">
+                    <div className="pt-4 border-t border-gray-100 dark:border-white/10 mt-3">
                       <Button 
-                        className="w-full" 
+                        className="w-full dark:bg-white/10 dark:text-white dark:hover:bg-white/20" 
                         variant="outline"
                         onClick={(e) => {
                           e.stopPropagation()
