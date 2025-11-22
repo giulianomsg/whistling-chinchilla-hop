@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { 
-  Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, GripVertical, Search, Check
+  Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
@@ -29,14 +29,19 @@ const WorkoutPlanner: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isManageSheetOpen, setIsManageSheetOpen] = useState(false)
   const [isAddExDialogOpen, setIsAddExDialogOpen] = useState(false)
+  const [isEditExDialogOpen, setIsEditExDialogOpen] = useState(false)
 
   // States do Formulário de Plano
   const initialPlanState = { id: '', name: '', weeks: 4, days: 3, objective: '', description: '' }
   const [planForm, setPlanForm] = useState(initialPlanState)
   const [isEditing, setIsEditing] = useState(false)
 
-  // State do Exercício
-  const [newExercise, setNewExercise] = useState({ exId: '', day: 1, sets: 3, reps: '10', note: '' })
+  // State do Exercício (Adicionar/Editar)
+  const initialExerciseState = { 
+    id: '', exId: '', day: 1, sets: 3, reps: '10', 
+    weight: 0, rest: 60, note: '' 
+  }
+  const [exForm, setExForm] = useState(initialExerciseState)
 
   const fetchWorkouts = async () => {
     if (!user) return
@@ -56,14 +61,13 @@ const WorkoutPlanner: React.FC = () => {
     loadExs()
   }, [user])
 
-  // Resetar form ao abrir criação
+  // --- Ações de Plano ---
   const openCreateDialog = () => {
     setPlanForm(initialPlanState)
     setIsEditing(false)
     setIsCreateDialogOpen(true)
   }
 
-  // Preencher form ao abrir edição
   const openEditDialog = (workout: any) => {
     setPlanForm({
       id: workout.id,
@@ -115,6 +119,7 @@ const WorkoutPlanner: React.FC = () => {
     else showError('Erro ao excluir')
   }
 
+  // --- Gerenciamento de Exercícios ---
   const handleManage = async (workout: any) => {
     setSelectedWorkout(workout)
     const { data } = await supabase.from('workout_exercises').select(`*, exercise:exercises_library(*)`).eq('workout_id', workout.id).order('day_number').order('order_index')
@@ -122,19 +127,52 @@ const WorkoutPlanner: React.FC = () => {
     setIsManageSheetOpen(true)
   }
 
-  const handleAddExercise = async () => {
-    if (!selectedWorkout || !newExercise.exId) return
-    const { error } = await supabase.from('workout_exercises').insert({
-      workout_id: selectedWorkout.id, exercise_id: newExercise.exId,
-      day_number: newExercise.day, sets: newExercise.sets, reps: newExercise.reps, notes: newExercise.note,
-      order_index: 99
+  const openAddExDialog = () => {
+    setExForm(initialExerciseState)
+    setIsAddExDialogOpen(true)
+  }
+
+  const openEditExDialog = (we: any) => {
+    setExForm({
+      id: we.id, exId: we.exercise_id, day: we.day_number, 
+      sets: we.sets, reps: we.reps, weight: we.weight || 0, 
+      rest: we.rest_time_seconds || 60, note: we.notes || ''
     })
+    setIsEditExDialogOpen(true)
+  }
+
+  const handleSaveExercise = async (mode: 'create' | 'update') => {
+    if (!selectedWorkout) return
+    
+    const payload = {
+      day_number: exForm.day,
+      sets: exForm.sets,
+      reps: exForm.reps,
+      weight: exForm.weight,
+      rest_time_seconds: exForm.rest,
+      notes: exForm.note
+    }
+
+    let error
+    if (mode === 'create') {
+      if (!exForm.exId) return showError('Selecione um exercício')
+      const insertPayload = { ...payload, workout_id: selectedWorkout.id, exercise_id: exForm.exId, order_index: 99 }
+      const res = await supabase.from('workout_exercises').insert(insertPayload)
+      error = res.error
+    } else {
+      const res = await supabase.from('workout_exercises').update(payload).eq('id', exForm.id)
+      error = res.error
+    }
+
     if (!error) {
-      showSuccess('Exercício adicionado!')
-      // Refresh local
+      showSuccess(mode === 'create' ? 'Exercício adicionado!' : 'Exercício atualizado!')
+      // Reload local
       const { data } = await supabase.from('workout_exercises').select(`*, exercise:exercises_library(*)`).eq('workout_id', selectedWorkout.id).order('day_number').order('order_index')
       setWorkoutExercises(data || [])
       setIsAddExDialogOpen(false)
+      setIsEditExDialogOpen(false)
+    } else {
+      showError('Erro ao salvar exercício')
     }
   }
 
@@ -156,22 +194,18 @@ const WorkoutPlanner: React.FC = () => {
           </div>
           <Button onClick={openCreateDialog} className="bg-primary text-black font-bold"><Plus className="mr-2 h-4 w-4"/> Novo Plano</Button>
           
-          {/* Dialog Create/Edit Unified */}
+          {/* Dialog Create/Edit Plan */}
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-lg">
               <DialogHeader><DialogTitle>{isEditing ? 'Editar Plano' : 'Criar Novo Plano'}</DialogTitle></DialogHeader>
               <form onSubmit={handleSaveWorkout} className="space-y-4">
                 <div><Label>Nome do Plano *</Label><Input required value={planForm.name} onChange={e => setPlanForm({...planForm, name: e.target.value})} className="bg-black/20 border-white/10"/></div>
-                
                 <div className="grid grid-cols-2 gap-4">
                   <div><Label>Duração (Semanas)</Label><Input type="number" min="1" value={planForm.weeks} onChange={e => setPlanForm({...planForm, weeks: +e.target.value})} className="bg-black/20 border-white/10"/></div>
                   <div><Label>Dias por Semana</Label><Input type="number" min="1" max="7" value={planForm.days} onChange={e => setPlanForm({...planForm, days: +e.target.value})} className="bg-black/20 border-white/10"/></div>
                 </div>
-                
                 <div><Label>Objetivo Principal</Label><Input value={planForm.objective} onChange={e => setPlanForm({...planForm, objective: e.target.value})} className="bg-black/20 border-white/10" placeholder="Ex: Hipertrofia"/></div>
-                
                 <div><Label>Descrição Detalhada</Label><Textarea rows={3} value={planForm.description} onChange={e => setPlanForm({...planForm, description: e.target.value})} className="bg-black/20 border-white/10" placeholder="Ex: Foco em pernas e ombros..."/></div>
-                
                 <Button type="submit" className="w-full bg-primary text-black font-bold">{isEditing ? 'Atualizar Plano' : 'Criar Plano'}</Button>
               </form>
             </DialogContent>
@@ -219,16 +253,16 @@ const WorkoutPlanner: React.FC = () => {
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-lg">Exercícios do Plano</h3>
+                <Button size="sm" onClick={openAddExDialog} className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50"><Plus className="h-4 w-4 mr-2"/> Adicionar</Button>
+                
+                {/* Dialog Adicionar Exercício */}
                 <Dialog open={isAddExDialogOpen} onOpenChange={setIsAddExDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50"><Plus className="h-4 w-4 mr-2"/> Adicionar</Button>
-                  </DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
                     <DialogHeader><DialogTitle>Adicionar Exercício</DialogTitle></DialogHeader>
                     <div className="space-y-4">
                       <div>
                         <Label>Exercício</Label>
-                        <Select onValueChange={v => setNewExercise({...newExercise, exId: v})}>
+                        <Select onValueChange={v => setExForm({...exForm, exId: v})}>
                           <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger>
                           <SelectContent className="bg-slate-800 border-white/10 text-white max-h-60">
                             {exercises.map(e => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}
@@ -236,12 +270,37 @@ const WorkoutPlanner: React.FC = () => {
                         </Select>
                       </div>
                       <div className="grid grid-cols-3 gap-2">
-                        <div><Label>Dia (1-{selectedWorkout?.days_per_week})</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-black/20 border-white/10" value={newExercise.day} onChange={e => setNewExercise({...newExercise, day: +e.target.value})}/></div>
-                        <div><Label>Séries</Label><Input type="number" className="bg-black/20 border-white/10" value={newExercise.sets} onChange={e => setNewExercise({...newExercise, sets: +e.target.value})}/></div>
-                        <div><Label>Reps</Label><Input className="bg-black/20 border-white/10" value={newExercise.reps} onChange={e => setNewExercise({...newExercise, reps: e.target.value})}/></div>
+                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-black/20 border-white/10" value={exForm.day} onChange={e => setExForm({...exForm, day: +e.target.value})}/></div>
+                        <div><Label>Séries</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.sets} onChange={e => setExForm({...exForm, sets: +e.target.value})}/></div>
+                        <div><Label>Reps</Label><Input className="bg-black/20 border-white/10" value={exForm.reps} onChange={e => setExForm({...exForm, reps: e.target.value})}/></div>
                       </div>
-                      <div><Label>Nota (Opcional)</Label><Input className="bg-black/20 border-white/10" value={newExercise.note} onChange={e => setNewExercise({...newExercise, note: e.target.value})} placeholder="Ex: Drop-set na última"/></div>
-                      <Button onClick={handleAddExercise} disabled={!newExercise.exId} className="w-full bg-primary text-black">Confirmar</Button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.weight} onChange={e => setExForm({...exForm, weight: +e.target.value})}/></div>
+                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.rest} onChange={e => setExForm({...exForm, rest: +e.target.value})}/></div>
+                      </div>
+                      <div><Label>Nota (Opcional)</Label><Input className="bg-black/20 border-white/10" value={exForm.note} onChange={e => setExForm({...exForm, note: e.target.value})} placeholder="Ex: Drop-set na última"/></div>
+                      <Button onClick={() => handleSaveExercise('create')} disabled={!exForm.exId} className="w-full bg-primary text-black">Adicionar</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Dialog Editar Exercício */}
+                <Dialog open={isEditExDialogOpen} onOpenChange={setIsEditExDialogOpen}>
+                  <DialogContent className="bg-slate-900 border-white/10 text-white">
+                    <DialogHeader><DialogTitle>Editar Exercício</DialogTitle></DialogHeader>
+                    <div className="space-y-4">
+                      {/* Exercício não editável aqui, apenas params */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-black/20 border-white/10" value={exForm.day} onChange={e => setExForm({...exForm, day: +e.target.value})}/></div>
+                        <div><Label>Séries</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.sets} onChange={e => setExForm({...exForm, sets: +e.target.value})}/></div>
+                        <div><Label>Reps</Label><Input className="bg-black/20 border-white/10" value={exForm.reps} onChange={e => setExForm({...exForm, reps: e.target.value})}/></div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.weight} onChange={e => setExForm({...exForm, weight: +e.target.value})}/></div>
+                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.rest} onChange={e => setExForm({...exForm, rest: +e.target.value})}/></div>
+                      </div>
+                      <div><Label>Nota (Opcional)</Label><Input className="bg-black/20 border-white/10" value={exForm.note} onChange={e => setExForm({...exForm, note: e.target.value})}/></div>
+                      <Button onClick={() => handleSaveExercise('update')} className="w-full bg-primary text-black">Atualizar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -261,13 +320,14 @@ const WorkoutPlanner: React.FC = () => {
                           <div className="bg-primary/20 text-primary w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-inner">{we.order_index}</div>
                           <div>
                             <div className="font-bold text-white">{we.exercise?.name}</div>
-                            <div className="text-xs text-gray-400">{we.sets} séries x {we.reps} reps</div>
+                            <div className="text-xs text-gray-400">{we.sets}x{we.reps} • {we.weight ? `${we.weight}kg` : 'Peso livre'} • {we.rest_time_seconds}s</div>
                             {we.notes && <div className="text-[10px] text-yellow-500/80 mt-1">{we.notes}</div>}
                           </div>
                         </div>
-                        <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-red-400 hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Trash2 className="h-4 w-4"/>
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button size="icon" variant="ghost" onClick={() => openEditExDialog(we)} className="text-blue-400 hover:bg-blue-900/20"><Edit className="h-4 w-4"/></Button>
+                          <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-red-400 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button>
+                        </div>
                       </div>
                     ))}
                     {workoutExercises.filter(we => we.day_number === i+1).length === 0 && <div className="text-center text-gray-500 text-sm py-8 bg-white/5 rounded-lg border border-dashed border-white/10">Sem exercícios neste dia</div>}
