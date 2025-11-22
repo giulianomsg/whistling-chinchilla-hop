@@ -50,4 +50,4 @@ export const resizeImage = (file: File, maxWidth = 800, maxHeight = 800): Promis
     };
     image.onerror = (error) => reject(error);
   });
-}; 
+};
