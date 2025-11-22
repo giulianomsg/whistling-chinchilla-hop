@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { 
-  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, Timer, 
-  Loader2, AlertCircle, Target, Calendar, Bell, Trash2, Plus
+  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
+  Loader2, Plus, Trash2, FileText, Save
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -37,12 +38,21 @@ const ClientDetails: React.FC = () => {
   const [selectedMealPlanId, setSelectedMealPlanId] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
 
+  // Estado da Anamnese
+  const [anamnesisForm, setAnamnesisForm] = useState({
+    medical_history: '',
+    medications: '',
+    injuries: '',
+    surgeries: '',
+    sleep_quality: '',
+    stress_level: ''
+  })
+
   useEffect(() => {
     const loadData = async () => {
       if (!id || !user) return
       setLoading(true)
       try {
-        // USAR maybeSingle() PARA EVITAR ERRO 406
         const profileRes = await supabase.from('profiles').select('*').eq('id', id).maybeSingle()
         const detailsRes = await supabase.from('client_details').select('*').eq('profile_id', id).maybeSingle()
         
@@ -61,9 +71,26 @@ const ClientDetails: React.FC = () => {
         setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
 
+        // Preencher form de anamnese se existir dados
+        if (detailsRes.data?.anamnesis_data) {
+          // A coluna anamnesis_data é JSONB, o supabase client já retorna como objeto se for válido
+          const data = typeof detailsRes.data.anamnesis_data === 'string' 
+            ? JSON.parse(detailsRes.data.anamnesis_data) 
+            : detailsRes.data.anamnesis_data
+            
+          setAnamnesisForm({
+            medical_history: data.medical_history || '',
+            medications: data.medications || '',
+            injuries: data.injuries || '',
+            surgeries: data.surgeries || '',
+            sleep_quality: data.sleep_quality || '',
+            stress_level: data.stress_level || ''
+          })
+        }
+
       } catch (error) {
         console.error(error)
-        // navigate('/app/clients')
+        showError('Erro ao carregar dados')
       } finally {
         setLoading(false)
       }
@@ -80,6 +107,7 @@ const ClientDetails: React.FC = () => {
       if (error) throw error
       showSuccess('Treino atribuído!')
       setIsAssignWorkoutOpen(false)
+      // Refresh simples
       const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
       setClientWorkouts(data || [])
     } catch (err) { showError('Erro ao atribuir') }
@@ -109,6 +137,23 @@ const ClientDetails: React.FC = () => {
     } catch (err) { showError('Erro ao remover') }
   }
 
+  const handleSaveAnamnesis = async () => {
+    try {
+      // Salva o objeto form inteiro na coluna JSONB
+      const { error } = await supabase.from('client_details').upsert({
+        profile_id: id,
+        anamnesis_data: anamnesisForm,
+        updated_at: new Date().toISOString()
+      })
+      
+      if (error) throw error
+      showSuccess('Anamnese salva com sucesso!')
+    } catch (e) { 
+      console.error(e)
+      showError('Erro ao salvar anamnese') 
+    }
+  }
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
@@ -121,42 +166,45 @@ const ClientDetails: React.FC = () => {
               <h1 className="text-3xl font-bold text-white">{clientProfile?.full_name || 'Cliente'}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
                 <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email}</span>
+                {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
               </div>
             </div>
           </div>
         </div>
 
         <Tabs defaultValue="workouts" className="space-y-6">
-          <TabsList className="bg-white/5 border border-white/10 w-full justify-start p-1">
+          <TabsList className="bg-white/5 border border-white/10 w-full justify-start p-1 overflow-x-auto">
             <TabsTrigger value="workouts" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Treinos</TabsTrigger>
             <TabsTrigger value="meal-plans" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Dietas</TabsTrigger>
             <TabsTrigger value="history" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Histórico</TabsTrigger>
+            <TabsTrigger value="anamnesis" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Anamnese</TabsTrigger>
             <TabsTrigger value="info" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Perfil</TabsTrigger>
           </TabsList>
 
+          {/* ABA DE TREINOS */}
           <TabsContent value="workouts">
             <Card className="bg-white/5 border-white/10">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white flex items-center gap-2"><Dumbbell className="text-blue-400" /> Treinos Atribuídos</CardTitle>
                 <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
+                  <DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
                     <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
                     <div className="space-y-4 mt-4">
-                      <Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select>
-                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10"/>
-                      <Button onClick={handleAssignWorkout} className="w-full bg-blue-600">Confirmar</Button>
+                      <Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione um treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select>
+                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
+                      <Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </CardHeader>
               <CardContent>
-                {clientWorkouts.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (
+                {clientWorkouts.length === 0 ? <div className="text-center py-8 text-gray-500">Nenhum treino ativo.</div> : (
                   <div className="space-y-4">
                     {clientWorkouts.map(cw => (
                       <div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center">
-                        <div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div>
-                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400"><Trash2 className="h-4 w-4"/></Button></div>
+                        <div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana • Início: {cw.start_date}</div></div>
+                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
                       </div>
                     ))}
                   </div>
@@ -165,29 +213,30 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
+          {/* ABA DE DIETAS */}
           <TabsContent value="meal-plans">
             <Card className="bg-white/5 border-white/10">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white flex items-center gap-2"><Utensils className="text-green-400" /> Planos Alimentares</CardTitle>
                 <Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
+                  <DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
                     <DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader>
                     <div className="space-y-4 mt-4">
-                      <Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select>
-                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10"/>
-                      <Button onClick={handleAssignMealPlan} className="w-full bg-green-600">Confirmar</Button>
+                      <Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione uma dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select>
+                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
+                      <Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </CardHeader>
               <CardContent>
-                {clientMealPlans.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (
+                {clientMealPlans.length === 0 ? <div className="text-center py-8 text-gray-500">Nenhuma dieta ativa.</div> : (
                   <div className="space-y-4">
                     {clientMealPlans.map(cm => (
                       <div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center">
-                        <div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div>
-                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400"><Trash2 className="h-4 w-4"/></Button></div>
+                        <div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal • Início: {cm.start_date}</div></div>
+                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
                       </div>
                     ))}
                   </div>
@@ -196,14 +245,87 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
+          {/* ABA DE HISTÓRICO */}
           <TabsContent value="history">
             <div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div>
           </TabsContent>
 
+          {/* ABA DE ANAMNESE (NOVA) */}
+          <TabsContent value="anamnesis">
+            <Card className="bg-white/5 border-white/10">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4">
+                <div className="flex flex-col">
+                  <CardTitle className="text-white flex items-center gap-2"><FileText className="text-yellow-400" /> Ficha de Anamnese</CardTitle>
+                  <p className="text-sm text-gray-400 mt-1">Dados médicos e histórico de saúde.</p>
+                </div>
+                <Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-semibold shadow-lg shadow-primary/10"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label className="text-gray-300">Histórico Médico Familiar</Label>
+                    <Textarea 
+                      value={anamnesisForm.medical_history} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, medical_history: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
+                      placeholder="Ex: Diabetes, Hipertensão na família..."
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Medicamentos em Uso</Label>
+                    <Textarea 
+                      value={anamnesisForm.medications} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, medications: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
+                      placeholder="Ex: Losartana 50mg (manhã)..."
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Lesões Prévias / Dores</Label>
+                    <Textarea 
+                      value={anamnesisForm.injuries} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, injuries: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
+                      placeholder="Ex: Condromalácia patelar joelho direito..."
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Cirurgias Realizadas</Label>
+                    <Textarea 
+                      value={anamnesisForm.surgeries} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, surgeries: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
+                      placeholder="Ex: Apendicite (2010)..."
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Qualidade do Sono</Label>
+                    <Input 
+                      value={anamnesisForm.sleep_quality} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, sleep_quality: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5" 
+                      placeholder="Ex: 6-7h por noite, acorda cansado..."
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Nível de Estresse (Subjetivo)</Label>
+                    <Input 
+                      value={anamnesisForm.stress_level} 
+                      onChange={e => setAnamnesisForm({...anamnesisForm, stress_level: e.target.value})} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5" 
+                      placeholder="Ex: Alto (trabalho), Médio..."
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ABA DE PERFIL (Info Básica) */}
           <TabsContent value="info">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card>
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card>
+              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || 'Não informado'}</CardContent></Card>
+              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições de Saúde</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || 'Nenhuma informada'}</CardContent></Card>
             </div>
           </TabsContent>
         </Tabs>
