@@ -18,13 +18,9 @@ import {
   Trash2, 
   Settings, 
   Calendar, 
-  Target,
-  Clock,
-  Loader2,
-  ChevronRight,
-  GripVertical,
+  Target, 
+  Loader2, 
   Search,
-  Filter,
   Apple
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -510,69 +506,72 @@ const MealPlanner: React.FC = () => {
   const mealsByDay = getMealsByDay()
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                 <Utensils className="h-8 w-8 text-green-600" />
-                Montador de Planos Alimentares
+                Planos Alimentares
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Crie e gerencie planos alimentares personalizados
               </p>
             </div>
             
             <Dialog open={isCreateMealPlanDialogOpen} onOpenChange={setIsCreateMealPlanDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
                   <Plus className="mr-2 h-4 w-4" />
                   Novo Plano
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl bg-white dark:bg-card border-gray-200 dark:border-white/10">
                 <DialogHeader>
-                  <DialogTitle>Criar Novo Plano Alimentar</DialogTitle>
+                  <DialogTitle className="text-gray-900 dark:text-white">Criar Novo Plano Alimentar</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateMealPlan} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="meal-plan-name">Nome do Plano *</Label>
+                    <Label htmlFor="meal-plan-name" className="dark:text-gray-200">Nome do Plano *</Label>
                     <Input
                       id="meal-plan-name"
                       value={mealPlanFormData.name}
                       onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, name: e.target.value })}
                       placeholder="Plano de Emagrecimento"
                       required
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="meal-plan-objective">Objetivo</Label>
+                    <Label htmlFor="meal-plan-objective" className="dark:text-gray-200">Objetivo</Label>
                     <Textarea
                       id="meal-plan-objective"
                       value={mealPlanFormData.objective}
                       onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, objective: e.target.value })}
                       placeholder="Emagrecimento, hipertrofia, manutenção..."
                       rows={2}
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="meal-plan-description">Descrição</Label>
+                    <Label htmlFor="meal-plan-description" className="dark:text-gray-200">Descrição</Label>
                     <Textarea
                       id="meal-plan-description"
                       value={mealPlanFormData.description}
                       onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, description: e.target.value })}
                       placeholder="Descrição detalhada do plano..."
                       rows={3}
+                      className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="calories-target">Calorias Diárias</Label>
+                      <Label htmlFor="calories-target" className="dark:text-gray-200">Calorias Diárias</Label>
                       <Input
                         id="calories-target"
                         type="number"
@@ -580,10 +579,11 @@ const MealPlanner: React.FC = () => {
                         max="5000"
                         value={mealPlanFormData.daily_calories_target}
                         onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_calories_target: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="protein-target">Proteínas (g)</Label>
+                      <Label htmlFor="protein-target" className="dark:text-gray-200">Proteínas (g)</Label>
                       <Input
                         id="protein-target"
                         type="number"
@@ -591,13 +591,14 @@ const MealPlanner: React.FC = () => {
                         max="500"
                         value={mealPlanFormData.daily_protein_target}
                         onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_protein_target: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="carbs-target">Carboidratos (g)</Label>
+                      <Label htmlFor="carbs-target" className="dark:text-gray-200">Carboidratos (g)</Label>
                       <Input
                         id="carbs-target"
                         type="number"
@@ -605,10 +606,11 @@ const MealPlanner: React.FC = () => {
                         max="500"
                         value={mealPlanFormData.daily_carbs_target}
                         onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_carbs_target: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="fat-target">Gorduras (g)</Label>
+                      <Label htmlFor="fat-target" className="dark:text-gray-200">Gorduras (g)</Label>
                       <Input
                         id="fat-target"
                         type="number"
@@ -616,15 +618,16 @@ const MealPlanner: React.FC = () => {
                         max="200"
                         value={mealPlanFormData.daily_fat_target}
                         onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_fat_target: parseInt(e.target.value) })}
+                        className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                       />
                     </div>
                   </div>
 
                   <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateMealPlanDialogOpen(false)}>
+                    <Button type="button" variant="outline" onClick={() => setIsCreateMealPlanDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                       Cancelar
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
                       Criar Plano
                     </Button>
                   </div>
@@ -643,13 +646,13 @@ const MealPlanner: React.FC = () => {
                 placeholder="Buscar planos alimentares..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white"
               />
             </div>
           </div>
           <div className="w-full sm:w-48">
             <Select value={objectiveFilter} onValueChange={setObjectiveFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-card/50 border-gray-200 dark:border-white/10 dark:text-white">
                 <SelectValue placeholder="Objetivo" />
               </SelectTrigger>
               <SelectContent>
@@ -667,20 +670,21 @@ const MealPlanner: React.FC = () => {
         {/* Lista de Planos Alimentares */}
         {pageLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mealPlans.map((mealPlan) => (
-              <Card key={mealPlan.id} className="relative">
+              <Card key={mealPlan.id} className="relative bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-sm">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{mealPlan.name}</CardTitle>
+                    <CardTitle className="text-lg text-gray-900 dark:text-white">{mealPlan.name}</CardTitle>
                     <div className="flex gap-1">
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => handleManageMeals(mealPlan)}
+                        className="dark:text-gray-400 dark:hover:text-white"
                       >
                         <Settings className="h-4 w-4" />
                       </Button>
@@ -688,6 +692,7 @@ const MealPlanner: React.FC = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleEditMealPlan(mealPlan)}
+                        className="dark:text-gray-400 dark:hover:text-white"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -697,16 +702,16 @@ const MealPlanner: React.FC = () => {
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogTitle className="dark:text-white">Confirmar Exclusão</AlertDialogTitle>
+                            <AlertDialogDescription className="dark:text-gray-400">
                               Tem certeza que deseja deletar o plano "{mealPlan.name}"? Esta ação não pode ser desfeita.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteMealPlan(mealPlan.id)}>
+                            <AlertDialogCancel className="dark:border-white/10 dark:text-gray-300">Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteMealPlan(mealPlan.id)} className="bg-red-600 hover:bg-red-700 text-white">
                               Deletar
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -717,14 +722,14 @@ const MealPlanner: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   {mealPlan.description && (
-                    <p className="text-sm text-gray-600 mb-3">{mealPlan.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{mealPlan.description}</p>
                   )}
                   
                   <div className="space-y-2">
                     {mealPlan.daily_calories_target && (
                       <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">
+                        <Target className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                           {mealPlan.daily_calories_target} cal/dia
                         </span>
                       </div>
@@ -732,14 +737,14 @@ const MealPlanner: React.FC = () => {
 
                     {mealPlan.objective && (
                       <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">{mealPlan.objective}</span>
+                        <Target className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                        <span className="text-sm text-gray-600 dark:text-gray-300">{mealPlan.objective}</span>
                       </div>
                     )}
                   </div>
                   
                   <Button 
-                    className="w-full mt-4" 
+                    className="w-full mt-4 dark:border-white/10 dark:text-gray-300 dark:hover:bg-white/10" 
                     variant="outline"
                     onClick={() => handleManageMeals(mealPlan)}
                   >
@@ -755,10 +760,10 @@ const MealPlanner: React.FC = () => {
         {/* Empty State */}
         {mealPlans.length === 0 && !pageLoading && (
           <div className="text-center py-12">
-            <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum plano encontrado</h3>
-            <p className="text-gray-600 mb-4">Comece criando seu primeiro plano alimentar personalizado.</p>
-            <Button onClick={() => setIsCreateMealPlanDialogOpen(true)}>
+            <Utensils className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum plano encontrado</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Comece criando seu primeiro plano alimentar personalizado.</p>
+            <Button onClick={() => setIsCreateMealPlanDialogOpen(true)} className="bg-green-600 hover:bg-green-700 text-white">
               <Plus className="mr-2 h-4 w-4" />
               Criar Primeiro Plano
             </Button>
@@ -767,32 +772,32 @@ const MealPlanner: React.FC = () => {
 
         {/* Sheet de Gerenciamento de Refeições */}
         <Sheet open={isManageMealsSheetOpen} onOpenChange={setIsManageMealsSheetOpen}>
-          <SheetContent className="w-[800px] sm:w-[1000px]">
+          <SheetContent className="w-[800px] sm:w-[1000px] bg-white dark:bg-card border-l border-gray-200 dark:border-white/10">
             <SheetHeader>
-              <SheetTitle>Gerenciar Refeições - {selectedMealPlan?.name}</SheetTitle>
+              <SheetTitle className="text-gray-900 dark:text-white">Gerenciar Refeições - {selectedMealPlan?.name}</SheetTitle>
             </SheetHeader>
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Refeições do Plano</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Refeições do Plano</h3>
                 <Dialog open={isAddMealDialogOpen} onOpenChange={setIsAddMealDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button className="bg-green-600 hover:bg-green-700 text-white">
                       <Plus className="mr-2 h-4 w-4" />
                       Adicionar Refeição
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                     <DialogHeader>
-                      <DialogTitle>Adicionar Refeição ao Plano</DialogTitle>
+                      <DialogTitle className="text-gray-900 dark:text-white">Adicionar Refeição ao Plano</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleAddMeal} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="meal-food-select">Alimento *</Label>
+                        <Label htmlFor="meal-food-select" className="dark:text-gray-200">Alimento *</Label>
                         <Select 
                           value={mealFormData.food_id} 
                           onValueChange={(value) => setMealFormData({ ...mealFormData, food_id: value })}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="dark:bg-background/50 dark:border-white/10 dark:text-white">
                             <SelectValue placeholder="Selecione um alimento" />
                           </SelectTrigger>
                           <SelectContent>
@@ -807,7 +812,7 @@ const MealPlanner: React.FC = () => {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="meal-day-number">Dia *</Label>
+                          <Label htmlFor="meal-day-number" className="dark:text-gray-200">Dia *</Label>
                           <Input
                             id="meal-day-number"
                             type="number"
@@ -816,10 +821,11 @@ const MealPlanner: React.FC = () => {
                             value={mealFormData.day_number}
                             onChange={(e) => setMealFormData({ ...mealFormData, day_number: parseInt(e.target.value) })}
                             required
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="meal-quantity">Quantidade (g) *</Label>
+                          <Label htmlFor="meal-quantity" className="dark:text-gray-200">Quantidade (g) *</Label>
                           <Input
                             id="meal-quantity"
                             type="number"
@@ -828,36 +834,39 @@ const MealPlanner: React.FC = () => {
                             value={mealFormData.quantity}
                             onChange={(e) => setMealFormData({ ...mealFormData, quantity: parseInt(e.target.value) })}
                             required
+                            className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="meal-name">Nome da Refeição</Label>
+                        <Label htmlFor="meal-name" className="dark:text-gray-200">Nome da Refeição</Label>
                         <Input
                           id="meal-name"
                           value={mealFormData.meal_name}
                           onChange={(e) => setMealFormData({ ...mealFormData, meal_name: e.target.value })}
                           placeholder="Café da manhã, Almoço, Jantar..."
+                          className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="meal-notes">Notas</Label>
+                        <Label htmlFor="meal-notes" className="dark:text-gray-200">Notas</Label>
                         <Textarea
                           id="meal-notes"
                           value={mealFormData.notes}
                           onChange={(e) => setMealFormData({ ...mealFormData, notes: e.target.value })}
                           placeholder="Instruções especiais..."
                           rows={2}
+                          className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                         />
                       </div>
 
                       <div className="flex justify-end space-x-2">
-                        <Button type="button" variant="outline" onClick={() => setIsAddMealDialogOpen(false)}>
+                        <Button type="button" variant="outline" onClick={() => setIsAddMealDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                           Cancelar
                         </Button>
-                        <Button type="submit" disabled={!mealFormData.food_id}>
+                        <Button type="submit" disabled={!mealFormData.food_id} className="bg-green-600 hover:bg-green-700 text-white">
                           Adicionar Refeição
                         </Button>
                       </div>
@@ -869,9 +878,13 @@ const MealPlanner: React.FC = () => {
               {/* Refeições por Dia */}
               {mealPlanItems.length > 0 && (
                 <Tabs defaultValue="day-1" className="w-full">
-                  <TabsList className="grid w-full grid-cols-7">
+                  <TabsList className="grid w-full grid-cols-7 dark:bg-card/50">
                     {Array.from({ length: 7 }, (_, i) => (
-                      <TabsTrigger key={i + 1} value={`day-${i + 1}`}>
+                      <TabsTrigger 
+                        key={i + 1} 
+                        value={`day-${i + 1}`}
+                        className="data-[state=active]:dark:bg-primary/20 data-[state=active]:dark:text-primary"
+                      >
                         Dia {i + 1}
                       </TabsTrigger>
                     ))}
@@ -884,35 +897,35 @@ const MealPlanner: React.FC = () => {
                     return (
                       <TabsContent key={dayNumber} value={`day-${dayNumber}`} className="mt-6">
                         {dayMeals.length === 0 ? (
-                          <div className="text-center py-8 text-gray-500">
+                          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                             <p>Nenhuma refeição para este dia</p>
                           </div>
                         ) : (
                           <div className="space-y-4">
                             {dayMeals.map((mealPlanItem, index) => (
-                              <Card key={mealPlanItem.id}>
+                              <Card key={mealPlanItem.id} className="bg-white/50 dark:bg-card/20 border border-gray-200 dark:border-white/5">
                                 <CardContent className="p-6">
                                   <div className="flex items-start gap-4">
                                     <div className="flex items-center gap-2 mt-1">
-                                      <span className="flex items-center justify-center w-8 h-8 bg-green-100 text-green-600 rounded-full text-sm font-medium">
+                                      <span className="flex items-center justify-center w-8 h-8 bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-200 rounded-full text-sm font-medium">
                                         {index + 1}
                                       </span>
                                     </div>
                                     <div className="flex-1">
-                                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                         {mealPlanItem.meal_name}
                                       </h3>
                                       
                                       <div className="flex items-center gap-2 mb-3">
                                         <Apple className="h-4 w-4 text-green-600" />
-                                        <span className="font-medium">{mealPlanItem.food?.name}</span>
-                                        <Badge variant="outline">
+                                        <span className="font-medium dark:text-white">{mealPlanItem.food?.name}</span>
+                                        <Badge variant="outline" className="dark:border-white/20 dark:text-gray-300">
                                           {mealPlanItem.quantity}g
                                         </Badge>
                                       </div>
 
                                       {mealPlanItem.food && (
-                                        <div className="grid grid-cols-4 gap-2 mb-3 text-sm">
+                                        <div className="grid grid-cols-4 gap-2 mb-3 text-sm dark:text-gray-300">
                                           <div>
                                             <span className="font-medium">Cal:</span> {Math.round(mealPlanItem.food.calories_per_serving * mealPlanItem.quantity / mealPlanItem.food.serving_size)}
                                           </div>
@@ -929,8 +942,8 @@ const MealPlanner: React.FC = () => {
                                       )}
 
                                       {mealPlanItem.notes && (
-                                        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                                          <p className="text-sm text-yellow-800">
+                                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded">
+                                          <p className="text-sm text-yellow-800 dark:text-yellow-200">
                                             <strong>Nota:</strong> {mealPlanItem.notes}
                                           </p>
                                         </div>
@@ -941,6 +954,7 @@ const MealPlanner: React.FC = () => {
                                         size="sm"
                                         variant="ghost"
                                         onClick={() => handleEditMealPlanItem(mealPlanItem)}
+                                        className="dark:text-gray-400 dark:hover:text-white"
                                       >
                                         <Edit className="h-4 w-4" />
                                       </Button>
@@ -950,16 +964,16 @@ const MealPlanner: React.FC = () => {
                                             <Trash2 className="h-4 w-4 text-red-600" />
                                           </Button>
                                         </AlertDialogTrigger>
-                                        <AlertDialogContent>
+                                        <AlertDialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
                                           <AlertDialogHeader>
-                                            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-                                            <AlertDialogDescription>
+                                            <AlertDialogTitle className="dark:text-white">Confirmar Exclusão</AlertDialogTitle>
+                                            <AlertDialogDescription className="dark:text-gray-400">
                                               Tem certeza que deseja remover "{mealPlanItem.meal_name}" do plano?
                                             </AlertDialogDescription>
                                           </AlertDialogHeader>
                                           <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteMealPlanItem(mealPlanItem.id)}>
+                                            <AlertDialogCancel className="dark:border-white/10 dark:text-gray-300">Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteMealPlanItem(mealPlanItem.id)} className="bg-red-600 hover:bg-red-700 text-white">
                                               Remover
                                             </AlertDialogAction>
                                           </AlertDialogFooter>
@@ -983,23 +997,24 @@ const MealPlanner: React.FC = () => {
 
         {/* Dialog de Edição de Refeição */}
         <Dialog open={isEditMealDialogOpen} onOpenChange={setIsEditMealDialogOpen}>
-          <DialogContent>
+          <DialogContent className="bg-white dark:bg-card border-gray-200 dark:border-white/10">
             <DialogHeader>
-              <DialogTitle>Editar Refeição</DialogTitle>
+              <DialogTitle className="text-gray-900 dark:text-white">Editar Refeição</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleUpdateMealPlanItem} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-name">Nome da Refeição</Label>
+                <Label htmlFor="edit-meal-name" className="dark:text-gray-200">Nome da Refeição</Label>
                 <Input
                   id="edit-meal-name"
                   value={editMealFormData.meal_name}
                   onChange={(e) => setEditMealFormData({ ...editMealFormData, meal_name: e.target.value })}
                   placeholder="Café da manhã, Almoço, Jantar..."
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-quantity">Quantidade (g)</Label>
+                <Label htmlFor="edit-meal-quantity" className="dark:text-gray-200">Quantidade (g)</Label>
                 <Input
                   id="edit-meal-quantity"
                   type="number"
@@ -1007,25 +1022,27 @@ const MealPlanner: React.FC = () => {
                   max="1000"
                   value={editMealFormData.quantity}
                   onChange={(e) => setEditMealFormData({ ...editMealFormData, quantity: parseInt(e.target.value) })}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-notes">Notas</Label>
+                <Label htmlFor="edit-meal-notes" className="dark:text-gray-200">Notas</Label>
                 <Textarea
                   id="edit-meal-notes"
                   value={editMealFormData.notes}
                   onChange={(e) => setEditMealFormData({ ...editMealFormData, notes: e.target.value })}
                   placeholder="Instruções especiais..."
                   rows={2}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditMealDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditMealDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
                   Atualizar Refeição
                 </Button>
               </div>
@@ -1035,47 +1052,50 @@ const MealPlanner: React.FC = () => {
 
         {/* Dialog de Edição de Plano Alimentar */}
         <Dialog open={isEditMealPlanDialogOpen} onOpenChange={setIsEditMealPlanDialogOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-white dark:bg-card border-gray-200 dark:border-white/10">
             <DialogHeader>
-              <DialogTitle>Editar Plano Alimentar</DialogTitle>
+              <DialogTitle className="text-gray-900 dark:text-white">Editar Plano Alimentar</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleUpdateMealPlan} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-plan-name">Nome do Plano *</Label>
+                <Label htmlFor="edit-meal-plan-name" className="dark:text-gray-200">Nome do Plano *</Label>
                 <Input
                   id="edit-meal-plan-name"
                   value={mealPlanFormData.name}
                   onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, name: e.target.value })}
                   placeholder="Plano de Emagrecimento"
                   required
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-plan-objective">Objetivo</Label>
+                <Label htmlFor="edit-meal-plan-objective" className="dark:text-gray-200">Objetivo</Label>
                 <Textarea
                   id="edit-meal-plan-objective"
                   value={mealPlanFormData.objective}
                   onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, objective: e.target.value })}
                   placeholder="Emagrecimento, hipertrofia, manutenção..."
                   rows={2}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-meal-plan-description">Descrição</Label>
+                <Label htmlFor="edit-meal-plan-description" className="dark:text-gray-200">Descrição</Label>
                 <Textarea
                   id="edit-meal-plan-description"
                   value={mealPlanFormData.description}
                   onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, description: e.target.value })}
                   placeholder="Descrição detalhada do plano..."
                   rows={3}
+                  className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-calories-target">Calorias Diárias</Label>
+                  <Label htmlFor="edit-calories-target" className="dark:text-gray-200">Calorias Diárias</Label>
                   <Input
                     id="edit-calories-target"
                     type="number"
@@ -1083,10 +1103,11 @@ const MealPlanner: React.FC = () => {
                     max="5000"
                     value={mealPlanFormData.daily_calories_target}
                     onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_calories_target: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-protein-target">Proteínas (g)</Label>
+                  <Label htmlFor="edit-protein-target" className="dark:text-gray-200">Proteínas (g)</Label>
                   <Input
                     id="edit-protein-target"
                     type="number"
@@ -1094,13 +1115,14 @@ const MealPlanner: React.FC = () => {
                     max="500"
                     value={mealPlanFormData.daily_protein_target}
                     onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_protein_target: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-carbs-target">Carboidratos (g)</Label>
+                  <Label htmlFor="edit-carbs-target" className="dark:text-gray-200">Carboidratos (g)</Label>
                   <Input
                     id="edit-carbs-target"
                     type="number"
@@ -1108,10 +1130,11 @@ const MealPlanner: React.FC = () => {
                     max="500"
                     value={mealPlanFormData.daily_carbs_target}
                     onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_carbs_target: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-fat-target">Gorduras (g)</Label>
+                  <Label htmlFor="edit-fat-target" className="dark:text-gray-200">Gorduras (g)</Label>
                   <Input
                     id="edit-fat-target"
                     type="number"
@@ -1119,15 +1142,16 @@ const MealPlanner: React.FC = () => {
                     max="200"
                     value={mealPlanFormData.daily_fat_target}
                     onChange={(e) => setMealPlanFormData({ ...mealPlanFormData, daily_fat_target: parseInt(e.target.value) })}
+                    className="dark:bg-background/50 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditMealPlanDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditMealPlanDialogOpen(false)} className="dark:border-white/10 dark:text-gray-300">
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
                   Atualizar Plano
                 </Button>
               </div>
