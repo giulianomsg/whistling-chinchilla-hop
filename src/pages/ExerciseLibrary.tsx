@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+// ... imports ...
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -48,6 +49,7 @@ const ExerciseLibrary: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, searchTerm, difficultyFilter])
 
+  // RESET CORRETO AO ABRIR DIALOG
   const openCreateDialog = () => {
     setFormData(initialFormState)
     setIsCreateDialogOpen(true)
@@ -117,25 +119,20 @@ const ExerciseLibrary: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Dumbbell className="text-blue-400"/> Exercícios</h1>
+          {/* CHAMADA DO RESET */}
           <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Novo</Button>
         </div>
 
+        {/* Busca e Filtro (igual) */}
         <div className="flex gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-            <Input placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/>
-          </div>
+          <div className="relative flex-1"><Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" /><Input placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/></div>
           <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
             <SelectTrigger className="w-48 bg-white/5 border-white/10 text-white"><SelectValue placeholder="Dificuldade"/></SelectTrigger>
-            <SelectContent className="bg-slate-900 border-white/10 text-white">
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="beginner">Iniciante</SelectItem>
-              <SelectItem value="intermediate">Intermediário</SelectItem>
-              <SelectItem value="advanced">Avançado</SelectItem>
-            </SelectContent>
+            <SelectContent className="bg-slate-800 border-white/10 text-white"><SelectItem value="all">Todas</SelectItem><SelectItem value="beginner">Iniciante</SelectItem><SelectItem value="intermediate">Intermediário</SelectItem><SelectItem value="advanced">Avançado</SelectItem></SelectContent>
           </Select>
         </div>
 
+        {/* Lista de Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {exercises.map(ex => (
             <Card key={ex.id} className="bg-white/5 border-white/10 hover:bg-white/10 transition-all group">
@@ -149,7 +146,7 @@ const ExerciseLibrary: React.FC = () => {
                         <AlertDialog>
                           <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400 h-8 w-8"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
                           <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
+                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
                             <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -175,6 +172,7 @@ const ExerciseLibrary: React.FC = () => {
           ))}
         </div>
 
+        {/* Dialogs (Forms Inline para evitar perda de foco) */}
         {[
           { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Exercício', mode: 'create' as const },
           { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Exercício', mode: 'update' as const }
@@ -189,21 +187,17 @@ const ExerciseLibrary: React.FC = () => {
                     <Label>Dificuldade</Label>
                     <Select value={formData.difficulty} onValueChange={v => setFormData({...formData, difficulty: v})}>
                       <SelectTrigger className="bg-black/20 border-white/10"><SelectValue/></SelectTrigger>
-                      <SelectContent className="bg-slate-800 text-white">
-                        <SelectItem value="beginner">Iniciante</SelectItem>
-                        <SelectItem value="intermediate">Intermediário</SelectItem>
-                        <SelectItem value="advanced">Avançado</SelectItem>
-                      </SelectContent>
+                      <SelectContent className="bg-slate-800 text-white"><SelectItem value="beginner">Iniciante</SelectItem><SelectItem value="intermediate">Intermediário</SelectItem><SelectItem value="advanced">Avançado</SelectItem></SelectContent>
                     </Select>
                   </div>
-                  <div><Label>Músculos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.muscles} onChange={e=>setFormData({...formData, muscles: e.target.value})}/></div>
+                  <div><Label>Músculos</Label><Input className="bg-black/20 border-white/10" value={formData.muscles} onChange={e=>setFormData({...formData, muscles: e.target.value})}/></div>
                 </div>
-                <div><Label>Equipamentos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})}/></div>
+                <div><Label>Equipamentos</Label><Input className="bg-black/20 border-white/10" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})}/></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Vídeo URL (YouTube)</Label><Input className="bg-black/20 border-white/10" value={formData.video_url} onChange={e=>setFormData({...formData, video_url: e.target.value})}/></div>
-                  <div><Label>GIF URL (Preview)</Label><Input className="bg-black/20 border-white/10" value={formData.gif_url} onChange={e=>setFormData({...formData, gif_url: e.target.value})}/></div>
+                  <div><Label>Vídeo URL</Label><Input className="bg-black/20 border-white/10" value={formData.video_url} onChange={e=>setFormData({...formData, video_url: e.target.value})}/></div>
+                  <div><Label>GIF URL</Label><Input className="bg-black/20 border-white/10" value={formData.gif_url} onChange={e=>setFormData({...formData, gif_url: e.target.value})}/></div>
                 </div>
-                <div><Label>Descrição Geral</Label><Textarea className="bg-black/20 border-white/10" rows={2} value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})}/></div>
+                <div><Label>Descrição</Label><Textarea className="bg-black/20 border-white/10" rows={2} value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})}/></div>
                 <div><Label className="text-blue-400">Instruções (uma por linha)</Label><Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={4} value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})}/></div>
                 <div><Label className="text-yellow-400">Dicas (uma por linha)</Label><Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={3} value={formData.tips} onChange={e=>setFormData({...formData, tips: e.target.value})}/></div>
                 <div className="flex items-center space-x-2 py-2">
