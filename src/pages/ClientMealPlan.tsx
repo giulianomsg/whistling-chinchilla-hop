@@ -1,246 +1,480 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, AlertCircle, Utensils, ArrowLeft, Clock, ChevronDown, ChevronUp } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { 
+  Utensils, 
+  Calendar, 
+  Target,
+  Clock,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Apple,
+  Maximize2,
+  Eye
+} from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
-import { useNavigate } from 'react-router-dom'
+import MealPlanDetailView from '@/components/client/MealPlanDetailView'
 
-interface ClientMealPlanData {
+interface MealPlan {
   id: string
+  name: string
+  description: string | null
+  objective: string | null
+  nutritionist_id: string
+  daily_calories_target: number | null
+  daily_protein_target: number | null
+  daily_carbs_target: number | null
+  daily_fat_target: number | null
+  is_template: boolean
+  created_at: string
+}
+
+interface Food {
+  id: string
+  name: string
+  brand: string | null
+  category: string | null
+  serving_size: number
+  calories_per_serving: number
+  protein: number
+  carbs: number
+  fat: number
+  created_by: string
+  is_public: boolean
+}
+
+interface MealPlanItem {
+  id: string
+  meal_plan_id: string
+  day_number: number
+  meal_order: number
+  meal_name: string
+  food_id: string | null
+  recipe_id: string | null
+  quantity: number
+  notes: string | null
+  food?: Food
+}
+
+interface ClientMealPlan {
+  id: string
+  client_id: string
+  meal_plan_id: string
+  nutritionist_id: string
+  start_date: string
+  end_date: string | null
   status: string
-  meal_plan: {
-    id: string
-    name: string
-    description: string | null
-    objective: string | null
-    daily_calories_target: number | null
-    daily_protein_target: number | null
-    daily_carbs_target: number | null
-    daily_fat_target: number | null
-    meal_plan_meals: {
-      id: string
-      name: string
-      time: string | null
-      notes: string | null
-      order_index: number
-      meal_foods: {
-        id: string
-        quantity: number
-        unit: string
-        notes: string | null
-        food: {
-          name: string
-          calories_per_serving: number
-          protein: number
-          carbs: number
-          fat: number
-          serving_size: number
-          serving_unit: string
-        }
-      }[]
-    }[]
-  }
+  notes: string | null
+  meal_plan: MealPlan
 }
 
 const ClientMealPlan: React.FC = () => {
-  const { user } = useAuth()
-  const navigate = useNavigate()
+  const { user, profile } = useAuth()
+  const [clientMealPlan, setClientMealPlan] = useState<ClientMealPlan | null>(null)
+  const [mealPlanItems, setMealPlanItems] = useState<MealPlanItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [activePlan, setActivePlan] = useState<ClientMealPlanData | null>(null)
-  const [expandedMeals, setExpandedMeals] = useState<Record<string, boolean>>({})
+  const [showDetailView, setShowDetailView] = useState(false)
+  const [initialized, setInitialized] = useState(false)
 
-  useEffect(() => {
-    const fetchMealPlan = async () => {
-      if (!user) return
-      
-      try {
-        setLoading(true)
-        
-        const { data, error } = await supabase
-          .from('client_meal_plans')
-          .select(`
-            id, status,
-            meal_plan:meal_plans (
-              id, name, description, objective,
-              daily_calories_target, daily_protein_target, daily_carbs_target, daily_fat_target,
-              meal_plan_meals (
-                id, name, time, notes, order_index,
-                meal_foods (
-                  id, quantity, unit, notes,
-                  food:foods_library (
-                    name, calories_per_serving, protein, carbs, fat, serving_size, serving_unit
-                  )
-                )
-              )
-            )
-          `)
-          .eq('client_id', user.id)
-          .eq('status', 'active')
-          .maybeSingle()
-
-        if (error) throw error
-        
-        if (data) {
-          // Ordenar refeições
-          if (data.meal_plan && data.meal_plan.meal_plan_meals) {
-            data.meal_plan.meal_plan_meals.sort((a, b) => a.order_index - b.order_index)
-            
-            // Expandir todas as refeições inicialmente
-            const initialExpanded: Record<string, boolean> = {}
-            data.meal_plan.meal_plan_meals.forEach(meal => {
-              initialExpanded[meal.id] = true
-            })
-            setExpandedMeals(initialExpanded)
-          }
-          setActivePlan(data as any)
-        }
-      } catch (error) {
-        console.error('Erro ao buscar plano alimentar:', error)
-      } finally {
-        setLoading(false)
-      }
+  // Buscar plano ativo do cliente
+  const fetchClientMealPlan = async () => {
+    if (!user) {
+      console.log('❌ [CLIENT_MEAL_PLAN] Usuário null, não buscando plano')
+      return
     }
 
-    fetchMealPlan()
-  }, [user])
+    try {
+      console.log('🔍 [CLIENT_MEAL_PLAN] Buscando plano do cliente:', user.id)
+      setLoading(true)
+      
+      const { data, error } = await supabase
+        .from('client_meal_plans')
+        .select(`
+          *,
+          meal_plan:meal_plans(*)
+        `)
+        .eq('client_id', user.id)
+        .eq('status', 'active')
+        .single()
 
-  const toggleMeal = (mealId: string) => {
-    setExpandedMeals(prev => ({
-      ...prev,
-      [mealId]: !prev[mealId]
-    }))
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('❌ [CLIENT_MEAL_PLAN] Erro ao buscar plano do cliente:', error)
+        console.error('❌ [CLIENT_MEAL_PLAN] Detalhes do erro:', {
+          code: error.code,
+          message: error.message,
+          details: error.details
+        })
+        return
+      }
+
+      console.log('✅ [CLIENT_MEAL_PLAN] Plano encontrado:', data)
+      setClientMealPlan(data)
+      
+      // Se encontrou um plano, buscar os itens
+      if (data) {
+        await fetchMealPlanItems(data.meal_plan_id)
+      }
+    } catch (error) {
+      console.error('❌ [CLIENT_MEAL_PLAN] Erro inesperado:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Buscar itens do plano
+  const fetchMealPlanItems = async (mealPlanId: string) => {
+    try {
+      console.log('🔍 [CLIENT_MEAL_PLAN] Buscando itens do plano:', mealPlanId)
+      
+      const { data, error } = await supabase
+        .from('meal_plan_items')
+        .select(`
+          *,
+          food:foods_library(*)
+        `)
+        .eq('meal_plan_id', mealPlanId)
+        .order('day_number', { ascending: true })
+        .order('meal_order', { ascending: true })
+
+      if (error) {
+        console.error('❌ [CLIENT_MEAL_PLAN] Erro ao buscar itens do plano:', error)
+        return
+      }
+
+      // ✅ PROTEGER CONTRA NULL: Filtrar itens com food null (ainda necessário para foods)
+      const filteredData = (data || []).filter(item => item.food !== null)
+      console.log('✅ [CLIENT_MEAL_PLAN] Itens do plano carregados:', filteredData.length)
+      setMealPlanItems(filteredData)
+    } catch (error) {
+      console.error('❌ [CLIENT_MEAL_PLAN] Erro inesperado:', error)
+    }
+  }
+
+  // useEffect simplificado e estável
+  useEffect(() => {
+    console.log('🔍 [CLIENT_MEAL_PLAN] useEffect chamado', { 
+      user: !!user, 
+      profile: !!profile,
+      userId: user?.id,
+      initialized
+    })
+    
+    // Só executar se tiver usuário e ainda não foi inicializado
+    if (user && !initialized) {
+      console.log('🚀 [CLIENT_MEAL_PLAN] Inicializando busca de plano')
+      setInitialized(true)
+      fetchClientMealPlan()
+    }
+  }, [user?.id, profile?.id, initialized])
+
+  // Agrupar refeições por dia
+  const getMealsByDay = () => {
+    const grouped: { [key: number]: MealPlanItem[] } = {}
+    mealPlanItems.forEach(item => {
+      if (!grouped[item.day_number]) {
+        grouped[item.day_number] = []
+      }
+      grouped[item.day_number].push(item)
+    })
+    return grouped
+  }
+
+  const mealsByDay = getMealsByDay()
+
+  // Calcular macros totais do dia
+  const calculateDayMacros = (dayMeals: MealPlanItem[]) => {
+    return dayMeals.reduce((acc, item) => {
+      if (!item.food) return acc
+      
+      const factor = item.quantity / item.food.serving_size
+      return {
+        calories: acc.calories + Math.round(item.food.calories_per_serving * factor),
+        protein: acc.protein + Math.round(item.food.protein * factor * 10) / 10,
+        carbs: acc.carbs + Math.round(item.food.carbs * factor * 10) / 10,
+        fat: acc.fat + Math.round(item.food.fat * factor * 10) / 10
+      }
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0 })
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600 dark:text-green-400" />
-      </div>
-    )
-  }
-
-  if (!activePlan) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-background flex flex-col items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Utensils className="h-10 w-10 text-gray-400" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Nenhum plano ativo</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Você ainda não possui um plano alimentar ativo. Entre em contato com seu nutricionista.
-          </p>
-          <Button onClick={() => navigate('/app/dashboard')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar ao Início
-          </Button>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Carregando seu plano alimentar...</p>
         </div>
       </div>
     )
   }
 
-  const { meal_plan } = activePlan
-
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-background pb-20 transition-colors duration-300">
-      {/* Header */}
-      <div className="bg-white dark:bg-card/20 border-b border-gray-200 dark:border-white/5 px-4 py-6 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/app/dashboard')} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{meal_plan.name}</h1>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">{meal_plan.objective}</p>
+  if (!clientMealPlan) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <AlertCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Você ainda não tem um plano alimentar ativo
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Entre em contato com seu profissional para receber um plano alimentar personalizado.
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
+              <p className="text-sm text-green-800">
+                <strong>Próximos passos:</strong><br />
+                1. Fale com seu profissional de nutrição<br />
+                2. Solicite um plano alimentar<br />
+                3. Volte aqui para visualizar suas refeições
+              </p>
             </div>
           </div>
-
-          {/* Macros Summary */}
-          <div className="grid grid-cols-4 gap-2 mt-2">
-             <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-2 text-center border border-orange-100 dark:border-orange-800/30">
-               <span className="block text-xs text-orange-600 dark:text-orange-400 font-bold">KCAL</span>
-               <span className="text-sm font-bold text-orange-800 dark:text-orange-200">{meal_plan.daily_calories_target || '-'}</span>
-             </div>
-             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 text-center border border-blue-100 dark:border-blue-800/30">
-               <span className="block text-xs text-blue-600 dark:text-blue-400 font-bold">PROT</span>
-               <span className="text-sm font-bold text-blue-800 dark:text-blue-200">{meal_plan.daily_protein_target || '-'}g</span>
-             </div>
-             <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-2 text-center border border-yellow-100 dark:border-yellow-800/30">
-               <span className="block text-xs text-yellow-600 dark:text-yellow-400 font-bold">CARB</span>
-               <span className="text-sm font-bold text-yellow-800 dark:text-yellow-200">{meal_plan.daily_carbs_target || '-'}g</span>
-             </div>
-             <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-2 text-center border border-red-100 dark:border-red-800/30">
-               <span className="block text-xs text-red-600 dark:text-red-400 font-bold">GORD</span>
-               <span className="text-sm font-bold text-red-800 dark:text-red-200">{meal_plan.daily_fat_target || '-'}g</span>
-             </div>
-          </div>
         </div>
       </div>
+    )
+  }
 
-      <div className="max-w-4xl mx-auto px-4 mt-6 space-y-4">
-        {meal_plan.meal_plan_meals.map((meal) => (
-          <Card key={meal.id} className="border-none shadow-sm overflow-hidden bg-white/80 dark:bg-card/30 backdrop-blur-md border border-gray-200 dark:border-white/10">
-            <div 
-              className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-              onClick={() => toggleMeal(meal.id)}
+  if (showDetailView) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowDetailView(false)}
+              className="mb-4"
             >
-              <div className="flex items-center gap-3">
-                <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg text-green-600 dark:text-green-400">
-                  <Utensils className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{meal.name}</h3>
-                  {meal.time && (
-                    <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                      <Clock className="h-3 w-3" />
-                      <span>{meal.time}</span>
-                    </div>
-                  )}
-                </div>
+              ← Voltar para Visão Resumida
+            </Button>
+          </div>
+          <MealPlanDetailView clientMealPlan={clientMealPlan} />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-green-600 rounded-lg">
+                <Utensils className="h-6 w-6 text-white" />
               </div>
-              {expandedMeals[meal.id] ? (
-                <ChevronUp className="h-5 w-5 text-gray-400" />
-              ) : (
-                <ChevronDown className="h-5 w-5 text-gray-400" />
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Meu Plano Alimentar</h1>
+                <p className="text-gray-600">Seu plano personalizado de nutrição</p>
+              </div>
+            </div>
+            
+            <Button 
+              onClick={() => setShowDetailView(true)}
+              className="flex items-center gap-2"
+            >
+              <Maximize2 className="h-4 w-4" />
+              Ver Detalhes Completos
+            </Button>
+          </div>
+        </div>
+
+        {/* Card Resumo do Plano */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-green-600" />
+              {/* ✅ PROTEÇÃO SIMPLIFICADA - Agora meal_plan não deve ser null graças à correção RLS */}
+              {clientMealPlan.meal_plan?.name || 'Plano Alimentar'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {clientMealPlan.meal_plan?.description && (
+              <p className="text-gray-600 mb-4">{clientMealPlan.meal_plan.description}</p>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Início:</span>
+                <span className="text-sm font-medium">
+                  {new Date(clientMealPlan.start_date).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Target className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Status:</span>
+                <Badge variant="secondary" className="text-xs">
+                  Ativo
+                </Badge>
+              </div>
+
+              {clientMealPlan.meal_plan?.daily_calories_target && (
+                <div className="flex items-center gap-2">
+                  <Target className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">Meta diária:</span>
+                  <span className="text-sm font-medium">
+                    {clientMealPlan.meal_plan.daily_calories_target} cal
+                  </span>
+                </div>
               )}
             </div>
 
-            {expandedMeals[meal.id] && (
-              <div className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2">
-                <div className="space-y-3 mt-2">
-                  {meal.meal_foods.map((item) => {
-                    const totalCals = Math.round((item.quantity / item.food.serving_size) * item.food.calories_per_serving)
-                    
-                    return (
-                      <div key={item.id} className="flex items-start justify-between py-2 border-b border-gray-100 dark:border-white/5 last:border-0">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-200">{item.food.name}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {item.quantity}{item.unit} • {totalCals} kcal
-                          </p>
-                          {item.notes && (
-                            <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1 italic">
-                              Nota: {item.notes}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
-                  
-                  {meal.notes && (
-                    <div className="mt-3 p-3 bg-gray-50 dark:bg-white/5 rounded-lg text-sm text-gray-600 dark:text-gray-300 italic border border-gray-100 dark:border-white/5">
-                      "{meal.notes}"
+            {/* Targets Nutricionais */}
+            {(clientMealPlan.meal_plan?.daily_protein_target || 
+              clientMealPlan.meal_plan?.daily_carbs_target || 
+              clientMealPlan.meal_plan?.daily_fat_target) && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-700 mb-2">Metas Diárias:</p>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  {clientMealPlan.meal_plan.daily_protein_target && (
+                    <div>
+                      <span className="text-gray-600">Proteínas:</span>
+                      <span className="ml-2 font-medium">{clientMealPlan.meal_plan.daily_protein_target}g</span>
+                    </div>
+                  )}
+                  {clientMealPlan.meal_plan.daily_carbs_target && (
+                    <div>
+                      <span className="text-gray-600">Carboidratos:</span>
+                      <span className="ml-2 font-medium">{clientMealPlan.meal_plan.daily_carbs_target}g</span>
+                    </div>
+                  )}
+                  {clientMealPlan.meal_plan.daily_fat_target && (
+                    <div>
+                      <span className="text-gray-600">Gorduras:</span>
+                      <span className="ml-2 font-medium">{clientMealPlan.meal_plan.daily_fat_target}g</span>
                     </div>
                   )}
                 </div>
               </div>
             )}
+
+            {clientMealPlan.meal_plan?.objective && (
+              <div className="mt-4 p-3 bg-gray-50 rounded">
+                <p className="text-sm font-medium text-gray-700">Objetivo:</p>
+                <p className="text-sm text-gray-600">{clientMealPlan.meal_plan.objective}</p>
+              </div>
+            )}
+
+            {clientMealPlan.notes && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                <p className="text-sm text-yellow-800">
+                  <strong>Nota do profissional:</strong> {clientMealPlan.notes}
+                </p>
+              </div>
+            )}
+
+            {/* Estatísticas Rápidas */}
+            <div className="mt-6 grid grid-cols-4 gap-4">
+              <div className="text-center p-3 bg-green-50 rounded">
+                <p className="text-xl font-bold text-green-600">{mealPlanItems.length}</p>
+                <p className="text-xs text-gray-600">Refeições</p>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded">
+                <p className="text-xl font-bold text-blue-600">
+                  {new Set(mealPlanItems.map(item => item.day_number)).size}
+                </p>
+                <p className="text-xs text-gray-600">Dias</p>
+              </div>
+              <div className="text-center p-3 bg-orange-50 rounded">
+                <p className="text-xl font-bold text-orange-600">
+                  {clientMealPlan.meal_plan?.daily_calories_target || 0}
+                </p>
+                <p className="text-xs text-gray-600">Cal/Dia</p>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded">
+                <p className="text-xl font-bold text-purple-600">
+                  {new Set(mealPlanItems.map(item => item.food?.category).filter(Boolean)).size}
+                </p>
+                <p className="text-xs text-gray-600">Categorias</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Prévia das Refeições */}
+        {mealPlanItems.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5 text-gray-600" />
+                Prévia das Refeições
+              </CardTitle>
+              <p className="text-sm text-gray-600">
+                Clique em "Ver Detalhes Completos" para ver todas as refeições com informações nutricionais detalhadas
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: Math.min(3, 7) }, (_, i) => {
+                  const dayNumber = i + 1
+                  const dayMeals = mealsByDay[dayNumber] || []
+                  
+                  return (
+                    <div key={dayNumber} className="p-4 border rounded-lg">
+                      <h3 className="font-semibold text-gray-900 mb-2">Dia {dayNumber}</h3>
+                      <div className="space-y-2">
+                        {dayMeals.slice(0, 2).map((mealPlanItem, index) => (
+                          <div key={mealPlanItem.id} className="flex items-center gap-2 text-sm">
+                            <span className="flex items-center justify-center w-6 h-6 bg-green-100 text-green-600 rounded-full text-xs font-medium">
+                              {index + 1}
+                            </span>
+                            <span className="text-gray-700 truncate">
+                              {mealPlanItem.meal_name}
+                            </span>
+                          </div>
+                        ))}
+                        {dayMeals.length > 2 && (
+                          <p className="text-xs text-gray-500">
+                            +{dayMeals.length - 2} refeições...
+                          </p>
+                        )}
+                        {dayMeals.length === 0 && (
+                          <p className="text-xs text-gray-500">Nenhuma refeição</p>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              
+              <div className="mt-6 text-center">
+                <Button 
+                  onClick={() => setShowDetailView(true)}
+                  variant="outline"
+                  className="flex items-center gap-2 mx-auto"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                  Ver Todas as Refeições Detalhadas
+                </Button>
+              </div>
+            </CardContent>
           </Card>
-        ))}
+        )}
+
+        {mealPlanItems.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-12">
+              <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhuma refeição encontrada</h3>
+              <p className="text-gray-600 mb-4">
+                Seu profissional ainda não adicionou refeições a este plano.
+              </p>
+              <Button 
+                onClick={() => setShowDetailView(true)}
+                variant="outline"
+                disabled
+              >
+                <Maximize2 className="h-4 w-4 mr-2" />
+                Ver Detalhes (Indisponível)
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   )
