@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
@@ -33,7 +33,6 @@ const ExerciseLibrary: React.FC = () => {
   }
   const [formData, setFormData] = useState(initialFormState)
 
-  // ... (manter fetchExercises e useEffect iguais) ...
   const fetchExercises = async () => {
     if (!user) return
     setPageLoading(true)
@@ -49,7 +48,6 @@ const ExerciseLibrary: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, searchTerm, difficultyFilter])
 
-  // FUNÇÃO DE RESET CORRIGIDA
   const openCreateDialog = () => {
     setFormData(initialFormState)
     setIsCreateDialogOpen(true)
@@ -83,7 +81,7 @@ const ExerciseLibrary: React.FC = () => {
     }
 
     if (!error) { 
-      showSuccess(mode === 'create' ? 'Exercício criado!' : 'Atualizado!')
+      showSuccess(mode === 'create' ? 'Criado!' : 'Atualizado!')
       setIsCreateDialogOpen(false)
       setIsEditDialogOpen(false)
       fetchExercises() 
@@ -112,54 +110,6 @@ const ExerciseLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
-  // ... (ExerciseForm component mantido igual) ...
-  const ExerciseForm = ({ mode }: { mode: 'create' | 'update' }) => (
-    <form onSubmit={(e) => handleSave(e, mode)} className="space-y-4 h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
-      <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Dificuldade</Label>
-          <Select value={formData.difficulty} onValueChange={v => setFormData({...formData, difficulty: v})}>
-            <SelectTrigger className="bg-black/20 border-white/10"><SelectValue/></SelectTrigger>
-            <SelectContent className="bg-slate-800 text-white">
-              <SelectItem value="beginner">Iniciante</SelectItem>
-              <SelectItem value="intermediate">Intermediário</SelectItem>
-              <SelectItem value="advanced">Avançado</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div><Label>Músculos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.muscles} onChange={e=>setFormData({...formData, muscles: e.target.value})}/></div>
-      </div>
-
-      <div><Label>Equipamentos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})}/></div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div><Label>Vídeo URL (YouTube)</Label><Input className="bg-black/20 border-white/10" value={formData.video_url} onChange={e=>setFormData({...formData, video_url: e.target.value})}/></div>
-        <div><Label>GIF URL (Preview)</Label><Input className="bg-black/20 border-white/10" value={formData.gif_url} onChange={e=>setFormData({...formData, gif_url: e.target.value})}/></div>
-      </div>
-
-      <div><Label>Descrição Geral</Label><Textarea className="bg-black/20 border-white/10" rows={2} value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})}/></div>
-      
-      <div>
-        <Label className="text-blue-400">Instruções Passo a Passo (uma por linha)</Label>
-        <Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={4} value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} placeholder="1. Posicione os pés...&#10;2. Segure a barra..."/>
-      </div>
-
-      <div>
-        <Label className="text-yellow-400">Dicas Importantes (uma por linha)</Label>
-        <Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={3} value={formData.tips} onChange={e=>setFormData({...formData, tips: e.target.value})}/>
-      </div>
-
-      <div className="flex items-center space-x-2 py-2">
-        <Checkbox id="public" checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-blue-500" />
-        <Label htmlFor="public" className="cursor-pointer">Tornar público</Label>
-      </div>
-
-      <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold">Salvar Exercício</Button>
-    </form>
-  )
-
   if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary"/></div>
 
   return (
@@ -167,18 +117,7 @@ const ExerciseLibrary: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Dumbbell className="text-blue-400"/> Exercícios</h1>
-          
-          {/* AQUI ESTÁ O BOTÃO CORRIGIDO */}
-          <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500">
-            <Plus className="mr-2 h-4 w-4"/> Novo
-          </Button>
-
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogContent className="bg-slate-900 border-white/10 text-white max-w-2xl">
-              <DialogHeader><DialogTitle>Novo Exercício</DialogTitle></DialogHeader>
-              <ExerciseForm mode="create" />
-            </DialogContent>
-          </Dialog>
+          <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Novo</Button>
         </div>
 
         <div className="flex gap-4 mb-6">
@@ -210,7 +149,7 @@ const ExerciseLibrary: React.FC = () => {
                         <AlertDialog>
                           <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400 h-8 w-8"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
                           <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
+                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
                             <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -236,12 +175,46 @@ const ExerciseLibrary: React.FC = () => {
           ))}
         </div>
 
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="bg-slate-900 border-white/10 text-white max-w-2xl">
-            <DialogHeader><DialogTitle>Editar Exercício</DialogTitle></DialogHeader>
-            <ExerciseForm mode="update" />
-          </DialogContent>
-        </Dialog>
+        {[
+          { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Exercício', mode: 'create' as const },
+          { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Exercício', mode: 'update' as const }
+        ].map((d, i) => (
+          <Dialog key={i} open={d.open} onOpenChange={d.change}>
+            <DialogContent className="bg-slate-900 border-white/10 text-white max-w-2xl h-[90vh] overflow-y-auto">
+              <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
+              <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
+                <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Dificuldade</Label>
+                    <Select value={formData.difficulty} onValueChange={v => setFormData({...formData, difficulty: v})}>
+                      <SelectTrigger className="bg-black/20 border-white/10"><SelectValue/></SelectTrigger>
+                      <SelectContent className="bg-slate-800 text-white">
+                        <SelectItem value="beginner">Iniciante</SelectItem>
+                        <SelectItem value="intermediate">Intermediário</SelectItem>
+                        <SelectItem value="advanced">Avançado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div><Label>Músculos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.muscles} onChange={e=>setFormData({...formData, muscles: e.target.value})}/></div>
+                </div>
+                <div><Label>Equipamentos (separar por vírgula)</Label><Input className="bg-black/20 border-white/10" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})}/></div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><Label>Vídeo URL (YouTube)</Label><Input className="bg-black/20 border-white/10" value={formData.video_url} onChange={e=>setFormData({...formData, video_url: e.target.value})}/></div>
+                  <div><Label>GIF URL (Preview)</Label><Input className="bg-black/20 border-white/10" value={formData.gif_url} onChange={e=>setFormData({...formData, gif_url: e.target.value})}/></div>
+                </div>
+                <div><Label>Descrição Geral</Label><Textarea className="bg-black/20 border-white/10" rows={2} value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})}/></div>
+                <div><Label className="text-blue-400">Instruções (uma por linha)</Label><Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={4} value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})}/></div>
+                <div><Label className="text-yellow-400">Dicas (uma por linha)</Label><Textarea className="bg-black/20 border-white/10 font-mono text-xs" rows={3} value={formData.tips} onChange={e=>setFormData({...formData, tips: e.target.value})}/></div>
+                <div className="flex items-center space-x-2 py-2">
+                  <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-blue-500" />
+                  <Label htmlFor={`public-${d.mode}`} className="cursor-pointer">Público</Label>
+                </div>
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold">Salvar</Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        ))}
       </div>
     </div>
   )
