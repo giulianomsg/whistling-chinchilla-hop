@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea' // Import Adicionado
+import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch' // Certifique-se de ter este componente
+import { Separator } from '@/components/ui/separator' // Certifique-se de ter este componente
 import { 
   User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, Timer, 
-  Loader2, AlertCircle, Target, Calendar, Bell, Trash2, Plus,
-  FileText, Save // Novos Ícones
+  Loader2, AlertCircle, Target, Calendar, Trash2, Plus,
+  FileText, Save, HeartPulse, Apple, Activity, BedDouble
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -39,14 +41,34 @@ const ClientDetails: React.FC = () => {
   const [selectedMealPlanId, setSelectedMealPlanId] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
 
-  // --- ESTADO DA ANAMNESE ---
+  // --- ESTADO DA ANAMNESE PROFISSIONAL (JSONB) ---
   const [anamnesisForm, setAnamnesisForm] = useState({
+    // Dados Médicos
     medical_history: '',
     medications: '',
-    injuries: '',
     surgeries: '',
-    sleep_quality: '',
-    stress_level: ''
+    injuries: '',
+    family_history: '',
+    allergies: '',
+    
+    // Estilo de Vida
+    occupation: '',
+    sleep_hours: '',
+    sleep_quality: '', // 'good', 'average', 'bad'
+    stress_level: '', // 'low', 'medium', 'high'
+    smoker: false,
+    alcohol: '', // 'never', 'socially', 'frequently'
+    
+    // Nutricional
+    water_intake: '',
+    diet_history: '',
+    food_aversions: '',
+    supplements: '',
+    
+    // Físico
+    activity_level: '', // 'sedentary', 'active', 'athlete'
+    training_experience: '',
+    weight_goal: ''
   })
 
   useEffect(() => {
@@ -72,24 +94,18 @@ const ClientDetails: React.FC = () => {
         setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
 
-        // Carregar dados de Anamnese (JSONB)
+        // Carregar dados de Anamnese (Merge com default para garantir campos novos)
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' 
             ? JSON.parse(detailsRes.data.anamnesis_data) 
             : detailsRes.data.anamnesis_data
             
-          setAnamnesisForm({
-            medical_history: data.medical_history || '',
-            medications: data.medications || '',
-            injuries: data.injuries || '',
-            surgeries: data.surgeries || '',
-            sleep_quality: data.sleep_quality || '',
-            stress_level: data.stress_level || ''
-          })
+          setAnamnesisForm(prev => ({ ...prev, ...data }))
         }
 
       } catch (error) {
         console.error(error)
+        showError('Erro ao carregar dados')
       } finally {
         setLoading(false)
       }
@@ -97,6 +113,7 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
+  // --- FUNÇÕES DE ATRIBUIÇÃO (MANTIDAS) ---
   const handleAssignWorkout = async () => {
     if (!selectedWorkoutId || !user) return
     try {
@@ -135,21 +152,25 @@ const ClientDetails: React.FC = () => {
     } catch (err) { showError('Erro ao remover') }
   }
 
-  // Função para Salvar Anamnese
+  // --- SALVAR ANAMNESE ---
   const handleSaveAnamnesis = async () => {
     try {
-      // Salva o objeto JSON inteiro na coluna JSONB
       const { error } = await supabase.from('client_details').upsert({
         profile_id: id,
         anamnesis_data: anamnesisForm,
         updated_at: new Date().toISOString()
       })
+      
       if (error) throw error
-      showSuccess('Anamnese atualizada!')
-    } catch (e) {
+      showSuccess('Anamnese completa salva com sucesso!')
+    } catch (e: any) {
       console.error(e)
-      showError('Erro ao salvar anamnese')
+      showError(`Erro ao salvar: ${e.message}`)
     }
+  }
+
+  const updateAnamnesis = (field: string, value: any) => {
+    setAnamnesisForm(prev => ({ ...prev, [field]: value }))
   }
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
@@ -179,18 +200,19 @@ const ClientDetails: React.FC = () => {
             <TabsTrigger value="info" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Perfil</TabsTrigger>
           </TabsList>
 
+          {/* --- ABAS EXISTENTES (MANTIDAS) --- */}
           <TabsContent value="workouts">
             <Card className="bg-white/5 border-white/10">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white flex items-center gap-2"><Dumbbell className="text-blue-400" /> Treinos Atribuídos</CardTitle>
                 <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
+                  <DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
                     <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
                     <div className="space-y-4 mt-4">
                       <Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select>
                       <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
-                      <Button onClick={handleAssignWorkout} className="w-full bg-blue-600">Confirmar</Button>
+                      <Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -201,7 +223,7 @@ const ClientDetails: React.FC = () => {
                     {clientWorkouts.map(cw => (
                       <div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center">
                         <div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana • Início: {cw.start_date}</div></div>
-                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
+                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
                       </div>
                     ))}
                   </div>
@@ -215,13 +237,13 @@ const ClientDetails: React.FC = () => {
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white flex items-center gap-2"><Utensils className="text-green-400" /> Planos Alimentares</CardTitle>
                 <Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
+                  <DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white">
                     <DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader>
                     <div className="space-y-4 mt-4">
                       <Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select>
                       <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
-                      <Button onClick={handleAssignMealPlan} className="w-full bg-green-600">Confirmar</Button>
+                      <Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -232,7 +254,7 @@ const ClientDetails: React.FC = () => {
                     {clientMealPlans.map(cm => (
                       <div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center">
                         <div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal • Início: {cm.start_date}</div></div>
-                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
+                        <div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div>
                       </div>
                     ))}
                   </div>
@@ -245,81 +267,134 @@ const ClientDetails: React.FC = () => {
             <div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div>
           </TabsContent>
 
-          {/* --- CONTEÚDO DA ABA ANAMNESE --- */}
+          {/* --- ABA ANAMNESE PROFISSIONAL (ATUALIZADA) --- */}
           <TabsContent value="anamnesis">
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4">
-                <div className="flex flex-col">
-                  <CardTitle className="text-white flex items-center gap-2"><FileText className="text-yellow-400" /> Ficha de Anamnese</CardTitle>
-                  <p className="text-sm text-gray-400 mt-1">Dados médicos e histórico de saúde.</p>
-                </div>
-                <Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-semibold shadow-lg shadow-primary/10"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label className="text-gray-300">Histórico Médico Familiar</Label>
-                    <Textarea 
-                      value={anamnesisForm.medical_history} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, medical_history: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
-                      placeholder="Ex: Diabetes, Hipertensão na família..."
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Medicamentos em Uso</Label>
-                    <Textarea 
-                      value={anamnesisForm.medications} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, medications: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
-                      placeholder="Ex: Losartana 50mg (manhã)..."
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Lesões Prévias / Dores</Label>
-                    <Textarea 
-                      value={anamnesisForm.injuries} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, injuries: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
-                      placeholder="Ex: Condromalácia patelar joelho direito..."
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Cirurgias Realizadas</Label>
-                    <Textarea 
-                      value={anamnesisForm.surgeries} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, surgeries: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5 h-32 resize-none focus:border-primary/50" 
-                      placeholder="Ex: Apendicite (2010)..."
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Qualidade do Sono</Label>
-                    <Input 
-                      value={anamnesisForm.sleep_quality} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, sleep_quality: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5" 
-                      placeholder="Ex: 6-7h por noite, acorda cansado..."
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">Nível de Estresse (Subjetivo)</Label>
-                    <Input 
-                      value={anamnesisForm.stress_level} 
-                      onChange={e => setAnamnesisForm({...anamnesisForm, stress_level: e.target.value})} 
-                      className="bg-black/20 border-white/10 text-white mt-1.5" 
-                      placeholder="Ex: Alto (trabalho), Médio..."
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
+              <Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-bold shadow-lg shadow-primary/10"><Save className="mr-2 h-4 w-4"/> Salvar Ficha Completa</Button>
+            </div>
+
+            <Tabs defaultValue="medical" className="w-full">
+              <TabsList className="bg-black/20 border border-white/10 w-full justify-start">
+                <TabsTrigger value="medical" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Clínica</TabsTrigger>
+                <TabsTrigger value="lifestyle" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Estilo de Vida</TabsTrigger>
+                <TabsTrigger value="nutri" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutricional</TabsTrigger>
+              </TabsList>
+
+              {/* 1. DADOS CLÍNICOS */}
+              <TabsContent value="medical" className="mt-4">
+                <Card className="bg-white/5 border-white/10">
+                  <CardHeader><CardTitle className="text-red-400 text-lg">Histórico Clínico e Lesões</CardTitle></CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Patologias / Histórico Familiar</Label>
+                      <Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]" placeholder="Diabetes, Hipertensão, Cardiopatias na família..."/>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Medicamentos de Uso Contínuo</Label>
+                      <Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]" placeholder="Nome, dosagem e horários..."/>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Cirurgias Realizadas</Label>
+                      <Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]" placeholder="Tipo e data aproximada..."/>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Lesões Osteoarticulares</Label>
+                      <Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]" placeholder="Dores articulares, fraturas antigas, hérnias..."/>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="text-gray-300 mb-1.5 block">Alergias (Medicamentosa/Alimentar)</Label>
+                      <Input value={anamnesisForm.allergies} onChange={e => updateAnamnesis('allergies', e.target.value)} className="bg-black/20 border-white/10"/>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* 2. ESTILO DE VIDA */}
+              <TabsContent value="lifestyle" className="mt-4">
+                <Card className="bg-white/5 border-white/10">
+                  <CardHeader><CardTitle className="text-blue-400 text-lg">Rotina e Hábitos</CardTitle></CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-300">Profissão / Rotina Diária</Label>
+                      <Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 mt-1.5" placeholder="Ex: Escritório, passa 8h sentado..."/>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-gray-300">Horas de Sono</Label>
+                        <Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/>
+                      </div>
+                      <div>
+                        <Label className="text-gray-300">Qualidade do Sono</Label>
+                        <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
+                          <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="Selecione..."/></SelectTrigger>
+                          <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="good">Boa/Reparadora</SelectItem><SelectItem value="average">Média/Acorda Cansado</SelectItem><SelectItem value="bad">Ruim/Insônia</SelectItem></SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300">Nível de Estresse</Label>
+                      <Select value={anamnesisForm.stress_level} onValueChange={v => updateAnamnesis('stress_level', v)}>
+                        <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="Selecione..."/></SelectTrigger>
+                        <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="low">Baixo</SelectItem><SelectItem value="medium">Médio</SelectItem><SelectItem value="high">Alto</SelectItem></SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center justify-between bg-black/20 p-3 rounded border border-white/5">
+                      <Label className="text-gray-300">Fumante?</Label>
+                      <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
+                    </div>
+                    <div>
+                      <Label className="text-gray-300">Consumo de Álcool</Label>
+                      <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
+                        <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="Frequência..."/></SelectTrigger>
+                        <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente (Fim de semana)</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300">Nível de Atividade Física</Label>
+                      <Select value={anamnesisForm.activity_level} onValueChange={v => updateAnamnesis('activity_level', v)}>
+                        <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="Selecione..."/></SelectTrigger>
+                        <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="sedentary">Sedentário</SelectItem><SelectItem value="active">Ativo (1-3x/sem)</SelectItem><SelectItem value="athlete">Muito Ativo (5x+/sem)</SelectItem></SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* 3. NUTRICIONAL */}
+              <TabsContent value="nutri" className="mt-4">
+                <Card className="bg-white/5 border-white/10">
+                  <CardHeader><CardTitle className="text-green-400 text-lg">Hábitos Alimentares</CardTitle></CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Histórico de Dietas / Recordatório 24h Breve</Label>
+                      <Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]" placeholder="Descreva brevemente como é a alimentação atual..."/>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label className="text-gray-300">Consumo de Água (L/dia)</Label>
+                        <Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 mt-1.5" placeholder="Ex: 2.5"/>
+                      </div>
+                      <div>
+                        <Label className="text-gray-300">Aversões Alimentares</Label>
+                        <Input value={anamnesisForm.food_aversions} onChange={e => updateAnamnesis('food_aversions', e.target.value)} className="bg-black/20 border-white/10 mt-1.5" placeholder="Ex: Não come peixe, brócolis..."/>
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-gray-300 mb-1.5 block">Suplementação Atual</Label>
+                      <Textarea value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10" placeholder="Whey, Creatina, Vitaminas..."/>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
+          {/* PERFIL (Visualização Rápida) */}
           <TabsContent value="info">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card>
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card>
+              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos do Aluno</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || 'Não informado pelo aluno.'}</CardContent></Card>
+              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições (Informadas pelo Aluno)</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || 'Nenhuma informada.'}</CardContent></Card>
             </div>
           </TabsContent>
         </Tabs>
