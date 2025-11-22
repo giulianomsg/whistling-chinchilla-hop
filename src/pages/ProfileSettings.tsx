@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -7,28 +7,36 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Loader2, Save, Upload, User, Shield, Award, Phone } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import { resizeImage, sanitizeFileName } from '@/utils/imageUtils' // Importe as funções criadas acima
 
 const ProfileSettings: React.FC = () => {
   const { user, profile, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  // Tabela profiles
+  // Estados do Formulário Base
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   
-  // Tabela professional_details
+  // Estados Profissional
   const [bio, setBio] = useState('')
   const [specialty, setSpecialty] = useState('')
   const [consultationPrice, setConsultationPrice] = useState('')
   const [certifications, setCertifications] = useState('')
 
-  // Tabela client_details
+  // Estados Cliente
   const [goals, setGoals] = useState('')
   const [restrictions, setRestrictions] = useState('')
+
+  // Estado para Preview da Imagem (Simulação de Recorte/Confirmação)
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (profile) {
@@ -47,10 +55,15 @@ const ProfileSettings: React.FC = () => {
         if (data) {
           setBio(data.bio || '')
           setSpecialty(data.specialty || '')
-          setConsultationPrice(data.consultation_price?.toString() || '')
-          // certifications é JSONB no banco
-          const certData = data.certifications as any
-          setCertifications(certData?.raw_text || '') 
+          // Garante que não seja null ou undefined ao converter para string
+          setConsultationPrice(data.consultation_price ? data.consultation_price.toString() : '')
+          // Tratamento robusto para o JSONB
+          let certText = ''
+          if (data.certifications) {
+            if (typeof data.certifications === 'string') certText = data.certifications
+            else if (typeof data.certifications === 'object') certText = (data.certifications as any).raw_text || ''
+          }
+          setCertifications(certText)
         }
       } else if (profile.role === 'client') {
         const { data } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
@@ -60,34 +73,66 @@ const ProfileSettings: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching details:', error)
+      console.error('Erro ao buscar detalhes:', error)
     }
   }
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  // 1. Seleção do Arquivo
+  const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0]
+      // Cria URL temporária para preview
+      const objectUrl = URL.createObjectURL(file)
+      setPreviewImage(objectUrl)
+      setSelectedFile(file)
+      setIsCropDialogOpen(true)
+      // Reseta o input para permitir selecionar o mesmo arquivo novamente se cancelar
+      event.target.value = ''
+    }
+  }
+
+  // 2. Confirmação e Upload (Processamento)
+  const handleConfirmUpload = async () => {
+    if (!selectedFile || !user) return
+    
     try {
       setUploading(true)
-      if (!event.target.files || event.target.files.length === 0) throw new Error('Selecione uma imagem.')
+      setIsCropDialogOpen(false) // Fecha modal
 
-      const file = event.target.files[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${user!.id}-${Date.now()}.${fileExt}`
-      const filePath = `${fileName}`
+      // Redimensiona para evitar erro 400 (Payload Too Large)
+      const blob = await resizeImage(selectedFile, 800, 800)
+      const processedFile = new File([blob], selectedFile.name, { type: selectedFile.type })
 
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+      // Sanitiza nome do arquivo
+      const fileName = sanitizeFileName(selectedFile.name)
+      const filePath = `${user.id}/${fileName}` // Organiza por pasta do usuário
+
+      // Upload com upsert para sobrescrever se houver conflito de nome
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, processedFile, { upsert: true })
+
       if (uploadError) throw uploadError
 
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
 
-      const { error: updateError } = await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', user!.id)
+      // Atualiza profile
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
+        .eq('id', user.id)
+
       if (updateError) throw updateError
 
       setAvatarUrl(publicUrl)
-      showSuccess('Avatar atualizado!')
+      showSuccess('Foto de perfil atualizada!')
     } catch (error: any) {
-      showError(error.message || 'Erro no upload')
+      console.error('Erro upload:', error)
+      showError(error.message || 'Erro ao atualizar foto')
     } finally {
       setUploading(false)
+      setPreviewImage(null)
+      setSelectedFile(null)
     }
   }
 
@@ -97,35 +142,58 @@ const ProfileSettings: React.FC = () => {
     setLoading(true)
 
     try {
-      const { error: profileError } = await supabase.from('profiles')
-        .update({ full_name: fullName, phone: phone, updated_at: new Date().toISOString() })
-        .eq('id', user.id)
-      
-      if (profileError) throw profileError
-
-      if (profile?.role === 'professional') {
-        const { error } = await supabase.from('professional_details').upsert({
-          profile_id: user.id,
-          bio,
-          specialty,
-          consultation_price: parseFloat(consultationPrice) || 0,
-          certifications: { raw_text: certifications },
+      // 1. Atualizar Tabela Base (profiles)
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ 
+          full_name: fullName,
+          phone: phone,
           updated_at: new Date().toISOString()
         })
-        if (error) throw error
+        .eq('id', user.id)
+      
+      if (profileError) {
+        console.error('Erro profile:', profileError)
+        throw new Error('Falha ao salvar dados básicos')
+      }
+
+      // 2. Atualizar Tabelas Específicas
+      if (profile?.role === 'professional') {
+        // Conversão segura de preço
+        const priceNumber = consultationPrice === '' ? null : parseFloat(consultationPrice.replace(',', '.'))
+        
+        // Upsert explícito com onConflict
+        const { error } = await supabase.from('professional_details').upsert({
+          profile_id: user.id,
+          bio: bio,
+          specialty: specialty,
+          consultation_price: priceNumber,
+          certifications: { raw_text: certifications }, // Salva como Objeto JSON
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'profile_id' })
+
+        if (error) {
+          console.error('Erro professional_details:', error)
+          throw error
+        }
+
       } else if (profile?.role === 'client') {
         const { error } = await supabase.from('client_details').upsert({
           profile_id: user.id,
-          goals,
+          goals: goals,
           health_restrictions: restrictions,
           updated_at: new Date().toISOString()
-        })
-        if (error) throw error
+        }, { onConflict: 'profile_id' })
+
+        if (error) {
+          console.error('Erro client_details:', error)
+          throw error
+        }
       }
 
       showSuccess('Perfil salvo com sucesso!')
-    } catch (error) {
-      showError('Erro ao salvar perfil')
+    } catch (error: any) {
+      showError(error.message || 'Erro ao salvar perfil')
     } finally {
       setLoading(false)
     }
@@ -141,81 +209,214 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
+          {/* Seção 1: Identidade */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="text-white">Informações Públicas</CardTitle>
-              <CardDescription className="text-gray-400">Sua identidade na plataforma.</CardDescription>
+              <CardDescription className="text-gray-400">Como você aparece para outros usuários.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row gap-8 items-start">
+              
+              {/* Avatar Area */}
               <div className="flex flex-col items-center gap-4">
-                <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl">
+                <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
                   <AvatarImage src={avatarUrl || ''} className="object-cover" />
-                  <AvatarFallback className="text-2xl bg-slate-800 text-primary font-bold">
-                    {fullName?.[0]?.toUpperCase() || 'U'}
+                  <AvatarFallback className="text-3xl bg-slate-800 text-primary font-bold">
+                    {fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="relative">
-                  <input type="file" id="avatar-upload" accept="image/*" onChange={handleAvatarUpload} className="hidden" disabled={uploading} />
-                  <Label htmlFor="avatar-upload" className={`cursor-pointer bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                    {uploading ? 'Enviando...' : 'Alterar Foto'}
-                  </Label>
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={onFileSelect}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="bg-white/5 border-white/10 hover:bg-white/10 text-white gap-2"
+                  >
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    Alterar Foto
+                  </Button>
                 </div>
               </div>
 
+              {/* Inputs Básicos */}
               <div className="flex-1 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-gray-300">Nome Completo</Label>
-                    <Input value={fullName} onChange={e => setFullName(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/>
+                    <Input 
+                      value={fullName} 
+                      onChange={e => setFullName(e.target.value)} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5"
+                      placeholder="Seu nome"
+                    />
                   </div>
                   <div>
                     <Label className="text-gray-300">Telefone</Label>
                     <div className="relative mt-1.5">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                      <Input value={phone} onChange={e => setPhone(e.target.value)} className="bg-black/20 border-white/10 text-white pl-10" placeholder="(00) 00000-0000"/>
+                      <Input 
+                        value={phone} 
+                        onChange={e => setPhone(e.target.value)} 
+                        className="bg-black/20 border-white/10 text-white pl-10"
+                        placeholder="(00) 00000-0000"
+                      />
                     </div>
                   </div>
                 </div>
                 <div>
                   <Label className="text-gray-300">Email</Label>
-                  <Input value={user?.email || ''} disabled className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed"/>
+                  <Input 
+                    value={user?.email || ''} 
+                    disabled 
+                    className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed"
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* Seção 2: Profissional */}
           {profile?.role === 'professional' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Perfil Profissional</CardTitle></CardHeader>
+            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Award className="text-purple-400"/> Perfil Profissional
+                </CardTitle>
+              </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div><Label className="text-gray-300">Especialidade</Label><Input value={specialty} onChange={e => setSpecialty(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
-                  <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={consultationPrice} onChange={e => setConsultationPrice(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div>
+                    <Label className="text-gray-300">Especialidade</Label>
+                    <Input 
+                      value={specialty} 
+                      onChange={e => setSpecialty(e.target.value)} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5"
+                      placeholder="Ex: Musculação"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Preço Consulta (R$)</Label>
+                    <Input 
+                      type="number" 
+                      step="0.01"
+                      value={consultationPrice} 
+                      onChange={e => setConsultationPrice(e.target.value)} 
+                      className="bg-black/20 border-white/10 text-white mt-1.5"
+                      placeholder="0.00"
+                    />
+                  </div>
                 </div>
-                <div><Label className="text-gray-300">Biografia</Label><Textarea value={bio} onChange={e => setBio(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"/></div>
-                <div><Label className="text-gray-300">Certificações</Label><Textarea value={certifications} onChange={e => setCertifications(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                <div>
+                  <Label className="text-gray-300">Biografia</Label>
+                  <Textarea 
+                    value={bio} 
+                    onChange={e => setBio(e.target.value)} 
+                    className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"
+                    placeholder="Descreva sua experiência..."
+                  />
+                </div>
+                <div>
+                  <Label className="text-gray-300">Certificações</Label>
+                  <Textarea 
+                    value={certifications} 
+                    onChange={e => setCertifications(e.target.value)} 
+                    className="bg-black/20 border-white/10 text-white mt-1.5"
+                    placeholder="CREF, CRN, Pós-graduações..."
+                  />
+                </div>
               </CardContent>
             </Card>
           )}
 
+          {/* Seção 3: Aluno */}
           {profile?.role === 'client' && (
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha do Aluno</CardTitle></CardHeader>
+            <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl animate-in slide-in-from-bottom-4">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Shield className="text-green-400"/> Ficha do Aluno
+                </CardTitle>
+              </CardHeader>
               <CardContent className="space-y-4">
-                <div><Label className="text-gray-300">Objetivos</Label><Textarea value={goals} onChange={e => setGoals(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
-                <div><Label className="text-gray-300">Restrições</Label><Textarea value={restrictions} onChange={e => setRestrictions(e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                <div>
+                  <Label className="text-gray-300">Objetivos</Label>
+                  <Textarea 
+                    value={goals} 
+                    onChange={e => setGoals(e.target.value)} 
+                    className="bg-black/20 border-white/10 text-white mt-1.5"
+                    placeholder="Ex: Hipertrofia, Perda de peso..."
+                  />
+                </div>
+                <div>
+                  <Label className="text-gray-300">Restrições / Lesões</Label>
+                  <Textarea 
+                    value={restrictions} 
+                    onChange={e => setRestrictions(e.target.value)} 
+                    className="bg-black/20 border-white/10 text-white mt-1.5"
+                    placeholder="Ex: Dor no joelho, Cirurgia no ombro..."
+                  />
+                </div>
               </CardContent>
             </Card>
           )}
 
+          {/* Barra de Ação */}
           <div className="flex justify-end pt-4 border-t border-white/10">
-            <Button type="submit" disabled={loading} className="bg-primary text-black hover:bg-primary/80 font-bold px-8">
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="bg-primary text-black hover:bg-primary/80 font-bold px-8 min-w-[150px]"
+            >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Salvar Alterações
+              Salvar Tudo
             </Button>
           </div>
         </form>
+
+        {/* Dialog de Preview/Recorte de Imagem */}
+        <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
+          <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Nova Foto de Perfil</DialogTitle>
+              <DialogDescription>Pré-visualização da sua nova imagem.</DialogDescription>
+            </DialogHeader>
+            
+            <div className="flex flex-col items-center justify-center py-6">
+              {previewImage && (
+                <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-primary/30">
+                  <img 
+                    src={previewImage} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <p className="text-xs text-gray-400 mt-4 flex items-center gap-2">
+                <AlertTriangle className="h-3 w-3 text-yellow-500"/>
+                A imagem será redimensionada automaticamente.
+              </p>
+            </div>
+
+            <DialogFooter className="flex gap-2">
+              <Button variant="ghost" onClick={() => setIsCropDialogOpen(false)} className="text-gray-400 hover:text-white">
+                Cancelar
+              </Button>
+              <Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-black hover:bg-primary/90">
+                {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                Confirmar Upload
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   )
