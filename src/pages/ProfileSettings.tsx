@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Cropper from 'react-easy-crop'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
@@ -66,7 +66,7 @@ async function getCroppedImg(
   })
 }
 
-// --- DICIONÁRIOS (Sincronizados com ClientDetails) ---
+// --- DICIONÁRIOS ---
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
 const COMMON_SYMPTOMS = ['Dor no Peito', 'Falta de Ar', 'Tontura', 'Palpitações', 'Dores Articulares', 'Dor nas Costas', 'Fraqueza', 'Tosse com Sangue']
 const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levantar peso', 'Dirigir']
@@ -113,9 +113,8 @@ const ProfileSettings: React.FC = () => {
     restrictions: ''
   })
   
-  // --- Estado da Anamnese Completa (JSONB) ---
+  // --- Estado da Anamnese Completa ---
   const [anamnesisForm, setAnamnesisForm] = useState(DEFAULT_ANAMNESIS)
-
   const [userRole, setUserRole] = useState<string>('')
 
   // --- Estados do Recorte ---
@@ -126,29 +125,25 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // --- Função de Carregamento OTIMIZADA (Correção do Erro de Build e Loop) ---
-  const fetchFreshData = useCallback(async () => {
-    if (!user) return
+  // --- LÓGICA DE CARREGAMENTO (CORRIGIDA) ---
+  // Esta função roda apenas para buscar os dados, sem depender de estado interno
+  const loadData = async (userId: string) => {
     try {
-      const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+      const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', userId).single()
       if (profileError) throw profileError
 
       const newFormData = {
         fullName: profile.full_name || '',
         phone: profile.phone || '',
         avatarUrl: profile.avatar_url || '',
-        bio: '', 
-        specialty: '', 
-        consultationPrice: '', 
-        certifications: '', 
-        goals: '', 
-        restrictions: '' 
+        bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
       }
       
-      setUserRole(profile.role)
+      let role = profile.role
+      let newAnamnesis = { ...DEFAULT_ANAMNESIS }
 
-      if (profile.role === 'professional') {
-        const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
+      if (role === 'professional') {
+        const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
         if (profData) {
           newFormData.bio = profData.bio || ''
           newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
@@ -156,47 +151,57 @@ const ProfileSettings: React.FC = () => {
           const certData = profData.certifications as any
           newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
         }
-      } else if (profile.role === 'client') {
-        const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
+      } else if (role === 'client') {
+        const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
         if (clientData) {
           newFormData.goals = clientData.goals || ''
           newFormData.restrictions = clientData.health_restrictions || ''
           
           if (clientData.anamnesis_data) {
-            const rawData = typeof clientData.anamnesis_data === 'string' 
-              ? JSON.parse(clientData.anamnesis_data) 
-              : clientData.anamnesis_data
-            
-            // Pré-processamento para evitar erro de chave duplicada no build
-            const processedData = {
+            const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
+            // Merge seguro
+            newAnamnesis = {
+                ...DEFAULT_ANAMNESIS,
                 ...rawData,
                 diagnosed_conditions: rawData.diagnosed_conditions || [],
                 symptoms: rawData.symptoms || [],
                 work_activities: rawData.work_activities || []
             }
-            
-            // Atualizamos a Anamnese mesclando defaults com dados processados
-            setAnamnesisForm({
-                ...DEFAULT_ANAMNESIS,
-                ...processedData
-            })
           }
         }
       }
-      // Atualiza o form geral de uma vez
-      setFormData(newFormData)
-    } catch (error) {
-      console.error('Erro ao buscar perfil:', error)
-    }
-  }, [user?.id]) // Dependência ÚNICA e imutável (string)
 
-  // --- Efeito Principal ---
-  useEffect(() => {
-    if (user?.id) {
-        setLoading(true)
-        fetchFreshData().finally(() => setLoading(false))
+      return { newFormData, role, newAnamnesis }
+    } catch (error) {
+      console.error('Erro loadData:', error)
+      return null
     }
-  }, [user?.id, fetchFreshData])
+  }
+
+  // --- EFEITO DE CARREGAMENTO INICIAL (Loop Fix) ---
+  useEffect(() => {
+    let mounted = true
+    const userId = user?.id
+
+    if (userId) {
+        const init = async () => {
+            if(mounted) setLoading(true)
+            const result = await loadData(userId)
+            
+            if (mounted && result) {
+                setFormData(result.newFormData)
+                setUserRole(result.role)
+                setAnamnesisForm(result.newAnamnesis)
+                setLoading(false)
+            } else if (mounted) {
+                setLoading(false)
+            }
+        }
+        init()
+    }
+
+    return () => { mounted = false }
+  }, [user?.id]) // Dependência ÚNICA: ID do usuário
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -305,7 +310,12 @@ const ProfileSettings: React.FC = () => {
       }
 
       showSuccess('Perfil salvo com sucesso!')
-      await fetchFreshData()
+      // Refresh manual
+      const updated = await loadData(user.id)
+      if (updated) {
+          setFormData(updated.newFormData)
+          setAnamnesisForm(updated.newAnamnesis)
+      }
 
     } catch (error: any) {
       showError(error.message || 'Erro ao salvar')
