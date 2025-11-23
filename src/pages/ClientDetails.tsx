@@ -24,38 +24,32 @@ import { showSuccess, showError } from '@/utils/toast'
 import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 
-// --- DICIONÁRIOS & LISTAS ---
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
 const COMMON_SYMPTOMS = ['Dor no Peito', 'Falta de Ar', 'Tontura', 'Palpitações', 'Dores Articulares', 'Dor nas Costas', 'Fraqueza', 'Tosse com Sangue']
 const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levantar peso', 'Dirigir']
 
-// --- LÓGICA DE ANÁLISE DE SAÚDE ---
 const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   const safeAnamnesis = anamnesis || {}
-  
   const risks = {
     cardio: { level: 'low', factors: [] as string[] },
     metabolic: { level: 'low', factors: [] as string[] },
     orthopedic: { level: 'low', factors: [] as string[] },
     redFlags: [] as string[]
   }
-
   const symptoms = safeAnamnesis.symptoms || []
   const conditions = safeAnamnesis.diagnosed_conditions || []
   const injuries = safeAnamnesis.injuries || ''
   const familyHistory = safeAnamnesis.family_history || ''
   const dietHistory = safeAnamnesis.diet_history || ''
 
-  // RED FLAGS
   if (symptoms.includes('Dor no Peito')) risks.redFlags.push('Dor no Peito (Angina?)')
   if (symptoms.includes('Falta de Ar')) risks.redFlags.push('Dispneia ao esforço')
   if (symptoms.includes('Tontura')) risks.redFlags.push('Tonturas/Desmaios')
   if (symptoms.includes('Palpitações')) risks.redFlags.push('Arritmia/Palpitações')
   if (symptoms.includes('Tosse com Sangue')) risks.redFlags.push('Hemoptise')
 
-  // RISCO CARDIO
   let cardioScore = 0
   if (safeAnamnesis.smoker) { cardioScore += 2; risks.cardio.factors.push('Tabagismo') }
   if (conditions.includes('Hipertensão')) { cardioScore += 2; risks.cardio.factors.push('Hipertensão') }
@@ -63,31 +57,22 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   if (familyHistory.toLowerCase().includes('infarto') || familyHistory.toLowerCase().includes('coração')) { cardioScore += 1; risks.cardio.factors.push('Histórico Familiar') }
   if (safeAnamnesis.stress_level === 'high') { cardioScore += 1; risks.cardio.factors.push('Alto Estresse') }
   if (latestBiometrics?.bmi > 30) { cardioScore += 1; risks.cardio.factors.push('Obesidade (IMC > 30)') }
-  
-  if (cardioScore >= 3) risks.cardio.level = 'high'
-  else if (cardioScore >= 1) risks.cardio.level = 'medium'
+  if (cardioScore >= 3) risks.cardio.level = 'high'; else if (cardioScore >= 1) risks.cardio.level = 'medium'
 
-  // RISCO METABÓLICO
   let metaScore = 0
   if (conditions.includes('Diabetes')) { metaScore += 3; risks.metabolic.factors.push('Diabetes') }
   if (latestBiometrics?.bmi > 25) { metaScore += 1; risks.metabolic.factors.push('Sobrepeso') }
   if (safeAnamnesis.activity_level === 'sedentary') { metaScore += 1; risks.metabolic.factors.push('Sedentarismo') }
   if (dietHistory.toLowerCase().includes('açúcar') || dietHistory.toLowerCase().includes('doce')) { metaScore += 1; risks.metabolic.factors.push('Dieta Rica em Açúcar') }
-  
-  if (metaScore >= 3) risks.metabolic.level = 'high'
-  else if (metaScore >= 1) risks.metabolic.level = 'medium'
+  if (metaScore >= 3) risks.metabolic.level = 'high'; else if (metaScore >= 1) risks.metabolic.level = 'medium'
 
-  // RISCO ORTOPÉDICO
   let orthoScore = 0
   if (injuries.length > 3) { orthoScore += 2; risks.orthopedic.factors.push('Histórico de Lesões') }
   if (symptoms.includes('Dores Articulares')) { orthoScore += 2; risks.orthopedic.factors.push('Dores Articulares Ativas') }
   if (symptoms.includes('Dor nas Costas')) { orthoScore += 1; risks.orthopedic.factors.push('Lombalgia/Dorsalgia') }
   if (safeAnamnesis.work_activities?.includes('Levantar peso')) { orthoScore += 1; risks.orthopedic.factors.push('Trabalho com Carga') }
-  
-  if (orthoScore >= 3) risks.orthopedic.level = 'high'
-  else if (orthoScore >= 1) risks.orthopedic.level = 'medium'
+  if (orthoScore >= 3) risks.orthopedic.level = 'high'; else if (orthoScore >= 1) risks.orthopedic.level = 'medium'
 
-  // SCORE DE BEM-ESTAR
   let wellness = 100
   if (safeAnamnesis.smoker) wellness -= 20
   if (safeAnamnesis.alcohol === 'frequently') wellness -= 15
@@ -106,7 +91,6 @@ const ClientDetails: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
-  // Dados
   const [clientProfile, setClientProfile] = useState<any>(null)
   const [clientDetails, setClientDetails] = useState<any>(null)
   const [clientWorkouts, setClientWorkouts] = useState<any[]>([])
@@ -116,7 +100,6 @@ const ClientDetails: React.FC = () => {
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
 
-  // UI States
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
   const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
@@ -127,7 +110,6 @@ const ClientDetails: React.FC = () => {
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
   const [editingAssessmentId, setEditingAssessmentId] = useState<string | null>(null)
 
-  // Form Anamnese
   const [anamnesisForm, setAnamnesisForm] = useState({
     occupation: '', work_hours: '', work_activities: [] as string[], last_exam_date: '',
     family_history: '', diagnosed_conditions: [] as string[], symptoms: [] as string[],
@@ -189,7 +171,6 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
-  // Handlers (Resumidos)
   const handleAssignWorkout = async () => {
     try {
       const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
@@ -369,7 +350,7 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               
-              {/* 1. PERFIL */}
+              {/* 1. PERFIL (Visual Nexus Ajustado) */}
               <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
                 <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
@@ -378,8 +359,8 @@ const ClientDetails: React.FC = () => {
                       <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-black">
                           {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-gray-400">{clientProfile?.full_name?.[0]}</div>}
                       </div>
-                      {/* BADGE CORRIGIDO: Amarelo Ouro com Texto Preto (Alto Contraste) */}
-                      <Badge className="mt-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold border-none px-4 py-1">Nível {currentLevel}</Badge>
+                      {/* Badge de Nível com Contraste Ajustado */}
+                      <Badge className="mt-2 bg-slate-900 text-primary border border-primary font-bold px-4 py-1 hover:bg-slate-800">Nível {currentLevel}</Badge>
                     </div>
                     <div className="flex-1 min-w-0 w-full text-center md:text-left">
                       <h2 className="text-3xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
@@ -389,37 +370,39 @@ const ClientDetails: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                         <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-primary"><span>XP ({currentXP % 1000}/1000)</span></div><Progress value={xpProgress} className="h-2 bg-white/10" /></div>
-                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-green-400"><span>Score de Bem-Estar: {healthAnalysis.wellness}/100</span></div><Progress value={healthAnalysis.wellness} className="h-2 bg-white/10" indicatorClassName="bg-green-500"/></div>
+                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-green-400"><span>Bem-Estar: {healthAnalysis.wellness}/100</span></div><Progress value={healthAnalysis.wellness} className="h-2 bg-white/10" indicatorClassName="bg-green-500"/></div>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* 2. AÇÕES RÁPIDAS */}
+              {/* 2. AÇÕES RÁPIDAS (Visual com Feedback e Ícones Grandes) */}
               <Card className="bg-white/5 border-white/10 w-full h-full">
                 <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-blue-500/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-orange-500/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-green-500/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-purple-500/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
                 </CardContent>
               </Card>
 
-              {/* 3. ANÁLISE DE SAÚDE */}
+              {/* 3. ANÁLISE DE SAÚDE (Cards Visíveis) */}
               <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
                 <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-400"/> Análise de Saúde</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Cards de Risco com Visual Aprimorado */}
+                    {/* Card Risco Cardio */}
                     <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>
                         <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
                         <div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
                     </div>
+                    {/* Card Risco Metabólico */}
                     <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>
                         <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
                         <div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
                     </div>
+                    {/* Card Risco Ortopédico */}
                     <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>
                         <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
                         <div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
@@ -427,15 +410,15 @@ const ClientDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* 4. MÉTRICAS VITAIS */}
+              {/* 4. MÉTRICAS VITAIS (Com mais contraste) */}
               <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:border-primary/30 transition-all">
+                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all">
                     <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-white">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-gray-500 font-normal">kg</span></p></div>
-                    <Scale className="h-8 w-8 text-gray-600 opacity-50"/>
+                    <Scale className="h-8 w-8 text-gray-500 opacity-50"/>
                   </div>
-                  <div className="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:border-primary/30 transition-all">
+                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all">
                     <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-white">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-gray-500 font-normal">%</span></p></div>
-                    <Activity className="h-8 w-8 text-gray-600 opacity-50"/>
+                    <Activity className="h-8 w-8 text-gray-500 opacity-50"/>
                   </div>
                   <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-900/10 border-green-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}>
                     <div className="min-w-0 flex-1">
@@ -464,9 +447,9 @@ const ClientDetails: React.FC = () => {
                   <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
                     <DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger>
                     <DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg">
-                       <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
+                       <DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader>
                        <div className="space-y-4 mt-4">
-                          <div><Label>Data</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
+                          <div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
                           <div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div>
                           <div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
                           <Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar'}</Button>
@@ -492,7 +475,7 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* --- ANAMNESE (Abas Internas) --- */}
+          {/* --- ANAMNESE (Aba completa com Checkbox Nativo) --- */}
           <TabsContent value="anamnesis">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                <h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
@@ -505,22 +488,22 @@ const ClientDetails: React.FC = () => {
                     <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px]">Nutrição</TabsTrigger>
                 </TabsList>
                 <TabsContent value="medical">
-                    <Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-8"><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span></div>))}</div></div><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><Checkbox checked={anamnesisForm.symptoms?.includes(sym)} onCheckedChange={() => toggleAnamnesisList('symptoms', sym)} /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div><div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div></div></CardContent></Card>
+                    <Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-8"><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><input type="checkbox" checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary" /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span></div>))}</div></div><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><input type="checkbox" checked={anamnesisForm.symptoms?.includes(sym)} onChange={() => toggleAnamnesisList('symptoms', sym)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary" /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div><div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div></div></CardContent></Card>
                 </TabsContent>
-                <TabsContent value="habits"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-gray-300 mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><Checkbox checked={anamnesisForm.work_activities?.includes(act)} onCheckedChange={() => toggleAnamnesisList('work_activities', act)}/><span className="text-sm text-gray-400">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
+                <TabsContent value="habits"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-gray-300 mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><input type="checkbox" checked={anamnesisForm.work_activities?.includes(act)} onChange={() => toggleAnamnesisList('work_activities', act)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary"/><span className="text-sm text-gray-400">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
                 <TabsContent value="nutri"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div><div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10"/></div></div><div><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]"/></div></CardContent></Card></TabsContent>
             </Tabs>
           </TabsContent>
 
-          {/* Demais abas (Biometrics, Workouts, etc) - Mantidas com visual corrigido */}
+          {/* --- OUTRAS ABAS --- */}
           <TabsContent value="biometrics">
-             <Card className="bg-white/5 border-white/10 w-full">
+            <Card className="bg-white/5 border-white/10 w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
-                <CardTitle className="text-white text-xl">Histórico</CardTitle>
-                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold"><Plus className="w-4 h-4 mr-2"/> Nova</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto"><div className="p-6"><DialogHeader><DialogTitle>Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div><DialogFooter className="mt-6"><Button onClick={() => handleSaveAssessment('completed')} className="w-full bg-green-600">Finalizar</Button></DialogFooter></div></DialogContent></Dialog>
+                <CardTitle className="text-white text-xl">Histórico de Avaliações</CardTitle>
+                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
               </CardHeader>
               <CardContent className="p-6">
-                {assessments.length === 0 ? <div className="text-center text-gray-500 py-8">Vazio.</div> : (
+                {assessments.length === 0 ? <div className="text-center text-gray-500 py-12">Nenhuma avaliação registrada.</div> : (
                   <div className="space-y-4">
                     {assessments.map((a) => {
                       const s = a.measurements?.status || 'completed'
