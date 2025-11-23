@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-    /* Variáveis Padrão (Light Mode - caso precise de fallback) */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -28,41 +27,24 @@
   }
 
   .dark {
-    /* --- TEMA NEXUS (Deep Blue + Neon Cyan) --- */
-    
-    /* Fundo: Azul Profundo Quase Preto */
     --background: 224 71% 4%; 
     --foreground: 210 40% 98%;
-
-    /* Cards: Translúcidos/Glass */
     --card: 224 71% 6%;
     --card-foreground: 210 40% 98%;
-
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-
-    /* Primary: Ciano Neon (Destaque principal) */
     --primary: 190 100% 50%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
-    /* Secondary: Roxo (para dar profundidade) */
     --secondary: 263 70% 50%;
     --secondary-foreground: 210 40% 98%;
-
-    /* Muted: Cinza azulado escuro */
     --muted: 217 33% 17%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217 33% 17%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    
-    /* Ring: Brilho do foco igual ao Primary */
     --ring: 190 100% 50%;
   }
 }
@@ -73,19 +55,20 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    /* Garante que o gradiente de fundo cubra tudo se necessário */
     background-image: linear-gradient(to bottom right, hsl(224 71% 4%), #0f172a);
     background-attachment: fixed;
+    /* Correção segura para scroll horizontal */
+    overflow-x: hidden; 
+    width: 100%;
   }
 }
 
-/* Utilitários para Glassmorphism Reutilizáveis */
 @layer utilities {
   .glass-card {
     @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
   }
 
-/* --- NOVO: CORREÇÃO DE OVERFLOW MOBILE --- */
+  /* Utilitário para esconder barra de rolagem mas manter funcionalidade */
   .scrollbar-hide::-webkit-scrollbar {
       display: none;
   }
@@ -94,23 +77,4 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
   }
-
-  /* Força o container a nunca exceder a largura da viewport */
-  .mobile-container {
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
-  } 
-  
-  .glass-panel {
-    @apply bg-slate-900/60 backdrop-blur-xl border-r border-white/5;
-  }
-}
-
-/* Reset Global para Mobile */
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
-  width: 100%;
-  position: relative;
 }
