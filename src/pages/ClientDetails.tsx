@@ -40,6 +40,10 @@ const ClientDetails: React.FC = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState(true)
   
+  // --- ESTADO DE NAVEGAÇÃO (Correção dos Botões) ---
+  const [activeTab, setActiveTab] = useState('dashboard')
+
+  // Dados
   const [clientProfile, setClientProfile] = useState<any>(null)
   const [clientDetails, setClientDetails] = useState<any>(null)
   const [clientWorkouts, setClientWorkouts] = useState<any[]>([])
@@ -49,6 +53,7 @@ const ClientDetails: React.FC = () => {
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
 
+  // UI States
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
   const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
@@ -58,6 +63,7 @@ const ClientDetails: React.FC = () => {
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
   const [editingAssessmentId, setEditingAssessmentId] = useState<string | null>(null)
 
+  // Form Anamnese Completa (JSONB)
   const [anamnesisForm, setAnamnesisForm] = useState({
     medical_history: '', medications: '', surgeries: '', injuries: '', allergies: '',
     occupation: '', sleep_hours: '', sleep_quality: '', stress_level: '', smoker: false, alcohol: '',
@@ -100,6 +106,7 @@ const ClientDetails: React.FC = () => {
         setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
 
+        // Carrega Anamnese do JSONB
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' ? JSON.parse(detailsRes.data.anamnesis_data) : detailsRes.data.anamnesis_data
           setAnamnesisForm(prev => ({ ...prev, ...data }))
@@ -114,6 +121,7 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
+  // Handlers
   const handleAssignWorkout = async () => {
     try {
       const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
@@ -268,8 +276,8 @@ const ClientDetails: React.FC = () => {
             </Button>
         </div>
 
-        {/* TABS COM CORREÇÃO DE LAYOUT MOBILE (display: grid) */}
-        <Tabs defaultValue="dashboard" className="space-y-6 w-full" style={{ display: 'grid' }}>
+        {/* Tabs com estado controlado */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
           <div className="w-full overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             <TabsList className="bg-white/5 border border-white/10 justify-start p-1 flex min-w-max h-10">
               <TabsTrigger value="dashboard" className="px-4 py-1.5 text-sm"><LayoutDashboard className="w-4 h-4 mr-2"/> Visão Geral</TabsTrigger>
@@ -283,10 +291,10 @@ const ClientDetails: React.FC = () => {
             </TabsList>
           </div>
 
-          {/* DASHBOARD */}
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-              {/* Perfil */}
+              
+              {/* PERFIL */}
               <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
                 <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
@@ -299,7 +307,8 @@ const ClientDetails: React.FC = () => {
                       </div>
                       <Badge className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black border-none whitespace-nowrap shadow-lg font-bold px-4 py-1 text-sm">Nível {currentLevel}</Badge>
                     </div>
-                    <div className="flex-1 w-full text-center md:text-left min-w-0">
+                    
+                    <div className="flex-1 min-w-0 w-full text-center md:text-left">
                       <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
                       <div className="flex flex-col md:flex-row items-center md:justify-start gap-2 md:gap-6 text-sm md:text-base text-gray-400 mb-6 w-full">
                         <span className="flex items-center gap-2 truncate max-w-full"><Mail className="w-4 h-4 text-primary flex-shrink-0"/> {clientProfile?.email}</span>
@@ -308,23 +317,24 @@ const ClientDetails: React.FC = () => {
                       <div className="space-y-2 w-full max-w-md mx-auto md:mx-0">
                         <div className="flex justify-between text-sm font-medium text-primary"><span>XP Atual</span><span>{currentXP % 1000} / 1000</span></div>
                         <Progress value={xpProgress} className="h-3 bg-white/10" />
+                        <p className="text-xs text-gray-500 mt-1 text-right">Faltam {1000 - (currentXP % 1000)} XP para o próximo nível</p>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Ações Rápidas */}
+              {/* AÇÕES RÁPIDAS - CORRIGIDO: onClicks agora mudam a aba */}
               <Card className="bg-white/5 border-white/10 w-full h-full">
                 <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setIsAssignWorkoutOpen(true)}>
-                    <Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Treino</span>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('workouts')}>
+                    <Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Treinos</span>
                   </Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setIsAssignMealPlanOpen(true)}>
-                    <Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Dieta</span>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('meal-plans')}>
+                    <Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Dietas</span>
                   </Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={openNewAssessment}>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('biometrics')}>
                     <Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Avaliar</span>
                   </Button>
                   <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => navigate('/app/chat')}>
@@ -333,7 +343,7 @@ const ClientDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Métricas */}
+              {/* MÉTRICAS */}
               <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
                 <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Activity className="h-6 w-6 text-primary"/> Status Vital</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -349,12 +359,14 @@ const ClientDetails: React.FC = () => {
                     <div className="min-w-0 flex-1">
                       <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Plano de Treino</p>
                       <p className={`text-xl font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Nenhum Ativo'}</p>
+                      {activeWorkout && <p className="text-sm text-gray-400 mt-1 hidden md:block">{activeWorkout.workout.days_per_week} dias / semana</p>}
                     </div>
                   </div>
                   <div className={`bg-black/20 p-6 rounded-xl border ${activeMealPlan ? 'border-orange-500/30 bg-orange-900/10' : 'border-white/5'} flex justify-between items-center md:block`}>
                     <div className="min-w-0 flex-1">
                       <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Dieta Atual</p>
                       <p className={`text-xl font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Nenhuma Ativa'}</p>
+                      {activeMealPlan && <p className="text-sm text-gray-400 mt-1 hidden md:block">Meta: {activeMealPlan.meal_plan.daily_calories_target} kcal</p>}
                     </div>
                   </div>
                 </CardContent>
@@ -362,7 +374,6 @@ const ClientDetails: React.FC = () => {
             </div>
           </TabsContent>
 
-          {/* FOTOS */}
           <TabsContent value="photos">
             <Card className="bg-white/5 border-white/10 w-full">
                <CardHeader className="flex flex-row items-center justify-between p-6">
@@ -409,25 +420,13 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* BIOMETRIA */}
           <TabsContent value="biometrics">
             <Card className="bg-white/5 border-white/10 w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
                 <CardTitle className="text-white text-xl">Histórico de Avaliações</CardTitle>
                 <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
                   <DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg">
-                    <div className="p-6">
-                      <DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="space-y-5"><h3 className="font-semibold text-primary">Básico</h3><div className="grid grid-cols-1 gap-3"><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div></div>
-                        <div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div>
-                        <div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div>
-                      </div>
-                    </div>
-                    <DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                  <DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
               </CardHeader>
               <CardContent className="p-6">
                 {assessments.length === 0 ? <div className="text-center text-gray-500 py-12">Nenhuma avaliação registrada.</div> : (
@@ -475,7 +474,6 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* OUTRAS ABAS (Mantidas) */}
           <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
           <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
           <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
