@@ -28,17 +28,14 @@ export const calculateBiometrics = (data: BiometricInput) => {
 
   // 1. Cálculo de IMC
   if (weight && height) {
-    const hM = height / 100; // converter cm para m
+    const hM = height / 100;
     bmi = parseFloat((weight / (hM * hM)).toFixed(2));
   }
 
-  // 2. Protocolo Pollock 3 Dobras
-  // Homens: Peitoral, Abdominal, Coxa
-  // Mulheres: Tricipital, Supra-ilíaca, Coxa
+  // 2. Protocolo Pollock
   const sum3Men = (skinfolds.chest || 0) + (skinfolds.abdominal || 0) + (skinfolds.thigh || 0);
   const sum3Women = (skinfolds.triceps || 0) + (skinfolds.suprailiac || 0) + (skinfolds.thigh || 0);
 
-  // 3. Protocolo Pollock 7 Dobras (Mais preciso se todos os dados estiverem presentes)
   const sum7 = 
     (skinfolds.chest || 0) + (skinfolds.axillary || 0) + (skinfolds.triceps || 0) + 
     (skinfolds.subscapular || 0) + (skinfolds.abdominal || 0) + 
@@ -46,7 +43,6 @@ export const calculateBiometrics = (data: BiometricInput) => {
 
   const has7Folds = Object.values(skinfolds).filter(v => v && v > 0).length >= 7;
 
-  // Fórmulas de Densidade Corporal (Jackson & Pollock)
   if (gender === 'male') {
     if (has7Folds) {
       bodyDensity = 1.112 - (0.00043499 * sum7) + (0.00000055 * sum7 * sum7) - (0.00028826 * age);
@@ -61,12 +57,10 @@ export const calculateBiometrics = (data: BiometricInput) => {
     }
   }
 
-  // Fórmula de Siri (Densidade -> % Gordura)
   if (bodyDensity > 0) {
     bodyFat = parseFloat(((4.95 / bodyDensity) - 4.50) * 100).toFixed(2) as any;
   }
 
-  // Massa Magra e Gorda
   if (bodyFat > 0 && weight > 0) {
     fatMass = weight * (bodyFat / 100);
     leanMass = weight - fatMass;
@@ -86,4 +80,19 @@ export const classifyBMI = (bmi: number) => {
   if (bmi < 24.9) return { label: 'Peso normal', color: 'text-green-400' };
   if (bmi < 29.9) return { label: 'Sobrepeso', color: 'text-yellow-400' };
   return { label: 'Obesidade', color: 'text-red-400' };
+};
+
+// --- NOVA FUNÇÃO: CALCULAR PORCENTAGEM ---
+export const calculateCompletion = (form: any) => {
+  const fields = [
+    form.weight, form.height, 
+    form.skinfolds.triceps, form.skinfolds.subscapular, form.skinfolds.chest, form.skinfolds.axillary, form.skinfolds.suprailiac, form.skinfolds.abdominal, form.skinfolds.thigh,
+    form.circumferences.waist, form.circumferences.abdomen, form.circumferences.hips
+  ];
+  
+  // Consideramos ~12 campos principais como "100% essencial" (ajustável)
+  const totalFields = fields.length;
+  const filledFields = fields.filter(f => f && f !== '' && Number(f) > 0).length;
+  
+  return Math.min(Math.round((filledFields / totalFields) * 100), 100);
 };
