@@ -5,10 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { 
   Send, Search, MoreVertical, Phone, Video, ArrowLeft, Loader2, MessageCircle, 
-  Check, CheckCheck, Paperclip, Image as ImageIcon, FileText, Download, ExternalLink
+  Check, CheckCheck, Paperclip, FileText, Download
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { format, isToday, isYesterday } from 'date-fns'
@@ -73,7 +72,7 @@ const ContactsList: React.FC<{
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Mensagens</h2>
-          <Button variant="ghost" size="sm" className="text-gray-400"><MoreVertical className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white"><MoreVertical className="h-4 w-4" /></Button>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
@@ -81,7 +80,7 @@ const ContactsList: React.FC<{
             placeholder="Buscar..." 
             value={searchTerm} 
             onChange={e => onSearch(e.target.value)} 
-            className="pl-10 bg-black/20 border-white/10 text-white"
+            className="pl-10 bg-black/20 border-white/10 text-white focus-visible:ring-primary/50"
           />
         </div>
       </div>
@@ -112,7 +111,7 @@ const ContactsList: React.FC<{
                 </div>
                 <div className="flex justify-between">
                   <p className="text-xs text-gray-400 truncate max-w-[140px]">{contact.last_message || 'Iniciar conversa...'}</p>
-                  {contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-black">{contact.unread_count}</Badge> : null}
+                  {contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-black font-bold border-none">{contact.unread_count}</Badge> : null}
                 </div>
               </div>
             </div>
@@ -148,21 +147,15 @@ const ChatArea: React.FC<{
     setSending(false)
   }
 
-  // Lógica de Chamada (Gera link Jitsi)
   const handleCall = async (video: boolean) => {
     if (!contact || !user) return
     const roomName = `capifit-${[user.id, contact.id].sort().join('-')}`
     const callUrl = `https://meet.jit.si/${roomName}`
-    
-    // Envia convite no chat
     const label = video ? 'chamada de vídeo' : 'chamada de voz'
     await onSend(`Iniciou uma ${label}.`, 'call_invite', callUrl)
-    
-    // Abre a sala
     window.open(callUrl, '_blank')
   }
 
-  // Upload de Arquivo/Imagem
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !user) return
@@ -170,22 +163,19 @@ const ChatArea: React.FC<{
     try {
       setUploading(true)
       const fileExt = file.name.split('.').pop()
-      const fileName = `${Date.now()}.${fileExt}`
+      // FIX: Nome único garantido para evitar sobreposição
+      const fileName = `${crypto.randomUUID()}-${Date.now()}.${fileExt}`
       const filePath = `${user.id}/${fileName}`
 
-      // Upload
       const { error: uploadError } = await supabase.storage.from('chat-attachments').upload(filePath, file)
       if (uploadError) throw uploadError
 
-      // Get URL
       const { data: { publicUrl } } = supabase.storage.from('chat-attachments').getPublicUrl(filePath)
 
-      // Determine Type
       const isImage = file.type.startsWith('image/')
       const type = isImage ? 'image' : 'file'
       const content = isImage ? 'Imagem' : file.name
 
-      // Send Message
       await onSend(content, type, publicUrl)
       showSuccess('Arquivo enviado!')
 
@@ -193,7 +183,7 @@ const ChatArea: React.FC<{
       showError('Erro no envio: ' + error.message)
     } finally {
       setUploading(false)
-      if (fileInputRef.current) fileInputRef.current.value = '' // Reset input
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -203,7 +193,7 @@ const ChatArea: React.FC<{
         <div className="space-y-2">
           <img 
             src={msg.file_url} 
-            alt="Enviada" 
+            alt="Anexo" 
             className="max-w-full rounded-lg border border-white/10 max-h-[300px] object-cover cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => window.open(msg.file_url!, '_blank')}
           />
@@ -248,9 +238,7 @@ const ChatArea: React.FC<{
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-background/50 backdrop-blur-sm">
         <div className="text-center p-8">
-          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-2xl shadow-primary/10">
-            <MessageCircle className="h-12 w-12 text-primary" />
-          </div>
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-2xl shadow-primary/10"><MessageCircle className="h-12 w-12 text-primary" /></div>
           <h3 className="text-2xl font-bold text-white mb-2">Chat CapiFit</h3>
           <p className="text-gray-400">Selecione uma conversa para começar.</p>
         </div>
@@ -260,7 +248,6 @@ const ChatArea: React.FC<{
 
   return (
     <div className="flex-1 flex flex-col h-full bg-gradient-to-b from-slate-900/50 to-black/50 relative">
-      {/* Header */}
       <div className="p-4 border-b border-white/10 bg-slate-900/80 backdrop-blur-md flex justify-between items-center z-10">
         <div className="flex items-center gap-3">
           {isMobile && <Button variant="ghost" size="icon" onClick={onBack}><ArrowLeft className="h-5 w-5 text-gray-400" /></Button>}
@@ -277,12 +264,11 @@ const ChatArea: React.FC<{
           </div>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon" onClick={() => handleCall(false)} className="text-gray-400 hover:text-primary hover:bg-white/5" title="Chamada de Voz"><Phone className="h-5 w-5" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => handleCall(true)} className="text-gray-400 hover:text-primary hover:bg-white/5" title="Chamada de Vídeo"><Video className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => handleCall(false)} className="text-gray-400 hover:text-primary hover:bg-white/5"><Phone className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => handleCall(true)} className="text-gray-400 hover:text-primary hover:bg-white/5"><Video className="h-5 w-5" /></Button>
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
         {loading ? (
           <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
@@ -307,22 +293,12 @@ const ChatArea: React.FC<{
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
       <div className="p-4 border-t border-white/10 bg-slate-900/90 backdrop-blur-lg">
         <form onSubmit={handleSendMessage} className="flex gap-3 items-end">
           <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
-          
-          <Button 
-            type="button" 
-            variant="ghost" 
-            size="icon" 
-            className="text-gray-400 hover:text-white hover:bg-white/10"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-          >
+          <Button type="button" variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-white/10" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
             {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
           </Button>
-          
           <Input 
             placeholder="Digite sua mensagem..." 
             value={inputText} 
@@ -330,13 +306,7 @@ const ChatArea: React.FC<{
             className="flex-1 bg-black/30 border-white/10 text-white focus-visible:ring-primary/50"
             disabled={sending || uploading}
           />
-          
-          <Button 
-            type="submit" 
-            disabled={!inputText.trim() || sending} 
-            size="icon" 
-            className="bg-primary hover:bg-primary/80 text-black rounded-xl w-11 h-11 shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all hover:scale-105"
-          >
+          <Button type="submit" disabled={!inputText.trim() || sending} size="icon" className="bg-primary hover:bg-primary/80 text-black rounded-xl w-11 h-11 shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all hover:scale-105">
             {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </Button>
         </form>
@@ -363,36 +333,30 @@ const Chat: React.FC = () => {
     if (!user) return
     try {
       setLoading(true)
-      // Buscar Profiles que tenham conversa com o usuário OU vínculo profissional
-      // 1. Vínculos
       let contactsData: Contact[] = []
       
       if (profile?.role === 'client') {
         const { data } = await supabase.from('client_professionals').select(`professional:profiles!professional_id(*)`).eq('client_id', user.id).eq('status', 'active')
         contactsData = (data || []).map((i: any) => ({ ...i.professional, unread_count: 0 }))
       } else {
-        // Para Profissional e Admin: Buscar alunos E conversas existentes
         const { data: clients } = await supabase.from('client_professionals').select(`client:profiles!client_id(*)`).eq('professional_id', user.id).eq('status', 'active')
         const clientContacts = (clients || []).map((i: any) => ({ ...i.client, unread_count: 0 }))
         
-        // Buscar conversas soltas (ex: outros users)
         const { data: msgs } = await supabase.from('chat_messages').select('sender_id, receiver_id').or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
         const ids = new Set<string>()
         msgs?.forEach(m => { ids.add(m.sender_id); ids.add(m.receiver_id) })
         ids.delete(user.id)
         
         const { data: otherProfiles } = await supabase.from('profiles').select('*').in('id', Array.from(ids))
-        
-        // Merge sem duplicatas
         const uniqueMap = new Map()
         clientContacts.forEach(c => uniqueMap.set(c.id, c))
         otherProfiles?.forEach(p => { if(!uniqueMap.has(p.id)) uniqueMap.set(p.id, { ...p, unread_count: 0 }) })
         contactsData = Array.from(uniqueMap.values())
       }
 
-      // Enriquecer com última mensagem
       const enriched = await Promise.all(contactsData.map(async (c) => {
-        const { count } = await supabase.from('chat_messages').select('*', { count: 'exact', head: true }).eq('sender_id', c.id).eq('receiver_id', user.id).eq('is_read', false)
+        // Busca segura de contagem (evita erro HEAD se RLS falhar, mas com a correção SQL deve funcionar)
+        const { count } = await supabase.from('chat_messages').select('id', { count: 'exact', head: true }).eq('sender_id', c.id).eq('receiver_id', user.id).eq('is_read', false)
         const { data: last } = await supabase.from('chat_messages').select('content, created_at, message_type').or(`and(sender_id.eq.${user.id},receiver_id.eq.${c.id}),and(sender_id.eq.${c.id},receiver_id.eq.${user.id})`).order('created_at', { ascending: false }).limit(1).maybeSingle()
         
         let lastMsg = last?.content || ''
@@ -421,13 +385,16 @@ const Chat: React.FC = () => {
     if (!selectedContact || !user) return
     try {
       const newMsg = { sender_id: user.id, receiver_id: selectedContact.id, content, message_type: type, file_url: fileUrl || null }
-      const { data } = await supabase.from('chat_messages').insert(newMsg).select().single()
-      if (data) setMessages(prev => [...prev, data])
-      fetchContacts() // Atualiza lista lateral
-    } catch (e) { console.error(e) }
+      // Apenas inserimos no banco. O Realtime vai cuidar de atualizar a tela.
+      // Isso EVITA A DUPLICIDADE.
+      const { error } = await supabase.from('chat_messages').insert(newMsg)
+      if (error) throw error
+      
+      // Atualiza a lista lateral para mostrar a última mensagem
+      fetchContacts()
+    } catch (e) { console.error(e); showError('Erro ao enviar mensagem') }
   }
 
-  // Realtime
   useEffect(() => {
     if (!user) return
     const channel = supabase.channel('global_chat')
@@ -439,9 +406,14 @@ const Chat: React.FC = () => {
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
         const msg = payload.new as ChatMessage
+        // Verifica se a mensagem pertence à conversa atual
         if (msg.receiver_id === user.id || msg.sender_id === user.id) {
           if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
-            setMessages(prev => [...prev, msg])
+            // DEDUPLICAÇÃO CRÍTICA: Verifica se a mensagem já existe no estado antes de adicionar
+            setMessages(prev => {
+              if (prev.some(m => m.id === msg.id)) return prev
+              return [...prev, msg]
+            })
             if (msg.receiver_id === user.id) supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
           }
           fetchContacts()
