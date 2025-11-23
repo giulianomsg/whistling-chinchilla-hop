@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip' // Import Tooltip
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { 
   Search, Plus, MoreVertical, Phone, Mail, 
   Loader2, Dumbbell, UserX, User, Trophy, Calendar, Utensils, Users
@@ -40,16 +40,19 @@ const MyClients: React.FC = () => {
     try {
       setLoading(true)
       
-      // Consulta Profunda (Deep Fetching)
+      // --- CORREÇÃO AQUI: Especificando as chaves estrangeiras (!client_id) ---
       const { data, error } = await supabase
         .from('client_professionals')
         .select(`
           id, status, started_at,
           client:profiles!client_id (
             id, full_name, email, phone, avatar_url, level,
-            client_workouts(id, status),
-            client_meal_plans(id, status),
-            other_links:client_professionals(
+            
+            client_workouts:client_workouts!client_id(id, status),
+            
+            client_meal_plans:client_meal_plans!client_id(id, status),
+            
+            other_links:client_professionals!client_id(
               professional:profiles!professional_id(
                 id, full_name, avatar_url,
                 details:professional_details(specialty)
@@ -63,9 +66,9 @@ const MyClients: React.FC = () => {
       if (error) throw error
       setClients((data || []).filter(item => item.client !== null))
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
-      showError('Erro ao carregar alunos')
+      showError('Erro ao carregar alunos: ' + error.message)
     } finally {
       setLoading(false)
     }
@@ -85,7 +88,7 @@ const MyClients: React.FC = () => {
         client_id: foundUser.id, 
         professional_id: user!.id, 
         status: 'active',
-        started_at: new Date().toISOString() // Garante data de início
+        started_at: new Date().toISOString()
       })
       if (error) throw error
 
@@ -107,7 +110,6 @@ const MyClients: React.FC = () => {
     return (item.client?.full_name?.toLowerCase() || '').includes(term) || (item.client?.email?.toLowerCase() || '').includes(term)
   })
 
-  // Helper para traduzir especialidades
   const translateSpecialty = (spec: string) => {
     if (spec === 'personal_trainer') return 'Personal'
     if (spec === 'nutritionist') return 'Nutri'
@@ -120,7 +122,6 @@ const MyClients: React.FC = () => {
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-2"><User className="text-blue-400" /> Meus Alunos</h1>
@@ -138,10 +139,8 @@ const MyClients: React.FC = () => {
           </Dialog>
         </div>
 
-        {/* Busca */}
         <div className="relative mb-6"><Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" /><Input placeholder="Buscar por nome ou email..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/></div>
 
-        {/* Grid de Clientes */}
         {filteredClients.length === 0 ? (
           <div className="text-center py-16 bg-white/5 rounded-xl border border-white/10 border-dashed"><h3 className="text-lg font-medium text-white">Nenhum aluno encontrado</h3></div>
         ) : (
@@ -149,12 +148,13 @@ const MyClients: React.FC = () => {
             {filteredClients.map((item) => {
               const client = item.client || {}
               
-              // Processamento de Dados
               const hasActiveWorkout = client.client_workouts?.some((w: any) => w.status === 'active')
               const hasActiveMealPlan = client.client_meal_plans?.some((m: any) => m.status === 'active')
+              
+              // Filtra para não mostrar o próprio usuário logado na lista de "Outros Profissionais"
               const otherProfessionals = client.other_links
                 ?.map((link: any) => link.professional)
-                .filter((p: any) => p.id !== user?.id) || []
+                .filter((p: any) => p && p.id !== user?.id) || []
               
               const linkedDate = item.started_at ? format(new Date(item.started_at), "dd/MM/yyyy", { locale: ptBR }) : 'Data desconhecida'
 
@@ -187,13 +187,11 @@ const MyClients: React.FC = () => {
                   </CardHeader>
                   
                   <CardContent className="flex-1 flex flex-col gap-4">
-                    {/* Info de Contato e Data */}
                     <div className="space-y-1.5 text-xs text-gray-400">
                       <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" /><span className="truncate">{client.email}</span></div>
                       <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5" /><span>Vinculado em: {linkedDate}</span></div>
                     </div>
 
-                    {/* Status dos Planos */}
                     <div className="flex gap-2 flex-wrap">
                       <Badge variant="secondary" className={`text-[10px] border ${hasActiveWorkout ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-gray-500/10 text-gray-500 border-gray-500/20'}`}>
                         <Dumbbell className="h-3 w-3 mr-1" /> {hasActiveWorkout ? 'Treino Ativo' : 'Sem Treino'}
@@ -203,11 +201,10 @@ const MyClients: React.FC = () => {
                       </Badge>
                     </div>
 
-                    {/* Outros Profissionais (Equipe) */}
                     {otherProfessionals.length > 0 && (
                       <div className="mt-auto pt-3 border-t border-white/5">
                         <p className="text-[10px] text-gray-500 mb-2 uppercase font-semibold tracking-wider flex items-center gap-1"><Users className="h-3 w-3"/> Equipe Multidisciplinar</p>
-                        <div className="flex -space-x-2 overflow-hidden">
+                        <div className="flex -space-x-2 overflow-hidden pl-1">
                           {otherProfessionals.map((prof: any) => (
                             <Tooltip key={prof.id}>
                               <TooltipTrigger asChild>
