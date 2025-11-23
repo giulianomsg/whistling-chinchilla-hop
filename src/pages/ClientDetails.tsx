@@ -11,19 +11,20 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
 import { 
   User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
-  AlertTriangle, Stethoscope, ChevronRight
+  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
-import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 
+// --- DICIONÁRIOS & LISTAS ---
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
@@ -91,20 +92,22 @@ const ClientDetails: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
+  // Dados
   const [clientProfile, setClientProfile] = useState<any>(null)
   const [clientDetails, setClientDetails] = useState<any>(null)
   const [clientWorkouts, setClientWorkouts] = useState<any[]>([])
   const [clientMealPlans, setClientMealPlans] = useState<any[]>([])
   const [assessments, setAssessments] = useState<any[]>([])
   const [progressPhotos, setProgressPhotos] = useState<any[]>([])
+  const [historySessions, setHistorySessions] = useState<any[]>([]) // NOVO: Histórico
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
 
+  // UI States
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
   const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
   const [isAddPhotoOpen, setIsAddPhotoOpen] = useState(false)
-  
   const [selectedWorkoutId, setSelectedWorkoutId] = useState('')
   const [selectedMealPlanId, setSelectedMealPlanId] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
@@ -141,6 +144,10 @@ const ClientDetails: React.FC = () => {
         const cMeals = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cAssessments = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
         const cPhotos = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
+        
+        // NOVO: Busca de Histórico de Sessões
+        const cHistory = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', id).order('created_at', { ascending: false }).limit(20)
+
         const myWorkouts = await supabase.from('workouts').select('*').eq('professional_id', user.id).eq('is_template', false)
         const myMealPlans = await supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id)
 
@@ -152,6 +159,7 @@ const ClientDetails: React.FC = () => {
         setClientMealPlans(cMeals.data || [])
         setAssessments(cAssessments.data || [])
         setProgressPhotos(cPhotos.data || [])
+        setHistorySessions(cHistory.data || [])
         setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
 
@@ -307,6 +315,11 @@ const ClientDetails: React.FC = () => {
       } catch (e) { showError('Erro ao excluir') }
   }
 
+  const formatDuration = (sec: number) => {
+     const m = Math.floor(sec / 60)
+     return m > 60 ? `${Math.floor(m/60)}h ${m%60}min` : `${m} min`
+  }
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
@@ -316,7 +329,6 @@ const ClientDetails: React.FC = () => {
   const currentLevel = clientProfile?.level || 1
   const xpProgress = ((currentXP % 1000) / 1000) * 100
 
-  // Análise de Saúde
   const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight/((latestAssessment.height/100)**2)).toFixed(2)) : 0 })
 
   const getRiskColor = (level: string) => {
@@ -350,7 +362,7 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               
-              {/* 1. PERFIL (Visual Nexus Ajustado) */}
+              {/* 1. PERFIL */}
               <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
                 <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
@@ -359,8 +371,7 @@ const ClientDetails: React.FC = () => {
                       <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-black">
                           {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-gray-400">{clientProfile?.full_name?.[0]}</div>}
                       </div>
-                      {/* Badge de Nível com Contraste Ajustado */}
-                      <Badge className="mt-2 bg-slate-900 text-primary border border-primary font-bold px-4 py-1 hover:bg-slate-800">Nível {currentLevel}</Badge>
+                      <Badge className="mt-2 bg-yellow-500 text-black font-bold border-none px-4 py-1 hover:bg-yellow-400">Nível {currentLevel}</Badge>
                     </div>
                     <div className="flex-1 min-w-0 w-full text-center md:text-left">
                       <h2 className="text-3xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
@@ -377,7 +388,7 @@ const ClientDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* 2. AÇÕES RÁPIDAS (Visual com Feedback e Ícones Grandes) */}
+              {/* 2. AÇÕES RÁPIDAS */}
               <Card className="bg-white/5 border-white/10 w-full h-full">
                 <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
@@ -388,54 +399,23 @@ const ClientDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* 3. ANÁLISE DE SAÚDE (Cards Visíveis) */}
+              {/* 3. ANÁLISE DE SAÚDE */}
               <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
                 <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-400"/> Análise de Saúde</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card Risco Cardio */}
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>
-                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
-                        <div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
-                    </div>
-                    {/* Card Risco Metabólico */}
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>
-                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
-                        <div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
-                    </div>
-                    {/* Card Risco Ortopédico */}
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>
-                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
-                        <div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
-                    </div>
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
                 </CardContent>
               </Card>
 
-              {/* 4. MÉTRICAS VITAIS (Com mais contraste) */}
+              {/* 4. MÉTRICAS VITAIS */}
               <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all">
-                    <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-white">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-gray-500 font-normal">kg</span></p></div>
-                    <Scale className="h-8 w-8 text-gray-500 opacity-50"/>
-                  </div>
-                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all">
-                    <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-white">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-gray-500 font-normal">%</span></p></div>
-                    <Activity className="h-8 w-8 text-gray-500 opacity-50"/>
-                  </div>
-                  <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-900/10 border-green-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Treino</p>
-                      <p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Inativo'}</p>
-                    </div>
-                    <Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-gray-600'} opacity-50`}/>
-                  </div>
-                  <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-900/10 border-orange-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Dieta</p>
-                      <p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p>
-                    </div>
-                    <Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-gray-600'} opacity-50`}/>
-                  </div>
+                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all"><div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-white">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-gray-500 font-normal">kg</span></p></div><Scale className="h-8 w-8 text-gray-500 opacity-50"/></div>
+                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all"><div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-white">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-gray-500 font-normal">%</span></p></div><Activity className="h-8 w-8 text-gray-500 opacity-50"/></div>
+                  <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-900/10 border-green-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Treino</p><p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Inativo'}</p></div><Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-gray-600'} opacity-50`}/></div>
+                  <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-900/10 border-orange-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Dieta</p><p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p></div><Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-gray-600'} opacity-50`}/></div>
               </div>
-
             </div>
           </TabsContent>
 
@@ -444,38 +424,15 @@ const ClientDetails: React.FC = () => {
             <Card className="bg-white/5 border-white/10 w-full">
                <CardHeader className="flex flex-row items-center justify-between p-6">
                   <CardTitle className="text-white text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-400"/> Galeria de Evolução</CardTitle>
-                  <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
-                    <DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger>
-                    <DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg">
-                       <DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader>
-                       <div className="space-y-4 mt-4">
-                          <div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar'}</Button>
-                       </div>
-                    </DialogContent>
-                  </Dialog>
+                  <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}><DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar'}</Button></div></DialogContent></Dialog>
                </CardHeader>
                <CardContent className="p-6">
-                  {progressPhotos.length === 0 ? <div className="text-center py-16 text-gray-500 border-dashed border border-white/10 rounded-lg">Nenhuma foto.</div> : (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                       {progressPhotos.map(photo => (
-                         <div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-white/10 aspect-[3/4] shadow-lg">
-                            <img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                               <span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span>
-                               <Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4"/></Button>
-                            </div>
-                         </div>
-                       ))}
-                    </div>
-                  )}
+                  {progressPhotos.length === 0 ? <div className="text-center py-16 text-gray-500 border-dashed border border-white/10 rounded-lg">Nenhuma foto.</div> : (<div className="grid grid-cols-2 md:grid-cols-4 gap-6">{progressPhotos.map(photo => (<div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-white/10 aspect-[3/4] shadow-lg"><img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4"><span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span><Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}
                </CardContent>
             </Card>
           </TabsContent>
 
-          {/* --- ANAMNESE (Aba completa com Checkbox Nativo) --- */}
+          {/* --- ANAMNESE --- */}
           <TabsContent value="anamnesis">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                <h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
@@ -487,15 +444,13 @@ const ClientDetails: React.FC = () => {
                     <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px]">Hábitos</TabsTrigger>
                     <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px]">Nutrição</TabsTrigger>
                 </TabsList>
-                <TabsContent value="medical">
-                    <Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-8"><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><input type="checkbox" checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary" /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span></div>))}</div></div><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><input type="checkbox" checked={anamnesisForm.symptoms?.includes(sym)} onChange={() => toggleAnamnesisList('symptoms', sym)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary" /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div><div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div></div></CardContent></Card>
-                </TabsContent>
-                <TabsContent value="habits"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-gray-300 mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><input type="checkbox" checked={anamnesisForm.work_activities?.includes(act)} onChange={() => toggleAnamnesisList('work_activities', act)} className="rounded border-gray-500 bg-transparent text-primary focus:ring-primary"/><span className="text-sm text-gray-400">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
+                <TabsContent value="medical"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-8"><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span></div>))}</div></div><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><Checkbox checked={anamnesisForm.symptoms?.includes(sym)} onCheckedChange={() => toggleAnamnesisList('symptoms', sym)} /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div><div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div></div></CardContent></Card></TabsContent>
+                <TabsContent value="habits"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-gray-300 mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><Checkbox checked={anamnesisForm.work_activities?.includes(act)} onCheckedChange={() => toggleAnamnesisList('work_activities', act)}/><span className="text-sm text-gray-400">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
                 <TabsContent value="nutri"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div><div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10"/></div></div><div><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]"/></div></CardContent></Card></TabsContent>
             </Tabs>
           </TabsContent>
 
-          {/* --- OUTRAS ABAS --- */}
+          {/* --- BIOMETRIA --- */}
           <TabsContent value="biometrics">
             <Card className="bg-white/5 border-white/10 w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
@@ -527,9 +482,42 @@ const ClientDetails: React.FC = () => {
              </Card>
           </TabsContent>
 
-          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Button onClick={handleAssignWorkout} className="w-full bg-blue-600">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Button onClick={handleAssignMealPlan} className="w-full bg-green-600">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
+          {/* --- HISTÓRICO DE TREINOS (Recurso Substituído e Integrado Visualmente) --- */}
+          <TabsContent value="history">
+             <Card className="bg-white/5 border-white/10 w-full">
+                <CardHeader className="p-6 border-b border-white/5"><CardTitle className="text-white text-xl flex items-center gap-2"><Activity className="h-6 w-6 text-orange-400"/> Histórico de Execução</CardTitle></CardHeader>
+                <CardContent className="p-6">
+                   {historySessions.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500">Nenhum treino realizado ainda.</div>
+                   ) : (
+                      <div className="space-y-4">
+                         {historySessions.map(session => (
+                            <div key={session.id} className="bg-black/20 p-5 rounded-xl border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                               <div className="flex items-center gap-5 w-full md:w-auto">
+                                  {/* Ícone de Status */}
+                                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                                     {session.status === 'completed' ? <CheckCircle className="h-6 w-6"/> : <AlertCircle className="h-6 w-6"/>}
+                                  </div>
+                                  <div>
+                                     <h4 className="text-lg font-bold text-white">{session.workout?.name || 'Treino Avulso'}</h4>
+                                     <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
+                                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3"/> {new Date(session.created_at).toLocaleDateString()}</span>
+                                        <span className="flex items-center gap-1"><Clock className="h-3 w-3"/> {session.duration_seconds ? `${Math.floor(session.duration_seconds / 60)} min` : '--'}</span>
+                                     </div>
+                                  </div>
+                               </div>
+                               <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+                            </div>
+                         ))}
+                      </div>
+                   )}
+                </CardContent>
+             </Card>
+          </TabsContent>
+
+          {/* Demais Abas Mantidas */}
+          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
           <TabsContent value="info"><div className="space-y-6"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
         </Tabs>
       </div>
