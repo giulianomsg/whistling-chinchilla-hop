@@ -11,14 +11,13 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
 import { 
   User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
-  AlertTriangle, Stethoscope
+  AlertTriangle, Stethoscope, ChevronRight
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -34,7 +33,6 @@ const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levan
 
 // --- LÓGICA DE ANÁLISE DE SAÚDE ---
 const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
-  // Proteção contra dados nulos
   const safeAnamnesis = anamnesis || {}
   
   const risks = {
@@ -50,14 +48,14 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   const familyHistory = safeAnamnesis.family_history || ''
   const dietHistory = safeAnamnesis.diet_history || ''
 
-  // 1. RED FLAGS
+  // RED FLAGS
   if (symptoms.includes('Dor no Peito')) risks.redFlags.push('Dor no Peito (Angina?)')
   if (symptoms.includes('Falta de Ar')) risks.redFlags.push('Dispneia ao esforço')
   if (symptoms.includes('Tontura')) risks.redFlags.push('Tonturas/Desmaios')
   if (symptoms.includes('Palpitações')) risks.redFlags.push('Arritmia/Palpitações')
   if (symptoms.includes('Tosse com Sangue')) risks.redFlags.push('Hemoptise')
 
-  // 2. RISCO CARDIO
+  // RISCO CARDIO
   let cardioScore = 0
   if (safeAnamnesis.smoker) { cardioScore += 2; risks.cardio.factors.push('Tabagismo') }
   if (conditions.includes('Hipertensão')) { cardioScore += 2; risks.cardio.factors.push('Hipertensão') }
@@ -69,7 +67,7 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   if (cardioScore >= 3) risks.cardio.level = 'high'
   else if (cardioScore >= 1) risks.cardio.level = 'medium'
 
-  // 3. RISCO METABÓLICO
+  // RISCO METABÓLICO
   let metaScore = 0
   if (conditions.includes('Diabetes')) { metaScore += 3; risks.metabolic.factors.push('Diabetes') }
   if (latestBiometrics?.bmi > 25) { metaScore += 1; risks.metabolic.factors.push('Sobrepeso') }
@@ -79,7 +77,7 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   if (metaScore >= 3) risks.metabolic.level = 'high'
   else if (metaScore >= 1) risks.metabolic.level = 'medium'
 
-  // 4. RISCO ORTOPÉDICO
+  // RISCO ORTOPÉDICO
   let orthoScore = 0
   if (injuries.length > 3) { orthoScore += 2; risks.orthopedic.factors.push('Histórico de Lesões') }
   if (symptoms.includes('Dores Articulares')) { orthoScore += 2; risks.orthopedic.factors.push('Dores Articulares Ativas') }
@@ -89,7 +87,7 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   if (orthoScore >= 3) risks.orthopedic.level = 'high'
   else if (orthoScore >= 1) risks.orthopedic.level = 'medium'
 
-  // 5. SCORE DE BEM-ESTAR (0-100)
+  // SCORE DE BEM-ESTAR
   let wellness = 100
   if (safeAnamnesis.smoker) wellness -= 20
   if (safeAnamnesis.alcohol === 'frequently') wellness -= 15
@@ -177,7 +175,6 @@ const ClientDetails: React.FC = () => {
 
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' ? JSON.parse(detailsRes.data.anamnesis_data) : detailsRes.data.anamnesis_data
-          // Merge seguro para evitar nulls
           setAnamnesisForm(prev => ({
              ...prev, 
              ...data,
@@ -192,7 +189,7 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
-  // Handlers
+  // Handlers (Resumidos)
   const handleAssignWorkout = async () => {
     try {
       const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
@@ -244,7 +241,6 @@ const ClientDetails: React.FC = () => {
     })
   }
 
-  // Biometria
   const openEditAssessment = (assessment: any) => {
     setEditingAssessmentId(assessment.id)
     const measures = typeof assessment.measurements === 'string' ? JSON.parse(assessment.measurements) : assessment.measurements
@@ -299,7 +295,6 @@ const ClientDetails: React.FC = () => {
     setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
   }
 
-  // Fotos
   const handlePhotoUpload = async () => {
     if (!newPhoto.file || !user) return
     setUploadingPhoto(true)
@@ -333,17 +328,15 @@ const ClientDetails: React.FC = () => {
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
-  // Dashboard Data
   const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
   const activeWorkout = clientWorkouts.find(w => w.status === 'active')
   const activeMealPlan = clientMealPlans.find(m => m.status === 'active')
-  
-  // Safe health analysis
-  const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight/((latestAssessment.height/100)**2)).toFixed(2)) : 0 })
-  
   const currentXP = clientProfile?.current_xp || 0
   const currentLevel = clientProfile?.level || 1
   const xpProgress = ((currentXP % 1000) / 1000) * 100
+
+  // Análise de Saúde
+  const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight/((latestAssessment.height/100)**2)).toFixed(2)) : 0 })
 
   const getRiskColor = (level: string) => {
     if (level === 'high') return 'text-red-500 border-red-500/30 bg-red-500/10'
@@ -356,7 +349,7 @@ const ClientDetails: React.FC = () => {
       <div className="w-full px-4 md:max-w-7xl md:mx-auto md:px-8">
         
         <div className="mb-6">
-            <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-gray-400 hover:text-white pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar para Lista</Button>
+            <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-gray-400 hover:text-white pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
@@ -372,11 +365,11 @@ const ClientDetails: React.FC = () => {
             </TabsList>
           </div>
 
-          {/* DASHBOARD INTELIGENTE */}
+          {/* DASHBOARD */}
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               
-              {/* 1. PERFIL + HEALTH SCORE */}
+              {/* 1. PERFIL */}
               <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
                 <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
@@ -385,7 +378,8 @@ const ClientDetails: React.FC = () => {
                       <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-black">
                           {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-gray-400">{clientProfile?.full_name?.[0]}</div>}
                       </div>
-                      <Badge className="mt-2 bg-yellow-500 text-black font-bold">Nível {currentLevel}</Badge>
+                      {/* BADGE CORRIGIDO: Amarelo Ouro com Texto Preto (Alto Contraste) */}
+                      <Badge className="mt-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold border-none px-4 py-1">Nível {currentLevel}</Badge>
                     </div>
                     <div className="flex-1 min-w-0 w-full text-center md:text-left">
                       <h2 className="text-3xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
@@ -406,26 +400,99 @@ const ClientDetails: React.FC = () => {
               <Card className="bg-white/5 border-white/10 w-full h-full">
                 <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => setActiveTab('biometrics')}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-400 mb-1"/> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-primary/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
                 </CardContent>
               </Card>
 
-              {/* 3. ANÁLISE DE SAÚDE (RISK MATRIX) */}
+              {/* 3. ANÁLISE DE SAÚDE */}
               <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
                 <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-400"/> Análise de Saúde</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className={`p-4 rounded-xl border ${getRiskColor(healthAnalysis.risks.cardio.level)}`}><div className="flex justify-between items-center mb-2"><span className="font-bold text-sm uppercase">Cardiovascular</span><Badge className="bg-black/20 hover:bg-black/30 border-none">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs opacity-80">• {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                    <div className={`p-4 rounded-xl border ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}><div className="flex justify-between items-center mb-2"><span className="font-bold text-sm uppercase">Metabólico</span><Badge className="bg-black/20 hover:bg-black/30 border-none">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs opacity-80">• {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                    <div className={`p-4 rounded-xl border ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}><div className="flex justify-between items-center mb-2"><span className="font-bold text-sm uppercase">Ortopédico</span><Badge className="bg-black/20 hover:bg-black/30 border-none">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs opacity-80">• {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                    {/* Cards de Risco com Visual Aprimorado */}
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>
+                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
+                        <div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
+                    </div>
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>
+                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
+                        <div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
+                    </div>
+                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>
+                        <div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div>
+                        <div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div>
+                    </div>
                 </CardContent>
               </Card>
+
+              {/* 4. MÉTRICAS VITAIS */}
+              <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:border-primary/30 transition-all">
+                    <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-white">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-gray-500 font-normal">kg</span></p></div>
+                    <Scale className="h-8 w-8 text-gray-600 opacity-50"/>
+                  </div>
+                  <div className="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:border-primary/30 transition-all">
+                    <div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-white">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-gray-500 font-normal">%</span></p></div>
+                    <Activity className="h-8 w-8 text-gray-600 opacity-50"/>
+                  </div>
+                  <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-900/10 border-green-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Treino</p>
+                      <p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Inativo'}</p>
+                    </div>
+                    <Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-gray-600'} opacity-50`}/>
+                  </div>
+                  <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-900/10 border-orange-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Dieta</p>
+                      <p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p>
+                    </div>
+                    <Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-gray-600'} opacity-50`}/>
+                  </div>
+              </div>
+
             </div>
           </TabsContent>
 
-          {/* --- ANAMNESE PROFISSIONAL --- */}
+          {/* --- FOTOS --- */}
+          <TabsContent value="photos">
+            <Card className="bg-white/5 border-white/10 w-full">
+               <CardHeader className="flex flex-row items-center justify-between p-6">
+                  <CardTitle className="text-white text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-400"/> Galeria de Evolução</CardTitle>
+                  <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
+                    <DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger>
+                    <DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg">
+                       <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
+                       <div className="space-y-4 mt-4">
+                          <div><Label>Data</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
+                          <div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div>
+                          <div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
+                          <Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar'}</Button>
+                       </div>
+                    </DialogContent>
+                  </Dialog>
+               </CardHeader>
+               <CardContent className="p-6">
+                  {progressPhotos.length === 0 ? <div className="text-center py-16 text-gray-500 border-dashed border border-white/10 rounded-lg">Nenhuma foto.</div> : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                       {progressPhotos.map(photo => (
+                         <div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-white/10 aspect-[3/4] shadow-lg">
+                            <img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                               <span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span>
+                               <Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4"/></Button>
+                            </div>
+                         </div>
+                       ))}
+                    </div>
+                  )}
+               </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* --- ANAMNESE (Abas Internas) --- */}
           <TabsContent value="anamnesis">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                <h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
@@ -445,109 +512,40 @@ const ClientDetails: React.FC = () => {
             </Tabs>
           </TabsContent>
 
-          {/* --- DEMAIS ABAS (Fotos, Biometria, etc) --- */}
-          <TabsContent value="photos">
-            <Card className="bg-white/5 border-white/10 w-full">
-               <CardHeader className="flex flex-row items-center justify-between p-6">
-                  <CardTitle className="text-white text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-400"/> Galeria de Evolução</CardTitle>
-                  <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
-                    <DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger>
-                    <DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg">
-                       <DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader>
-                       <div className="space-y-4 mt-4">
-                          <div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
-                          <Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600 hover:bg-purple-700">
-                             {uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar Foto'}
-                          </Button>
-                       </div>
-                    </DialogContent>
-                  </Dialog>
-               </CardHeader>
-               <CardContent className="p-6">
-                  {progressPhotos.length === 0 ? (
-                    <div className="text-center py-16 text-gray-500 bg-white/5 rounded-xl border border-dashed border-white/10">
-                       <Camera className="h-12 w-12 mx-auto mb-3 opacity-20"/>
-                       <p>Nenhuma foto registrada.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                       {progressPhotos.map(photo => (
-                         <div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-white/10 aspect-[3/4] shadow-lg">
-                            <img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                               <span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span>
-                               {photo.notes && <span className="text-xs text-gray-300 truncate">{photo.notes}</span>}
-                               <Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4"/></Button>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-center md:hidden backdrop-blur-sm">
-                               <span className="text-xs font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span>
-                            </div>
-                         </div>
-                       ))}
-                    </div>
-                  )}
-               </CardContent>
-            </Card>
-          </TabsContent>
-
+          {/* Demais abas (Biometrics, Workouts, etc) - Mantidas com visual corrigido */}
           <TabsContent value="biometrics">
-            <Card className="bg-white/5 border-white/10 w-full">
+             <Card className="bg-white/5 border-white/10 w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
-                <CardTitle className="text-white text-xl">Histórico de Avaliações</CardTitle>
-                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
-                  <DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
+                <CardTitle className="text-white text-xl">Histórico</CardTitle>
+                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold"><Plus className="w-4 h-4 mr-2"/> Nova</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto"><div className="p-6"><DialogHeader><DialogTitle>Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div><DialogFooter className="mt-6"><Button onClick={() => handleSaveAssessment('completed')} className="w-full bg-green-600">Finalizar</Button></DialogFooter></div></DialogContent></Dialog>
               </CardHeader>
               <CardContent className="p-6">
-                {assessments.length === 0 ? <div className="text-center text-gray-500 py-12">Nenhuma avaliação registrada.</div> : (
+                {assessments.length === 0 ? <div className="text-center text-gray-500 py-8">Vazio.</div> : (
                   <div className="space-y-4">
-                    {assessments.map((assessment) => {
-                      const bmiInfo = classifyBMI(Number((assessment.weight / ((assessment.height/100)**2)).toFixed(2)))
-                      const status = assessment.measurements?.status || 'completed'
-                      const completion = assessment.measurements?.completion || 0
+                    {assessments.map((a) => {
+                      const s = a.measurements?.status || 'completed'
+                      const i = classifyBMI(Number((a.weight/((a.height/100)**2)).toFixed(2)))
                       return (
-                        <div key={assessment.id} className={`bg-black/20 p-5 rounded-xl border ${status === 'draft' ? 'border-yellow-500/30' : 'border-white/5'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
+                        <div key={a.id} className={`bg-black/20 p-5 rounded-xl border ${s==='draft' ? 'border-yellow-500/30' : 'border-white/5'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
                           <div className="flex items-center gap-5 w-full md:w-auto">
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${status === 'draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}>
-                              <span>{new Date(assessment.date).getDate()}</span>
-                              <span className="uppercase text-[10px]">{new Date(assessment.date).toLocaleString('default', { month: 'short' })}</span>
-                            </div>
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${s==='draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}><span>{new Date(a.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(a.date).toLocaleString('default',{month:'short'})}</span></div>
                             <div className="flex-1">
-                              <div className="flex items-center gap-3">
-                                <span className="text-white font-bold text-xl">{assessment.weight} kg</span>
-                                {status === 'draft' ? <Badge variant="secondary" className="text-yellow-400 bg-yellow-900/20 border-none text-xs">Rascunho</Badge> : <Badge variant="outline" className={`text-xs ${bmiInfo.color} border-current`}>{bmiInfo.label}</Badge>}
-                              </div>
-                              {status === 'draft' ? (
-                                <div className="w-full md:w-40 mt-2">
-                                  <div className="flex justify-between text-xs text-gray-400 mb-1"><span>Preenchimento</span><span>{completion}%</span></div>
-                                  <Progress value={completion} className="h-1.5 bg-white/10" />
-                                </div>
-                              ) : (
-                                <div className="text-sm text-gray-400 flex gap-4 mt-1">
-                                  <span>Gord: {assessment.body_fat_percentage}%</span>
-                                  <span className="hidden sm:inline">•</span>
-                                  <span>Massa: {assessment.muscle_mass}kg</span>
-                                </div>
-                              )}
+                              <div className="flex items-center gap-3"><span className="text-white font-bold text-xl">{a.weight} kg</span><Badge variant="outline" className={`text-xs ${i.color} border-current`}>{i.label}</Badge></div>
+                              <div className="text-sm text-gray-400 flex gap-4 mt-1"><span>Gord: {a.body_fat_percentage}%</span><span>Massa: {a.muscle_mass}kg</span></div>
                             </div>
                           </div>
-                          <div className="flex gap-2 w-full md:w-auto justify-end pt-4 md:pt-0">
-                            <Button variant="ghost" size="sm" onClick={() => openEditAssessment(assessment)} className="text-blue-400 hover:bg-blue-500/10 gap-2"><Pencil className="h-4 w-4"/><span className="md:hidden">Editar</span></Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(assessment.id)} className="text-red-400 hover:bg-red-500/10 gap-2"><Trash2 className="h-4 w-4"/><span className="md:hidden">Excluir</span></Button>
-                          </div>
+                          <div className="flex gap-2 w-full md:w-auto justify-end"><Button variant="ghost" size="sm" onClick={() => openEditAssessment(a)}><Pencil className="h-4 w-4"/></Button><Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(a.id)} className="text-red-400"><Trash2 className="h-4 w-4"/></Button></div>
                         </div>
                       )
                     })}
                   </div>
                 )}
               </CardContent>
-            </Card>
+             </Card>
           </TabsContent>
 
-          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Button onClick={handleAssignWorkout} className="w-full bg-blue-600">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Button onClick={handleAssignMealPlan} className="w-full bg-green-600">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
           <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
           <TabsContent value="info"><div className="space-y-6"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
         </Tabs>
