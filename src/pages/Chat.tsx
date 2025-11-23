@@ -40,9 +40,7 @@ interface Contact {
   unread_count?: number
 }
 
-// --- Utils de Formatação ---
-
-// Formatação para a Sidebar (Lista de Contatos) - Mais resumida
+// --- Utils ---
 const formatSidebarDate = (dateString?: string) => {
   if (!dateString) return ''
   try {
@@ -53,16 +51,11 @@ const formatSidebarDate = (dateString?: string) => {
   } catch { return '' }
 }
 
-// NOVO: Formatação para a Bolha de Mensagem (Detalhada)
 const formatChatTimestamp = (dateString: string) => {
   if (!dateString) return ''
   try {
     const date = new Date(dateString)
-    // Se for hoje: apenas hora (14:30)
-    if (isToday(date)) {
-      return format(date, 'HH:mm', { locale: ptBR })
-    }
-    // Se não for hoje: dia/mês + hora (23/11 14:30)
+    if (isToday(date)) return format(date, 'HH:mm', { locale: ptBR })
     return format(date, 'dd/MM HH:mm', { locale: ptBR })
   } catch { return '' }
 }
@@ -128,7 +121,19 @@ const ChatArea: React.FC<{
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, loading])
+  // Função de Scroll Inteligente
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior })
+    }
+  }
+
+  // Scroll ao carregar mensagens ou enviar
+  useEffect(() => { 
+    // Pequeno timeout para garantir renderização do DOM
+    const timer = setTimeout(() => scrollToBottom(loading ? 'auto' : 'smooth'), 100)
+    return () => clearTimeout(timer)
+  }, [messages, loading])
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
@@ -137,6 +142,8 @@ const ChatArea: React.FC<{
     await onSend(inputText, 'text')
     setInputText('')
     setSending(false)
+    // Scroll forçado após envio
+    setTimeout(() => scrollToBottom(), 100)
   }
 
   const handleCall = async (video: boolean) => {
@@ -186,6 +193,8 @@ const ChatArea: React.FC<{
             alt="Anexo" 
             className="max-w-full rounded-lg border border-white/10 max-h-[300px] object-cover cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => window.open(msg.file_url!, '_blank')}
+            // IMPORTANTE: Força scroll quando a imagem termina de carregar
+            onLoad={() => scrollToBottom()}
             loading="lazy"
           />
         </div>
@@ -237,9 +246,9 @@ const ChatArea: React.FC<{
               <div className={`max-w-[85%] md:max-w-[65%] rounded-2xl px-4 py-3 shadow-lg ${isOwn ? 'bg-primary/20 border border-primary/30 text-white rounded-br-none' : 'bg-white/10 border border-white/10 text-gray-100 rounded-bl-none'}`}>
                 {renderMessageContent(msg, isOwn)}
                 <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-primary/70' : 'text-gray-500'}`}>
-                  {/* AQUI ESTÁ A CORREÇÃO DE DATA/HORA */}
                   <span className="text-[10px]">{formatChatTimestamp(msg.created_at)}</span>
-                  {isOwn && (msg.is_read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
+                  {/* Ícone de Visualizado - Atualizado em Tempo Real */}
+                  {isOwn && (msg.is_read ? <CheckCheck className="h-3 w-3 text-blue-400" /> : <Check className="h-3 w-3" />)}
                 </div>
               </div>
             </div>
@@ -264,6 +273,7 @@ const ChatArea: React.FC<{
   )
 }
 
+// --- COMPONENTE PRINCIPAL ---
 const Chat: React.FC = () => {
   const { user, profile } = useAuth()
   const { refreshUnreadCount } = useChat()
@@ -345,16 +355,28 @@ const Chat: React.FC = () => {
         for (const key in state) { (state[key] as any[]).forEach(p => ids.add(p.user_id)) }
         setOnlineUsers(ids)
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
-        const msg = payload.new as ChatMessage
-        if (msg.receiver_id === user.id || msg.sender_id === user.id) {
-          if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
-            setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
-            if (msg.receiver_id === user.id) supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
+      .on(
+        'postgres_changes', 
+        { event: '*', schema: 'public', table: 'chat_messages' }, // ESCUTAR TODOS OS EVENTOS (INSERT + UPDATE)
+        (payload) => {
+          // INSERT: Nova Mensagem
+          if (payload.eventType === 'INSERT') {
+            const msg = payload.new as ChatMessage
+            if (msg.receiver_id === user.id || msg.sender_id === user.id) {
+              if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
+                setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
+                if (msg.receiver_id === user.id) supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
+              }
+              fetchContacts()
+            }
           }
-          fetchContacts()
+          // UPDATE: Leitura de Mensagem (Double Check)
+          if (payload.eventType === 'UPDATE') {
+            const updatedMsg = payload.new as ChatMessage
+            setMessages(prev => prev.map(m => m.id === updatedMsg.id ? updatedMsg : m))
+          }
         }
-      })
+      )
       .subscribe(async (status: any) => { if (status === 'SUBSCRIBED') await channelRef.current.track({ user_id: user.id }) })
     return () => { if (channelRef.current) supabase.removeChannel(channelRef.current) }
   }, [user, selectedContact])
