@@ -13,7 +13,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, AlertTriangle, ZoomIn, HeartPulse, Activity, Apple } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 // --- UTILITÁRIOS DE IMAGEM ---
@@ -65,6 +66,11 @@ async function getCroppedImg(
   })
 }
 
+// --- DICIONÁRIOS (Sincronizados com ClientDetails) ---
+const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
+const COMMON_SYMPTOMS = ['Dor no Peito', 'Falta de Ar', 'Tontura', 'Palpitações', 'Dores Articulares', 'Dor nas Costas', 'Fraqueza', 'Tosse com Sangue']
+const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levantar peso', 'Dirigir']
+
 const ProfileSettings: React.FC = () => {
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
@@ -79,36 +85,37 @@ const ProfileSettings: React.FC = () => {
     specialty: '',
     consultationPrice: '',
     certifications: '',
-    // Campos simples legados (mantidos para compatibilidade se necessário)
     goals: '',
     restrictions: ''
   })
   
-  // --- Estado da Anamnese Completa (JSONB) ---
+  // --- Estado da Anamnese Completa (JSONB) - ESTRUTURA PADRONIZADA ---
   const [anamnesisForm, setAnamnesisForm] = useState({
-    // Dados Médicos
-    medical_history: '',
+    // Clínico
+    diagnosed_conditions: [] as string[],
+    symptoms: [] as string[],
+    family_history: '',
     medications: '',
     surgeries: '',
     injuries: '',
     allergies: '',
     
-    // Estilo de Vida
+    // Hábitos
+    smoker: false,
+    alcohol: 'never',
     occupation: '',
+    work_hours: '',
+    work_activities: [] as string[],
+    stress_level: '',
     sleep_hours: '',
     sleep_quality: '',
-    stress_level: '',
-    smoker: false,
-    alcohol: '',
     
     // Nutricional
     water_intake: '',
     diet_history: '',
     food_aversions: '',
     supplements: '',
-    
-    // Físico
-    activity_level: ''
+    activity_level: 'sedentary'
   })
 
   const [userRole, setUserRole] = useState<string>('')
@@ -151,16 +158,22 @@ const ProfileSettings: React.FC = () => {
       } else if (profile.role === 'client') {
         const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (clientData) {
-          // Carrega campos legados
           newForm.goals = clientData.goals || ''
           newForm.restrictions = clientData.health_restrictions || ''
           
-          // Carrega Anamnese JSONB
           if (clientData.anamnesis_data) {
             const data = typeof clientData.anamnesis_data === 'string' 
               ? JSON.parse(clientData.anamnesis_data) 
               : clientData.anamnesis_data
-            setAnamnesisForm(prev => ({ ...prev, ...data }))
+            
+            // Mesclar com defaults para garantir que arrays existam
+            setAnamnesisForm(prev => ({
+                ...prev,
+                ...data,
+                diagnosed_conditions: data.diagnosed_conditions || [],
+                symptoms: data.symptoms || [],
+                work_activities: data.work_activities || []
+            }))
           }
         }
       }
@@ -180,7 +193,17 @@ const ProfileSettings: React.FC = () => {
     setAnamnesisForm(prev => ({ ...prev, [field]: value }))
   }
 
-  // --- Seleção e Upload de Imagem (Mantido igual) ---
+  // --- Lógica de Toggle para Listas (Correção do Checkbox) ---
+  const toggleAnamnesisList = (field: 'diagnosed_conditions' | 'symptoms' | 'work_activities', item: string) => {
+    setAnamnesisForm(prev => {
+      const list = prev[field] || []
+      return list.includes(item) 
+        ? { ...prev, [field]: list.filter(i => i !== item) } 
+        : { ...prev, [field]: [...list, item] }
+    })
+  }
+
+  // --- Seleção e Upload de Imagem ---
   const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
@@ -260,12 +283,11 @@ const ProfileSettings: React.FC = () => {
         if (profError) throw profError
 
       } else if (userRole === 'client') {
-        // Salva Anamnese Completa no JSONB e mantem compatibilidade com colunas antigas se quiser
         const { error: clientError } = await supabase.from('client_details').upsert({
           profile_id: user.id,
-          goals: formData.goals, // Mantém compatibilidade
-          health_restrictions: formData.restrictions, // Mantém compatibilidade
-          anamnesis_data: anamnesisForm, // NOVA FICHA COMPLETA
+          goals: formData.goals,
+          health_restrictions: formData.restrictions,
+          anamnesis_data: anamnesisForm, 
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
         
@@ -352,7 +374,7 @@ const ProfileSettings: React.FC = () => {
             </Card>
           )}
 
-          {/* ÁREA DO ALUNO (ANAMNESE COMPLETA) */}
+          {/* ÁREA DO ALUNO (ANAMNESE COMPLETA - ESTRUTURA UNIFICADA) */}
           {userRole === 'client' && (
             <div className="space-y-6">
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
@@ -362,66 +384,115 @@ const ProfileSettings: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="medical" className="w-full">
-                    <TabsList className="bg-black/20 border border-white/10 w-full justify-start mb-6">
-                      <TabsTrigger value="medical" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Saúde</TabsTrigger>
-                      <TabsTrigger value="lifestyle" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Estilo de Vida</TabsTrigger>
-                      <TabsTrigger value="nutri" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutrição</TabsTrigger>
+                    <TabsList className="bg-black/20 border border-white/10 w-full justify-start mb-6 h-auto flex-wrap">
+                      <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Clínico</TabsTrigger>
+                      <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Hábitos</TabsTrigger>
+                      <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutrição</TabsTrigger>
                     </TabsList>
 
-                    {/* Aba Saúde */}
-                    <TabsContent value="medical" className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><Label className="text-gray-300">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div><Label className="text-gray-300">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div><Label className="text-gray-300">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div><Label className="text-gray-300">Cirurgias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                    {/* Aba Clínica (Sincronizada) */}
+                    <TabsContent value="medical" className="space-y-6">
+                      <div>
+                        <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {COMMON_CONDITIONS.map(cond => (
+                            <div 
+                              key={cond} 
+                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} 
+                              onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}
+                            >
+                              <Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} className="pointer-events-none border-white/30" />
+                              <span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {COMMON_SYMPTOMS.map(sym => (
+                            <div 
+                              key={sym} 
+                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} 
+                              onClick={() => toggleAnamnesisList('symptoms', sym)}
+                            >
+                              <Checkbox checked={anamnesisForm.symptoms?.includes(sym)} className="pointer-events-none border-white/30" />
+                              <span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><Label className="text-gray-300 mb-2 block">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Cirurgias / Alergias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
                       </div>
                     </TabsContent>
 
-                    {/* Aba Estilo de Vida */}
-                    <TabsContent value="lifestyle" className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><Label className="text-gray-300">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div><Label className="text-gray-300">Sono (h)</Label><Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                          <div>
-                            <Label className="text-gray-300">Qualidade</Label>
-                            <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
-                              <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="..."/></SelectTrigger>
-                              <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="good">Boa</SelectItem><SelectItem value="average">Média</SelectItem><SelectItem value="bad">Ruim</SelectItem></SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between bg-black/20 p-3 rounded border border-white/5">
+                    {/* Aba Hábitos (Sincronizada) */}
+                    <TabsContent value="habits" className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex items-center justify-between bg-black/20 p-4 rounded border border-white/5">
                           <Label className="text-gray-300">Fumante?</Label>
                           <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
                         </div>
                         <div>
-                          <Label className="text-gray-300">Nível de Atividade</Label>
-                          <Select value={anamnesisForm.activity_level} onValueChange={v => updateAnamnesis('activity_level', v)}>
-                            <SelectTrigger className="bg-black/20 border-white/10 mt-1.5"><SelectValue placeholder="..."/></SelectTrigger>
-                            <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="sedentary">Sedentário</SelectItem><SelectItem value="active">Ativo</SelectItem><SelectItem value="athlete">Atleta</SelectItem></SelectContent>
+                          <Label className="text-gray-300 mb-2 block">Consumo de Álcool</Label>
+                          <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
+                            <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger>
+                            <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent>
                           </Select>
+                        </div>
+                        <div><Label className="text-gray-300 mb-2 block">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10"/></div>
+                        
+                        <div className="grid grid-cols-2 gap-2">
+                          <div><Label className="text-gray-300 mb-2 block">Sono (h)</Label><Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10"/></div>
+                          <div>
+                            <Label className="text-gray-300 mb-2 block">Qualidade</Label>
+                            <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
+                              <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="..."/></SelectTrigger>
+                              <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="good">Boa</SelectItem><SelectItem value="average">Média</SelectItem><SelectItem value="bad">Ruim</SelectItem></SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-300 mb-3 block">Atividades de Trabalho</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {WORK_ACTIVITIES.map(act => (
+                            <div 
+                              key={act} 
+                              className="flex items-center space-x-2 cursor-pointer"
+                              onClick={() => toggleAnamnesisList('work_activities', act)}
+                            >
+                              <Checkbox checked={anamnesisForm.work_activities?.includes(act)} className="pointer-events-none border-white/30"/>
+                              <span className="text-sm text-gray-400">{act}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </TabsContent>
 
-                    {/* Aba Nutrição */}
-                    <TabsContent value="nutri" className="space-y-4">
+                    {/* Aba Nutrição (Sincronizada) */}
+                    <TabsContent value="nutri" className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><Label className="text-gray-300">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div><Label className="text-gray-300">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
-                        <div className="md:col-span-2"><Label className="text-gray-300">Resumo da Alimentação</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10"/></div>
+                        <div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div>
                       </div>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
               </Card>
 
-              {/* Objetivos Rápidos */}
+              {/* Objetivos Rápidos (Mantido como extra) */}
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
                 <CardContent className="space-y-4 pt-6">
-                  <div><Label className="text-gray-300">Objetivo Principal</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div><Label className="text-gray-300">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
                 </CardContent>
               </Card>
             </div>
