@@ -84,6 +84,23 @@
   .glass-card {
     @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
   }
+
+/* --- NOVO: CORREÇÃO DE OVERFLOW MOBILE --- */
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+
+  /* Força o container a nunca exceder a largura da viewport */
+  .mobile-container {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  } 
   
   .glass-panel {
     @apply bg-slate-900/60 backdrop-blur-xl border-r border-white/5;
