@@ -40,14 +40,30 @@ interface Contact {
   unread_count?: number
 }
 
-// --- Utils ---
-const formatMessageDate = (dateString?: string) => {
+// --- Utils de Formatação ---
+
+// Formatação para a Sidebar (Lista de Contatos) - Mais resumida
+const formatSidebarDate = (dateString?: string) => {
   if (!dateString) return ''
   try {
     const date = new Date(dateString)
     if (isToday(date)) return format(date, 'HH:mm', { locale: ptBR })
     if (isYesterday(date)) return 'Ontem'
     return format(date, 'dd/MM', { locale: ptBR })
+  } catch { return '' }
+}
+
+// NOVO: Formatação para a Bolha de Mensagem (Detalhada)
+const formatChatTimestamp = (dateString: string) => {
+  if (!dateString) return ''
+  try {
+    const date = new Date(dateString)
+    // Se for hoje: apenas hora (14:30)
+    if (isToday(date)) {
+      return format(date, 'HH:mm', { locale: ptBR })
+    }
+    // Se não for hoje: dia/mês + hora (23/11 14:30)
+    return format(date, 'dd/MM HH:mm', { locale: ptBR })
   } catch { return '' }
 }
 
@@ -88,7 +104,7 @@ const ContactsList: React.FC<{
                 {onlineUsers.has(contact.id) && <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-slate-900 shadow-[0_0_8px_#22c55e]" />}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex justify-between mb-1"><h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-white' : 'text-gray-200'}`}>{contact.full_name || contact.email}</h3><span className="text-[10px] text-gray-500">{formatMessageDate(contact.last_message_time)}</span></div>
+                <div className="flex justify-between mb-1"><h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-white' : 'text-gray-200'}`}>{contact.full_name || contact.email}</h3><span className="text-[10px] text-gray-500">{formatSidebarDate(contact.last_message_time)}</span></div>
                 <div className="flex justify-between"><p className="text-xs text-gray-400 truncate max-w-[140px]">{contact.last_message || 'Iniciar conversa...'}</p>{contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-black font-bold border-none">{contact.unread_count}</Badge> : null}</div>
               </div>
             </div>
@@ -137,7 +153,6 @@ const ChatArea: React.FC<{
 
     try {
       setUploading(true)
-      // Nome ÚNICO e SEGURO (UUID) para evitar conflitos de "1 para 1"
       const fileExt = file.name.split('.').pop()
       const fileName = `${crypto.randomUUID()}.${fileExt}`
       const filePath = `${user.id}/${fileName}`
@@ -149,7 +164,6 @@ const ChatArea: React.FC<{
 
       const isImage = file.type.startsWith('image/')
       const type = isImage ? 'image' : 'file'
-      // Adiciona timestamp na URL para evitar cache do navegador
       const finalUrl = isImage ? `${publicUrl}?t=${Date.now()}` : publicUrl
       const content = isImage ? 'Imagem' : file.name
 
@@ -222,7 +236,11 @@ const ChatArea: React.FC<{
             <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] md:max-w-[65%] rounded-2xl px-4 py-3 shadow-lg ${isOwn ? 'bg-primary/20 border border-primary/30 text-white rounded-br-none' : 'bg-white/10 border border-white/10 text-gray-100 rounded-bl-none'}`}>
                 {renderMessageContent(msg, isOwn)}
-                <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-primary/70' : 'text-gray-500'}`}><span className="text-[10px]">{format(new Date(msg.created_at), 'HH:mm')}</span>{isOwn && (msg.is_read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}</div>
+                <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-primary/70' : 'text-gray-500'}`}>
+                  {/* AQUI ESTÁ A CORREÇÃO DE DATA/HORA */}
+                  <span className="text-[10px]">{formatChatTimestamp(msg.created_at)}</span>
+                  {isOwn && (msg.is_read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
+                </div>
               </div>
             </div>
           )
@@ -246,7 +264,6 @@ const ChatArea: React.FC<{
   )
 }
 
-// --- COMPONENTE PRINCIPAL ---
 const Chat: React.FC = () => {
   const { user, profile } = useAuth()
   const { refreshUnreadCount } = useChat()
@@ -260,7 +277,6 @@ const Chat: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
   
-  // REF PARA O CANAL DE REALTIME (Evita duplicidade de subscription)
   const channelRef = useRef<any>(null)
 
   const fetchContacts = async () => {
@@ -287,7 +303,6 @@ const Chat: React.FC = () => {
       }
 
       const enriched = await Promise.all(contactsData.map(async (c) => {
-        // SELECT count seguro usando RPC ou direct se RLS permitir
         const { count } = await supabase.from('chat_messages').select('id', { count: 'exact', head: true }).eq('sender_id', c.id).eq('receiver_id', user.id).eq('is_read', false)
         const { data: last } = await supabase.from('chat_messages').select('content, created_at, message_type').or(`and(sender_id.eq.${user.id},receiver_id.eq.${c.id}),and(sender_id.eq.${c.id},receiver_id.eq.${user.id})`).order('created_at', { ascending: false }).limit(1).maybeSingle()
         let lastMsg = last?.content || ''
@@ -303,7 +318,6 @@ const Chat: React.FC = () => {
 
   const fetchMessages = async (contactId: string) => {
     setMessagesLoading(true)
-    // RPC segura que usamos no SQL
     const { data } = await supabase.rpc('get_conversation', { user1_id: user!.id, user2_id: contactId, limit_count: 100 })
     setMessages(data || [])
     setMessagesLoading(false)
@@ -321,14 +335,9 @@ const Chat: React.FC = () => {
     } catch (e) { console.error(e); showError('Erro ao enviar') }
   }
 
-  // REALTIME CORRIGIDO (Anti-duplicidade e Cleanup)
   useEffect(() => {
     if (!user) return
-
-    if (channelRef.current) {
-      supabase.removeChannel(channelRef.current)
-    }
-
+    if (channelRef.current) supabase.removeChannel(channelRef.current)
     channelRef.current = supabase.channel('global_chat')
       .on('presence', { event: 'sync' }, () => {
         const state = channelRef.current.presenceState()
@@ -340,22 +349,15 @@ const Chat: React.FC = () => {
         const msg = payload.new as ChatMessage
         if (msg.receiver_id === user.id || msg.sender_id === user.id) {
           if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
-            setMessages(prev => {
-              // DEDUPLICAÇÃO AGRESSIVA
-              const exists = prev.some(m => m.id === msg.id)
-              return exists ? prev : [...prev, msg]
-            })
+            setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
             if (msg.receiver_id === user.id) supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
           }
           fetchContacts()
         }
       })
       .subscribe(async (status: any) => { if (status === 'SUBSCRIBED') await channelRef.current.track({ user_id: user.id }) })
-
-    return () => { 
-      if (channelRef.current) supabase.removeChannel(channelRef.current) 
-    }
-  }, [user, selectedContact]) // Reinicia apenas se mudar o contato selecionado ou usuário
+    return () => { if (channelRef.current) supabase.removeChannel(channelRef.current) }
+  }, [user, selectedContact])
 
   useEffect(() => { fetchContacts() }, [user])
 
@@ -363,26 +365,14 @@ const Chat: React.FC = () => {
     <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-white/10 shadow-2xl">
       {isMobile ? (
         selectedContact ? (
-          <ChatArea 
-            contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage}
-            onBack={() => setSelectedContact(null)} isMobile={true} online={onlineUsers.has(selectedContact.id)} user={user}
-          />
+          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={true} online={onlineUsers.has(selectedContact.id)} user={user} />
         ) : (
-          <ContactsList 
-            contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }}
-            searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers}
-          />
+          <ContactsList contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }} searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers} />
         )
       ) : (
         <>
-          <ContactsList 
-            contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }}
-            searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers}
-          />
-          <ChatArea 
-            contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage}
-            onBack={() => setSelectedContact(null)} isMobile={false} online={selectedContact ? onlineUsers.has(selectedContact.id) : false} user={user}
-          />
+          <ContactsList contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }} searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers} />
+          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={false} online={selectedContact ? onlineUsers.has(selectedContact.id) : false} user={user} />
         </>
       )}
     </div>
