@@ -1,5 +1,3 @@
-// src/utils/biometrics.ts
-
 export interface BiometricInput {
   gender: 'male' | 'female';
   age: number;
@@ -41,7 +39,8 @@ export const calculateBiometrics = (data: BiometricInput) => {
     (skinfolds.subscapular || 0) + (skinfolds.abdominal || 0) + 
     (skinfolds.suprailiac || 0) + (skinfolds.thigh || 0);
 
-  const has7Folds = Object.values(skinfolds).filter(v => v && v > 0).length >= 7;
+  // Consideramos 7 dobras se pelo menos 7 campos tiverem valor maior que 0
+  const has7Folds = Object.values(skinfolds).filter(v => v && Number(v) > 0).length >= 7;
 
   if (gender === 'male') {
     if (has7Folds) {
@@ -82,17 +81,49 @@ export const classifyBMI = (bmi: number) => {
   return { label: 'Obesidade', color: 'text-red-400' };
 };
 
-// --- NOVA FUNÇÃO: CALCULAR PORCENTAGEM ---
+// --- CÁLCULO DE PORCENTAGEM REAL (25 CAMPOS) ---
 export const calculateCompletion = (form: any) => {
-  const fields = [
-    form.weight, form.height, 
-    form.skinfolds.triceps, form.skinfolds.subscapular, form.skinfolds.chest, form.skinfolds.axillary, form.skinfolds.suprailiac, form.skinfolds.abdominal, form.skinfolds.thigh,
-    form.circumferences.waist, form.circumferences.abdomen, form.circumferences.hips
-  ];
+  let filledCount = 0;
+  const totalFields = 25;
+
+  // Helper para verificar se o campo tem valor válido
+  const isValid = (val: any) => val !== '' && val !== null && val !== undefined && Number(val) >= 0;
+
+  // 1. Dados Básicos (5 campos)
+  if (form.date) filledCount++;
+  if (isValid(form.weight)) filledCount++;
+  if (isValid(form.height)) filledCount++;
+  if (isValid(form.age)) filledCount++;
+  if (form.gender) filledCount++;
+
+  // 2. Dobras Cutâneas (9 campos)
+  const s = form.skinfolds;
+  if (isValid(s.triceps)) filledCount++;
+  if (isValid(s.biceps)) filledCount++;
+  if (isValid(s.subscapular)) filledCount++;
+  if (isValid(s.chest)) filledCount++;
+  if (isValid(s.axillary)) filledCount++;
+  if (isValid(s.suprailiac)) filledCount++;
+  if (isValid(s.abdominal)) filledCount++;
+  if (isValid(s.thigh)) filledCount++;
+  if (isValid(s.calf)) filledCount++;
+
+  // 3. Perímetros (11 campos)
+  const c = form.circumferences;
+  if (isValid(c.shoulder)) filledCount++;
+  if (isValid(c.chest)) filledCount++;
+  if (isValid(c.arm_right)) filledCount++;
+  if (isValid(c.arm_left)) filledCount++;
+  if (isValid(c.waist)) filledCount++;
+  if (isValid(c.abdomen)) filledCount++;
+  if (isValid(c.hips)) filledCount++;
+  if (isValid(c.thigh_right)) filledCount++;
+  if (isValid(c.thigh_left)) filledCount++;
+  if (isValid(c.calf_right)) filledCount++;
+  if (isValid(c.calf_left)) filledCount++;
+
+  // Cálculo da porcentagem
+  const percentage = Math.round((filledCount / totalFields) * 100);
   
-  // Consideramos ~12 campos principais como "100% essencial" (ajustável)
-  const totalFields = fields.length;
-  const filledFields = fields.filter(f => f && f !== '' && Number(f) > 0).length;
-  
-  return Math.min(Math.round((filledFields / totalFields) * 100), 100);
+  return Math.min(percentage, 100);
 };
