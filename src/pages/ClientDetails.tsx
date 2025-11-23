@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Progress } from '@/components/ui/progress' // Certifique-se de ter o Progress do shadcn
+import { Progress } from '@/components/ui/progress'
 import { 
   User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
   Loader2, Plus,
@@ -22,6 +22,33 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
+
+// --- DICIONÁRIOS DE TRADUÇÃO ---
+const SKINFOLD_LABELS: Record<string, string> = {
+  triceps: 'Tríceps',
+  biceps: 'Bíceps',
+  subscapular: 'Subescapular',
+  chest: 'Peitoral',
+  axillary: 'Axilar Média',
+  suprailiac: 'Supra-ilíaca',
+  abdominal: 'Abdominal',
+  thigh: 'Coxa',
+  calf: 'Panturrilha'
+}
+
+const CIRCUMFERENCE_LABELS: Record<string, string> = {
+  shoulder: 'Ombros',
+  chest: 'Tórax',
+  arm_right: 'Braço Dir.',
+  arm_left: 'Braço Esq.',
+  waist: 'Cintura',
+  abdomen: 'Abdômen',
+  hips: 'Quadril',
+  thigh_right: 'Coxa Dir.',
+  thigh_left: 'Coxa Esq.',
+  calf_right: 'Panturrilha Dir.',
+  calf_left: 'Panturrilha Esq.'
+}
 
 const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -106,7 +133,7 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
-  // Handlers Assignments... (Mantidos iguais)
+  // Handlers Assignments...
   const handleAssignWorkout = async () => {
     if (!selectedWorkoutId || !user) return
     try {
@@ -153,7 +180,6 @@ const ClientDetails: React.FC = () => {
 
   // --- HANDLERS AVALIAÇÃO FÍSICA ---
 
-  // Abrir Modal para Edição
   const openEditAssessment = (assessment: any) => {
     setEditingAssessmentId(assessment.id)
     const measures = typeof assessment.measurements === 'string' ? JSON.parse(assessment.measurements) : assessment.measurements
@@ -162,8 +188,8 @@ const ClientDetails: React.FC = () => {
       date: assessment.date,
       weight: assessment.weight,
       height: assessment.height,
-      gender: 'male', // Idealmente viria do perfil
-      age: 25, // Idealmente calcularia da data de nasc
+      gender: 'male',
+      age: 25,
       skinfolds: measures.skinfolds || initialAssessmentState.skinfolds,
       circumferences: measures.circumferences || initialAssessmentState.circumferences,
       notes: assessment.notes || ''
@@ -171,14 +197,12 @@ const ClientDetails: React.FC = () => {
     setIsNewAssessmentOpen(true)
   }
 
-  // Abrir Modal para Novo
   const openNewAssessment = () => {
     setEditingAssessmentId(null)
     setNewAssessment(initialAssessmentState)
     setIsNewAssessmentOpen(true)
   }
 
-  // Salvar (Novo ou Edição)
   const handleSaveAssessment = async (status: 'draft' | 'completed') => {
     try {
       const calculated = calculateBiometrics({
@@ -198,8 +222,8 @@ const ClientDetails: React.FC = () => {
         bmi: calculated.bmi,
         lean_mass: calculated.leanMass,
         fat_mass: calculated.fatMass,
-        status: status, // Salva status dentro do JSONB
-        completion: completion // Salva porcentagem
+        status: status,
+        completion: completion
       }
 
       const payload = {
@@ -215,11 +239,9 @@ const ClientDetails: React.FC = () => {
 
       let error
       if (editingAssessmentId) {
-        // Update
         const res = await supabase.from('biometric_data').update(payload).eq('id', editingAssessmentId)
         error = res.error
       } else {
-        // Insert
         const res = await supabase.from('biometric_data').insert(payload)
         error = res.error
       }
@@ -238,7 +260,6 @@ const ClientDetails: React.FC = () => {
     }
   }
 
-  // Excluir Avaliação
   const handleDeleteAssessment = async (assessmentId: string) => {
     if (!confirm('Tem certeza que deseja excluir esta avaliação?')) return
     try {
@@ -257,6 +278,8 @@ const ClientDetails: React.FC = () => {
 
   const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
   const previousAssessment = assessments.find(a => a.measurements?.status === 'completed' && a.id !== latestAssessment?.id)
+  const weightDiff = latestAssessment && previousAssessment ? (latestAssessment.weight - previousAssessment.weight).toFixed(1) : 0
+  const fatDiff = latestAssessment && previousAssessment ? (latestAssessment.body_fat_percentage - previousAssessment.body_fat_percentage).toFixed(1) : 0
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -268,6 +291,7 @@ const ClientDetails: React.FC = () => {
               <h1 className="text-3xl font-bold text-white">{clientProfile?.full_name || 'Cliente'}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
                 <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email}</span>
+                {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
               </div>
             </div>
           </div>
@@ -291,18 +315,21 @@ const ClientDetails: React.FC = () => {
                 <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Peso Atual</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.weight || '--'} kg</div>
+                  {previousAssessment && <p className={`text-xs mt-1 flex items-center ${Number(weightDiff) < 0 ? 'text-green-400' : 'text-red-400'}`}><TrendingUp className="w-3 h-3 mr-1"/> {weightDiff} kg vs anterior</p>}
                 </CardContent>
               </Card>
               <Card className="bg-white/5 border-white/10">
                 <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Gordura Corporal</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.body_fat_percentage || '--'} %</div>
+                  {previousAssessment && <p className={`text-xs mt-1 flex items-center ${Number(fatDiff) < 0 ? 'text-green-400' : 'text-red-400'}`}><TrendingUp className="w-3 h-3 mr-1"/> {fatDiff} % vs anterior</p>}
                 </CardContent>
               </Card>
               <Card className="bg-white/5 border-white/10">
                 <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Massa Magra</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.muscle_mass || '--'} kg</div>
+                  <p className="text-xs text-gray-500 mt-1">Baseado em Pollock</p>
                 </CardContent>
               </Card>
             </div>
@@ -337,22 +364,28 @@ const ClientDetails: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Coluna 2: Dobras */}
+                      {/* Coluna 2: Dobras (Com tradução) */}
                       <div className="space-y-4">
                         <h3 className="font-semibold text-primary flex items-center gap-2"><Scale className="w-4 h-4"/> Dobras (mm)</h3>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.keys(newAssessment.skinfolds).map((key) => (
-                            <div key={key}><Label className="text-xs text-gray-400 capitalize">{key}</Label><Input type="number" value={(newAssessment.skinfolds as any)[key]} onChange={e => updateNested('skinfolds', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                            <div key={key}>
+                              <Label className="text-xs text-gray-400">{SKINFOLD_LABELS[key] || key}</Label>
+                              <Input type="number" value={(newAssessment.skinfolds as any)[key]} onChange={e => updateNested('skinfolds', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/>
+                            </div>
                           ))}
                         </div>
                       </div>
 
-                      {/* Coluna 3: Perímetros */}
+                      {/* Coluna 3: Perímetros (Com tradução) */}
                       <div className="space-y-4">
                         <h3 className="font-semibold text-primary flex items-center gap-2"><Ruler className="w-4 h-4"/> Perímetros (cm)</h3>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.keys(newAssessment.circumferences).map((key) => (
-                            <div key={key}><Label className="text-xs text-gray-400 capitalize">{key.replace('_', ' ')}</Label><Input type="number" value={(newAssessment.circumferences as any)[key]} onChange={e => updateNested('circumferences', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                            <div key={key}>
+                              <Label className="text-xs text-gray-400">{CIRCUMFERENCE_LABELS[key] || key}</Label>
+                              <Input type="number" value={(newAssessment.circumferences as any)[key]} onChange={e => updateNested('circumferences', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -411,8 +444,7 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* --- DEMAIS ABAS (WORKOUTS, MEAL-PLANS, HISTORY, ANAMNESIS, INFO) MANTIDAS IGUAIS AO CÓDIGO ANTERIOR --- */}
-          {/* Para economizar espaço na resposta, mantenha o código das outras abas como estava na versão anterior */}
+          {/* --- DEMAIS ABAS MANTIDAS IGUAIS --- */}
           <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-white flex items-center gap-2"><Dumbbell className="text-blue-400" /> Treinos Atribuídos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent>{clientWorkouts.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (<div className="space-y-4">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}</CardContent></Card></TabsContent>
           <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-white flex items-center gap-2"><Utensils className="text-green-400" /> Planos Alimentares</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent>{clientMealPlans.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (<div className="space-y-4">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}</CardContent></Card></TabsContent>
           <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
