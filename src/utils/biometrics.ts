@@ -1,5 +1,5 @@
 // src/utils/biometrics.ts
- 
+
 export interface BiometricInput {
   gender: 'male' | 'female';
   age: number;
