@@ -89,7 +89,7 @@ const ProfileSettings: React.FC = () => {
     restrictions: ''
   })
   
-  // --- Estado da Anamnese Completa (JSONB) - ESTRUTURA PADRONIZADA ---
+  // --- Estado da Anamnese Completa (JSONB) ---
   const [anamnesisForm, setAnamnesisForm] = useState({
     // Clínico
     diagnosed_conditions: [] as string[],
@@ -128,22 +128,26 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Carregar dados
-  useEffect(() => {
-    if (user) fetchFreshData()
-  }, [user])
-
-  const fetchFreshData = async () => {
+  // --- Função de Carregamento (Envolvida em useCallback para estabilidade) ---
+  const fetchFreshData = useCallback(async () => {
     if (!user) return
     try {
       setLoading(true)
       const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileError) throw profileError
 
-      const newForm = { ...formData }
-      newForm.fullName = profile.full_name || ''
-      newForm.phone = profile.phone || ''
-      newForm.avatarUrl = profile.avatar_url || ''
+      const newForm = { 
+        fullName: profile.full_name || '',
+        phone: profile.phone || '',
+        avatarUrl: profile.avatar_url || '',
+        bio: '',
+        specialty: '',
+        consultationPrice: '',
+        certifications: '',
+        goals: '',
+        restrictions: ''
+      }
+      
       setUserRole(profile.role)
 
       if (profile.role === 'professional') {
@@ -166,7 +170,6 @@ const ProfileSettings: React.FC = () => {
               ? JSON.parse(clientData.anamnesis_data) 
               : clientData.anamnesis_data
             
-            // Mesclar com defaults para garantir que arrays existam
             setAnamnesisForm(prev => ({
                 ...prev,
                 ...data,
@@ -183,7 +186,14 @@ const ProfileSettings: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user?.id]) // Dependência apenas do ID do usuário
+
+  // --- Efeito Principal (Correção do Loop Infinito) ---
+  useEffect(() => {
+    if (user?.id) {
+        fetchFreshData()
+    }
+  }, [user?.id, fetchFreshData]) // Monitora user.id (string) em vez de user (objeto)
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -193,7 +203,6 @@ const ProfileSettings: React.FC = () => {
     setAnamnesisForm(prev => ({ ...prev, [field]: value }))
   }
 
-  // --- Lógica de Toggle para Listas (Correção do Checkbox) ---
   const toggleAnamnesisList = (field: 'diagnosed_conditions' | 'symptoms' | 'work_activities', item: string) => {
     setAnamnesisForm(prev => {
       const list = prev[field] || []
@@ -203,7 +212,6 @@ const ProfileSettings: React.FC = () => {
     })
   }
 
-  // --- Seleção e Upload de Imagem ---
   const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
@@ -252,7 +260,6 @@ const ProfileSettings: React.FC = () => {
     }
   }
 
-  // --- Salvar Geral ---
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
@@ -326,7 +333,6 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          {/* Identidade */}
           <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
             <CardHeader>
               <CardTitle className="text-white">Informações Pessoais</CardTitle>
@@ -353,7 +359,6 @@ const ProfileSettings: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* ÁREA DO PROFISSIONAL */}
           {userRole === 'professional' && (
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
               <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Dados Profissionais</CardTitle></CardHeader>
@@ -374,7 +379,6 @@ const ProfileSettings: React.FC = () => {
             </Card>
           )}
 
-          {/* ÁREA DO ALUNO (ANAMNESE COMPLETA - ESTRUTURA UNIFICADA) */}
           {userRole === 'client' && (
             <div className="space-y-6">
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
@@ -390,7 +394,6 @@ const ProfileSettings: React.FC = () => {
                       <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutrição</TabsTrigger>
                     </TabsList>
 
-                    {/* Aba Clínica (Sincronizada) */}
                     <TabsContent value="medical" className="space-y-6">
                       <div>
                         <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label>
@@ -432,7 +435,6 @@ const ProfileSettings: React.FC = () => {
                       </div>
                     </TabsContent>
 
-                    {/* Aba Hábitos (Sincronizada) */}
                     <TabsContent value="habits" className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex items-center justify-between bg-black/20 p-4 rounded border border-white/5">
@@ -477,7 +479,6 @@ const ProfileSettings: React.FC = () => {
                       </div>
                     </TabsContent>
 
-                    {/* Aba Nutrição (Sincronizada) */}
                     <TabsContent value="nutri" className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div>
@@ -489,7 +490,6 @@ const ProfileSettings: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Objetivos Rápidos (Mantido como extra) */}
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
                 <CardContent className="space-y-4 pt-6">
                   <div><Label className="text-gray-300">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
@@ -506,7 +506,6 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        {/* DIALOG RECORTE */}
         <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) setIsCropDialogOpen(false) }}>
           <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[550px] flex flex-col">
             <DialogHeader><DialogTitle>Ajustar Foto</DialogTitle><DialogDescription>Enquadre seu rosto.</DialogDescription></DialogHeader>
