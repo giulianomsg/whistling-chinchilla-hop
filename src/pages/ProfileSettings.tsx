@@ -89,7 +89,7 @@ const ProfileSettings: React.FC = () => {
     restrictions: ''
   })
   
-  // --- Estado da Anamnese Completa (JSONB) ---
+  // --- Estado da Anamnese Completa (JSONB) - ESTRUTURA PADRONIZADA ---
   const [anamnesisForm, setAnamnesisForm] = useState({
     // Clínico
     diagnosed_conditions: [] as string[],
@@ -128,24 +128,28 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // --- Função de Carregamento (Envolvida em useCallback para estabilidade) ---
+  // --- Função de Carregamento OTIMIZADA ---
+  // Removemos qualquer dependência de 'formData' ou 'anamnesisForm' aqui dentro.
   const fetchFreshData = useCallback(async () => {
     if (!user) return
     try {
-      setLoading(true)
+      // Não ative setLoading se já estiver carregando para evitar loops em edge cases,
+      // mas aqui vamos forçar apenas no mount.
+      
       const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileError) throw profileError
 
-      const newForm = { 
+      // Construímos o objeto do ZERO, sem ler o estado anterior (formData)
+      const newFormData = {
         fullName: profile.full_name || '',
         phone: profile.phone || '',
         avatarUrl: profile.avatar_url || '',
-        bio: '',
-        specialty: '',
-        consultationPrice: '',
-        certifications: '',
-        goals: '',
-        restrictions: ''
+        bio: '', // Default
+        specialty: '', // Default
+        consultationPrice: '', // Default
+        certifications: '', // Default
+        goals: '', // Default
+        restrictions: '' // Default
       }
       
       setUserRole(profile.role)
@@ -153,47 +157,70 @@ const ProfileSettings: React.FC = () => {
       if (profile.role === 'professional') {
         const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (profData) {
-          newForm.bio = profData.bio || ''
-          newForm.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
-          newForm.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
+          newFormData.bio = profData.bio || ''
+          newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
+          newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
           const certData = profData.certifications as any
-          newForm.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
+          newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
         }
       } else if (profile.role === 'client') {
         const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', user.id).maybeSingle()
         if (clientData) {
-          newForm.goals = clientData.goals || ''
-          newForm.restrictions = clientData.health_restrictions || ''
+          newFormData.goals = clientData.goals || ''
+          newFormData.restrictions = clientData.health_restrictions || ''
           
           if (clientData.anamnesis_data) {
             const data = typeof clientData.anamnesis_data === 'string' 
               ? JSON.parse(clientData.anamnesis_data) 
               : clientData.anamnesis_data
             
-            setAnamnesisForm(prev => ({
-                ...prev,
+            // Atualizamos a Anamnese do ZERO também
+            setAnamnesisForm({
+                // Defaults
+                diagnosed_conditions: [],
+                symptoms: [],
+                family_history: '',
+                medications: '',
+                surgeries: '',
+                injuries: '',
+                allergies: '',
+                smoker: false,
+                alcohol: 'never',
+                occupation: '',
+                work_hours: '',
+                work_activities: [],
+                stress_level: '',
+                sleep_hours: '',
+                sleep_quality: '',
+                water_intake: '',
+                diet_history: '',
+                food_aversions: '',
+                supplements: '',
+                activity_level: 'sedentary',
+                // Override com dados do banco
                 ...data,
+                // Garantia de Arrays
                 diagnosed_conditions: data.diagnosed_conditions || [],
                 symptoms: data.symptoms || [],
                 work_activities: data.work_activities || []
-            }))
+            })
           }
         }
       }
-      setFormData(newForm)
+      // Atualiza o form geral de uma vez
+      setFormData(newFormData)
     } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
+      console.error('Erro ao buscar perfil:', error)
     }
-  }, [user?.id]) // Dependência apenas do ID do usuário
+  }, [user?.id]) // Dependência ÚNICA e imutável (string)
 
-  // --- Efeito Principal (Correção do Loop Infinito) ---
+  // --- Efeito Principal ---
   useEffect(() => {
     if (user?.id) {
-        fetchFreshData()
+        setLoading(true)
+        fetchFreshData().finally(() => setLoading(false))
     }
-  }, [user?.id, fetchFreshData]) // Monitora user.id (string) em vez de user (objeto)
+  }, [user?.id, fetchFreshData])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -302,6 +329,7 @@ const ProfileSettings: React.FC = () => {
       }
 
       showSuccess('Perfil salvo com sucesso!')
+      // Recarrega os dados para garantir sincronia
       await fetchFreshData()
 
     } catch (error: any) {
