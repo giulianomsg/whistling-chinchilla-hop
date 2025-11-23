@@ -117,7 +117,6 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
-  // Handlers
   const handleAssignWorkout = async () => {
     try {
       const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
@@ -221,7 +220,7 @@ const ClientDetails: React.FC = () => {
     setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
   }
 
-  // --- HANDLERS FOTOS ---
+  // Handlers Fotos
   const handlePhotoUpload = async () => {
     if (!newPhoto.file || !user) return
     setUploadingPhoto(true)
@@ -287,41 +286,40 @@ const ClientDetails: React.FC = () => {
             </TabsList>
           </div>
 
-          {/* --- DASHBOARD: LAYOUT RESTAURADO --- */}
+          {/* --- DASHBOARD --- */}
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               
-              {/* 1. PERFIL GRANDE (Desktop) / Stacked (Mobile) */}
+              {/* 1. PERFIL */}
               <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
-                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
+                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-32 h-32 text-primary"/></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
                   <div className="flex flex-col md:flex-row gap-8 items-center md:items-start w-full">
                     <div className="relative flex-shrink-0">
-                      <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto md:mx-0 shadow-2xl">
+                      <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary/20 p-1 mx-auto">
                         <div className="w-full h-full rounded-full bg-black overflow-hidden">
                           {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-slate-800 flex items-center justify-center text-3xl font-bold text-gray-400">{clientProfile?.full_name?.[0]}</div>}
                         </div>
                       </div>
                       <Badge className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black border-none whitespace-nowrap shadow-lg font-bold px-4 py-1 text-sm">Nível {currentLevel}</Badge>
                     </div>
-                    
-                    <div className="flex-1 min-w-0 w-full text-center md:text-left">
-                      <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
-                      <div className="flex flex-col md:flex-row items-center md:justify-start gap-2 md:gap-6 text-sm md:text-base text-gray-400 mb-6 w-full">
-                        <span className="flex items-center gap-2 truncate max-w-full"><Mail className="w-4 h-4 text-primary flex-shrink-0"/> {clientProfile?.email}</span>
-                        {clientProfile?.phone && <span className="flex items-center gap-2 truncate max-w-full"><Phone className="w-4 h-4 text-primary flex-shrink-0"/> {clientProfile?.phone}</span>}
+                    <div className="flex-1 w-full text-center md:text-left min-w-0">
+                      <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
+                      <div className="flex flex-col md:flex-row items-center md:justify-start gap-1 md:gap-6 text-sm md:text-base text-gray-400 mb-6 w-full">
+                        <span className="truncate max-w-full">{clientProfile?.email}</span>
+                        {clientProfile?.phone && <span className="truncate max-w-full">{clientProfile?.phone}</span>}
                       </div>
                       <div className="space-y-2 w-full max-w-md mx-auto md:mx-0">
                         <div className="flex justify-between text-sm font-medium text-primary"><span>XP Atual</span><span>{currentXP % 1000} / 1000</span></div>
                         <Progress value={xpProgress} className="h-3 bg-white/10" />
-                        <p className="text-xs text-gray-500 mt-1 text-right">Faltam {1000 - (currentXP % 1000)} XP para o próximo nível</p>
+                        <p className="text-xs text-gray-500 mt-1 text-right">Próximo nível em {1000 - (currentXP % 1000)} XP</p>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* 2. AÇÕES RÁPIDAS (Grandes) */}
+              {/* 2. AÇÕES RÁPIDAS */}
               <Card className="bg-white/5 border-white/10 w-full h-full">
                 <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
@@ -340,7 +338,7 @@ const ClientDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* 3. MÉTRICAS (Cards Expandidos) */}
+              {/* 3. MÉTRICAS */}
               <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
                 <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Activity className="h-6 w-6 text-primary"/> Status Vital</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -354,15 +352,15 @@ const ClientDetails: React.FC = () => {
                   </div>
                   <div className={`bg-black/20 p-6 rounded-xl border ${activeWorkout ? 'border-green-500/30 bg-green-900/10' : 'border-white/5'} flex justify-between items-center md:block`}>
                     <div className="min-w-0 flex-1">
-                      <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Treino</p>
-                      <p className={`text-lg md:text-xl font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Nenhum Ativo'}</p>
+                      <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Plano de Treino</p>
+                      <p className={`text-xl font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Inativo'}</p>
                       {activeWorkout && <p className="text-sm text-gray-400 mt-1 hidden md:block">{activeWorkout.workout.days_per_week} dias / semana</p>}
                     </div>
                   </div>
                   <div className={`bg-black/20 p-6 rounded-xl border ${activeMealPlan ? 'border-orange-500/30 bg-orange-900/10' : 'border-white/5'} flex justify-between items-center md:block`}>
                     <div className="min-w-0 flex-1">
-                      <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Dieta</p>
-                      <p className={`text-lg md:text-xl font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Nenhuma Ativa'}</p>
+                      <p className="text-gray-400 text-xs uppercase tracking-wider md:mb-2">Dieta Atual</p>
+                      <p className={`text-xl font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p>
                       {activeMealPlan && <p className="text-sm text-gray-400 mt-1 hidden md:block">Meta: {activeMealPlan.meal_plan.daily_calories_target} kcal</p>}
                     </div>
                   </div>
@@ -371,7 +369,7 @@ const ClientDetails: React.FC = () => {
             </div>
           </TabsContent>
 
-          {/* --- ABA FOTOS (NOVA) --- */}
+          {/* --- FOTOS (NOVA ABA) --- */}
           <TabsContent value="photos">
             <Card className="bg-white/5 border-white/10 w-full">
                <CardHeader className="flex flex-row items-center justify-between p-6">
@@ -395,7 +393,7 @@ const ClientDetails: React.FC = () => {
                   {progressPhotos.length === 0 ? (
                     <div className="text-center py-16 text-gray-500 bg-white/5 rounded-xl border border-dashed border-white/10">
                        <Camera className="h-12 w-12 mx-auto mb-3 opacity-20"/>
-                       <p>Nenhuma foto registrada. Adicione a primeira para acompanhar a evolução!</p>
+                       <p>Nenhuma foto registrada.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -407,7 +405,6 @@ const ClientDetails: React.FC = () => {
                                {photo.notes && <span className="text-xs text-gray-300 truncate">{photo.notes}</span>}
                                <Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id, photo.photo_url)}><Trash2 className="h-4 w-4"/></Button>
                             </div>
-                            {/* Mobile Label */}
                             <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-center md:hidden backdrop-blur-sm">
                                <span className="text-xs font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span>
                             </div>
@@ -419,23 +416,49 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* --- OUTRAS ABAS (Estrutura mantida, visual restaurado) --- */}
+          {/* --- OUTRAS ABAS --- */}
           <TabsContent value="biometrics">
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white/5 border-white/10 w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
                 <CardTitle className="text-white text-xl">Histórico de Avaliações</CardTitle>
-                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
+                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
+                  <DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger>
+                  <DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
               </CardHeader>
               <CardContent className="p-6">
-                {assessments.length === 0 ? <div className="text-center text-gray-500 py-8">Vazio.</div> : (<div className="space-y-4">{assessments.map(a => {const s=a.measurements?.status||'completed';const c=a.measurements?.completion||0;const i=classifyBMI(Number((a.weight/((a.height/100)**2)).toFixed(2)));return(<div key={a.id} className={`bg-black/20 p-5 rounded-xl border ${s==='draft'?'border-yellow-500/30':'border-white/5'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}><div className="flex items-center gap-5 w-full md:w-auto"><div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${s==='draft'?'bg-yellow-500/10 text-yellow-500':'bg-primary/10 text-primary'}`}><span>{new Date(a.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(a.date).toLocaleString('default',{month:'short'})}</span></div><div className="flex-1"><div className="flex items-center gap-3"><span className="text-white font-bold text-xl">{a.weight} kg</span>{s==='draft'?<Badge variant="secondary" className="text-yellow-400 bg-yellow-900/20 border-none text-xs">Rascunho</Badge>:<Badge variant="outline" className={`text-xs ${i.color} border-current`}>{i.label}</Badge>}</div>{s==='draft'?(<div className="w-full md:w-40 mt-2"><Progress value={c} className="h-1.5 bg-white/10"/></div>):(<div className="text-sm text-gray-400 flex gap-4 mt-1"><span>Gord: {a.body_fat_percentage}%</span><span>Massa: {a.muscle_mass}kg</span></div>)}</div></div><div className="flex gap-2 w-full md:w-auto justify-end pt-4 md:pt-0"><Button variant="ghost" size="sm" onClick={()=>openEditAssessment(a)} className="text-blue-400 hover:bg-blue-500/10"><Pencil className="h-4 w-4"/></Button><Button variant="ghost" size="sm" onClick={()=>handleDeleteAssessment(a.id)} className="text-red-400 hover:bg-red-500/10"><Trash2 className="h-4 w-4"/></Button></div></div>)})})}</div>}
+                {assessments.length === 0 ? <div className="text-center text-gray-500 py-12">Nenhuma avaliação registrada.</div> : (
+                  <div className="space-y-4">
+                    {assessments.map((assessment) => {
+                      const bmiInfo = classifyBMI(Number((assessment.weight / ((assessment.height/100)**2)).toFixed(2)))
+                      const status = assessment.measurements?.status || 'completed'
+                      const completion = assessment.measurements?.completion || 0
+                      return (
+                        <div key={assessment.id} className={`bg-black/20 p-4 md:p-5 rounded-xl border ${status === 'draft' ? 'border-yellow-500/30' : 'border-white/5'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
+                          <div className="flex items-center gap-5 w-full md:w-auto">
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${status === 'draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}><span>{new Date(assessment.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(assessment.date).toLocaleString('default', { month: 'short' })}</span></div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3"><span className="text-white font-bold text-xl">{assessment.weight} kg</span>{status === 'draft' ? <Badge variant="secondary" className="text-yellow-400 bg-yellow-900/20 border-none text-xs">Rascunho</Badge> : <Badge variant="outline" className={`text-xs ${bmiInfo.color} border-current`}>{bmiInfo.label}</Badge>}</div>
+                              {status === 'draft' ? (<div className="w-full md:w-40 mt-2"><div className="flex justify-between text-xs text-gray-400 mb-1"><span>Preenchimento</span><span>{completion}%</span></div><Progress value={completion} className="h-1.5 bg-white/10" /></div>) : (<div className="text-sm text-gray-400 flex gap-4 mt-1"><span>Gord: {assessment.body_fat_percentage}%</span><span>Massa: {assessment.muscle_mass}kg</span></div>)}
+                            </div>
+                          </div>
+                          <div className="flex gap-2 w-full md:w-auto justify-end pt-4 md:pt-0"><Button variant="ghost" size="sm" onClick={() => openEditAssessment(assessment)} className="text-blue-400 hover:bg-blue-500/10 gap-2"><Pencil className="h-4 w-4"/><span className="md:hidden">Editar</span></Button><Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(assessment.id)} className="text-red-400 hover:bg-red-500/10 gap-2"><Trash2 className="h-4 w-4"/><span className="md:hidden">Excluir</span></Button></div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto"><Trash2 className="h-4 w-4 mr-2"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto"><Trash2 className="h-4 w-4 mr-2"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-sm font-bold text-white text-center sm:text-left">{cw.workout.name}</h4><div className="text-xs text-gray-400 text-center sm:text-left">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto"><Trash2 className="h-4 w-4 mr-2"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          
+          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-sm font-bold text-white text-center sm:text-left">{cm.meal_plan.name}</h4><div className="text-xs text-gray-400 text-center sm:text-left">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto"><Trash2 className="h-4 w-4 mr-2"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
+
           <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
+
           <TabsContent value="anamnesis"><div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4"><h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2><Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-bold shadow-lg w-full sm:w-auto"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button></div><Tabs defaultValue="medical" className="w-full"><TabsList className="bg-black/20 border border-white/10 w-full justify-start h-12 mb-6"><TabsTrigger value="medical" className="flex-1 h-10">Saúde</TabsTrigger><TabsTrigger value="lifestyle" className="flex-1 h-10">Estilo</TabsTrigger><TabsTrigger value="nutri" className="flex-1 h-10">Nutri</TabsTrigger></TabsList><TabsContent value="medical"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div><Label className="text-gray-300 mb-2 block">Patologias</Label><Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-2 block">Lesões</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div></CardContent></Card></TabsContent><TabsContent value="lifestyle"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div><Label className="text-gray-300 mb-2 block">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 h-10"/></div><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div></CardContent></Card></TabsContent><TabsContent value="nutri"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div><Label className="text-gray-300 mb-2 block">Água (L)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 h-10"/></div><div><Label className="text-gray-300 mb-2 block">Histórico</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div></CardContent></Card></TabsContent></Tabs></TabsContent>
+          
           <TabsContent value="info"><div className="space-y-6"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
         </Tabs>
       </div>
