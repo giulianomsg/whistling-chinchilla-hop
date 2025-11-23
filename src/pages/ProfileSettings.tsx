@@ -71,6 +71,30 @@ const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Probl
 const COMMON_SYMPTOMS = ['Dor no Peito', 'Falta de Ar', 'Tontura', 'Palpitações', 'Dores Articulares', 'Dor nas Costas', 'Fraqueza', 'Tosse com Sangue']
 const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levantar peso', 'Dirigir']
 
+// --- STATE PADRÃO DA ANAMNESE ---
+const DEFAULT_ANAMNESIS = {
+    diagnosed_conditions: [] as string[],
+    symptoms: [] as string[],
+    family_history: '',
+    medications: '',
+    surgeries: '',
+    injuries: '',
+    allergies: '',
+    smoker: false,
+    alcohol: 'never',
+    occupation: '',
+    work_hours: '',
+    work_activities: [] as string[],
+    stress_level: '',
+    sleep_hours: '',
+    sleep_quality: '',
+    water_intake: '',
+    diet_history: '',
+    food_aversions: '',
+    supplements: '',
+    activity_level: 'sedentary'
+}
+
 const ProfileSettings: React.FC = () => {
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
@@ -89,34 +113,8 @@ const ProfileSettings: React.FC = () => {
     restrictions: ''
   })
   
-  // --- Estado da Anamnese Completa (JSONB) - ESTRUTURA PADRONIZADA ---
-  const [anamnesisForm, setAnamnesisForm] = useState({
-    // Clínico
-    diagnosed_conditions: [] as string[],
-    symptoms: [] as string[],
-    family_history: '',
-    medications: '',
-    surgeries: '',
-    injuries: '',
-    allergies: '',
-    
-    // Hábitos
-    smoker: false,
-    alcohol: 'never',
-    occupation: '',
-    work_hours: '',
-    work_activities: [] as string[],
-    stress_level: '',
-    sleep_hours: '',
-    sleep_quality: '',
-    
-    // Nutricional
-    water_intake: '',
-    diet_history: '',
-    food_aversions: '',
-    supplements: '',
-    activity_level: 'sedentary'
-  })
+  // --- Estado da Anamnese Completa (JSONB) ---
+  const [anamnesisForm, setAnamnesisForm] = useState(DEFAULT_ANAMNESIS)
 
   const [userRole, setUserRole] = useState<string>('')
 
@@ -128,28 +126,23 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // --- Função de Carregamento OTIMIZADA ---
-  // Removemos qualquer dependência de 'formData' ou 'anamnesisForm' aqui dentro.
+  // --- Função de Carregamento OTIMIZADA (Correção do Erro de Build e Loop) ---
   const fetchFreshData = useCallback(async () => {
     if (!user) return
     try {
-      // Não ative setLoading se já estiver carregando para evitar loops em edge cases,
-      // mas aqui vamos forçar apenas no mount.
-      
       const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileError) throw profileError
 
-      // Construímos o objeto do ZERO, sem ler o estado anterior (formData)
       const newFormData = {
         fullName: profile.full_name || '',
         phone: profile.phone || '',
         avatarUrl: profile.avatar_url || '',
-        bio: '', // Default
-        specialty: '', // Default
-        consultationPrice: '', // Default
-        certifications: '', // Default
-        goals: '', // Default
-        restrictions: '' // Default
+        bio: '', 
+        specialty: '', 
+        consultationPrice: '', 
+        certifications: '', 
+        goals: '', 
+        restrictions: '' 
       }
       
       setUserRole(profile.role)
@@ -170,39 +163,22 @@ const ProfileSettings: React.FC = () => {
           newFormData.restrictions = clientData.health_restrictions || ''
           
           if (clientData.anamnesis_data) {
-            const data = typeof clientData.anamnesis_data === 'string' 
+            const rawData = typeof clientData.anamnesis_data === 'string' 
               ? JSON.parse(clientData.anamnesis_data) 
               : clientData.anamnesis_data
             
-            // Atualizamos a Anamnese do ZERO também
+            // Pré-processamento para evitar erro de chave duplicada no build
+            const processedData = {
+                ...rawData,
+                diagnosed_conditions: rawData.diagnosed_conditions || [],
+                symptoms: rawData.symptoms || [],
+                work_activities: rawData.work_activities || []
+            }
+            
+            // Atualizamos a Anamnese mesclando defaults com dados processados
             setAnamnesisForm({
-                // Defaults
-                diagnosed_conditions: [],
-                symptoms: [],
-                family_history: '',
-                medications: '',
-                surgeries: '',
-                injuries: '',
-                allergies: '',
-                smoker: false,
-                alcohol: 'never',
-                occupation: '',
-                work_hours: '',
-                work_activities: [],
-                stress_level: '',
-                sleep_hours: '',
-                sleep_quality: '',
-                water_intake: '',
-                diet_history: '',
-                food_aversions: '',
-                supplements: '',
-                activity_level: 'sedentary',
-                // Override com dados do banco
-                ...data,
-                // Garantia de Arrays
-                diagnosed_conditions: data.diagnosed_conditions || [],
-                symptoms: data.symptoms || [],
-                work_activities: data.work_activities || []
+                ...DEFAULT_ANAMNESIS,
+                ...processedData
             })
           }
         }
@@ -329,7 +305,6 @@ const ProfileSettings: React.FC = () => {
       }
 
       showSuccess('Perfil salvo com sucesso!')
-      // Recarrega os dados para garantir sincronia
       await fetchFreshData()
 
     } catch (error: any) {
