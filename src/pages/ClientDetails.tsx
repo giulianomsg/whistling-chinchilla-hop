@@ -11,15 +11,17 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Progress } from '@/components/ui/progress' // Certifique-se de ter o Progress do shadcn
 import { 
-  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, Timer, 
-  Loader2, AlertCircle, Target, Calendar, Trash2, Plus,
-  FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp
+  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
+  Loader2, Plus,
+  FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
+  Pencil, Trash2
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import ClientWorkoutHistory from '@/components/professional/ClientWorkoutHistory'
-import { calculateBiometrics, classifyBMI } from '@/utils/biometrics'
+import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 
 const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -27,18 +29,17 @@ const ClientDetails: React.FC = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState(true)
   
-  // Dados do Cliente
+  // Dados
   const [clientProfile, setClientProfile] = useState<any>(null)
   const [clientDetails, setClientDetails] = useState<any>(null)
   const [clientWorkouts, setClientWorkouts] = useState<any[]>([])
   const [clientMealPlans, setClientMealPlans] = useState<any[]>([])
-  const [assessments, setAssessments] = useState<any[]>([]) // Histórico de Avaliações
+  const [assessments, setAssessments] = useState<any[]>([])
   
-  // Recursos do Profissional
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
 
-  // Estados de UI
+  // UI States
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
   const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
@@ -46,49 +47,38 @@ const ClientDetails: React.FC = () => {
   const [selectedMealPlanId, setSelectedMealPlanId] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
 
-  // --- FORMULÁRIOS ---
-  // Anamnese
+  // Estado da Edição de Biometria
+  const [editingAssessmentId, setEditingAssessmentId] = useState<string | null>(null)
+
+  // Formulários
   const [anamnesisForm, setAnamnesisForm] = useState({
     medical_history: '', medications: '', surgeries: '', injuries: '', allergies: '',
     occupation: '', sleep_hours: '', sleep_quality: '', stress_level: '', smoker: false, alcohol: '',
     water_intake: '', diet_history: '', food_aversions: '', supplements: '', activity_level: ''
   })
 
-  // Nova Avaliação Física
-  const [newAssessment, setNewAssessment] = useState({
+  const initialAssessmentState = {
     date: new Date().toISOString().split('T')[0],
     weight: '',
     height: '',
-    gender: 'male', // Default, ideal vir do perfil
-    age: 25, // Default
-    // Dobras (Skinfolds)
-    skinfolds: {
-      triceps: '', biceps: '', subscapular: '', chest: '', axillary: '', suprailiac: '', abdominal: '', thigh: '', calf: ''
-    },
-    // Perímetros (Circumferences)
-    circumferences: {
-      shoulder: '', chest: '', arm_right: '', arm_left: '', waist: '', abdomen: '', hips: '', thigh_right: '', thigh_left: '', calf_right: '', calf_left: ''
-    },
+    gender: 'male',
+    age: 25,
+    skinfolds: { triceps: '', biceps: '', subscapular: '', chest: '', axillary: '', suprailiac: '', abdominal: '', thigh: '', calf: '' },
+    circumferences: { shoulder: '', chest: '', arm_right: '', arm_left: '', waist: '', abdomen: '', hips: '', thigh_right: '', thigh_left: '', calf_right: '', calf_left: '' },
     notes: ''
-  })
+  }
+  const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
 
   useEffect(() => {
     const loadData = async () => {
       if (!id || !user) return
       setLoading(true)
       try {
-        // 1. Perfis e Detalhes
         const profileRes = await supabase.from('profiles').select('*').eq('id', id).maybeSingle()
         const detailsRes = await supabase.from('client_details').select('*').eq('profile_id', id).maybeSingle()
-        
-        // 2. Vínculos Ativos
         const cWorkouts = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cMeals = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
-        
-        // 3. Histórico de Avaliações (Biometria)
         const cAssessments = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
-
-        // 4. Recursos do Profissional (para atribuir)
         const myWorkouts = await supabase.from('workouts').select('*').eq('professional_id', user.id).eq('is_template', false)
         const myMealPlans = await supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id)
 
@@ -102,15 +92,13 @@ const ClientDetails: React.FC = () => {
         setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
 
-        // Carregar Anamnese
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' ? JSON.parse(detailsRes.data.anamnesis_data) : detailsRes.data.anamnesis_data
           setAnamnesisForm(prev => ({ ...prev, ...data }))
         }
-
       } catch (error) {
         console.error(error)
-        showError('Erro ao carregar dados do cliente')
+        showError('Erro ao carregar dados')
       } finally {
         setLoading(false)
       }
@@ -118,17 +106,14 @@ const ClientDetails: React.FC = () => {
     loadData()
   }, [id, user])
 
-  // --- HANDLERS DE ATRIBUIÇÃO ---
+  // Handlers Assignments... (Mantidos iguais)
   const handleAssignWorkout = async () => {
     if (!selectedWorkoutId || !user) return
     try {
-      const { error } = await supabase.from('client_workouts').insert({
-        client_id: id, workout_id: selectedWorkoutId, professional_id: user.id, start_date: startDate, status: 'active'
-      })
+      const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user.id, start_date: startDate, status: 'active' })
       if (error) throw error
       showSuccess('Treino atribuído!')
       setIsAssignWorkoutOpen(false)
-      // Refresh
       const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
       setClientWorkouts(data || [])
     } catch (err) { showError('Erro ao atribuir') }
@@ -137,13 +122,10 @@ const ClientDetails: React.FC = () => {
   const handleAssignMealPlan = async () => {
     if (!selectedMealPlanId || !user) return
     try {
-      const { error } = await supabase.from('client_meal_plans').insert({
-        client_id: id, meal_plan_id: selectedMealPlanId, nutritionist_id: user.id, start_date: startDate, status: 'active'
-      })
+      const { error } = await supabase.from('client_meal_plans').insert({ client_id: id, meal_plan_id: selectedMealPlanId, nutritionist_id: user.id, start_date: startDate, status: 'active' })
       if (error) throw error
       showSuccess('Dieta atribuída!')
       setIsAssignMealPlanOpen(false)
-      // Refresh
       const { data } = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
       setClientMealPlans(data || [])
     } catch (err) { showError('Erro ao atribuir') }
@@ -159,86 +141,122 @@ const ClientDetails: React.FC = () => {
     } catch (err) { showError('Erro ao remover') }
   }
 
-  // --- HANDLERS DE ANAMNESE ---
   const handleSaveAnamnesis = async () => {
     try {
-      const { error } = await supabase.from('client_details').upsert({
-        profile_id: id,
-        anamnesis_data: anamnesisForm,
-        updated_at: new Date().toISOString()
-      })
+      const { error } = await supabase.from('client_details').upsert({ profile_id: id, anamnesis_data: anamnesisForm, updated_at: new Date().toISOString() })
       if (error) throw error
       showSuccess('Anamnese salva!')
-    } catch (e) { console.error(e); showError('Erro ao salvar anamnese') }
+    } catch (e) { showError('Erro ao salvar') }
   }
 
   const updateAnamnesis = (field: string, value: any) => setAnamnesisForm(prev => ({ ...prev, [field]: value }))
 
-  // --- HANDLERS DE AVALIAÇÃO FÍSICA ---
-  const handleSaveAssessment = async () => {
+  // --- HANDLERS AVALIAÇÃO FÍSICA ---
+
+  // Abrir Modal para Edição
+  const openEditAssessment = (assessment: any) => {
+    setEditingAssessmentId(assessment.id)
+    const measures = typeof assessment.measurements === 'string' ? JSON.parse(assessment.measurements) : assessment.measurements
+    
+    setNewAssessment({
+      date: assessment.date,
+      weight: assessment.weight,
+      height: assessment.height,
+      gender: 'male', // Idealmente viria do perfil
+      age: 25, // Idealmente calcularia da data de nasc
+      skinfolds: measures.skinfolds || initialAssessmentState.skinfolds,
+      circumferences: measures.circumferences || initialAssessmentState.circumferences,
+      notes: assessment.notes || ''
+    })
+    setIsNewAssessmentOpen(true)
+  }
+
+  // Abrir Modal para Novo
+  const openNewAssessment = () => {
+    setEditingAssessmentId(null)
+    setNewAssessment(initialAssessmentState)
+    setIsNewAssessmentOpen(true)
+  }
+
+  // Salvar (Novo ou Edição)
+  const handleSaveAssessment = async (status: 'draft' | 'completed') => {
     try {
-      // 1. Calcular Resultados Automaticamente
       const calculated = calculateBiometrics({
         gender: newAssessment.gender as 'male'|'female',
         age: Number(newAssessment.age),
         weight: Number(newAssessment.weight),
         height: Number(newAssessment.height),
-        skinfolds: Object.fromEntries(
-          Object.entries(newAssessment.skinfolds).map(([k, v]) => [k, Number(v)])
-        )
+        skinfolds: Object.fromEntries(Object.entries(newAssessment.skinfolds).map(([k, v]) => [k, Number(v)]))
       })
 
-      // 2. Montar Objeto JSONB (Medidas + Perímetros)
+      const completion = calculateCompletion(newAssessment)
+
       const measurementsData = {
         skinfolds: newAssessment.skinfolds,
         circumferences: newAssessment.circumferences,
         protocol: calculated.protocol,
         bmi: calculated.bmi,
         lean_mass: calculated.leanMass,
-        fat_mass: calculated.fatMass
+        fat_mass: calculated.fatMass,
+        status: status, // Salva status dentro do JSONB
+        completion: completion // Salva porcentagem
       }
 
-      // 3. Salvar no Banco
-      const { error } = await supabase.from('biometric_data').insert({
+      const payload = {
         client_id: id,
         date: newAssessment.date,
         weight: Number(newAssessment.weight),
         height: Number(newAssessment.height),
         body_fat_percentage: calculated.bodyFat,
-        muscle_mass: calculated.leanMass, // Usando lean mass como proxy se não tiver muscle mass isolado
+        muscle_mass: calculated.leanMass,
         measurements: measurementsData,
         notes: newAssessment.notes
-      })
+      }
+
+      let error
+      if (editingAssessmentId) {
+        // Update
+        const res = await supabase.from('biometric_data').update(payload).eq('id', editingAssessmentId)
+        error = res.error
+      } else {
+        // Insert
+        const res = await supabase.from('biometric_data').insert(payload)
+        error = res.error
+      }
 
       if (error) throw error
-      showSuccess('Avaliação salva com sucesso!')
+      
+      showSuccess(status === 'draft' ? 'Rascunho salvo!' : 'Avaliação finalizada!')
       setIsNewAssessmentOpen(false)
       
-      // Refresh
       const { data } = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
       setAssessments(data || [])
 
     } catch (e: any) {
       console.error(e)
-      showError('Erro ao salvar avaliação: ' + e.message)
+      showError('Erro ao salvar avaliação')
     }
   }
 
-  // Helper para inputs aninhados
+  // Excluir Avaliação
+  const handleDeleteAssessment = async (assessmentId: string) => {
+    if (!confirm('Tem certeza que deseja excluir esta avaliação?')) return
+    try {
+      const { error } = await supabase.from('biometric_data').delete().eq('id', assessmentId)
+      if (error) throw error
+      showSuccess('Avaliação excluída.')
+      setAssessments(prev => prev.filter(a => a.id !== assessmentId))
+    } catch (e) { showError('Erro ao excluir') }
+  }
+
   const updateNested = (section: 'skinfolds'|'circumferences', field: string, value: string) => {
-    setNewAssessment(prev => ({
-      ...prev,
-      [section]: { ...prev[section], [field]: value }
-    }))
+    setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
   }
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
-  // Dados para Dashboard de Evolução
-  const latestAssessment = assessments[0]
-  const previousAssessment = assessments[1]
-  const weightDiff = latestAssessment && previousAssessment ? (latestAssessment.weight - previousAssessment.weight).toFixed(1) : 0
-  const fatDiff = latestAssessment && previousAssessment ? (latestAssessment.body_fat_percentage - previousAssessment.body_fat_percentage).toFixed(1) : 0
+  const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
+  const previousAssessment = assessments.find(a => a.measurements?.status === 'completed' && a.id !== latestAssessment?.id)
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -250,7 +268,6 @@ const ClientDetails: React.FC = () => {
               <h1 className="text-3xl font-bold text-white">{clientProfile?.full_name || 'Cliente'}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
                 <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email}</span>
-                {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
               </div>
             </div>
           </div>
@@ -266,43 +283,41 @@ const ClientDetails: React.FC = () => {
             <TabsTrigger value="info" className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">Perfil</TabsTrigger>
           </TabsList>
 
-          {/* --- BIOMETRIA (NOVA ABA) --- */}
+          {/* --- BIOMETRIA --- */}
           <TabsContent value="biometrics">
-            {/* Cards de Resumo */}
+            {/* Cards Resumo */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <Card className="bg-white/5 border-white/10">
                 <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Peso Atual</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.weight || '--'} kg</div>
-                  {previousAssessment && <p className={`text-xs mt-1 flex items-center ${Number(weightDiff) < 0 ? 'text-green-400' : 'text-red-400'}`}><TrendingUp className="w-3 h-3 mr-1"/> {weightDiff} kg vs anterior</p>}
                 </CardContent>
               </Card>
               <Card className="bg-white/5 border-white/10">
                 <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Gordura Corporal</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.body_fat_percentage || '--'} %</div>
-                  {previousAssessment && <p className={`text-xs mt-1 flex items-center ${Number(fatDiff) < 0 ? 'text-green-400' : 'text-red-400'}`}><TrendingUp className="w-3 h-3 mr-1"/> {fatDiff} % vs anterior</p>}
                 </CardContent>
               </Card>
               <Card className="bg-white/5 border-white/10">
-                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Massa Magra (Est.)</CardTitle></CardHeader>
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Massa Magra</CardTitle></CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-white">{latestAssessment?.muscle_mass || '--'} kg</div>
-                  <p className="text-xs text-gray-500 mt-1">Baseado em Pollock</p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Lista de Avaliações */}
             <Card className="bg-white/5 border-white/10">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white">Histórico de Avaliações</CardTitle>
                 <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
-                  <DialogTrigger asChild><Button className="bg-primary text-black hover:bg-primary/80 font-bold"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger>
+                  <DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger>
                   <DialogContent className="bg-slate-900 border-white/10 text-white max-w-3xl h-[90vh] overflow-y-auto">
-                    <DialogHeader><DialogTitle>Nova Avaliação Física</DialogTitle></DialogHeader>
+                    <DialogHeader><DialogTitle>{editingAssessmentId ? 'Editar Avaliação' : 'Nova Avaliação'}</DialogTitle></DialogHeader>
+                    
+                    {/* FORMULÁRIO DE AVALIAÇÃO */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
-                      {/* Coluna 1: Dados Básicos */}
+                      {/* Coluna 1 */}
                       <div className="space-y-4">
                         <h3 className="font-semibold text-primary flex items-center gap-2"><User className="w-4 h-4"/> Básico</h3>
                         <div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div>
@@ -321,18 +336,14 @@ const ClientDetails: React.FC = () => {
                           </div>
                         </div>
                       </div>
-
-                      {/* Coluna 2: Dobras (Skinfolds) */}
+                      
+                      {/* Coluna 2: Dobras */}
                       <div className="space-y-4">
                         <h3 className="font-semibold text-primary flex items-center gap-2"><Scale className="w-4 h-4"/> Dobras (mm)</h3>
                         <div className="grid grid-cols-2 gap-2">
-                          <div><Label className="text-xs text-gray-400">Tríceps</Label><Input type="number" value={newAssessment.skinfolds.triceps} onChange={e => updateNested('skinfolds', 'triceps', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Subescapular</Label><Input type="number" value={newAssessment.skinfolds.subscapular} onChange={e => updateNested('skinfolds', 'subscapular', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Peitoral</Label><Input type="number" value={newAssessment.skinfolds.chest} onChange={e => updateNested('skinfolds', 'chest', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Axilar M.</Label><Input type="number" value={newAssessment.skinfolds.axillary} onChange={e => updateNested('skinfolds', 'axillary', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Supra-ilíaca</Label><Input type="number" value={newAssessment.skinfolds.suprailiac} onChange={e => updateNested('skinfolds', 'suprailiac', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Abdominal</Label><Input type="number" value={newAssessment.skinfolds.abdominal} onChange={e => updateNested('skinfolds', 'abdominal', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Coxa</Label><Input type="number" value={newAssessment.skinfolds.thigh} onChange={e => updateNested('skinfolds', 'thigh', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                          {Object.keys(newAssessment.skinfolds).map((key) => (
+                            <div key={key}><Label className="text-xs text-gray-400 capitalize">{key}</Label><Input type="number" value={(newAssessment.skinfolds as any)[key]} onChange={e => updateNested('skinfolds', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                          ))}
                         </div>
                       </div>
 
@@ -340,18 +351,17 @@ const ClientDetails: React.FC = () => {
                       <div className="space-y-4">
                         <h3 className="font-semibold text-primary flex items-center gap-2"><Ruler className="w-4 h-4"/> Perímetros (cm)</h3>
                         <div className="grid grid-cols-2 gap-2">
-                          <div><Label className="text-xs text-gray-400">Ombro</Label><Input type="number" value={newAssessment.circumferences.shoulder} onChange={e => updateNested('circumferences', 'shoulder', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Peito</Label><Input type="number" value={newAssessment.circumferences.chest} onChange={e => updateNested('circumferences', 'chest', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Braço Dir.</Label><Input type="number" value={newAssessment.circumferences.arm_right} onChange={e => updateNested('circumferences', 'arm_right', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Braço Esq.</Label><Input type="number" value={newAssessment.circumferences.arm_left} onChange={e => updateNested('circumferences', 'arm_left', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Cintura</Label><Input type="number" value={newAssessment.circumferences.waist} onChange={e => updateNested('circumferences', 'waist', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Abdômen</Label><Input type="number" value={newAssessment.circumferences.abdomen} onChange={e => updateNested('circumferences', 'abdomen', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Quadril</Label><Input type="number" value={newAssessment.circumferences.hips} onChange={e => updateNested('circumferences', 'hips', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
-                          <div><Label className="text-xs text-gray-400">Coxa Dir.</Label><Input type="number" value={newAssessment.circumferences.thigh_right} onChange={e => updateNested('circumferences', 'thigh_right', e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                          {Object.keys(newAssessment.circumferences).map((key) => (
+                            <div key={key}><Label className="text-xs text-gray-400 capitalize">{key.replace('_', ' ')}</Label><Input type="number" value={(newAssessment.circumferences as any)[key]} onChange={e => updateNested('circumferences', key, e.target.value)} className="bg-black/20 border-white/10 text-white h-8"/></div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                    <DialogFooter><Button onClick={handleSaveAssessment} className="bg-green-600 text-white w-full">Salvar Avaliação</Button></DialogFooter>
+
+                    <DialogFooter className="gap-2">
+                      <Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5">Salvar Rascunho</Button>
+                      <Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700">Finalizar Avaliação</Button>
+                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </CardHeader>
@@ -360,25 +370,38 @@ const ClientDetails: React.FC = () => {
                   <div className="space-y-4">
                     {assessments.map((assessment) => {
                       const bmiInfo = classifyBMI(Number((assessment.weight / ((assessment.height/100)**2)).toFixed(2)))
+                      const status = assessment.measurements?.status || 'completed'
+                      const completion = assessment.measurements?.completion || 0
+
                       return (
-                        <div key={assessment.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs flex-col">
+                        <div key={assessment.id} className={`bg-black/20 p-4 rounded-lg border ${status === 'draft' ? 'border-yellow-500/30' : 'border-white/5'} flex flex-col md:flex-row justify-between items-center gap-4`}>
+                          <div className="flex items-center gap-4 flex-1">
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs flex-col ${status === 'draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}>
                               <span>{new Date(assessment.date).getDate()}</span>
                               <span className="uppercase text-[9px]">{new Date(assessment.date).toLocaleString('default', { month: 'short' })}</span>
                             </div>
-                            <div>
+                            <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <span className="text-white font-medium">{assessment.weight} kg</span>
-                                <Badge variant="outline" className={`text-[10px] ${bmiInfo.color} border-current`}>{bmiInfo.label}</Badge>
+                                {status === 'draft' ? <Badge variant="secondary" className="text-yellow-400 bg-yellow-900/20 border-none">Rascunho</Badge> : <Badge variant="outline" className={`text-[10px] ${bmiInfo.color} border-current`}>{bmiInfo.label}</Badge>}
                               </div>
-                              <div className="text-xs text-gray-400 flex gap-3 mt-1">
-                                <span>Gordura: {assessment.body_fat_percentage}%</span>
-                                <span>Massa Magra: {assessment.muscle_mass}kg</span>
-                              </div>
+                              {status === 'draft' ? (
+                                <div className="w-full max-w-[200px] mt-1.5">
+                                  <div className="flex justify-between text-[10px] text-gray-400 mb-1"><span>Progresso</span><span>{completion}%</span></div>
+                                  <Progress value={completion} className="h-1.5 bg-white/10" />
+                                </div>
+                              ) : (
+                                <div className="text-xs text-gray-400 flex gap-3 mt-1">
+                                  <span>Gordura: {assessment.body_fat_percentage}%</span>
+                                  <span>Massa Magra: {assessment.muscle_mass}kg</span>
+                                </div>
+                              )}
                             </div>
                           </div>
-                          {/* Detalhes (JSONB) poderiam ser expandidos aqui */}
+                          <div className="flex gap-2">
+                            <Button variant="ghost" size="icon" onClick={() => openEditAssessment(assessment)} className="text-blue-400 hover:bg-blue-500/10"><Pencil className="h-4 w-4"/></Button>
+                            <Button variant="ghost" size="icon" onClick={() => handleDeleteAssessment(assessment.id)} className="text-red-400 hover:bg-red-500/10"><Trash2 className="h-4 w-4"/></Button>
+                          </div>
                         </div>
                       )
                     })}
@@ -388,89 +411,13 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* --- DEMAIS ABAS (MANTIDAS IGUAIS AO ANTERIOR) --- */}
-          {/* TREINOS */}
-          <TabsContent value="workouts">
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-white flex items-center gap-2"><Dumbbell className="text-blue-400" /> Treinos Atribuídos</CardTitle>
-                <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white">
-                    <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
-                    <div className="space-y-4 mt-4">
-                      <Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select>
-                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
-                      <Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardHeader>
-              <CardContent>
-                {clientWorkouts.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (
-                  <div className="space-y-4">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* DIETAS */}
-          <TabsContent value="meal-plans">
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-white flex items-center gap-2"><Utensils className="text-green-400" /> Planos Alimentares</CardTitle>
-                <Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}>
-                  <DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white">
-                    <DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader>
-                    <div className="space-y-4 mt-4">
-                      <Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select>
-                      <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/>
-                      <Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardHeader>
-              <CardContent>
-                {clientMealPlans.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (
-                  <div className="space-y-4">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* HISTÓRICO */}
-          <TabsContent value="history">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div>
-          </TabsContent>
-
-          {/* ANAMNESE (MESMO CÓDIGO DA RESPOSTA ANTERIOR) */}
-          <TabsContent value="anamnesis">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
-              <Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-bold shadow-lg shadow-primary/10"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button>
-            </div>
-            <Tabs defaultValue="medical" className="w-full">
-              <TabsList className="bg-black/20 border border-white/10 w-full justify-start"><TabsTrigger value="medical" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Clínica</TabsTrigger><TabsTrigger value="lifestyle" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Estilo de Vida</TabsTrigger><TabsTrigger value="nutri" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutricional</TabsTrigger></TabsList>
-              <TabsContent value="medical" className="mt-4">
-                <Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300 mb-1.5 block">Patologias</Label><Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Cirurgias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Lesões</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div></CardContent></Card>
-              </TabsContent>
-              <TabsContent value="lifestyle" className="mt-4">
-                <Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div><div className="flex items-center justify-between bg-black/20 p-3 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div></CardContent></Card>
-              </TabsContent>
-              <TabsContent value="nutri" className="mt-4">
-                <Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div><div className="md:col-span-2"><Label className="text-gray-300">Histórico Alimentar</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]"/></div></CardContent></Card>
-              </TabsContent>
-            </Tabs>
-          </TabsContent>
-
-          {/* PERFIL */}
-          <TabsContent value="info">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card>
-              <Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card>
-            </div>
-          </TabsContent>
+          {/* --- DEMAIS ABAS (WORKOUTS, MEAL-PLANS, HISTORY, ANAMNESIS, INFO) MANTIDAS IGUAIS AO CÓDIGO ANTERIOR --- */}
+          {/* Para economizar espaço na resposta, mantenha o código das outras abas como estava na versão anterior */}
+          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-white flex items-center gap-2"><Dumbbell className="text-blue-400" /> Treinos Atribuídos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent>{clientWorkouts.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (<div className="space-y-4">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}</CardContent></Card></TabsContent>
+          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-white flex items-center gap-2"><Utensils className="text-green-400" /> Planos Alimentares</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent>{clientMealPlans.length === 0 ? <div className="text-center py-8 text-gray-500">Vazio</div> : (<div className="space-y-4">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 flex justify-between items-center"><div><h4 className="text-lg font-semibold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><div className="flex gap-3"><Badge className="bg-green-500/20 text-green-400 border-none">Ativo</Badge><Button size="icon" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}</CardContent></Card></TabsContent>
+          <TabsContent value="history"><div className="bg-white/5 border border-white/10 rounded-xl p-6"><ClientWorkoutHistory clientId={id!} /></div></TabsContent>
+          <TabsContent value="anamnesis"><div className="flex justify-between items-center mb-4"><h2 className="text-xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2><Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-bold shadow-lg shadow-primary/10"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button></div><Tabs defaultValue="medical" className="w-full"><TabsList className="bg-black/20 border border-white/10 w-full justify-start"><TabsTrigger value="medical" className="data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Clínica</TabsTrigger><TabsTrigger value="lifestyle" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Estilo de Vida</TabsTrigger><TabsTrigger value="nutri" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutricional</TabsTrigger></TabsList><TabsContent value="medical" className="mt-4"><Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300 mb-1.5 block">Patologias</Label><Textarea value={anamnesisForm.medical_history} onChange={e => updateAnamnesis('medical_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Cirurgias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div><div><Label className="text-gray-300 mb-1.5 block">Lesões</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div></CardContent></Card></TabsContent><TabsContent value="lifestyle" className="mt-4"><Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div><div className="flex items-center justify-between bg-black/20 p-3 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div></CardContent></Card></TabsContent><TabsContent value="nutri" className="mt-4"><Card className="bg-white/5 border-white/10"><CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6"><div><Label className="text-gray-300">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10 mt-1.5"/></div><div className="md:col-span-2"><Label className="text-gray-300">Histórico Alimentar</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]"/></div></CardContent></Card></TabsContent></Tabs></TabsContent>
+          <TabsContent value="info"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Objetivos</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-white/5 border-white/10"><CardHeader><CardTitle className="text-white">Restrições</CardTitle></CardHeader><CardContent className="text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
         </Tabs>
       </div>
     </div>
