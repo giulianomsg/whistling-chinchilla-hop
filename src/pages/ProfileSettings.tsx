@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Cropper from 'react-easy-crop'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
@@ -125,83 +125,76 @@ const ProfileSettings: React.FC = () => {
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // --- LÓGICA DE CARREGAMENTO (CORRIGIDA) ---
-  // Esta função roda apenas para buscar os dados, sem depender de estado interno
-  const loadData = async (userId: string) => {
-    try {
-      const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', userId).single()
-      if (profileError) throw profileError
-
-      const newFormData = {
-        fullName: profile.full_name || '',
-        phone: profile.phone || '',
-        avatarUrl: profile.avatar_url || '',
-        bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
-      }
-      
-      let role = profile.role
-      let newAnamnesis = { ...DEFAULT_ANAMNESIS }
-
-      if (role === 'professional') {
-        const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
-        if (profData) {
-          newFormData.bio = profData.bio || ''
-          newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
-          newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
-          const certData = profData.certifications as any
-          newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
-        }
-      } else if (role === 'client') {
-        const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
-        if (clientData) {
-          newFormData.goals = clientData.goals || ''
-          newFormData.restrictions = clientData.health_restrictions || ''
-          
-          if (clientData.anamnesis_data) {
-            const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
-            // Merge seguro
-            newAnamnesis = {
-                ...DEFAULT_ANAMNESIS,
-                ...rawData,
-                diagnosed_conditions: rawData.diagnosed_conditions || [],
-                symptoms: rawData.symptoms || [],
-                work_activities: rawData.work_activities || []
-            }
-          }
-        }
-      }
-
-      return { newFormData, role, newAnamnesis }
-    } catch (error) {
-      console.error('Erro loadData:', error)
-      return null
-    }
-  }
-
-  // --- EFEITO DE CARREGAMENTO INICIAL (Loop Fix) ---
+  // --- EFEITO DE CARREGAMENTO INICIAL (Sem Loop e Sem ReferenceError) ---
   useEffect(() => {
     let mounted = true
     const userId = user?.id
 
     if (userId) {
-        const init = async () => {
+        const loadData = async () => {
             if(mounted) setLoading(true)
-            const result = await loadData(userId)
             
-            if (mounted && result) {
-                setFormData(result.newFormData)
-                setUserRole(result.role)
-                setAnamnesisForm(result.newAnamnesis)
-                setLoading(false)
-            } else if (mounted) {
-                setLoading(false)
+            try {
+                const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', userId).single()
+                if (profileError) throw profileError
+
+                if (!mounted) return
+
+                const newFormData = {
+                    fullName: profile.full_name || '',
+                    phone: profile.phone || '',
+                    avatarUrl: profile.avatar_url || '',
+                    bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
+                }
+                
+                let role = profile.role
+                let newAnamnesis = { ...DEFAULT_ANAMNESIS }
+
+                if (role === 'professional') {
+                    const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
+                    if (profData) {
+                        newFormData.bio = profData.bio || ''
+                        newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
+                        newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
+                        const certData = profData.certifications as any
+                        newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
+                    }
+                } else if (role === 'client') {
+                    const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
+                    if (clientData) {
+                        newFormData.goals = clientData.goals || ''
+                        newFormData.restrictions = clientData.health_restrictions || ''
+                        
+                        if (clientData.anamnesis_data) {
+                            const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
+                            // Merge seguro
+                            newAnamnesis = {
+                                ...DEFAULT_ANAMNESIS,
+                                ...rawData,
+                                diagnosed_conditions: rawData.diagnosed_conditions || [],
+                                symptoms: rawData.symptoms || [],
+                                work_activities: rawData.work_activities || []
+                            }
+                        }
+                    }
+                }
+
+                if (mounted) {
+                    setFormData(newFormData)
+                    setUserRole(role)
+                    setAnamnesisForm(newAnamnesis)
+                }
+            } catch (error) {
+                console.error('Erro loadData:', error)
+            } finally {
+                if (mounted) setLoading(false)
             }
         }
-        init()
+        loadData()
     }
 
     return () => { mounted = false }
-  }, [user?.id]) // Dependência ÚNICA: ID do usuário
+  }, [user?.id])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -235,6 +228,7 @@ const ProfileSettings: React.FC = () => {
     }
   }
 
+  // --- CORREÇÃO: useCallback está importado agora ---
   const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
@@ -310,12 +304,9 @@ const ProfileSettings: React.FC = () => {
       }
 
       showSuccess('Perfil salvo com sucesso!')
-      // Refresh manual
-      const updated = await loadData(user.id)
-      if (updated) {
-          setFormData(updated.newFormData)
-          setAnamnesisForm(updated.newAnamnesis)
-      }
+      
+      // Atualização Otimista (sem re-fetch completo para evitar qualquer chance de loop)
+      // Apenas continua, pois os estados locais já estão atualizados com o que o usuário digitou.
 
     } catch (error: any) {
       showError(error.message || 'Erro ao salvar')
