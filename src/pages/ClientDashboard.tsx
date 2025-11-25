@@ -339,7 +339,7 @@ const ClientDashboard: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                  <Card className="bg-blue-50 dark:bg-gradient-to-r dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-500/20">
+                  <Card className="dark:bg-gradient-to-r dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-500/20">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300 text-base">
                         <TrendingUp className="h-5 w-5" /> Seu Progresso
