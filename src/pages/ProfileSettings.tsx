@@ -73,26 +73,26 @@ const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levan
 
 // --- STATE PADRÃO DA ANAMNESE ---
 const DEFAULT_ANAMNESIS = {
-    diagnosed_conditions: [] as string[],
-    symptoms: [] as string[],
-    family_history: '',
-    medications: '',
-    surgeries: '',
-    injuries: '',
-    allergies: '',
-    smoker: false,
-    alcohol: 'never',
-    occupation: '',
-    work_hours: '',
-    work_activities: [] as string[],
-    stress_level: '',
-    sleep_hours: '',
-    sleep_quality: '',
-    water_intake: '',
-    diet_history: '',
-    food_aversions: '',
-    supplements: '',
-    activity_level: 'sedentary'
+  diagnosed_conditions: [] as string[],
+  symptoms: [] as string[],
+  family_history: '',
+  medications: '',
+  surgeries: '',
+  injuries: '',
+  allergies: '',
+  smoker: false,
+  alcohol: 'never',
+  occupation: '',
+  work_hours: '',
+  work_activities: [] as string[],
+  stress_level: '',
+  sleep_hours: '',
+  sleep_quality: '',
+  water_intake: '',
+  diet_history: '',
+  food_aversions: '',
+  supplements: '',
+  activity_level: 'sedentary'
 }
 
 const ProfileSettings: React.FC = () => {
@@ -112,7 +112,7 @@ const ProfileSettings: React.FC = () => {
     goals: '',
     restrictions: ''
   })
-  
+
   // --- Estado da Anamnese Completa ---
   const [anamnesisForm, setAnamnesisForm] = useState(DEFAULT_ANAMNESIS)
   const [userRole, setUserRole] = useState<string>('')
@@ -131,66 +131,66 @@ const ProfileSettings: React.FC = () => {
     const userId = user?.id
 
     if (userId) {
-        const loadData = async () => {
-            if(mounted) setLoading(true)
-            
-            try {
-                const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', userId).single()
-                if (profileError) throw profileError
+      const loadData = async () => {
+        if (mounted) setLoading(true)
 
-                if (!mounted) return
+        try {
+          const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', userId).single()
+          if (profileError) throw profileError
 
-                const newFormData = {
-                    fullName: profile.full_name || '',
-                    phone: profile.phone || '',
-                    avatarUrl: profile.avatar_url || '',
-                    bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
-                }
-                
-                let role = profile.role
-                let newAnamnesis = { ...DEFAULT_ANAMNESIS }
+          if (!mounted) return
 
-                if (role === 'professional') {
-                    const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
-                    if (profData) {
-                        newFormData.bio = profData.bio || ''
-                        newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
-                        newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
-                        const certData = profData.certifications as any
-                        newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
-                    }
-                } else if (role === 'client') {
-                    const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
-                    if (clientData) {
-                        newFormData.goals = clientData.goals || ''
-                        newFormData.restrictions = clientData.health_restrictions || ''
-                        
-                        if (clientData.anamnesis_data) {
-                            const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
-                            // Merge seguro
-                            newAnamnesis = {
-                                ...DEFAULT_ANAMNESIS,
-                                ...rawData,
-                                diagnosed_conditions: rawData.diagnosed_conditions || [],
-                                symptoms: rawData.symptoms || [],
-                                work_activities: rawData.work_activities || []
-                            }
-                        }
-                    }
-                }
+          const newFormData = {
+            fullName: profile.full_name || '',
+            phone: profile.phone || '',
+            avatarUrl: profile.avatar_url || '',
+            bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
+          }
 
-                if (mounted) {
-                    setFormData(newFormData)
-                    setUserRole(role)
-                    setAnamnesisForm(newAnamnesis)
-                }
-            } catch (error) {
-                console.error('Erro loadData:', error)
-            } finally {
-                if (mounted) setLoading(false)
+          let role = profile.role
+          let newAnamnesis = { ...DEFAULT_ANAMNESIS }
+
+          if (role === 'professional') {
+            const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
+            if (profData) {
+              newFormData.bio = profData.bio || ''
+              newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
+              newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
+              const certData = profData.certifications as any
+              newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
             }
+          } else if (role === 'client') {
+            const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
+            if (clientData) {
+              newFormData.goals = clientData.goals || ''
+              newFormData.restrictions = clientData.health_restrictions || ''
+
+              if (clientData.anamnesis_data) {
+                const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
+                // Merge seguro
+                newAnamnesis = {
+                  ...DEFAULT_ANAMNESIS,
+                  ...rawData,
+                  diagnosed_conditions: rawData.diagnosed_conditions || [],
+                  symptoms: rawData.symptoms || [],
+                  work_activities: rawData.work_activities || []
+                }
+              }
+            }
+          }
+
+          if (mounted) {
+            setFormData(newFormData)
+            setUserRole(role)
+            setAnamnesisForm(newAnamnesis)
+          }
+        } catch (error) {
+          console.error('Erro loadData:', error)
+        } finally {
+          if (mounted) setLoading(false)
         }
-        loadData()
+      }
+      loadData()
     }
 
     return () => { mounted = false }
@@ -207,8 +207,8 @@ const ProfileSettings: React.FC = () => {
   const toggleAnamnesisList = (field: 'diagnosed_conditions' | 'symptoms' | 'work_activities', item: string) => {
     setAnamnesisForm(prev => {
       const list = prev[field] || []
-      return list.includes(item) 
-        ? { ...prev, [field]: list.filter(i => i !== item) } 
+      return list.includes(item)
+        ? { ...prev, [field]: list.filter(i => i !== item) }
         : { ...prev, [field]: [...list, item] }
     })
   }
@@ -249,10 +249,10 @@ const ProfileSettings: React.FC = () => {
       const finalUrl = `${publicUrl}?t=${Date.now()}`
 
       await supabase.from('profiles').update({ avatar_url: finalUrl, updated_at: new Date().toISOString() }).eq('id', user.id)
-      
+
       setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
       await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
-      
+
       setIsCropDialogOpen(false)
       showSuccess('Foto atualizada!')
     } catch (error: any) {
@@ -271,7 +271,7 @@ const ProfileSettings: React.FC = () => {
       const { error: profileError } = await supabase.from('profiles')
         .update({ full_name: formData.fullName, phone: formData.phone, updated_at: new Date().toISOString() })
         .eq('id', user.id)
-      
+
       if (profileError) throw profileError
 
       await supabase.auth.updateUser({ data: { full_name: formData.fullName, phone: formData.phone } })
@@ -279,7 +279,7 @@ const ProfileSettings: React.FC = () => {
       if (userRole === 'professional') {
         if (!formData.specialty) throw new Error('Selecione o Tipo de Profissional')
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
-        
+
         const { error: profError } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio: formData.bio,
@@ -288,7 +288,7 @@ const ProfileSettings: React.FC = () => {
           certifications: { raw_text: formData.certifications },
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
-        
+
         if (profError) throw profError
 
       } else if (userRole === 'client') {
@@ -296,15 +296,15 @@ const ProfileSettings: React.FC = () => {
           profile_id: user.id,
           goals: formData.goals,
           health_restrictions: formData.restrictions,
-          anamnesis_data: anamnesisForm, 
+          anamnesis_data: anamnesisForm,
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
-        
+
         if (clientError) throw clientError
       }
 
       showSuccess('Perfil salvo com sucesso!')
-      
+
       // Atualização Otimista (sem re-fetch completo para evitar qualquer chance de loop)
       // Apenas continua, pois os estados locais já estão atualizados com o que o usuário digitou.
 
@@ -318,7 +318,7 @@ const ProfileSettings: React.FC = () => {
   if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
 
   const renderAvatar = () => {
-    const src = formData.avatarUrl ? `${formData.avatarUrl}?t=${Date.now()}` : ''
+    const src = formData.avatarUrl || ''
     return (
       <Avatar className="w-32 h-32 border-4 border-white/10 shadow-xl ring-2 ring-primary/20">
         <AvatarImage src={src} className="object-cover" />
@@ -355,17 +355,17 @@ const ProfileSettings: React.FC = () => {
               </div>
               <div className="flex-1 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div><Label className="text-gray-300">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
-                  <div><Label className="text-gray-300">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10"/></div></div>
+                  <div><Label className="text-gray-300">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" /></div>
+                  <div><Label className="text-gray-300">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-gray-500" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-black/20 border-white/10 text-white pl-10" /></div></div>
                 </div>
-                <div><Label className="text-gray-300">Email</Label><Input value={user?.email || ''} disabled className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed"/></div>
+                <div><Label className="text-gray-300">Email</Label><Input value={user?.email || ''} disabled className="bg-white/5 border-white/5 text-gray-500 mt-1.5 cursor-not-allowed" /></div>
               </div>
             </CardContent>
           </Card>
 
           {userRole === 'professional' && (
             <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400"/> Dados Profissionais</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Award className="text-purple-400" /> Dados Profissionais</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -375,10 +375,10 @@ const ProfileSettings: React.FC = () => {
                       <SelectContent className="bg-slate-900 border-white/10 text-white"><SelectItem value="personal_trainer">Personal Trainer</SelectItem><SelectItem value="nutritionist">Nutricionista</SelectItem></SelectContent>
                     </Select>
                   </div>
-                  <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div><Label className="text-gray-300">Preço Consulta (R$)</Label><Input type="number" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" /></div>
                 </div>
-                <div><Label className="text-gray-300">Biografia</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]"/></div>
-                <div><Label className="text-gray-300">Certificações</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                <div><Label className="text-gray-300">Biografia</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5 min-h-[100px]" /></div>
+                <div><Label className="text-gray-300">Certificações</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" /></div>
               </CardContent>
             </Card>
           )}
@@ -387,15 +387,15 @@ const ProfileSettings: React.FC = () => {
             <div className="space-y-6">
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400"/> Ficha de Anamnese</CardTitle>
+                  <CardTitle className="text-white flex items-center gap-2"><Shield className="text-green-400" /> Ficha de Anamnese</CardTitle>
                   <CardDescription className="text-gray-400">Preencha com atenção. Seus dados ajudam a montar o treino ideal.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="medical" className="w-full">
                     <TabsList className="bg-black/20 border border-white/10 w-full justify-start mb-6 h-auto flex-wrap">
-                      <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2"/> Clínico</TabsTrigger>
-                      <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2"/> Hábitos</TabsTrigger>
-                      <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2"/> Nutrição</TabsTrigger>
+                      <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-gray-400"><HeartPulse className="w-4 h-4 mr-2" /> Clínico</TabsTrigger>
+                      <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-gray-400"><Activity className="w-4 h-4 mr-2" /> Hábitos</TabsTrigger>
+                      <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-gray-400"><Apple className="w-4 h-4 mr-2" /> Nutrição</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="medical" className="space-y-6">
@@ -403,12 +403,12 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {COMMON_CONDITIONS.map(cond => (
-                            <div 
-                              key={cond} 
-                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} 
+                            <div
+                              key={cond}
+                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`}
                               onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}
                             >
-                              <Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} className="pointer-events-none border-white/30" />
+                              <Checkbox checked={!!anamnesisForm.diagnosed_conditions?.includes(cond)} className="pointer-events-none border-white/30" />
                               <span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span>
                             </div>
                           ))}
@@ -419,12 +419,12 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {COMMON_SYMPTOMS.map(sym => (
-                            <div 
-                              key={sym} 
-                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} 
+                            <div
+                              key={sym}
+                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`}
                               onClick={() => toggleAnamnesisList('symptoms', sym)}
                             >
-                              <Checkbox checked={anamnesisForm.symptoms?.includes(sym)} className="pointer-events-none border-white/30" />
+                              <Checkbox checked={!!anamnesisForm.symptoms?.includes(sym)} className="pointer-events-none border-white/30" />
                               <span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span>
                             </div>
                           ))}
@@ -432,10 +432,10 @@ const ProfileSettings: React.FC = () => {
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><Label className="text-gray-300 mb-2 block">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
-                        <div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
-                        <div><Label className="text-gray-300 mb-2 block">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
-                        <div><Label className="text-gray-300 mb-2 block">Cirurgias / Alergias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]" /></div>
+                        <div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]" /></div>
+                        <div><Label className="text-gray-300 mb-2 block">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]" /></div>
+                        <div><Label className="text-gray-300 mb-2 block">Cirurgias / Alergias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-black/20 border-white/10 mt-1.5 min-h-[80px]" /></div>
                       </div>
                     </TabsContent>
 
@@ -448,18 +448,18 @@ const ProfileSettings: React.FC = () => {
                         <div>
                           <Label className="text-gray-300 mb-2 block">Consumo de Álcool</Label>
                           <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
-                            <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger>
+                            <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..." /></SelectTrigger>
                             <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent>
                           </Select>
                         </div>
-                        <div><Label className="text-gray-300 mb-2 block">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10"/></div>
-                        
+                        <div><Label className="text-gray-300 mb-2 block">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-black/20 border-white/10" /></div>
+
                         <div className="grid grid-cols-2 gap-2">
-                          <div><Label className="text-gray-300 mb-2 block">Sono (h)</Label><Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10"/></div>
+                          <div><Label className="text-gray-300 mb-2 block">Sono (h)</Label><Input type="number" value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-black/20 border-white/10" /></div>
                           <div>
                             <Label className="text-gray-300 mb-2 block">Qualidade</Label>
                             <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
-                              <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="..."/></SelectTrigger>
+                              <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="..." /></SelectTrigger>
                               <SelectContent className="bg-slate-900 text-white border-white/10"><SelectItem value="good">Boa</SelectItem><SelectItem value="average">Média</SelectItem><SelectItem value="bad">Ruim</SelectItem></SelectContent>
                             </Select>
                           </div>
@@ -470,12 +470,12 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-300 mb-3 block">Atividades de Trabalho</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {WORK_ACTIVITIES.map(act => (
-                            <div 
-                              key={act} 
+                            <div
+                              key={act}
                               className="flex items-center space-x-2 cursor-pointer"
                               onClick={() => toggleAnamnesisList('work_activities', act)}
                             >
-                              <Checkbox checked={anamnesisForm.work_activities?.includes(act)} className="pointer-events-none border-white/30"/>
+                              <Checkbox checked={!!anamnesisForm.work_activities?.includes(act)} className="pointer-events-none border-white/30" />
                               <span className="text-sm text-gray-400">{act}</span>
                             </div>
                           ))}
@@ -485,9 +485,9 @@ const ProfileSettings: React.FC = () => {
 
                     <TabsContent value="nutri" className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div>
-                        <div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10"/></div>
-                        <div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]"/></div>
+                        <div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10" /></div>
+                        <div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10" /></div>
+                        <div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[100px]" /></div>
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -496,7 +496,7 @@ const ProfileSettings: React.FC = () => {
 
               <Card className="bg-white/5 backdrop-blur-md border-white/10 shadow-xl">
                 <CardContent className="space-y-4 pt-6">
-                  <div><Label className="text-gray-300">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5"/></div>
+                  <div><Label className="text-gray-300">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-black/20 border-white/10 text-white mt-1.5" /></div>
                 </CardContent>
               </Card>
             </div>
@@ -510,7 +510,7 @@ const ProfileSettings: React.FC = () => {
           </div>
         </form>
 
-        <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if(!open) setIsCropDialogOpen(false) }}>
+        <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if (!open) setIsCropDialogOpen(false) }}>
           <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-[500px] h-[550px] flex flex-col">
             <DialogHeader><DialogTitle>Ajustar Foto</DialogTitle><DialogDescription>Enquadre seu rosto.</DialogDescription></DialogHeader>
             <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4 border border-white/10">
