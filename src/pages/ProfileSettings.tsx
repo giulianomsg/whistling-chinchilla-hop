@@ -361,87 +361,95 @@ const ProfileSettings: React.FC = () => {
 
           {userRole === 'professional' && (
             <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
-              <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Award className="text-purple-400" /> Dados Profissionais</CardTitle></CardHeader>
+              <CardHeader>
+                <CardTitle className="text-foreground">Dados Profissionais</CardTitle>
+                <CardDescription className="text-muted-foreground">Especialidade e detalhes.</CardDescription>
+              </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-muted-foreground">Área de Atuação <span className="text-destructive">*</span></Label>
-                    <Select onValueChange={(v) => handleInputChange('specialty', v)} value={formData.specialty}>
+                    <Label className="text-muted-foreground">Tipo de Profissional</Label>
+                    <Select value={formData.specialty} onValueChange={v => handleInputChange('specialty', v)}>
                       <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent className="bg-popover border-border text-popover-foreground"><SelectItem value="personal_trainer">Personal Trainer</SelectItem><SelectItem value="nutritionist">Nutricionista</SelectItem></SelectContent>
+                      <SelectContent className="bg-popover text-popover-foreground border-border">
+                        <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
+                        <SelectItem value="nutritionist">Nutricionista</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
-                  <div><Label className="text-muted-foreground">Preço Consulta (R$)</Label><Input type="number" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                  <div><Label className="text-muted-foreground">Valor da Consulta (R$)</Label><Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
                 </div>
-                <div><Label className="text-muted-foreground">Biografia</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
-                <div><Label className="text-muted-foreground">Certificações</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                <div><Label className="text-muted-foreground">Biografia / Sobre Mim</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
+                <div><Label className="text-muted-foreground">Certificações (CRN / CREF)</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
               </CardContent>
             </Card>
           )}
 
           {userRole === 'client' && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-foreground flex items-center gap-2"><Shield className="text-green-400" /> Ficha de Anamnese</CardTitle>
-                  <CardDescription className="text-muted-foreground">Preencha com atenção. Seus dados ajudam a montar o treino ideal.</CardDescription>
+                  <CardTitle className="text-foreground flex items-center gap-2"><Activity className="text-primary" /> Ficha de Anamnese</CardTitle>
+                  <CardDescription className="text-muted-foreground">Informações de saúde essenciais.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="medical" className="w-full">
-                    <TabsList className="bg-muted border border-border w-full justify-start mb-6 h-auto flex-wrap">
-                      <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-red-500/20 data-[state=active]:text-red-400 text-muted-foreground"><HeartPulse className="w-4 h-4 mr-2" /> Clínico</TabsTrigger>
-                      <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400 text-muted-foreground"><Activity className="w-4 h-4 mr-2" /> Hábitos</TabsTrigger>
-                      <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px] data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 text-muted-foreground"><Apple className="w-4 h-4 mr-2" /> Nutrição</TabsTrigger>
+                  <Tabs defaultValue="general" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4 bg-muted/50">
+                      <TabsTrigger value="general" className="data-[state=active]:bg-background data-[state=active]:text-foreground">Geral</TabsTrigger>
+                      <TabsTrigger value="medical" className="data-[state=active]:bg-background data-[state=active]:text-foreground">Médico</TabsTrigger>
+                      <TabsTrigger value="habits" className="data-[state=active]:bg-background data-[state=active]:text-foreground">Hábitos</TabsTrigger>
+                      <TabsTrigger value="nutri" className="data-[state=active]:bg-background data-[state=active]:text-foreground">Nutri</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="medical" className="space-y-6">
-                      <div>
-                        <Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {COMMON_CONDITIONS.map(cond => (
-                            <label
-                              key={cond}
-                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-background border-border hover:bg-accent'}`}
-                            >
-                              <Checkbox
-                                checked={!!anamnesisForm.diagnosed_conditions?.includes(cond)}
-                                onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)}
-                                className="border-border"
-                              />
-                              <span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-400' : 'text-muted-foreground'}`}>{cond}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {COMMON_SYMPTOMS.map(sym => (
-                            <label
-                              key={sym}
-                              className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-background border-border hover:bg-accent'}`}
-                            >
-                              <Checkbox
-                                checked={!!anamnesisForm.symptoms?.includes(sym)}
-                                onCheckedChange={() => toggleAnamnesisList('symptoms', sym)}
-                                className="border-border"
-                              />
-                              <span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-400' : 'text-muted-foreground'}`}>{sym}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
+                    <TabsContent value="general" className="space-y-6 mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><Label className="text-muted-foreground mb-2 block">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
-                        <div><Label className="text-muted-foreground mb-2 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
-                        <div><Label className="text-muted-foreground mb-2 block">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
-                        <div><Label className="text-muted-foreground mb-2 block">Cirurgias / Alergias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
+                        <div>
+                          <Label className="text-muted-foreground mb-3 block">Condições Diagnosticadas</Label>
+                          <div className="grid grid-cols-1 gap-2">
+                            {COMMON_CONDITIONS.map(cond => (
+                              <label
+                                key={cond}
+                                className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-100 dark:bg-red-500/20 border-red-500 dark:border-red-500/50' : 'bg-card border-border hover:bg-accent'}`}
+                              >
+                                <Checkbox
+                                  checked={!!anamnesisForm.diagnosed_conditions?.includes(cond)}
+                                  onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)}
+                                  className="border-primary"
+                                />
+                                <span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}>{cond}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground mb-3 block">Sintomas Frequentes</Label>
+                          <div className="grid grid-cols-1 gap-2">
+                            {COMMON_SYMPTOMS.map(sym => (
+                              <label
+                                key={sym}
+                                className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-100 dark:bg-yellow-500/20 border-yellow-500 dark:border-yellow-500/50' : 'bg-card border-border hover:bg-accent'}`}
+                              >
+                                <Checkbox
+                                  checked={!!anamnesisForm.symptoms?.includes(sym)}
+                                  onCheckedChange={() => toggleAnamnesisList('symptoms', sym)}
+                                  className="border-primary"
+                                />
+                                <span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-600 dark:text-yellow-400' : 'text-muted-foreground'}`}>{sym}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="habits" className="space-y-6">
+                    <TabsContent value="medical" className="space-y-6 mt-6">
+                      <div><Label className="text-muted-foreground mb-2 block">Histórico Médico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
+                      <div><Label className="text-muted-foreground mb-2 block">Medicamentos</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
+                      <div><Label className="text-muted-foreground mb-2 block">Lesões / Dores</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
+                      <div><Label className="text-muted-foreground mb-2 block">Cirurgias / Alergias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-background border-border mt-1.5 min-h-[80px]" /></div>
+                    </TabsContent>
+
+                    <TabsContent value="habits" className="space-y-6 mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex items-center justify-between bg-background p-4 rounded border border-border">
                           <Label className="text-muted-foreground">Fumante?</Label>
@@ -488,7 +496,7 @@ const ProfileSettings: React.FC = () => {
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="nutri" className="space-y-6">
+                    <TabsContent value="nutri" className="space-y-6 mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><Label className="text-muted-foreground mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-background border-border" /></div>
                         <div><Label className="text-muted-foreground mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-background border-border" /></div>
@@ -504,7 +512,7 @@ const ProfileSettings: React.FC = () => {
                   <div><Label className="text-muted-foreground">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
                 </CardContent>
               </Card>
-            </div>
+            </div >
           )}
 
           <div className="flex justify-end pt-4 border-t border-border">
@@ -513,7 +521,7 @@ const ProfileSettings: React.FC = () => {
               Salvar Tudo
             </Button>
           </div>
-        </form>
+        </form >
 
         <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if (!open) setIsCropDialogOpen(false) }}>
           <DialogContent className="bg-popover border-border text-popover-foreground sm:max-w-[500px] h-[550px] flex flex-col">
@@ -527,8 +535,8 @@ const ProfileSettings: React.FC = () => {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
 

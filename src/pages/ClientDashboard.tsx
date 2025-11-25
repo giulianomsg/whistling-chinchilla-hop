@@ -228,7 +228,7 @@ const ClientDashboard: React.FC = () => {
 
         {/* Seção de Gamificação */}
         <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
-          <Card className="bg-gradient-to-r from-indigo-900/80 to-blue-900/80 border-border border shadow-2xl overflow-hidden relative">
+          <Card className="bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-900/80 dark:to-blue-900/80 border-border border shadow-2xl overflow-hidden relative">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl"></div>
             <CardContent className="p-6">
               <div className="flex items-center gap-6">
@@ -322,7 +322,7 @@ const ClientDashboard: React.FC = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Button onClick={() => navigate('/app/my-workout')} className="h-24 flex-col bg-card hover:bg-accent border border-border" variant="ghost">
-                    <Dumbbell className="h-8 w-8 mb-2 text-green-400" />
+                    <Dumbbell className="h-8 w-8 mb-2 text-green-600 dark:text-green-400" />
                     <div className="text-center">
                       <div className="font-medium text-foreground">Meu Treino</div>
                       <div className="text-xs text-muted-foreground">{clientWorkout ? 'Ver plano' : 'Aguardando'}</div>
@@ -330,7 +330,7 @@ const ClientDashboard: React.FC = () => {
                   </Button>
 
                   <Button onClick={() => navigate('/app/my-meal-plan')} className="h-24 flex-col bg-card hover:bg-accent border border-border" variant="ghost">
-                    <Utensils className="h-8 w-8 mb-2 text-orange-400" />
+                    <Utensils className="h-8 w-8 mb-2 text-orange-600 dark:text-orange-400" />
                     <div className="text-center">
                       <div className="font-medium text-foreground">Minha Dieta</div>
                       <div className="text-xs text-muted-foreground">{clientMealPlan ? 'Ver plano' : 'Aguardando'}</div>
@@ -339,32 +339,32 @@ const ClientDashboard: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                  <Card className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-blue-500/20">
+                  <Card className="bg-blue-50 dark:bg-gradient-to-r dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-500/20">
                     <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-blue-300 text-base">
+                      <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300 text-base">
                         <TrendingUp className="h-5 w-5" /> Seu Progresso
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-blue-200/70">Sessões recentes:</span>
-                        <span className="font-bold text-blue-100">{stats.completedSessions}</span>
+                        <span className="text-blue-600/70 dark:text-blue-200/70">Sessões recentes:</span>
+                        <span className="font-bold text-blue-800 dark:text-blue-100">{stats.completedSessions}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-200/70">Tempo médio:</span>
-                        <span className="font-bold text-blue-100">{stats.averageDuration} min</span>
+                        <span className="text-blue-600/70 dark:text-blue-200/70">Tempo médio:</span>
+                        <span className="font-bold text-blue-800 dark:text-blue-100">{stats.averageDuration} min</span>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border-green-500/20">
+                  <Card className="bg-green-50 dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-500/20">
                     <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-green-300 text-base">
+                      <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300 text-base">
                         <Activity className="h-5 w-5" /> Motivação
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-green-200/70 text-sm">
+                      <p className="text-green-700/70 dark:text-green-200/70 text-sm">
                         Você está indo muito bem! Mantenha o foco e os resultados virão.
                       </p>
                     </CardContent>
@@ -379,7 +379,7 @@ const ClientDashboard: React.FC = () => {
             <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Timer className="h-5 w-5 text-orange-400" /> Histórico Recente
+                  <Timer className="h-5 w-5 text-orange-600 dark:text-orange-400" /> Histórico Recente
                 </CardTitle>
               </CardHeader>
               <CardContent>

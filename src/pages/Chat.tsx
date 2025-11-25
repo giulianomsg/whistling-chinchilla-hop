@@ -202,7 +202,7 @@ const ChatArea: React.FC<{
     }
     if (msg.message_type === 'file' && msg.file_url) {
       return (
-        <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${isOwn ? 'bg-black/20 border-white/10 hover:bg-black/30' : 'bg-muted border-border hover:bg-accent'}`}>
+        <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${isOwn ? 'bg-primary-foreground/10 border-primary-foreground/20 hover:bg-primary-foreground/20' : 'bg-muted border-border hover:bg-accent'}`}>
           <div className="p-2 bg-background/50 rounded-full"><FileText className="h-5 w-5" /></div>
           <div className="flex-1 min-w-0"><p className="text-sm font-medium truncate max-w-[150px]">{msg.content}</p><p className="text-[10px] opacity-70">Clique para baixar</p></div>
           <Download className="h-4 w-4 opacity-70" />

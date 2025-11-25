@@ -107,10 +107,10 @@ const ProfessionalDashboard: React.FC = () => {
 
   const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'started': return { className: 'bg-green-500/20 text-green-400 border-green-500/50', icon: <Play className="h-3 w-3" />, text: 'Treinando' }
-      case 'paused': return { className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50', icon: <Pause className="h-3 w-3" />, text: 'Pausado' }
-      case 'completed': return { className: 'bg-blue-500/20 text-blue-400 border-blue-500/50', icon: <CheckCircle className="h-3 w-3" />, text: 'Concluído' }
-      default: return { className: 'bg-red-500/20 text-red-400 border-red-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Abandonado' }
+      case 'started': return { className: 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/50', icon: <Play className="h-3 w-3" />, text: 'Treinando' }
+      case 'paused': return { className: 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/50', icon: <Pause className="h-3 w-3" />, text: 'Pausado' }
+      case 'completed': return { className: 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-500/50', icon: <CheckCircle className="h-3 w-3" />, text: 'Concluído' }
+      default: return { className: 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Abandonado' }
     }
   }
 
@@ -134,16 +134,16 @@ const ProfessionalDashboard: React.FC = () => {
         {/* Métricas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-600 dark:text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Lista de Atividades Recentes */}
           <div className="lg:col-span-2">
             <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
-              <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-600 dark:text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
               <CardContent>
                 {recentActivities.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">Nenhuma atividade recente.</div>
@@ -178,34 +178,34 @@ const ProfessionalDashboard: React.FC = () => {
 
           {/* RANKING DE ALUNOS (NOVA FUNCIONALIDADE) */}
           <div className="lg:col-span-1">
-            <Card className="bg-gradient-to-b from-slate-900/80 to-black/40 border-border shadow-xl">
+            <Card className="bg-slate-50 dark:bg-gradient-to-b dark:from-slate-900/80 dark:to-black/40 border-border shadow-xl">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-yellow-400 animate-pulse" /> Ranking de XP
+                <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400 animate-pulse" /> Ranking de XP
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {rankedClients.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">Sem dados de ranking.</div>
+                  <div className="text-center py-8 text-muted-foreground">Sem dados de ranking.</div>
                 ) : (
                   <div className="space-y-4">
                     {rankedClients.map((client, index) => (
-                      <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
-                        <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-gray-500">
-                          {index === 0 ? <Medal className="h-6 w-6 text-yellow-400 mx-auto" /> :
-                            index === 1 ? <Medal className="h-6 w-6 text-gray-300 mx-auto" /> :
+                      <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                        <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-muted-foreground">
+                          {index === 0 ? <Medal className="h-6 w-6 text-yellow-500 dark:text-yellow-400 mx-auto" /> :
+                            index === 1 ? <Medal className="h-6 w-6 text-slate-400 dark:text-gray-300 mx-auto" /> :
                               index === 2 ? <Medal className="h-6 w-6 text-amber-600 mx-auto" /> :
                                 `#${index + 1}`}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-center">
-                            <span className="font-medium text-white truncate">{client.full_name}</span>
+                            <span className="font-medium text-slate-900 dark:text-white truncate">{client.full_name}</span>
                             <span className="text-xs font-bold text-primary">{client.current_xp || 0} XP</span>
                           </div>
-                          <div className="w-full bg-white/10 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                          <div className="w-full bg-slate-200 dark:bg-white/10 h-1.5 rounded-full mt-1.5 overflow-hidden">
                             <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-full" style={{ width: `${Math.min(100, ((client.current_xp % 1000) / 1000) * 100)}%` }}></div>
                           </div>
-                          <p className="text-[10px] text-gray-400 mt-1">Nível {client.level || 1}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1">Nível {client.level || 1}</p>
                         </div>
                       </div>
                     ))}
