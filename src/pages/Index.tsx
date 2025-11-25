@@ -14,20 +14,20 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
-            <div className="p-4 bg-blue-600 rounded-full">
-              <Dumbbell className="h-12 w-12 text-white" />
+            <div className="p-4 bg-primary rounded-full">
+              <Dumbbell className="h-12 w-12 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl font-bold text-foreground mb-4">
             CapiFit
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Sua plataforma completa para fitness e nutrição. Conecte-se com profissionais 
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Sua plataforma completa para fitness e nutrição. Conecte-se com profissionais
             e alcance seus objetivos de saúde.
           </p>
           <div className="mt-8 space-x-4">
@@ -45,12 +45,12 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-600" />
+                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Conexão
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Conecte-se com profissionais de fitness e nutrição qualificados
               </p>
             </CardContent>
@@ -59,12 +59,12 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+                <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
                 Progresso
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Acompanhe sua evolução com planos personalizados e métricas detalhadas
               </p>
             </CardContent>
@@ -73,12 +73,12 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Dumbbell className="h-5 w-5 text-orange-600" />
+                <Dumbbell className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 Treinos
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Planos de treino elaborados por profissionais para seus objetivos
               </p>
             </CardContent>
@@ -87,12 +87,12 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-purple-600" />
+                <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 Segurança
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Seus dados protegidos com as melhores práticas de segurança
               </p>
             </CardContent>
@@ -100,11 +100,11 @@ const Index = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-white rounded-lg shadow-lg p-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="text-center bg-card border border-border rounded-lg shadow-lg p-12">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
             Pronto para transformar sua vida?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-muted-foreground mb-8">
             Junte-se a milhares de usuários que já alcançaram seus objetivos
           </p>
           <Button size="lg" asChild>

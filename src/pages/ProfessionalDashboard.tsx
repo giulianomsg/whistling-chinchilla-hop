@@ -178,9 +178,9 @@ const ProfessionalDashboard: React.FC = () => {
 
           {/* RANKING DE ALUNOS (NOVA FUNCIONALIDADE) */}
           <div className="lg:col-span-1">
-            <Card className="bg-slate-50 dark:bg-gradient-to-b dark:from-slate-900/80 dark:to-black/40 border-border shadow-xl">
+            <Card className="bg-card border-border shadow-xl">
               <CardHeader>
-                <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400 animate-pulse" /> Ranking de XP
                 </CardTitle>
               </CardHeader>
@@ -190,7 +190,7 @@ const ProfessionalDashboard: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     {rankedClients.map((client, index) => (
-                      <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 transition-colors">
+                      <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
                         <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-muted-foreground">
                           {index === 0 ? <Medal className="h-6 w-6 text-yellow-500 dark:text-yellow-400 mx-auto" /> :
                             index === 1 ? <Medal className="h-6 w-6 text-slate-400 dark:text-gray-300 mx-auto" /> :
@@ -199,10 +199,10 @@ const ProfessionalDashboard: React.FC = () => {
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-center">
-                            <span className="font-medium text-slate-900 dark:text-white truncate">{client.full_name}</span>
+                            <span className="font-medium text-foreground truncate">{client.full_name}</span>
                             <span className="text-xs font-bold text-primary">{client.current_xp || 0} XP</span>
                           </div>
-                          <div className="w-full bg-slate-200 dark:bg-white/10 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                          <div className="w-full bg-muted h-1.5 rounded-full mt-1.5 overflow-hidden">
                             <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-full" style={{ width: `${Math.min(100, ((client.current_xp % 1000) / 1000) * 100)}%` }}></div>
                           </div>
                           <p className="text-[10px] text-muted-foreground mt-1">Nível {client.level || 1}</p>

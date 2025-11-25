@@ -23,7 +23,7 @@ const ClientMealPlan: React.FC = () => {
           .from('client_meal_plans')
           .select(`*, meal_plan:meal_plans(*)`)
           .eq('client_id', user.id).eq('status', 'active').single()
-        
+
         setClientMealPlan(planData)
         if (planData) {
           const { data: items } = await supabase
@@ -33,7 +33,7 @@ const ClientMealPlan: React.FC = () => {
             .order('day_number').order('meal_order')
           setMealPlanItems((items || []).filter(i => i.food !== null))
         }
-      } catch (error) { console.error(error) } 
+      } catch (error) { console.error(error) }
       finally { setLoading(false) }
     }
     fetchData()
@@ -44,10 +44,10 @@ const ClientMealPlan: React.FC = () => {
   if (!clientMealPlan) {
     return (
       <div className="min-h-screen bg-background py-8">
-        <div className="max-w-4xl mx-auto px-4 text-center py-12 bg-white/5 rounded-xl border border-white/10">
-          <AlertCircle className="h-16 w-16 text-gray-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Sem dieta ativa</h2>
-          <p className="text-gray-400 mb-6">Solicite um plano alimentar ao seu nutricionista.</p>
+        <div className="max-w-4xl mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
+          <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-foreground mb-2">Sem dieta ativa</h2>
+          <p className="text-muted-foreground mb-6">Solicite um plano alimentar ao seu nutricionista.</p>
         </div>
       </div>
     )
@@ -57,7 +57,7 @@ const ClientMealPlan: React.FC = () => {
     return (
       <div className="min-h-screen bg-background py-8">
         <div className="max-w-6xl mx-auto px-4">
-          <Button variant="outline" onClick={() => setShowDetailView(false)} className="mb-6 border-white/10 text-gray-300 hover:text-white hover:bg-white/10">
+          <Button variant="outline" onClick={() => setShowDetailView(false)} className="mb-6 border-border text-muted-foreground hover:text-foreground hover:bg-accent">
             ← Voltar ao Resumo
           </Button>
           <MealPlanDetailView clientMealPlan={clientMealPlan} />
@@ -71,30 +71,30 @@ const ClientMealPlan: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-500/20 rounded-lg"><Utensils className="h-6 w-6 text-green-400" /></div>
+            <div className="p-3 bg-green-500/10 rounded-lg"><Utensils className="h-6 w-6 text-green-500" /></div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Minha Dieta</h1>
-              <p className="text-gray-400">Seu plano nutricional</p>
+              <h1 className="text-3xl font-bold text-foreground">Minha Dieta</h1>
+              <p className="text-muted-foreground">Seu plano nutricional</p>
             </div>
           </div>
-          <Button onClick={() => setShowDetailView(true)} className="bg-green-500 text-black hover:bg-green-400 font-semibold">
+          <Button onClick={() => setShowDetailView(true)} className="bg-green-600 text-white hover:bg-green-500 font-semibold">
             <Maximize2 className="h-4 w-4 mr-2" /> Ver Detalhes
           </Button>
         </div>
 
-        <Card className="mb-8 bg-white/5 border-white/10 backdrop-blur-md">
-          <CardHeader><CardTitle className="text-white flex gap-2"><Target className="text-green-400"/> {clientMealPlan.meal_plan.name}</CardTitle></CardHeader>
+        <Card className="mb-8 bg-card border-border backdrop-blur-md">
+          <CardHeader><CardTitle className="text-foreground flex gap-2"><Target className="text-green-500" /> {clientMealPlan.meal_plan.name}</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="flex items-center gap-2 text-gray-300"><Calendar className="h-4 w-4 text-gray-500"/> Início: {new Date(clientMealPlan.start_date).toLocaleDateString('pt-BR')}</div>
-              <div className="flex items-center gap-2 text-gray-300"><Target className="h-4 w-4 text-gray-500"/> Meta: {clientMealPlan.meal_plan.daily_calories_target} kcal</div>
-              <div className="flex items-center gap-2 text-gray-300"><CheckCircle className="h-4 w-4 text-green-500"/> Status: <Badge variant="outline" className="ml-2 border-green-500/50 text-green-400">Ativo</Badge></div>
+              <div className="flex items-center gap-2 text-muted-foreground"><Calendar className="h-4 w-4 text-muted-foreground" /> Início: {new Date(clientMealPlan.start_date).toLocaleDateString('pt-BR')}</div>
+              <div className="flex items-center gap-2 text-muted-foreground"><Target className="h-4 w-4 text-muted-foreground" /> Meta: {clientMealPlan.meal_plan.daily_calories_target} kcal</div>
+              <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle className="h-4 w-4 text-green-500" /> Status: <Badge variant="outline" className="ml-2 border-green-500/50 text-green-600 dark:text-green-400">Ativo</Badge></div>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              <div className="bg-black/20 p-3 rounded text-center"><p className="text-xl font-bold text-orange-400">{clientMealPlan.meal_plan.daily_calories_target}</p><p className="text-xs text-gray-500">Kcal</p></div>
-              <div className="bg-black/20 p-3 rounded text-center"><p className="text-xl font-bold text-blue-400">{clientMealPlan.meal_plan.daily_protein_target}g</p><p className="text-xs text-gray-500">Prot</p></div>
-              <div className="bg-black/20 p-3 rounded text-center"><p className="text-xl font-bold text-yellow-400">{clientMealPlan.meal_plan.daily_carbs_target}g</p><p className="text-xs text-gray-500">Carb</p></div>
-              <div className="bg-black/20 p-3 rounded text-center"><p className="text-xl font-bold text-red-400">{clientMealPlan.meal_plan.daily_fat_target}g</p><p className="text-xs text-gray-500">Gord</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-orange-500">{clientMealPlan.meal_plan.daily_calories_target}</p><p className="text-xs text-muted-foreground">Kcal</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-blue-500">{clientMealPlan.meal_plan.daily_protein_target}g</p><p className="text-xs text-muted-foreground">Prot</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-yellow-500">{clientMealPlan.meal_plan.daily_carbs_target}g</p><p className="text-xs text-muted-foreground">Carb</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-red-500">{clientMealPlan.meal_plan.daily_fat_target}g</p><p className="text-xs text-muted-foreground">Gord</p></div>
             </div>
           </CardContent>
         </Card>

@@ -13,8 +13,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
-import { 
-  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, 
+import {
+  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils,
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
@@ -81,7 +81,7 @@ const analyzeHealth = (anamnesis: any, latestBiometrics: any) => {
   if (safeAnamnesis.sleep_quality === 'bad') wellness -= 15
   if (Number(safeAnamnesis.water_intake || 0) < 1.5) wellness -= 10
   if (safeAnamnesis.activity_level === 'sedentary') wellness -= 15
-  
+
   return { risks, wellness: Math.max(0, wellness) }
 }
 
@@ -144,7 +144,7 @@ const ClientDetails: React.FC = () => {
         const cMeals = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cAssessments = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
         const cPhotos = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
-        
+
         // NOVO: Busca de Histórico de Sessões
         const cHistory = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', id).order('created_at', { ascending: false }).limit(20)
 
@@ -152,7 +152,7 @@ const ClientDetails: React.FC = () => {
         const myMealPlans = await supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id)
 
         if (profileRes.error) throw profileRes.error
-        
+
         setClientProfile(profileRes.data)
         setClientDetails(detailsRes.data)
         setClientWorkouts(cWorkouts.data || [])
@@ -166,14 +166,14 @@ const ClientDetails: React.FC = () => {
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' ? JSON.parse(detailsRes.data.anamnesis_data) : detailsRes.data.anamnesis_data
           setAnamnesisForm(prev => ({
-             ...prev, 
-             ...data,
-             diagnosed_conditions: data.diagnosed_conditions || [],
-             symptoms: data.symptoms || [],
-             work_activities: data.work_activities || []
+            ...prev,
+            ...data,
+            diagnosed_conditions: data.diagnosed_conditions || [],
+            symptoms: data.symptoms || [],
+            work_activities: data.work_activities || []
           }))
         }
-      } catch (error) { console.error(error); showError('Erro ao carregar dados') } 
+      } catch (error) { console.error(error); showError('Erro ao carregar dados') }
       finally { setLoading(false) }
     }
     loadData()
@@ -212,7 +212,7 @@ const ClientDetails: React.FC = () => {
       else setClientMealPlans(prev => prev.filter(i => i.id !== itemId))
     } catch (err) { showError('Erro ao remover') }
   }
-  
+
   const handleSaveAnamnesis = async () => {
     try {
       const { error } = await supabase.from('client_details').upsert({ profile_id: id, anamnesis_data: anamnesisForm, updated_at: new Date().toISOString() })
@@ -222,7 +222,7 @@ const ClientDetails: React.FC = () => {
   }
 
   const updateAnamnesis = (field: string, value: any) => setAnamnesisForm(prev => ({ ...prev, [field]: value }))
-  
+
   const toggleAnamnesisList = (field: 'diagnosed_conditions' | 'symptoms' | 'work_activities', item: string) => {
     setAnamnesisForm(prev => {
       const list = prev[field] || []
@@ -247,7 +247,7 @@ const ClientDetails: React.FC = () => {
   const handleSaveAssessment = async (status: 'draft' | 'completed') => {
     try {
       const calculated = calculateBiometrics({
-        gender: newAssessment.gender as 'male'|'female', age: Number(newAssessment.age),
+        gender: newAssessment.gender as 'male' | 'female', age: Number(newAssessment.age),
         weight: Number(newAssessment.weight), height: Number(newAssessment.height),
         skinfolds: Object.fromEntries(Object.entries(newAssessment.skinfolds).map(([k, v]) => [k, Number(v)]))
       })
@@ -280,7 +280,7 @@ const ClientDetails: React.FC = () => {
     } catch (e) { showError('Erro ao excluir') }
   }
 
-  const updateNested = (section: 'skinfolds'|'circumferences', field: string, value: string) => {
+  const updateNested = (section: 'skinfolds' | 'circumferences', field: string, value: string) => {
     setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
   }
 
@@ -288,36 +288,36 @@ const ClientDetails: React.FC = () => {
     if (!newPhoto.file || !user) return
     setUploadingPhoto(true)
     try {
-        const fileExt = newPhoto.file.name.split('.').pop()
-        const fileName = `${id}/${Date.now()}.${fileExt}`
-        const { error: uploadError } = await supabase.storage.from('progress-photos').upload(fileName, newPhoto.file)
-        if (uploadError) throw uploadError
-        const { data: { publicUrl } } = supabase.storage.from('progress-photos').getPublicUrl(fileName)
-        const { error: dbError } = await supabase.from('progress_photos').insert({
-            client_id: id, photo_url: publicUrl, date: newPhoto.date, notes: newPhoto.notes
-        })
-        if (dbError) throw dbError
-        showSuccess('Foto adicionada!')
-        setIsAddPhotoOpen(false)
-        setNewPhoto({ date: new Date().toISOString().split('T')[0], notes: '', file: null })
-        const { data } = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
-        setProgressPhotos(data || [])
+      const fileExt = newPhoto.file.name.split('.').pop()
+      const fileName = `${id}/${Date.now()}.${fileExt}`
+      const { error: uploadError } = await supabase.storage.from('progress-photos').upload(fileName, newPhoto.file)
+      if (uploadError) throw uploadError
+      const { data: { publicUrl } } = supabase.storage.from('progress-photos').getPublicUrl(fileName)
+      const { error: dbError } = await supabase.from('progress_photos').insert({
+        client_id: id, photo_url: publicUrl, date: newPhoto.date, notes: newPhoto.notes
+      })
+      if (dbError) throw dbError
+      showSuccess('Foto adicionada!')
+      setIsAddPhotoOpen(false)
+      setNewPhoto({ date: new Date().toISOString().split('T')[0], notes: '', file: null })
+      const { data } = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
+      setProgressPhotos(data || [])
     } catch (e: any) { showError('Erro no upload: ' + e.message) }
     finally { setUploadingPhoto(false) }
   }
 
   const handleDeletePhoto = async (photoId: string) => {
-      if (!confirm('Excluir foto?')) return
-      try {
-          await supabase.from('progress_photos').delete().eq('id', photoId)
-          showSuccess('Foto removida.')
-          setProgressPhotos(prev => prev.filter(p => p.id !== photoId))
-      } catch (e) { showError('Erro ao excluir') }
+    if (!confirm('Excluir foto?')) return
+    try {
+      await supabase.from('progress_photos').delete().eq('id', photoId)
+      showSuccess('Foto removida.')
+      setProgressPhotos(prev => prev.filter(p => p.id !== photoId))
+    } catch (e) { showError('Erro ao excluir') }
   }
 
   const formatDuration = (sec: number) => {
-     const m = Math.floor(sec / 60)
-     return m > 60 ? `${Math.floor(m/60)}h ${m%60}min` : `${m} min`
+    const m = Math.floor(sec / 60)
+    return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
   }
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
@@ -329,31 +329,31 @@ const ClientDetails: React.FC = () => {
   const currentLevel = clientProfile?.level || 1
   const xpProgress = ((currentXP % 1000) / 1000) * 100
 
-  const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight/((latestAssessment.height/100)**2)).toFixed(2)) : 0 })
+  const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight / ((latestAssessment.height / 100) ** 2)).toFixed(2)) : 0 })
 
   const getRiskColor = (level: string) => {
-    if (level === 'high') return 'text-red-500 border-red-500/30 bg-red-500/10'
-    if (level === 'medium') return 'text-yellow-500 border-yellow-500/30 bg-yellow-500/10'
-    return 'text-green-500 border-green-500/30 bg-green-500/10'
+    if (level === 'high') return 'text-red-600 dark:text-red-500 border-red-500/30 bg-red-500/10'
+    if (level === 'medium') return 'text-yellow-600 dark:text-yellow-500 border-yellow-500/30 bg-yellow-500/10'
+    return 'text-green-600 dark:text-green-500 border-green-500/30 bg-green-500/10'
   }
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8 w-full overflow-x-hidden">
       <div className="w-full px-4 md:max-w-7xl md:mx-auto md:px-8">
-        
+
         <div className="mb-6">
-            <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-gray-400 hover:text-white pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
+          <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-muted-foreground hover:text-foreground pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
           <div className="w-full overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-            <TabsList className="bg-white/5 border border-white/10 justify-start p-1 flex min-w-max h-10">
-              <TabsTrigger value="dashboard" className="px-4 py-1.5 text-sm"><LayoutDashboard className="w-4 h-4 mr-2"/> Visão Geral</TabsTrigger>
-              <TabsTrigger value="photos" className="px-4 py-1.5 text-sm"><Camera className="w-4 h-4 mr-2"/> Fotos</TabsTrigger>
+            <TabsList className="bg-muted border border-border justify-start p-1 flex min-w-max h-10">
+              <TabsTrigger value="dashboard" className="px-4 py-1.5 text-sm"><LayoutDashboard className="w-4 h-4 mr-2" /> Visão Geral</TabsTrigger>
+              <TabsTrigger value="photos" className="px-4 py-1.5 text-sm"><Camera className="w-4 h-4 mr-2" /> Fotos</TabsTrigger>
               <TabsTrigger value="workouts" className="px-4 py-1.5 text-sm">Treinos</TabsTrigger>
               <TabsTrigger value="meal-plans" className="px-4 py-1.5 text-sm">Dietas</TabsTrigger>
-              <TabsTrigger value="biometrics" className="px-4 py-1.5 text-sm"><Scale className="w-4 h-4 mr-2"/> Biometria</TabsTrigger>
-              <TabsTrigger value="anamnesis" className="px-4 py-1.5 text-sm"><FileText className="w-4 h-4 mr-2"/> Anamnese</TabsTrigger>
+              <TabsTrigger value="biometrics" className="px-4 py-1.5 text-sm"><Scale className="w-4 h-4 mr-2" /> Biometria</TabsTrigger>
+              <TabsTrigger value="anamnesis" className="px-4 py-1.5 text-sm"><FileText className="w-4 h-4 mr-2" /> Anamnese</TabsTrigger>
               <TabsTrigger value="history" className="px-4 py-1.5 text-sm">Histórico</TabsTrigger>
             </TabsList>
           </div>
@@ -361,27 +361,27 @@ const ClientDetails: React.FC = () => {
           {/* DASHBOARD */}
           <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-              
+
               {/* 1. PERFIL */}
-              <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 border-white/10 shadow-xl relative overflow-hidden w-full">
-                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary"/></div>
+              <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 bg-white border-border shadow-xl relative overflow-hidden w-full">
+                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary" /></div>
                 <CardContent className="pt-8 px-6 md:px-10 pb-8">
                   <div className="flex flex-col md:flex-row gap-8 items-center md:items-start w-full">
                     <div className="relative flex-shrink-0 text-center">
-                      <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-black">
-                          {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-gray-400">{clientProfile?.full_name?.[0]}</div>}
+                      <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-muted">
+                        {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-muted-foreground">{clientProfile?.full_name?.[0]}</div>}
                       </div>
                       <Badge className="mt-2 bg-yellow-500 text-black font-bold border-none px-4 py-1 hover:bg-yellow-400">Nível {currentLevel}</Badge>
                     </div>
                     <div className="flex-1 min-w-0 w-full text-center md:text-left">
-                      <h2 className="text-3xl font-bold text-white mb-2 truncate">{clientProfile?.full_name}</h2>
-                      <div className="flex flex-col md:flex-row items-center md:justify-start gap-4 text-sm text-gray-400 mb-6">
-                        <span className="flex items-center gap-1"><Mail className="w-4 h-4"/> {clientProfile?.email}</span>
-                        {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4"/> {clientProfile?.phone}</span>}
+                      <h2 className="text-3xl font-bold text-white dark:text-white text-gray-900 mb-2 truncate">{clientProfile?.full_name}</h2>
+                      <div className="flex flex-col md:flex-row items-center md:justify-start gap-4 text-sm text-muted-foreground mb-6">
+                        <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {clientProfile?.email}</span>
+                        {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4" /> {clientProfile?.phone}</span>}
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-primary"><span>XP ({currentXP % 1000}/1000)</span></div><Progress value={xpProgress} className="h-2 bg-white/10" /></div>
-                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-green-400"><span>Bem-Estar: {healthAnalysis.wellness}/100</span></div><Progress value={healthAnalysis.wellness} className="h-2 bg-white/10" indicatorClassName="bg-green-500"/></div>
+                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-primary"><span>XP ({currentXP % 1000}/1000)</span></div><Progress value={xpProgress} className="h-2 bg-muted" /></div>
+                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-green-600 dark:text-green-400"><span>Bem-Estar: {healthAnalysis.wellness}/100</span></div><Progress value={healthAnalysis.wellness} className="h-2 bg-muted" indicatorClassName="bg-green-500" /></div>
                       </div>
                     </div>
                   </div>
@@ -389,136 +389,136 @@ const ClientDetails: React.FC = () => {
               </Card>
 
               {/* 2. AÇÕES RÁPIDAS */}
-              <Card className="bg-white/5 border-white/10 w-full h-full">
-                <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-gray-400 font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
+              <Card className="bg-card border-border w-full h-full">
+                <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
                 <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-blue-500/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-orange-500/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-green-500/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 hover:border-purple-500/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-400 mb-1 group-hover:scale-110 transition-transform"/> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-blue-500/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-orange-500/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-green-500/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
+                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-purple-500/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
                 </CardContent>
               </Card>
 
               {/* 3. ANÁLISE DE SAÚDE */}
-              <Card className="bg-white/5 border-white/10 lg:col-span-3 w-full">
-                <CardHeader className="pb-4 px-6 pt-6 border-b border-white/5"><CardTitle className="text-white flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-400"/> Análise de Saúde</CardTitle></CardHeader>
+              <Card className="bg-card border-border lg:col-span-3 w-full">
+                <CardHeader className="pb-4 px-6 pt-6 border-b border-border"><CardTitle className="text-foreground flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-500" /> Análise de Saúde</CardTitle></CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                    <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3"/> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
                 </CardContent>
               </Card>
 
               {/* 4. MÉTRICAS VITAIS */}
               <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all"><div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-white">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-gray-500 font-normal">kg</span></p></div><Scale className="h-8 w-8 text-gray-500 opacity-50"/></div>
-                  <div className="bg-white/5 p-5 rounded-xl border border-white/10 flex justify-between items-center hover:bg-white/10 transition-all"><div><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-white">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-gray-500 font-normal">%</span></p></div><Activity className="h-8 w-8 text-gray-500 opacity-50"/></div>
-                  <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-900/10 border-green-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Treino</p><p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-400' : 'text-gray-500'}`}>{activeWorkout?.workout.name || 'Inativo'}</p></div><Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-gray-600'} opacity-50`}/></div>
-                  <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-900/10 border-orange-500/30' : 'bg-white/5 border-white/10'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Dieta</p><p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-400' : 'text-gray-500'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p></div><Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-gray-600'} opacity-50`}/></div>
+                <div className="bg-card p-5 rounded-xl border border-border flex justify-between items-center hover:bg-accent/50 transition-all"><div><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-foreground">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-muted-foreground font-normal">kg</span></p></div><Scale className="h-8 w-8 text-muted-foreground opacity-50" /></div>
+                <div className="bg-card p-5 rounded-xl border border-border flex justify-between items-center hover:bg-accent/50 transition-all"><div><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-foreground">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-muted-foreground font-normal">%</span></p></div><Activity className="h-8 w-8 text-muted-foreground opacity-50" /></div>
+                <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-500/10 border-green-500/30' : 'bg-card border-border'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Treino</p><p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>{activeWorkout?.workout.name || 'Inativo'}</p></div><Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-muted-foreground'} opacity-50`} /></div>
+                <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-500/10 border-orange-500/30' : 'bg-card border-border'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Dieta</p><p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-600 dark:text-orange-400' : 'text-muted-foreground'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p></div><Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-muted-foreground'} opacity-50`} /></div>
               </div>
             </div>
           </TabsContent>
 
           {/* --- FOTOS --- */}
           <TabsContent value="photos">
-            <Card className="bg-white/5 border-white/10 w-full">
-               <CardHeader className="flex flex-row items-center justify-between p-6">
-                  <CardTitle className="text-white text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-400"/> Galeria de Evolução</CardTitle>
-                  <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}><DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2"/> Add Foto</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({...newPhoto, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({...newPhoto, file: e.target.files?.[0] || null})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({...newPhoto, notes: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4"/> : 'Salvar'}</Button></div></DialogContent></Dialog>
-               </CardHeader>
-               <CardContent className="p-6">
-                  {progressPhotos.length === 0 ? <div className="text-center py-16 text-gray-500 border-dashed border border-white/10 rounded-lg">Nenhuma foto.</div> : (<div className="grid grid-cols-2 md:grid-cols-4 gap-6">{progressPhotos.map(photo => (<div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-white/10 aspect-[3/4] shadow-lg"><img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4"><span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span><Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4"/></Button></div></div>))}</div>)}
-               </CardContent>
+            <Card className="bg-card border-border w-full">
+              <CardHeader className="flex flex-row items-center justify-between p-6">
+                <CardTitle className="text-foreground text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-500" /> Galeria de Evolução</CardTitle>
+                <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}><DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2" /> Add Foto</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({ ...newPhoto, date: e.target.value })} className="bg-muted border-border text-foreground" /></div><div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({ ...newPhoto, file: e.target.files?.[0] || null })} className="bg-muted border-border text-foreground" /></div><div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({ ...newPhoto, notes: e.target.value })} className="bg-muted border-border text-foreground" /></div><Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4" /> : 'Salvar'}</Button></div></DialogContent></Dialog>
+              </CardHeader>
+              <CardContent className="p-6">
+                {progressPhotos.length === 0 ? <div className="text-center py-16 text-muted-foreground border-dashed border border-border rounded-lg">Nenhuma foto.</div> : (<div className="grid grid-cols-2 md:grid-cols-4 gap-6">{progressPhotos.map(photo => (<div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-border aspect-[3/4] shadow-lg"><img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4"><span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span><Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4" /></Button></div></div>))}</div>)}
+              </CardContent>
             </Card>
           </TabsContent>
 
           {/* --- ANAMNESE --- */}
           <TabsContent value="anamnesis">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-               <h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="text-primary"/> Anamnese Profissional</h2>
-               <Button onClick={handleSaveAnamnesis} className="bg-primary text-black hover:bg-primary/80 font-bold shadow-lg w-full sm:w-auto"><Save className="mr-2 h-4 w-4"/> Salvar Ficha</Button>
+              <h2 className="text-2xl font-bold text-foreground flex items-center gap-2"><FileText className="text-primary" /> Anamnese Profissional</h2>
+              <Button onClick={handleSaveAnamnesis} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold shadow-lg w-full sm:w-auto"><Save className="mr-2 h-4 w-4" /> Salvar Ficha</Button>
             </div>
             <Tabs defaultValue="medical" className="w-full">
-                <TabsList className="bg-black/20 border border-white/10 w-full justify-start h-auto flex-wrap mb-6">
-                    <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px]">Clínico</TabsTrigger>
-                    <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px]">Hábitos</TabsTrigger>
-                    <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px]">Nutrição</TabsTrigger>
-                </TabsList>
-                <TabsContent value="medical"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-8"><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span></div>))}</div></div><div><Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><Checkbox checked={anamnesisForm.symptoms?.includes(sym)} onCheckedChange={() => toggleAnamnesisList('symptoms', sym)} /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div><div><Label className="text-gray-300 mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-black/20 border-white/10 min-h-[80px]"/></div></div></CardContent></Card></TabsContent>
-                <TabsContent value="habits"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-black/20 p-4 rounded border border-white/5"><Label className="text-gray-300">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-gray-300 mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-gray-300 mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><Checkbox checked={anamnesisForm.work_activities?.includes(act)} onCheckedChange={() => toggleAnamnesisList('work_activities', act)}/><span className="text-sm text-gray-400">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
-                <TabsContent value="nutri"><Card className="bg-white/5 border-white/10"><CardContent className="p-6 space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-gray-300 mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-black/20 border-white/10"/></div><div><Label className="text-gray-300 mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-black/20 border-white/10"/></div></div><div><Label className="text-gray-300 mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-black/20 border-white/10 min-h-[120px]"/></div></CardContent></Card></TabsContent>
+              <TabsList className="bg-muted border border-border w-full justify-start h-auto flex-wrap mb-6">
+                <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px]">Clínico</TabsTrigger>
+                <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px]">Hábitos</TabsTrigger>
+                <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px]">Nutrição</TabsTrigger>
+              </TabsList>
+              <TabsContent value="medical"><Card className="bg-card border-border"><CardContent className="p-6 space-y-8"><div><Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-muted border-border hover:bg-accent'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-600 dark:text-red-200' : 'text-muted-foreground'}`}>{cond}</span></div>))}</div></div><div><Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-muted border-border hover:bg-accent'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><Checkbox checked={anamnesisForm.symptoms?.includes(sym)} onCheckedChange={() => toggleAnamnesisList('symptoms', sym)} /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-600 dark:text-yellow-200' : 'text-muted-foreground'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-muted-foreground mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-muted border-border min-h-[80px]" /></div><div><Label className="text-muted-foreground mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-muted border-border min-h-[80px]" /></div></div></CardContent></Card></TabsContent>
+              <TabsContent value="habits"><Card className="bg-card border-border"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-muted p-4 rounded border border-border"><Label className="text-muted-foreground">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-muted-foreground mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Selecione..." /></SelectTrigger><SelectContent className="bg-card text-foreground border-border"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-muted-foreground mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><Checkbox checked={anamnesisForm.work_activities?.includes(act)} onCheckedChange={() => toggleAnamnesisList('work_activities', act)} /><span className="text-sm text-muted-foreground">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
+              <TabsContent value="nutri"><Card className="bg-card border-border"><CardContent className="p-6 space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-muted-foreground mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-muted border-border" /></div><div><Label className="text-muted-foreground mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-muted border-border" /></div></div><div><Label className="text-muted-foreground mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-muted border-border min-h-[120px]" /></div></CardContent></Card></TabsContent>
             </Tabs>
           </TabsContent>
 
           {/* --- BIOMETRIA --- */}
           <TabsContent value="biometrics">
-            <Card className="bg-white/5 border-white/10 w-full">
+            <Card className="bg-card border-border w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
-                <CardTitle className="text-white text-xl">Histórico de Avaliações</CardTitle>
-                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-black hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2"/> Nova Avaliação</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({...newAssessment, date: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({...newAssessment, weight: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({...newAssessment, height: e.target.value})} className="bg-black/20 border-white/10 text-white"/></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({...newAssessment, age: Number(e.target.value)})} className="bg-black/20 border-white/10 text-white"/></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({...newAssessment, gender: v})}><SelectTrigger className="bg-black/20 border-white/10 text-white"><SelectValue/></SelectTrigger><SelectContent className="bg-slate-800 text-white border-white/10"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{SKINFOLD_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-gray-400 uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0,3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-black/20 border-white/10 text-white h-9"/></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-white/10 gap-3 flex-col sm:flex-row bg-black/20"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
+                <CardTitle className="text-foreground text-xl">Histórico de Avaliações</CardTitle>
+                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2" /> Nova Avaliação</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({ ...newAssessment, date: e.target.value })} className="bg-muted border-border text-foreground" /></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({ ...newAssessment, weight: e.target.value })} className="bg-muted border-border text-foreground" /></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({ ...newAssessment, height: e.target.value })} className="bg-muted border-border text-foreground" /></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({ ...newAssessment, age: Number(e.target.value) })} className="bg-muted border-border text-foreground" /></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({ ...newAssessment, gender: v })}><SelectTrigger className="bg-muted border-border text-foreground"><SelectValue /></SelectTrigger><SelectContent className="bg-card text-foreground border-border"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-muted-foreground uppercase">{SKINFOLD_LABELS[k]?.slice(0, 3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-muted border-border text-foreground h-9" /></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-muted-foreground uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0, 3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-muted border-border text-foreground h-9" /></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-border gap-3 flex-col sm:flex-row bg-muted/50"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-border text-foreground hover:bg-accent w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
               </CardHeader>
               <CardContent className="p-6">
-                {assessments.length === 0 ? <div className="text-center text-gray-500 py-12">Nenhuma avaliação registrada.</div> : (
+                {assessments.length === 0 ? <div className="text-center text-muted-foreground py-12">Nenhuma avaliação registrada.</div> : (
                   <div className="space-y-4">
                     {assessments.map((a) => {
                       const s = a.measurements?.status || 'completed'
-                      const i = classifyBMI(Number((a.weight/((a.height/100)**2)).toFixed(2)))
+                      const i = classifyBMI(Number((a.weight / ((a.height / 100) ** 2)).toFixed(2)))
                       return (
-                        <div key={a.id} className={`bg-black/20 p-5 rounded-xl border ${s==='draft' ? 'border-yellow-500/30' : 'border-white/5'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
+                        <div key={a.id} className={`bg-muted/50 p-5 rounded-xl border ${s === 'draft' ? 'border-yellow-500/30' : 'border-border'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
                           <div className="flex items-center gap-5 w-full md:w-auto">
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${s==='draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}><span>{new Date(a.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(a.date).toLocaleString('default',{month:'short'})}</span></div>
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${s === 'draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}><span>{new Date(a.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(a.date).toLocaleString('default', { month: 'short' })}</span></div>
                             <div className="flex-1">
-                              <div className="flex items-center gap-3"><span className="text-white font-bold text-xl">{a.weight} kg</span><Badge variant="outline" className={`text-xs ${i.color} border-current`}>{i.label}</Badge></div>
-                              <div className="text-sm text-gray-400 flex gap-4 mt-1"><span>Gord: {a.body_fat_percentage}%</span><span>Massa: {a.muscle_mass}kg</span></div>
+                              <div className="flex items-center gap-3"><span className="text-foreground font-bold text-xl">{a.weight} kg</span><Badge variant="outline" className={`text-xs ${i.color} border-current`}>{i.label}</Badge></div>
+                              <div className="text-sm text-muted-foreground flex gap-4 mt-1"><span>Gord: {a.body_fat_percentage}%</span><span>Massa: {a.muscle_mass}kg</span></div>
                             </div>
                           </div>
-                          <div className="flex gap-2 w-full md:w-auto justify-end"><Button variant="ghost" size="sm" onClick={() => openEditAssessment(a)}><Pencil className="h-4 w-4"/></Button><Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(a.id)} className="text-red-400"><Trash2 className="h-4 w-4"/></Button></div>
+                          <div className="flex gap-2 w-full md:w-auto justify-end"><Button variant="ghost" size="sm" onClick={() => openEditAssessment(a)}><Pencil className="h-4 w-4" /></Button><Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(a.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button></div>
                         </div>
                       )
                     })}
                   </div>
                 )}
               </CardContent>
-             </Card>
+            </Card>
           </TabsContent>
 
           {/* --- HISTÓRICO DE TREINOS (Recurso Substituído e Integrado Visualmente) --- */}
           <TabsContent value="history">
-             <Card className="bg-white/5 border-white/10 w-full">
-                <CardHeader className="p-6 border-b border-white/5"><CardTitle className="text-white text-xl flex items-center gap-2"><Activity className="h-6 w-6 text-orange-400"/> Histórico de Execução</CardTitle></CardHeader>
-                <CardContent className="p-6">
-                   {historySessions.length === 0 ? (
-                      <div className="text-center py-12 text-gray-500">Nenhum treino realizado ainda.</div>
-                   ) : (
-                      <div className="space-y-4">
-                         {historySessions.map(session => (
-                            <div key={session.id} className="bg-black/20 p-5 rounded-xl border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                               <div className="flex items-center gap-5 w-full md:w-auto">
-                                  {/* Ícone de Status */}
-                                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
-                                     {session.status === 'completed' ? <CheckCircle className="h-6 w-6"/> : <AlertCircle className="h-6 w-6"/>}
-                                  </div>
-                                  <div>
-                                     <h4 className="text-lg font-bold text-white">{session.workout?.name || 'Treino Avulso'}</h4>
-                                     <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
-                                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3"/> {new Date(session.created_at).toLocaleDateString()}</span>
-                                        <span className="flex items-center gap-1"><Clock className="h-3 w-3"/> {session.duration_seconds ? `${Math.floor(session.duration_seconds / 60)} min` : '--'}</span>
-                                     </div>
-                                  </div>
-                               </div>
-                               <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+            <Card className="bg-card border-border w-full">
+              <CardHeader className="p-6 border-b border-border"><CardTitle className="text-foreground text-xl flex items-center gap-2"><Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução</CardTitle></CardHeader>
+              <CardContent className="p-6">
+                {historySessions.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">Nenhum treino realizado ainda.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {historySessions.map(session => (
+                      <div key={session.id} className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div className="flex items-center gap-5 w-full md:w-auto">
+                          {/* Ícone de Status */}
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                            {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-bold text-foreground">{session.workout?.name || 'Treino Avulso'}</h4>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                              <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {new Date(session.created_at).toLocaleDateString()}</span>
+                              <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {session.duration_seconds ? `${Math.floor(session.duration_seconds / 60)} min` : '--'}</span>
                             </div>
-                         ))}
+                          </div>
+                        </div>
+                        <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
                       </div>
-                   )}
-                </CardContent>
-             </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Demais Abas Mantidas */}
-          <TabsContent value="workouts"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Treino..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cw.workout.name}</h4><div className="text-sm text-gray-400">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="meal-plans"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-white text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4"/> Atribuir</Button></DialogTrigger><DialogContent className="bg-slate-900 border-white/10 text-white w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Dieta..."/></SelectTrigger><SelectContent className="bg-slate-800 border-white/10 text-white">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-black/20 border-white/10 text-white"/><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-black/20 p-4 rounded-lg border border-white/5 mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-white">{cm.meal_plan.name}</h4><div className="text-sm text-gray-400">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-red-400 hover:bg-red-900/20 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4"/> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="info"><div className="space-y-6"><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-white/5 border-white/10"><CardHeader className="p-6 pb-2"><CardTitle className="text-white text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-gray-300">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
+          <TabsContent value="workouts"><Card className="bg-card border-border"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-foreground text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" /> Atribuir</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Treino..." /></SelectTrigger><SelectContent className="bg-card border-border text-foreground">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-muted border-border text-foreground" /><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-muted/50 p-4 rounded-lg border border-border mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-foreground">{cw.workout.name}</h4><div className="text-sm text-muted-foreground">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-destructive hover:bg-destructive/10 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4" /> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="meal-plans"><Card className="bg-card border-border"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-foreground text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" /> Atribuir</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Dieta..." /></SelectTrigger><SelectContent className="bg-card border-border text-foreground">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-muted border-border text-foreground" /><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-muted/50 p-4 rounded-lg border border-border mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-foreground">{cm.meal_plan.name}</h4><div className="text-sm text-muted-foreground">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-destructive hover:bg-destructive/10 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4" /> Remover</Button></div>))}</CardContent></Card></TabsContent>
+          <TabsContent value="info"><div className="space-y-6"><Card className="bg-card border-border"><CardHeader className="p-6 pb-2"><CardTitle className="text-foreground text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-muted-foreground">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-card border-border"><CardHeader className="p-6 pb-2"><CardTitle className="text-foreground text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-muted-foreground">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
         </Tabs>
       </div>
     </div>

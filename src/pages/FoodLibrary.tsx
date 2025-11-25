@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Apple, Plus, Search, Edit, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Apple, Plus, Search, Edit, Trash2, Eye, Loader2 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -16,11 +16,11 @@ const FoodLibrary: React.FC = () => {
   const [foods, setFoods] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  
+
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  
-  const initialFormState = { 
+
+  const initialFormState = {
     id: '', name: '', brand: '', category: '',
     serving_size: 100, serving_unit: 'g',
     kcal: 0, prot: 0, carb: 0, fat: 0,
@@ -72,11 +72,11 @@ const FoodLibrary: React.FC = () => {
       error = res.error
     }
 
-    if (!error) { 
+    if (!error) {
       showSuccess(mode === 'create' ? 'Criado!' : 'Atualizado!')
       setIsCreateDialogOpen(false)
       setIsEditDialogOpen(false)
-      fetchFoods() 
+      fetchFoods()
     } else {
       showError('Erro ao salvar')
     }
@@ -99,36 +99,36 @@ const FoodLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
-  if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary"/></div>
+  if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Apple className="text-green-400"/> Alimentos</h1>
-          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4"/> Novo</Button>
+          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Apple className="text-green-600 dark:text-green-400" /> Alimentos</h1>
+          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4" /> Novo</Button>
         </div>
 
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-          <Input placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/>
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border text-foreground" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {foods.map(food => (
-            <Card key={food.id} className="bg-white/5 border-white/10 hover:bg-white/10 transition-all group">
+            <Card key={food.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div><CardTitle className="text-white text-lg">{food.name}</CardTitle><p className="text-sm text-gray-400">{food.brand}</p></div>
+                  <div><CardTitle className="text-foreground text-lg">{food.name}</CardTitle><p className="text-sm text-muted-foreground">{food.brand}</p></div>
                   <div className="flex gap-1">
                     {food.created_by === user?.id && (
                       <>
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(food)} className="text-gray-400 hover:text-green-400 h-8 w-8"><Edit className="h-4 w-4"/></Button>
+                        <Button variant="ghost" size="icon" onClick={() => openEdit(food)} className="text-muted-foreground hover:text-green-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
                         <AlertDialog>
-                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400 h-8 w-8"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
-                          <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
+                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
+                          <AlertDialogContent className="bg-card border-border text-foreground">
                             <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
-                            <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(food.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
+                            <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(food.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
                       </>
@@ -138,12 +138,12 @@ const FoodLibrary: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-4 gap-1 text-center text-xs mb-2">
-                  <div className="bg-orange-500/20 p-1 rounded text-orange-300 font-bold">{food.calories_per_serving}</div>
-                  <div className="bg-blue-500/20 p-1 rounded text-blue-300">{food.protein}P</div>
-                  <div className="bg-yellow-500/20 p-1 rounded text-yellow-300">{food.carbs}C</div>
-                  <div className="bg-red-500/20 p-1 rounded text-red-300">{food.fat}G</div>
+                  <div className="bg-orange-500/20 p-1 rounded text-orange-700 dark:text-orange-300 font-bold">{food.calories_per_serving}</div>
+                  <div className="bg-blue-500/20 p-1 rounded text-blue-700 dark:text-blue-300">{food.protein}P</div>
+                  <div className="bg-yellow-500/20 p-1 rounded text-yellow-700 dark:text-yellow-300">{food.carbs}C</div>
+                  <div className="bg-red-500/20 p-1 rounded text-red-700 dark:text-red-300">{food.fat}G</div>
                 </div>
-                {food.is_public && <div className="text-right"><Eye className="h-3 w-3 text-green-500 inline"/></div>}
+                {food.is_public && <div className="text-right"><Eye className="h-3 w-3 text-green-500 inline" /></div>}
               </CardContent>
             </Card>
           ))}
@@ -155,37 +155,37 @@ const FoodLibrary: React.FC = () => {
           { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Alimento', mode: 'update' as const }
         ].map((d, i) => (
           <Dialog key={i} open={d.open} onOpenChange={d.change}>
-            <DialogContent className="bg-slate-900 border-white/10 text-white max-w-lg">
+            <DialogContent className="bg-card border-border text-foreground max-w-lg">
               <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Nome *</Label><Input className="bg-black/20 border-white/10" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})}/></div>
-                  <div><Label>Marca</Label><Input className="bg-black/20 border-white/10" value={formData.brand} onChange={e=>setFormData({...formData, brand: e.target.value})}/></div>
+                  <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
+                  <div><Label>Marca</Label><Input className="bg-muted border-border" value={formData.brand} onChange={e => setFormData({ ...formData, brand: e.target.value })} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  <div><Label>Porção</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.serving_size} onChange={e=>setFormData({...formData, serving_size: +e.target.value})}/></div>
-                  <div><Label>Unidade</Label><Input className="bg-black/20 border-white/10" value={formData.serving_unit} onChange={e=>setFormData({...formData, serving_unit: e.target.value})}/></div>
-                  <div><Label>Categoria</Label><Input className="bg-black/20 border-white/10" value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})}/></div>
+                  <div><Label>Porção</Label><Input type="number" className="bg-muted border-border" value={formData.serving_size} onChange={e => setFormData({ ...formData, serving_size: +e.target.value })} /></div>
+                  <div><Label>Unidade</Label><Input className="bg-muted border-border" value={formData.serving_unit} onChange={e => setFormData({ ...formData, serving_unit: e.target.value })} /></div>
+                  <div><Label>Categoria</Label><Input className="bg-muted border-border" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} /></div>
                 </div>
-                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                  <Label className="text-green-400 mb-2 block">Macronutrientes</Label>
+                <div className="p-3 bg-muted/50 rounded-lg border border-border">
+                  <Label className="text-green-600 dark:text-green-400 mb-2 block">Macronutrientes</Label>
                   <div className="grid grid-cols-4 gap-2">
-                    <div><Label>Kcal</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.kcal} onChange={e=>setFormData({...formData, kcal: +e.target.value})}/></div>
-                    <div><Label>Prot</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.prot} onChange={e=>setFormData({...formData, prot: +e.target.value})}/></div>
-                    <div><Label>Carb</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.carb} onChange={e=>setFormData({...formData, carb: +e.target.value})}/></div>
-                    <div><Label>Gord</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fat} onChange={e=>setFormData({...formData, fat: +e.target.value})}/></div>
+                    <div><Label>Kcal</Label><Input type="number" className="bg-muted border-border" value={formData.kcal} onChange={e => setFormData({ ...formData, kcal: +e.target.value })} /></div>
+                    <div><Label>Prot</Label><Input type="number" className="bg-muted border-border" value={formData.prot} onChange={e => setFormData({ ...formData, prot: +e.target.value })} /></div>
+                    <div><Label>Carb</Label><Input type="number" className="bg-muted border-border" value={formData.carb} onChange={e => setFormData({ ...formData, carb: +e.target.value })} /></div>
+                    <div><Label>Gord</Label><Input type="number" className="bg-muted border-border" value={formData.fat} onChange={e => setFormData({ ...formData, fat: +e.target.value })} /></div>
                   </div>
                 </div>
-                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                  <Label className="text-blue-400 mb-2 block">Micronutrientes</Label>
+                <div className="p-3 bg-muted/50 rounded-lg border border-border">
+                  <Label className="text-blue-600 dark:text-blue-400 mb-2 block">Micronutrientes</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <div><Label>Fibras</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.fiber} onChange={e=>setFormData({...formData, fiber: +e.target.value})}/></div>
-                    <div><Label>Açúcar</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sugar} onChange={e=>setFormData({...formData, sugar: +e.target.value})}/></div>
-                    <div><Label>Sódio</Label><Input type="number" className="bg-black/20 border-white/10" value={formData.sodium} onChange={e=>setFormData({...formData, sodium: +e.target.value})}/></div>
+                    <div><Label>Fibras</Label><Input type="number" className="bg-muted border-border" value={formData.fiber} onChange={e => setFormData({ ...formData, fiber: +e.target.value })} /></div>
+                    <div><Label>Açúcar</Label><Input type="number" className="bg-muted border-border" value={formData.sugar} onChange={e => setFormData({ ...formData, sugar: +e.target.value })} /></div>
+                    <div><Label>Sódio</Label><Input type="number" className="bg-muted border-border" value={formData.sodium} onChange={e => setFormData({ ...formData, sodium: +e.target.value })} /></div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 py-2">
-                  <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({...formData, is_public: c as boolean})} className="border-white/30 data-[state=checked]:bg-green-500" />
+                  <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-green-600" />
                   <Label htmlFor={`public-${d.mode}`} className="cursor-pointer">Público</Label>
                 </div>
                 <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar</Button>

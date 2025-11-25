@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { 
+import {
   Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -24,7 +24,7 @@ const WorkoutPlanner: React.FC = () => {
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedWorkout, setSelectedWorkout] = useState<any>(null)
-  
+
   // Dialogs
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isManageSheetOpen, setIsManageSheetOpen] = useState(false)
@@ -37,9 +37,9 @@ const WorkoutPlanner: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false)
 
   // State do Exercício (Adicionar/Editar)
-  const initialExerciseState = { 
-    id: '', exId: '', day: 1, sets: 3, reps: '10', 
-    weight: 0, rest: 60, note: '' 
+  const initialExerciseState = {
+    id: '', exId: '', day: 1, sets: 3, reps: '10',
+    weight: 0, rest: 60, note: ''
   }
   const [exForm, setExForm] = useState(initialExerciseState)
 
@@ -86,12 +86,12 @@ const WorkoutPlanner: React.FC = () => {
     if (!user) return
 
     const payload = {
-      name: planForm.name, 
-      duration_weeks: planForm.weeks, 
+      name: planForm.name,
+      duration_weeks: planForm.weeks,
       days_per_week: planForm.days,
-      objective: planForm.objective, 
+      objective: planForm.objective,
       description: planForm.description,
-      professional_id: user.id, 
+      professional_id: user.id,
       is_template: false
     }
 
@@ -134,8 +134,8 @@ const WorkoutPlanner: React.FC = () => {
 
   const openEditExDialog = (we: any) => {
     setExForm({
-      id: we.id, exId: we.exercise_id, day: we.day_number, 
-      sets: we.sets, reps: we.reps, weight: we.weight || 0, 
+      id: we.id, exId: we.exercise_id, day: we.day_number,
+      sets: we.sets, reps: we.reps, weight: we.weight || 0,
       rest: we.rest_time_seconds || 60, note: we.notes || ''
     })
     setIsEditExDialogOpen(true)
@@ -143,7 +143,7 @@ const WorkoutPlanner: React.FC = () => {
 
   const handleSaveExercise = async (mode: 'create' | 'update') => {
     if (!selectedWorkout) return
-    
+
     const payload = {
       day_number: exForm.day,
       sets: exForm.sets,
@@ -189,57 +189,57 @@ const WorkoutPlanner: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3"><Dumbbell className="text-primary"/> Planos de Treino</h1>
-            <p className="text-gray-400 mt-1">Crie e gerencie rotinas de treino.</p>
+            <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Dumbbell className="text-primary" /> Planos de Treino</h1>
+            <p className="text-muted-foreground mt-1">Crie e gerencie rotinas de treino.</p>
           </div>
-          <Button onClick={openCreateDialog} className="bg-primary text-black font-bold"><Plus className="mr-2 h-4 w-4"/> Novo Plano</Button>
-          
+          <Button onClick={openCreateDialog} className="bg-primary text-primary-foreground font-bold"><Plus className="mr-2 h-4 w-4" /> Novo Plano</Button>
+
           {/* Dialog Create/Edit Plan */}
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogContent className="bg-slate-900 border-white/10 text-white sm:max-w-lg">
+            <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
               <DialogHeader><DialogTitle>{isEditing ? 'Editar Plano' : 'Criar Novo Plano'}</DialogTitle></DialogHeader>
               <form onSubmit={handleSaveWorkout} className="space-y-4">
-                <div><Label>Nome do Plano *</Label><Input required value={planForm.name} onChange={e => setPlanForm({...planForm, name: e.target.value})} className="bg-black/20 border-white/10"/></div>
+                <div><Label>Nome do Plano *</Label><Input required value={planForm.name} onChange={e => setPlanForm({ ...planForm, name: e.target.value })} className="bg-muted border-border" /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Duração (Semanas)</Label><Input type="number" min="1" value={planForm.weeks} onChange={e => setPlanForm({...planForm, weeks: +e.target.value})} className="bg-black/20 border-white/10"/></div>
-                  <div><Label>Dias por Semana</Label><Input type="number" min="1" max="7" value={planForm.days} onChange={e => setPlanForm({...planForm, days: +e.target.value})} className="bg-black/20 border-white/10"/></div>
+                  <div><Label>Duração (Semanas)</Label><Input type="number" min="1" value={planForm.weeks} onChange={e => setPlanForm({ ...planForm, weeks: +e.target.value })} className="bg-muted border-border" /></div>
+                  <div><Label>Dias por Semana</Label><Input type="number" min="1" max="7" value={planForm.days} onChange={e => setPlanForm({ ...planForm, days: +e.target.value })} className="bg-muted border-border" /></div>
                 </div>
-                <div><Label>Objetivo Principal</Label><Input value={planForm.objective} onChange={e => setPlanForm({...planForm, objective: e.target.value})} className="bg-black/20 border-white/10" placeholder="Ex: Hipertrofia"/></div>
-                <div><Label>Descrição Detalhada</Label><Textarea rows={3} value={planForm.description} onChange={e => setPlanForm({...planForm, description: e.target.value})} className="bg-black/20 border-white/10" placeholder="Ex: Foco em pernas e ombros..."/></div>
-                <Button type="submit" className="w-full bg-primary text-black font-bold">{isEditing ? 'Atualizar Plano' : 'Criar Plano'}</Button>
+                <div><Label>Objetivo Principal</Label><Input value={planForm.objective} onChange={e => setPlanForm({ ...planForm, objective: e.target.value })} className="bg-muted border-border" placeholder="Ex: Hipertrofia" /></div>
+                <div><Label>Descrição Detalhada</Label><Textarea rows={3} value={planForm.description} onChange={e => setPlanForm({ ...planForm, description: e.target.value })} className="bg-muted border-border" placeholder="Ex: Foco em pernas e ombros..." /></div>
+                <Button type="submit" className="w-full bg-primary text-primary-foreground font-bold">{isEditing ? 'Atualizar Plano' : 'Criar Plano'}</Button>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-          <Input placeholder="Buscar planos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/5 border-white/10 text-white"/>
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Buscar planos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border text-foreground" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {workouts.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase())).map(workout => (
-            <Card key={workout.id} className="bg-white/5 border-white/10 hover:bg-white/10 transition-all group">
+            <Card key={workout.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
               <CardHeader>
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-white text-lg truncate">{workout.name}</CardTitle>
+                  <CardTitle className="text-foreground text-lg truncate">{workout.name}</CardTitle>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => handleManage(workout)} title="Gerenciar Exercícios" className="text-gray-400 hover:text-white"><Settings className="h-4 w-4"/></Button>
-                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(workout)} title="Editar Informações" className="text-gray-400 hover:text-blue-400"><Edit className="h-4 w-4"/></Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleManage(workout)} title="Gerenciar Exercícios" className="text-muted-foreground hover:text-foreground"><Settings className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(workout)} title="Editar Informações" className="text-muted-foreground hover:text-blue-500"><Edit className="h-4 w-4" /></Button>
                     <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-gray-400 hover:text-red-400"><Trash2 className="h-4 w-4"/></Button></AlertDialogTrigger>
-                      <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
+                      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
+                      <AlertDialogContent className="bg-card border-border text-foreground">
                         <AlertDialogHeader><AlertDialogTitle>Excluir Plano?</AlertDialogTitle><AlertDialogDescription>Isso não afeta treinos já iniciados por alunos.</AlertDialogDescription></AlertDialogHeader>
-                        <AlertDialogFooter><AlertDialogCancel className="text-black">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)} className="bg-red-600">Excluir</AlertDialogAction></AlertDialogFooter>
+                        <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="text-gray-400 text-sm space-y-2">
-                <div className="flex gap-2 items-center"><Clock className="h-4 w-4"/> {workout.duration_weeks} semanas</div>
-                <div className="flex gap-2 items-center"><Calendar className="h-4 w-4"/> {workout.days_per_week}x por semana</div>
-                <div className="flex gap-2 items-center"><Target className="h-4 w-4"/> {workout.objective || 'Geral'}</div>
+              <CardContent className="text-muted-foreground text-sm space-y-2">
+                <div className="flex gap-2 items-center"><Clock className="h-4 w-4" /> {workout.duration_weeks} semanas</div>
+                <div className="flex gap-2 items-center"><Calendar className="h-4 w-4" /> {workout.days_per_week}x por semana</div>
+                <div className="flex gap-2 items-center"><Target className="h-4 w-4" /> {workout.objective || 'Geral'}</div>
               </CardContent>
             </Card>
           ))}
@@ -247,90 +247,90 @@ const WorkoutPlanner: React.FC = () => {
 
         {/* Sheet de Gerenciamento de Exercícios */}
         <Sheet open={isManageSheetOpen} onOpenChange={setIsManageSheetOpen}>
-          <SheetContent className="bg-slate-900 border-l border-white/10 text-white w-[90%] sm:w-[600px] overflow-y-auto">
-            <SheetHeader><SheetTitle className="text-white">Gerenciar: {selectedWorkout?.name}</SheetTitle></SheetHeader>
-            
+          <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] overflow-y-auto">
+            <SheetHeader><SheetTitle className="text-foreground">Gerenciar: {selectedWorkout?.name}</SheetTitle></SheetHeader>
+
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-lg">Exercícios do Plano</h3>
-                <Button size="sm" onClick={openAddExDialog} className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50"><Plus className="h-4 w-4 mr-2"/> Adicionar</Button>
-                
+                <Button size="sm" onClick={openAddExDialog} className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50"><Plus className="h-4 w-4 mr-2" /> Adicionar</Button>
+
                 {/* Dialog Adicionar Exercício */}
                 <Dialog open={isAddExDialogOpen} onOpenChange={setIsAddExDialogOpen}>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white">
+                  <DialogContent className="bg-card border-border text-foreground">
                     <DialogHeader><DialogTitle>Adicionar Exercício</DialogTitle></DialogHeader>
                     <div className="space-y-4">
                       <div>
                         <Label>Exercício</Label>
-                        <Select onValueChange={v => setExForm({...exForm, exId: v})}>
-                          <SelectTrigger className="bg-black/20 border-white/10"><SelectValue placeholder="Selecione..."/></SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-white/10 text-white max-h-60">
+                        <Select onValueChange={v => setExForm({ ...exForm, exId: v })}>
+                          <SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                          <SelectContent className="bg-card border-border text-foreground max-h-60">
                             {exercises.map(e => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="grid grid-cols-3 gap-2">
-                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-black/20 border-white/10" value={exForm.day} onChange={e => setExForm({...exForm, day: +e.target.value})}/></div>
-                        <div><Label>Séries</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.sets} onChange={e => setExForm({...exForm, sets: +e.target.value})}/></div>
-                        <div><Label>Reps</Label><Input className="bg-black/20 border-white/10" value={exForm.reps} onChange={e => setExForm({...exForm, reps: e.target.value})}/></div>
+                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-muted border-border" value={exForm.day} onChange={e => setExForm({ ...exForm, day: +e.target.value })} /></div>
+                        <div><Label>Séries</Label><Input type="number" className="bg-muted border-border" value={exForm.sets} onChange={e => setExForm({ ...exForm, sets: +e.target.value })} /></div>
+                        <div><Label>Reps</Label><Input className="bg-muted border-border" value={exForm.reps} onChange={e => setExForm({ ...exForm, reps: e.target.value })} /></div>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.weight} onChange={e => setExForm({...exForm, weight: +e.target.value})}/></div>
-                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.rest} onChange={e => setExForm({...exForm, rest: +e.target.value})}/></div>
+                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-muted border-border" value={exForm.weight} onChange={e => setExForm({ ...exForm, weight: +e.target.value })} /></div>
+                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-muted border-border" value={exForm.rest} onChange={e => setExForm({ ...exForm, rest: +e.target.value })} /></div>
                       </div>
-                      <div><Label>Nota (Opcional)</Label><Input className="bg-black/20 border-white/10" value={exForm.note} onChange={e => setExForm({...exForm, note: e.target.value})} placeholder="Ex: Drop-set na última"/></div>
-                      <Button onClick={() => handleSaveExercise('create')} disabled={!exForm.exId} className="w-full bg-primary text-black">Adicionar</Button>
+                      <div><Label>Nota (Opcional)</Label><Input className="bg-muted border-border" value={exForm.note} onChange={e => setExForm({ ...exForm, note: e.target.value })} placeholder="Ex: Drop-set na última" /></div>
+                      <Button onClick={() => handleSaveExercise('create')} disabled={!exForm.exId} className="w-full bg-primary text-primary-foreground">Adicionar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
 
                 {/* Dialog Editar Exercício */}
                 <Dialog open={isEditExDialogOpen} onOpenChange={setIsEditExDialogOpen}>
-                  <DialogContent className="bg-slate-900 border-white/10 text-white">
+                  <DialogContent className="bg-card border-border text-foreground">
                     <DialogHeader><DialogTitle>Editar Exercício</DialogTitle></DialogHeader>
                     <div className="space-y-4">
                       {/* Exercício não editável aqui, apenas params */}
                       <div className="grid grid-cols-3 gap-2">
-                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-black/20 border-white/10" value={exForm.day} onChange={e => setExForm({...exForm, day: +e.target.value})}/></div>
-                        <div><Label>Séries</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.sets} onChange={e => setExForm({...exForm, sets: +e.target.value})}/></div>
-                        <div><Label>Reps</Label><Input className="bg-black/20 border-white/10" value={exForm.reps} onChange={e => setExForm({...exForm, reps: e.target.value})}/></div>
+                        <div><Label>Dia</Label><Input type="number" min="1" max={selectedWorkout?.days_per_week} className="bg-muted border-border" value={exForm.day} onChange={e => setExForm({ ...exForm, day: +e.target.value })} /></div>
+                        <div><Label>Séries</Label><Input type="number" className="bg-muted border-border" value={exForm.sets} onChange={e => setExForm({ ...exForm, sets: +e.target.value })} /></div>
+                        <div><Label>Reps</Label><Input className="bg-muted border-border" value={exForm.reps} onChange={e => setExForm({ ...exForm, reps: e.target.value })} /></div>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.weight} onChange={e => setExForm({...exForm, weight: +e.target.value})}/></div>
-                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-black/20 border-white/10" value={exForm.rest} onChange={e => setExForm({...exForm, rest: +e.target.value})}/></div>
+                        <div><Label>Carga (kg)</Label><Input type="number" className="bg-muted border-border" value={exForm.weight} onChange={e => setExForm({ ...exForm, weight: +e.target.value })} /></div>
+                        <div><Label>Descanso (s)</Label><Input type="number" className="bg-muted border-border" value={exForm.rest} onChange={e => setExForm({ ...exForm, rest: +e.target.value })} /></div>
                       </div>
-                      <div><Label>Nota (Opcional)</Label><Input className="bg-black/20 border-white/10" value={exForm.note} onChange={e => setExForm({...exForm, note: e.target.value})}/></div>
-                      <Button onClick={() => handleSaveExercise('update')} className="w-full bg-primary text-black">Atualizar</Button>
+                      <div><Label>Nota (Opcional)</Label><Input className="bg-muted border-border" value={exForm.note} onChange={e => setExForm({ ...exForm, note: e.target.value })} /></div>
+                      <Button onClick={() => handleSaveExercise('update')} className="w-full bg-primary text-primary-foreground">Atualizar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
 
               <Tabs defaultValue="day-1">
-                <TabsList className="bg-white/5 w-full justify-start overflow-x-auto p-1">
-                  {Array.from({length: selectedWorkout?.days_per_week || 1}, (_, i) => (
-                    <TabsTrigger key={i} value={`day-${i+1}`} className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400 px-4">Dia {i+1}</TabsTrigger>
+                <TabsList className="bg-muted w-full justify-start overflow-x-auto p-1">
+                  {Array.from({ length: selectedWorkout?.days_per_week || 1 }, (_, i) => (
+                    <TabsTrigger key={i} value={`day-${i + 1}`} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground px-4">Dia {i + 1}</TabsTrigger>
                   ))}
                 </TabsList>
-                {Array.from({length: selectedWorkout?.days_per_week || 1}, (_, i) => (
-                  <TabsContent key={i} value={`day-${i+1}`} className="space-y-3 mt-4">
-                    {workoutExercises.filter(we => we.day_number === i+1).map(we => (
-                      <div key={we.id} className="bg-white/5 border border-white/10 p-3 rounded-lg flex items-center justify-between group hover:bg-white/10 transition-colors">
+                {Array.from({ length: selectedWorkout?.days_per_week || 1 }, (_, i) => (
+                  <TabsContent key={i} value={`day-${i + 1}`} className="space-y-3 mt-4">
+                    {workoutExercises.filter(we => we.day_number === i + 1).map(we => (
+                      <div key={we.id} className="bg-card border border-border p-3 rounded-lg flex items-center justify-between group hover:bg-accent/50 transition-colors">
                         <div className="flex items-center gap-3">
                           <div className="bg-primary/20 text-primary w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-inner">{we.order_index}</div>
                           <div>
-                            <div className="font-bold text-white">{we.exercise?.name}</div>
-                            <div className="text-xs text-gray-400">{we.sets}x{we.reps} • {we.weight ? `${we.weight}kg` : 'Peso livre'} • {we.rest_time_seconds}s</div>
-                            {we.notes && <div className="text-[10px] text-yellow-500/80 mt-1">{we.notes}</div>}
+                            <div className="font-bold text-foreground">{we.exercise?.name}</div>
+                            <div className="text-xs text-muted-foreground">{we.sets}x{we.reps} • {we.weight ? `${we.weight}kg` : 'Peso livre'} • {we.rest_time_seconds}s</div>
+                            {we.notes && <div className="text-[10px] text-yellow-600 dark:text-yellow-400 mt-1">{we.notes}</div>}
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Button size="icon" variant="ghost" onClick={() => openEditExDialog(we)} className="text-blue-400 hover:bg-blue-900/20"><Edit className="h-4 w-4"/></Button>
-                          <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-red-400 hover:bg-red-900/20"><Trash2 className="h-4 w-4"/></Button>
+                          <Button size="icon" variant="ghost" onClick={() => openEditExDialog(we)} className="text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/20"><Edit className="h-4 w-4" /></Button>
+                          <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
                         </div>
                       </div>
                     ))}
-                    {workoutExercises.filter(we => we.day_number === i+1).length === 0 && <div className="text-center text-gray-500 text-sm py-8 bg-white/5 rounded-lg border border-dashed border-white/10">Sem exercícios neste dia</div>}
+                    {workoutExercises.filter(we => we.day_number === i + 1).length === 0 && <div className="text-center text-muted-foreground text-sm py-8 bg-card rounded-lg border border-dashed border-border">Sem exercícios neste dia</div>}
                   </TabsContent>
                 ))}
               </Tabs>
