@@ -357,7 +357,7 @@ const ClientDashboard: React.FC = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-green-50 dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-500/20">
+                  <Card className="dark:bg-gradient-to-r dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-500/20">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300 text-base">
                         <Activity className="h-5 w-5" /> Motivação
