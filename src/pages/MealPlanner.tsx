@@ -181,7 +181,7 @@ const MealPlanner: React.FC = () => {
         ))}
 
         <Sheet open={isManageSheetOpen} onOpenChange={setIsManageSheetOpen}>
-          <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] overflow-y-auto">
+          <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] sm:max-w-[30rem] overflow-y-auto">
             <SheetHeader><SheetTitle className="text-foreground">Refeições</SheetTitle></SheetHeader>
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
