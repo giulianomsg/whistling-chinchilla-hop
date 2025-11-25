@@ -410,6 +410,14 @@ const ClientDashboard: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-2 text-primary hover:text-primary/80 hover:bg-primary/10" 
+                    onClick={() => navigate('/app/my-history')}
+                  >
+                    Ver Histórico Completo
+                  </Button>
+
                 )}
               </CardContent>
             </Card>

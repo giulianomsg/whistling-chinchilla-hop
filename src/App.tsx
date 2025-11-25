@@ -18,6 +18,7 @@ const WorkoutPlanner = lazy(() => import("./pages/WorkoutPlanner"));
 const MyClients = lazy(() => import("./pages/MyClients"));
 const ClientWorkout = lazy(() => import("./pages/ClientWorkout"));
 const ClientMealPlan = lazy(() => import("./pages/ClientMealPlan"));
+const ClientHistory = lazy(() => import("./pages/ClientHistory"));
 const FoodLibrary = lazy(() => import("./pages/FoodLibrary"));
 const MealPlanner = lazy(() => import("./pages/MealPlanner"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -52,139 +53,149 @@ const AppRoutes: React.FC = () => {
     <Routes>
       {/* Rotas Públicas */}
       <Route path="/" element={<Index />} />
-      <Route 
-        path="/auth" 
+      <Route
+        path="/auth"
         element={
           user ? <Navigate to="/app" replace /> : <Auth />
-        } 
+        }
       />
 
       {/* Rotas Protegidas com Lazy Loading */}
-      <Route 
-        path="/app" 
+      <Route
+        path="/app"
         element={
           user ? <DashboardLayout /> : <Navigate to="/auth" replace />
         }
       >
         {/* Dashboard principal - redireciona baseado no role */}
         <Route index element={<Navigate to="/app/dashboard" replace />} />
-        
+
         {/* Dashboard unificado baseado no role */}
-        <Route 
-          path="dashboard" 
+        <Route
+          path="dashboard"
           element={
-            profile?.role === 'client' ? 
+            profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientDashboard />
-              </Suspense> : 
+              </Suspense> :
               <Suspense fallback={<PageLoader />}>
                 <ProfessionalDashboard />
               </Suspense>
-          } 
+          }
         />
 
         {/* Rota de Perfil (Acessível a todos) */}
-        <Route 
-          path="profile" 
+        <Route
+          path="profile"
           element={
             <Suspense fallback={<PageLoader />}>
               <ProfileSettings />
             </Suspense>
-          } 
+          }
         />
 
         {/* Professional/Admin */}
-        <Route 
-          path="clients" 
+        <Route
+          path="clients"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <MyClients />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="clients/:id" 
+        <Route
+          path="clients/:id"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <ClientDetails />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="planner" 
+        <Route
+          path="planner"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <WorkoutPlanner />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="meal-planner" 
+        <Route
+          path="meal-planner"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <MealPlanner />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="library" 
+        <Route
+          path="library"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <ExerciseLibrary />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="foods" 
+        <Route
+          path="foods"
           element={
-            (profile?.role === 'professional' || profile?.role === 'admin') ? 
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <FoodLibrary />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="chat" 
+        <Route
+          path="chat"
           element={
-            (profile?.role === 'professional' || profile?.role === 'client') ? 
+            (profile?.role === 'professional' || profile?.role === 'client') ?
               <Suspense fallback={<PageLoader />}>
                 <Chat />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
 
         {/* Cliente */}
-        <Route 
-          path="my-workout" 
+        <Route
+          path="my-workout"
           element={
-            profile?.role === 'client' ? 
+            profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientWorkout />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
         />
-        <Route 
-          path="my-meal-plan" 
+        <Route
+          path="my-meal-plan"
           element={
-            profile?.role === 'client' ? 
+            profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientMealPlan />
-              </Suspense> : 
+              </Suspense> :
               <Navigate to="/app/dashboard" replace />
-          } 
+          }
+        />
+        <Route
+          path="my-history"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ClientHistory />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
         />
       </Route>
 

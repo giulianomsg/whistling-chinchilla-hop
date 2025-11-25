@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
@@ -18,13 +19,12 @@ import {
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
-  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play
+  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 
-// --- DICIONÁRIOS & LISTAS ---
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
@@ -92,18 +92,20 @@ const ClientDetails: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
-  // Dados
   const [clientProfile, setClientProfile] = useState<any>(null)
   const [clientDetails, setClientDetails] = useState<any>(null)
   const [clientWorkouts, setClientWorkouts] = useState<any[]>([])
   const [clientMealPlans, setClientMealPlans] = useState<any[]>([])
   const [assessments, setAssessments] = useState<any[]>([])
   const [progressPhotos, setProgressPhotos] = useState<any[]>([])
-  const [historySessions, setHistorySessions] = useState<any[]>([]) // NOVO: Histórico
+  const [historySessions, setHistorySessions] = useState<any[]>([])
+  const [selectedHistorySession, setSelectedHistorySession] = useState<any>(null)
+  const [historyLogs, setHistoryLogs] = useState<any[]>([])
+  const [historyLogsLoading, setHistoryLogsLoading] = useState(false)
+  const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
 
-  // UI States
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
   const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
@@ -144,10 +146,7 @@ const ClientDetails: React.FC = () => {
         const cMeals = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cAssessments = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
         const cPhotos = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
-
-        // NOVO: Busca de Histórico de Sessões
         const cHistory = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', id).order('created_at', { ascending: false }).limit(20)
-
         const myWorkouts = await supabase.from('workouts').select('*').eq('professional_id', user.id).eq('is_template', false)
         const myMealPlans = await supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id)
 
@@ -320,6 +319,24 @@ const ClientDetails: React.FC = () => {
     return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
   }
 
+  const handleHistorySessionClick = async (session: any) => {
+    setSelectedHistorySession(session)
+    setIsHistoryDetailOpen(true)
+    setHistoryLogsLoading(true)
+
+    const { data } = await supabase
+      .from('workout_execution_logs')
+      .select(`
+        *,
+        exercise:exercises_library(name)
+      `)
+      .eq('workout_session_id', session.id)
+      .order('completed_at', { ascending: true })
+
+    setHistoryLogs(data || [])
+    setHistoryLogsLoading(false)
+  }
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
@@ -328,23 +345,15 @@ const ClientDetails: React.FC = () => {
   const currentXP = clientProfile?.current_xp || 0
   const currentLevel = clientProfile?.level || 1
   const xpProgress = ((currentXP % 1000) / 1000) * 100
-
   const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight / ((latestAssessment.height / 100) ** 2)).toFixed(2)) : 0 })
-
-  const getRiskColor = (level: string) => {
-    if (level === 'high') return 'text-red-600 dark:text-red-500 border-red-500/30 bg-red-500/10'
-    if (level === 'medium') return 'text-yellow-600 dark:text-yellow-500 border-yellow-500/30 bg-yellow-500/10'
-    return 'text-green-600 dark:text-green-500 border-green-500/30 bg-green-500/10'
-  }
+  const getRiskColor = (level: string) => { return 'text-green-600' }
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8 w-full overflow-x-hidden">
       <div className="w-full px-4 md:max-w-7xl md:mx-auto md:px-8">
-
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-muted-foreground hover:text-foreground pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
         </div>
-
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
           <div className="w-full overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             <TabsList className="bg-muted border border-border justify-start p-1 flex min-w-max h-10">
@@ -358,144 +367,266 @@ const ClientDetails: React.FC = () => {
             </TabsList>
           </div>
 
-          {/* DASHBOARD */}
-          <TabsContent value="dashboard" className="animate-in fade-in slide-in-from-left-2 duration-500 space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-
-              {/* 1. PERFIL */}
-              <Card className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 bg-white border-border shadow-xl relative overflow-hidden w-full">
-                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><User className="w-64 h-64 text-primary" /></div>
-                <CardContent className="pt-8 px-6 md:px-10 pb-8">
-                  <div className="flex flex-col md:flex-row gap-8 items-center md:items-start w-full">
-                    <div className="relative flex-shrink-0 text-center">
-                      <div className="w-32 h-32 rounded-full border-4 border-primary/20 p-1 mx-auto shadow-2xl bg-muted">
-                        {clientProfile?.avatar_url ? <img src={clientProfile.avatar_url} className="w-full h-full object-cover rounded-full" /> : <div className="w-full h-full rounded-full flex items-center justify-center text-3xl font-bold text-muted-foreground">{clientProfile?.full_name?.[0]}</div>}
-                      </div>
-                      <Badge className="mt-2 bg-yellow-500 text-black font-bold border-none px-4 py-1 hover:bg-yellow-400">Nível {currentLevel}</Badge>
-                    </div>
-                    <div className="flex-1 min-w-0 w-full text-center md:text-left">
-                      <h2 className="text-3xl font-bold text-white dark:text-white text-gray-900 mb-2 truncate">{clientProfile?.full_name}</h2>
-                      <div className="flex flex-col md:flex-row items-center md:justify-start gap-4 text-sm text-muted-foreground mb-6">
-                        <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {clientProfile?.email}</span>
-                        {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4" /> {clientProfile?.phone}</span>}
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-primary"><span>XP ({currentXP % 1000}/1000)</span></div><Progress value={xpProgress} className="h-2 bg-muted" /></div>
-                        <div className="space-y-1"><div className="flex justify-between text-xs font-medium text-green-600 dark:text-green-400"><span>Bem-Estar: {healthAnalysis.wellness}/100</span></div><Progress value={healthAnalysis.wellness} className="h-2 bg-muted" indicatorClassName="bg-green-500" /></div>
-                      </div>
-                    </div>
-                  </div>
+          <TabsContent value="dashboard">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="md:col-span-1 bg-card border-border shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Nível Atual</CardTitle>
+                  <Trophy className="h-4 w-4 text-yellow-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">Nível {currentLevel}</div>
+                  <Progress value={xpProgress} className="h-2 mt-2 bg-muted" indicatorClassName="bg-yellow-500" />
+                  <p className="text-xs text-muted-foreground mt-2">{Math.floor(currentXP % 1000)} / 1000 XP para o próximo nível</p>
                 </CardContent>
               </Card>
-
-              {/* 2. AÇÕES RÁPIDAS */}
-              <Card className="bg-card border-border w-full h-full">
-                <CardHeader className="pb-4 px-6 pt-6"><CardTitle className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Ações Rápidas</CardTitle></CardHeader>
-                <CardContent className="px-6 pb-6 grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-blue-500/50 transition-all group" onClick={() => setActiveTab('workouts')}><Dumbbell className="h-6 w-6 md:w-8 md:h-8 text-blue-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Treinos</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-orange-500/50 transition-all group" onClick={() => setActiveTab('meal-plans')}><Utensils className="h-6 w-6 md:w-8 md:h-8 text-orange-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Dietas</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-green-500/50 transition-all group" onClick={openNewAssessment}><Scale className="h-6 w-6 md:w-8 md:h-8 text-green-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Avaliar</span></Button>
-                  <Button variant="outline" className="h-auto py-4 md:h-28 flex-col border-border bg-card hover:bg-accent text-foreground gap-2 hover:border-purple-500/50 transition-all group" onClick={() => navigate('/app/chat')}><MessageSquare className="h-6 w-6 md:w-8 md:h-8 text-purple-500 mb-1 group-hover:scale-110 transition-transform" /> <span className="text-xs md:text-sm font-medium">Chat</span></Button>
+              <Card className="md:col-span-1 bg-card border-border shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Treino Ativo</CardTitle>
+                  <Dumbbell className="h-4 w-4 text-blue-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">{activeWorkout?.workout?.name || 'Nenhum'}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Foco: {activeWorkout?.workout?.focus || '--'}</p>
                 </CardContent>
               </Card>
-
-              {/* 3. ANÁLISE DE SAÚDE */}
-              <Card className="bg-card border-border lg:col-span-3 w-full">
-                <CardHeader className="pb-4 px-6 pt-6 border-b border-border"><CardTitle className="text-foreground flex items-center gap-3 text-xl"><Stethoscope className="h-6 w-6 text-blue-500" /> Análise de Saúde</CardTitle></CardHeader>
-                <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.cardio.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Cardiovascular</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.cardio.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.cardio.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.cardio.factors.length > 0 ? healthAnalysis.risks.cardio.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Metabólico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.metabolic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.metabolic.factors.length > 0 ? healthAnalysis.risks.metabolic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
-                  <div className={`p-5 rounded-xl border transition-colors ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}><div className="flex justify-between items-center mb-3"><span className="font-bold text-sm uppercase tracking-wider">Ortopédico</span><Badge className="bg-black/30 hover:bg-black/40 border-none text-white">{healthAnalysis.risks.orthopedic.level === 'high' ? 'Alto Risco' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Atenção' : 'Baixo Risco'}</Badge></div><div className="space-y-1">{healthAnalysis.risks.orthopedic.factors.length > 0 ? healthAnalysis.risks.orthopedic.factors.map(f => <p key={f} className="text-xs font-medium flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> {f}</p>) : <p className="text-xs opacity-60">Sem fatores de risco identificados.</p>}</div></div>
+              <Card className="md:col-span-1 bg-card border-border shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Dieta Ativa</CardTitle>
+                  <Utensils className="h-4 w-4 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">{activeMealPlan?.meal_plan?.name || 'Nenhuma'}</div>
+                  <p className="text-xs text-muted-foreground mt-1">{activeMealPlan?.meal_plan?.daily_calories || 0} kcal/dia</p>
                 </CardContent>
               </Card>
-
-              {/* 4. MÉTRICAS VITAIS */}
-              <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-card p-5 rounded-xl border border-border flex justify-between items-center hover:bg-accent/50 transition-all"><div><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Peso Atual</p><p className="text-2xl font-bold text-foreground">{latestAssessment?.weight ? `${latestAssessment.weight}` : '--'} <span className="text-sm text-muted-foreground font-normal">kg</span></p></div><Scale className="h-8 w-8 text-muted-foreground opacity-50" /></div>
-                <div className="bg-card p-5 rounded-xl border border-border flex justify-between items-center hover:bg-accent/50 transition-all"><div><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Gordura Corporal</p><p className="text-2xl font-bold text-foreground">{latestAssessment?.body_fat_percentage ? `${latestAssessment.body_fat_percentage}` : '--'} <span className="text-sm text-muted-foreground font-normal">%</span></p></div><Activity className="h-8 w-8 text-muted-foreground opacity-50" /></div>
-                <div className={`p-5 rounded-xl border ${activeWorkout ? 'bg-green-500/10 border-green-500/30' : 'bg-card border-border'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Treino</p><p className={`text-lg font-bold truncate ${activeWorkout ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>{activeWorkout?.workout.name || 'Inativo'}</p></div><Dumbbell className={`h-6 w-6 ${activeWorkout ? 'text-green-500' : 'text-muted-foreground'} opacity-50`} /></div>
-                <div className={`p-5 rounded-xl border ${activeMealPlan ? 'bg-orange-500/10 border-orange-500/30' : 'bg-card border-border'} flex justify-between items-center`}><div className="min-w-0 flex-1"><p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Dieta</p><p className={`text-lg font-bold truncate ${activeMealPlan ? 'text-orange-600 dark:text-orange-400' : 'text-muted-foreground'}`}>{activeMealPlan?.meal_plan.name || 'Inativa'}</p></div><Utensils className={`h-6 w-6 ${activeMealPlan ? 'text-orange-500' : 'text-muted-foreground'} opacity-50`} /></div>
-              </div>
             </div>
           </TabsContent>
-
-          {/* --- FOTOS --- */}
           <TabsContent value="photos">
-            <Card className="bg-card border-border w-full">
-              <CardHeader className="flex flex-row items-center justify-between p-6">
-                <CardTitle className="text-foreground text-xl flex items-center gap-2"><ImageIcon className="h-6 w-6 text-purple-500" /> Galeria de Evolução</CardTitle>
-                <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}><DialogTrigger asChild><Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold"><Plus className="h-4 w-4 mr-2" /> Add Foto</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Adicionar Foto de Progresso</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><div><Label>Data da Foto</Label><Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({ ...newPhoto, date: e.target.value })} className="bg-muted border-border text-foreground" /></div><div><Label>Arquivo</Label><Input type="file" accept="image/*" onChange={e => setNewPhoto({ ...newPhoto, file: e.target.files?.[0] || null })} className="bg-muted border-border text-foreground" /></div><div><Label>Notas</Label><Input placeholder="Ex: Frente, relaxado" value={newPhoto.notes} onChange={e => setNewPhoto({ ...newPhoto, notes: e.target.value })} className="bg-muted border-border text-foreground" /></div><Button onClick={handlePhotoUpload} disabled={uploadingPhoto} className="w-full bg-purple-600">{uploadingPhoto ? <Loader2 className="animate-spin h-4 w-4" /> : 'Salvar'}</Button></div></DialogContent></Dialog>
+            <Card className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-foreground flex items-center gap-2"><Camera className="h-5 w-5 text-primary" /> Galeria de Progresso</CardTitle>
+                <Button onClick={() => setIsAddPhotoOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Nova Foto</Button>
               </CardHeader>
-              <CardContent className="p-6">
-                {progressPhotos.length === 0 ? <div className="text-center py-16 text-muted-foreground border-dashed border border-border rounded-lg">Nenhuma foto.</div> : (<div className="grid grid-cols-2 md:grid-cols-4 gap-6">{progressPhotos.map(photo => (<div key={photo.id} className="group relative bg-black/40 rounded-xl overflow-hidden border border-border aspect-[3/4] shadow-lg"><img src={photo.photo_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4"><span className="text-sm font-bold text-white">{new Date(photo.date).toLocaleDateString('pt-BR')}</span><Button size="icon" variant="destructive" className="h-8 w-8 absolute top-2 right-2" onClick={() => handleDeletePhoto(photo.id)}><Trash2 className="h-4 w-4" /></Button></div></div>))}</div>)}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* --- ANAMNESE --- */}
-          <TabsContent value="anamnesis">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-              <h2 className="text-2xl font-bold text-foreground flex items-center gap-2"><FileText className="text-primary" /> Anamnese Profissional</h2>
-              <Button onClick={handleSaveAnamnesis} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold shadow-lg w-full sm:w-auto"><Save className="mr-2 h-4 w-4" /> Salvar Ficha</Button>
-            </div>
-            <Tabs defaultValue="medical" className="w-full">
-              <TabsList className="bg-muted border border-border w-full justify-start h-auto flex-wrap mb-6">
-                <TabsTrigger value="medical" className="h-10 flex-1 min-w-[100px]">Clínico</TabsTrigger>
-                <TabsTrigger value="habits" className="h-10 flex-1 min-w-[100px]">Hábitos</TabsTrigger>
-                <TabsTrigger value="nutri" className="h-10 flex-1 min-w-[100px]">Nutrição</TabsTrigger>
-              </TabsList>
-              <TabsContent value="medical"><Card className="bg-card border-border"><CardContent className="p-6 space-y-8"><div><Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_CONDITIONS.map(cond => (<div key={cond} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-muted border-border hover:bg-accent'}`} onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}><Checkbox checked={anamnesisForm.diagnosed_conditions?.includes(cond)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)} /><span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-600 dark:text-red-200' : 'text-muted-foreground'}`}>{cond}</span></div>))}</div></div><div><Label className="text-muted-foreground mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{COMMON_SYMPTOMS.map(sym => (<div key={sym} className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-muted border-border hover:bg-accent'}`} onClick={() => toggleAnamnesisList('symptoms', sym)}><Checkbox checked={anamnesisForm.symptoms?.includes(sym)} onCheckedChange={() => toggleAnamnesisList('symptoms', sym)} /><span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-600 dark:text-yellow-200' : 'text-muted-foreground'}`}>{sym}</span></div>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-muted-foreground mb-2 block">Histórico Familiar</Label><Textarea placeholder="Pai/Mãe com cardiopatia..." value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-muted border-border min-h-[80px]" /></div><div><Label className="text-muted-foreground mb-2 block">Medicamentos</Label><Textarea placeholder="Nome, dose, frequência..." value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-muted border-border min-h-[80px]" /></div></div></CardContent></Card></TabsContent>
-              <TabsContent value="habits"><Card className="bg-card border-border"><CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"><div className="flex justify-between items-center bg-muted p-4 rounded border border-border"><Label className="text-muted-foreground">Fumante?</Label><Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} /></div><div><Label className="text-muted-foreground mb-2 block">Álcool</Label><Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Selecione..." /></SelectTrigger><SelectContent className="bg-card text-foreground border-border"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent></Select></div><div className="md:col-span-2"><Label className="text-muted-foreground mb-2 block">Atividades de Trabalho</Label><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{WORK_ACTIVITIES.map(act => (<div key={act} className="flex items-center space-x-2"><Checkbox checked={anamnesisForm.work_activities?.includes(act)} onCheckedChange={() => toggleAnamnesisList('work_activities', act)} /><span className="text-sm text-muted-foreground">{act}</span></div>))}</div></div></CardContent></Card></TabsContent>
-              <TabsContent value="nutri"><Card className="bg-card border-border"><CardContent className="p-6 space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><Label className="text-muted-foreground mb-2 block">Água (L/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-muted border-border" /></div><div><Label className="text-muted-foreground mb-2 block">Suplementos</Label><Input value={anamnesisForm.supplements} onChange={e => updateAnamnesis('supplements', e.target.value)} className="bg-muted border-border" /></div></div><div><Label className="text-muted-foreground mb-2 block">Histórico Alimentar / Aversões</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-muted border-border min-h-[120px]" /></div></CardContent></Card></TabsContent>
-            </Tabs>
-          </TabsContent>
-
-          {/* --- BIOMETRIA --- */}
-          <TabsContent value="biometrics">
-            <Card className="bg-card border-border w-full">
-              <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
-                <CardTitle className="text-foreground text-xl">Histórico de Avaliações</CardTitle>
-                <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}><DialogTrigger asChild><Button onClick={openNewAssessment} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold w-full sm:w-auto"><Plus className="w-4 h-4 mr-2" /> Nova Avaliação</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95vw] max-w-4xl max-h-[85vh] overflow-y-auto p-0 rounded-lg"><div className="p-6"><DialogHeader className="mb-6"><DialogTitle>{editingAssessmentId ? 'Editar' : 'Nova'} Avaliação</DialogTitle></DialogHeader><div className="grid grid-cols-1 md:grid-cols-3 gap-8"><div className="space-y-5"><h3 className="font-semibold text-primary flex items-center gap-2">Básico</h3><div><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({ ...newAssessment, date: e.target.value })} className="bg-muted border-border text-foreground" /></div><div className="grid grid-cols-2 gap-3"><div><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({ ...newAssessment, weight: e.target.value })} className="bg-muted border-border text-foreground" /></div><div><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({ ...newAssessment, height: e.target.value })} className="bg-muted border-border text-foreground" /></div></div><div className="grid grid-cols-2 gap-3"><div><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({ ...newAssessment, age: Number(e.target.value) })} className="bg-muted border-border text-foreground" /></div><div><Label>Gênero</Label><Select value={newAssessment.gender} onValueChange={v => setNewAssessment({ ...newAssessment, gender: v })}><SelectTrigger className="bg-muted border-border text-foreground"><SelectValue /></SelectTrigger><SelectContent className="bg-card text-foreground border-border"><SelectItem value="male">Masculino</SelectItem><SelectItem value="female">Feminino</SelectItem></SelectContent></Select></div></div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Dobras</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.skinfolds).map(k => (<div key={k}><Label className="text-xs text-muted-foreground uppercase">{SKINFOLD_LABELS[k]?.slice(0, 3)}</Label><Input type="number" value={(newAssessment.skinfolds as any)[k]} onChange={e => updateNested('skinfolds', k, e.target.value)} className="bg-muted border-border text-foreground h-9" /></div>))}</div></div><div className="space-y-5"><h3 className="font-semibold text-primary">Perímetros</h3><div className="grid grid-cols-2 gap-3">{Object.keys(newAssessment.circumferences).map(k => (<div key={k}><Label className="text-xs text-muted-foreground uppercase">{CIRCUMFERENCE_LABELS[k]?.slice(0, 3)}</Label><Input type="number" value={(newAssessment.circumferences as any)[k]} onChange={e => updateNested('circumferences', k, e.target.value)} className="bg-muted border-border text-foreground h-9" /></div>))}</div></div></div></div><DialogFooter className="p-6 border-t border-border gap-3 flex-col sm:flex-row bg-muted/50"><Button variant="outline" onClick={() => handleSaveAssessment('draft')} className="border-border text-foreground hover:bg-accent w-full sm:w-auto">Salvar Rascunho</Button><Button onClick={() => handleSaveAssessment('completed')} className="bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto">Finalizar</Button></DialogFooter></DialogContent></Dialog>
-              </CardHeader>
-              <CardContent className="p-6">
-                {assessments.length === 0 ? <div className="text-center text-muted-foreground py-12">Nenhuma avaliação registrada.</div> : (
-                  <div className="space-y-4">
-                    {assessments.map((a) => {
-                      const s = a.measurements?.status || 'completed'
-                      const i = classifyBMI(Number((a.weight / ((a.height / 100) ** 2)).toFixed(2)))
-                      return (
-                        <div key={a.id} className={`bg-muted/50 p-5 rounded-xl border ${s === 'draft' ? 'border-yellow-500/30' : 'border-border'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
-                          <div className="flex items-center gap-5 w-full md:w-auto">
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-sm flex-col flex-shrink-0 ${s === 'draft' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-primary/10 text-primary'}`}><span>{new Date(a.date).getDate()}</span><span className="uppercase text-[10px]">{new Date(a.date).toLocaleString('default', { month: 'short' })}</span></div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3"><span className="text-foreground font-bold text-xl">{a.weight} kg</span><Badge variant="outline" className={`text-xs ${i.color} border-current`}>{i.label}</Badge></div>
-                              <div className="text-sm text-muted-foreground flex gap-4 mt-1"><span>Gord: {a.body_fat_percentage}%</span><span>Massa: {a.muscle_mass}kg</span></div>
-                            </div>
-                          </div>
-                          <div className="flex gap-2 w-full md:w-auto justify-end"><Button variant="ghost" size="sm" onClick={() => openEditAssessment(a)}><Pencil className="h-4 w-4" /></Button><Button variant="ghost" size="sm" onClick={() => handleDeleteAssessment(a.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button></div>
+              <CardContent>
+                {progressPhotos.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma foto registrada.</div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {progressPhotos.map(photo => (
+                      <div key={photo.id} className="group relative aspect-[3/4] rounded-lg overflow-hidden border border-border bg-muted">
+                        <img src={photo.photo_url} alt="Progresso" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                          <p className="text-white text-xs font-medium">{new Date(photo.date).toLocaleDateString()}</p>
+                          {photo.notes && <p className="text-white/80 text-[10px] line-clamp-2 mt-1">{photo.notes}</p>}
+                          <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={(e) => { e.stopPropagation(); handleDeletePhoto(photo.id) }}><Trash2 className="h-3 w-3" /></Button>
                         </div>
-                      )
-                    })}
+                      </div>
+                    ))}
                   </div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
+          <TabsContent value="anamnesis">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="md:col-span-2 bg-card border-border">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="text-foreground flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Ficha de Anamnese</CardTitle>
+                  <Button onClick={handleSaveAnamnesis} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Save className="h-4 w-4 mr-2" /> Salvar Alterações</Button>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" /> Histórico Médico</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Condições Diagnosticadas</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {COMMON_CONDITIONS.map(condition => (
+                            <div key={condition} className="flex items-center space-x-2">
+                              <Checkbox id={condition} checked={anamnesisForm.diagnosed_conditions?.includes(condition)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', condition)} />
+                              <label htmlFor={condition} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{condition}</label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Sintomas Recentes</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {COMMON_SYMPTOMS.map(symptom => (
+                            <div key={symptom} className="flex items-center space-x-2">
+                              <Checkbox id={symptom} checked={anamnesisForm.symptoms?.includes(symptom)} onCheckedChange={() => toggleAnamnesisList('symptoms', symptom)} />
+                              <label htmlFor={symptom} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{symptom}</label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2"><Label>Cirurgias Prévias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} placeholder="Liste cirurgias e datas..." className="h-20" /></div>
+                      <div className="space-y-2"><Label>Lesões Musculoesqueléticas</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} placeholder="Fraturas, torções, dores crônicas..." className="h-20" /></div>
+                      <div className="space-y-2"><Label>Medicamentos em Uso</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} placeholder="Nome, dosagem e frequência..." className="h-20" /></div>
+                      <div className="space-y-2"><Label>Histórico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} placeholder="Doenças cardíacas, diabetes na família..." className="h-20" /></div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Apple className="h-4 w-4 text-green-500" /> Estilo de Vida</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>Fumante?</Label>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
+                          <span className="text-sm">{anamnesisForm.smoker ? 'Sim' : 'Não'}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Consumo de Álcool</Label>
+                        <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="never">Nunca</SelectItem>
+                            <SelectItem value="socially">Socialmente</SelectItem>
+                            <SelectItem value="frequently">Frequentemente</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Nível de Estresse</Label>
+                        <Select value={anamnesisForm.stress_level} onValueChange={v => updateAnamnesis('stress_level', v)}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="low">Baixo</SelectItem>
+                            <SelectItem value="medium">Médio</SelectItem>
+                            <SelectItem value="high">Alto</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="space-y-6">
+                <Card className="bg-card border-border">
+                  <CardHeader><CardTitle className="text-base flex items-center gap-2"><Activity className="h-4 w-4 text-blue-500" /> Análise de Saúde</CardTitle></CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1"><span>Risco Cardiovascular</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>{healthAnalysis.risks.cardio.level === 'low' ? 'Baixo' : healthAnalysis.risks.cardio.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.cardio.level === 'low' ? 33 : healthAnalysis.risks.cardio.level === 'medium' ? 66 : 100} className="h-2" />
+                      {healthAnalysis.risks.cardio.factors.length > 0 && <p className="text-xs text-muted-foreground mt-1">Fatores: {healthAnalysis.risks.cardio.factors.join(', ')}</p>}
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1"><span>Risco Metabólico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>{healthAnalysis.risks.metabolic.level === 'low' ? 'Baixo' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.metabolic.level === 'low' ? 33 : healthAnalysis.risks.metabolic.level === 'medium' ? 66 : 100} className="h-2" />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1"><span>Risco Ortopédico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>{healthAnalysis.risks.orthopedic.level === 'low' ? 'Baixo' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.orthopedic.level === 'low' ? 33 : healthAnalysis.risks.orthopedic.level === 'medium' ? 66 : 100} className="h-2" />
+                    </div>
+                    {healthAnalysis.risks.redFlags.length > 0 && (
+                      <div className="bg-red-500/10 p-3 rounded-md border border-red-500/20">
+                        <h4 className="text-red-500 text-xs font-bold flex items-center gap-1 mb-1"><AlertTriangle className="h-3 w-3" /> Atenção (Red Flags)</h4>
+                        <ul className="list-disc list-inside text-xs text-red-400">{healthAnalysis.risks.redFlags.map(flag => <li key={flag}>{flag}</li>)}</ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="biometrics">
+            <Card className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-foreground flex items-center gap-2"><Scale className="h-5 w-5 text-primary" /> Avaliações Físicas</CardTitle>
+                <Button onClick={openNewAssessment} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Nova Avaliação</Button>
+              </CardHeader>
+              <CardContent>
+                {assessments.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma avaliação registrada.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {assessments.map(assessment => (
+                      <div key={assessment.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border cursor-pointer hover:bg-muted/80 transition-colors" onClick={() => openEditAssessment(assessment)}>
+                        <div className="flex items-center gap-4">
+                          <div className="bg-blue-500/10 p-2 rounded-full"><Scale className="h-5 w-5 text-blue-500" /></div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{new Date(assessment.date).toLocaleDateString()}</h4>
+                            <p className="text-sm text-muted-foreground">{assessment.weight} kg • {assessment.body_fat_percentage}% GC</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={assessment.measurements?.status === 'completed' ? 'default' : 'outline'}>{assessment.measurements?.status === 'completed' ? 'Finalizada' : 'Rascunho'}</Badge>
+                          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDeleteAssessment(assessment.id) }} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-          {/* --- HISTÓRICO DE TREINOS (Recurso Substituído e Integrado Visualmente) --- */}
+            <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
+              <DialogContent className="bg-card border-border text-foreground max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader><DialogTitle>{editingAssessmentId ? 'Editar Avaliação' : 'Nova Avaliação'}</DialogTitle></DialogHeader>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Dados Básicos</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2"><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({ ...newAssessment, date: e.target.value })} /></div>
+                      <div className="space-y-2"><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({ ...newAssessment, weight: e.target.value })} /></div>
+                      <div className="space-y-2"><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({ ...newAssessment, height: e.target.value })} /></div>
+                      <div className="space-y-2"><Label>Idade</Label><Input type="number" value={newAssessment.age} onChange={e => setNewAssessment({ ...newAssessment, age: Number(e.target.value) })} /></div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4" /> Dobras Cutâneas (mm)</h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      {Object.entries(SKINFOLD_LABELS).map(([key, label]) => (
+                        <div key={key} className="space-y-2">
+                          <Label className="text-xs">{label}</Label>
+                          <Input type="number" className="h-8" value={newAssessment.skinfolds[key as keyof typeof newAssessment.skinfolds]} onChange={e => updateNested('skinfolds', key, e.target.value)} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-4 md:col-span-2">
+                    <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Circunferências (cm)</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {Object.entries(CIRCUMFERENCE_LABELS).map(([key, label]) => (
+                        <div key={key} className="space-y-2">
+                          <Label className="text-xs">{label}</Label>
+                          <Input type="number" className="h-8" value={newAssessment.circumferences[key as keyof typeof newAssessment.circumferences]} onChange={e => updateNested('circumferences', key, e.target.value)} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter className="gap-2">
+                  <Button variant="outline" onClick={() => handleSaveAssessment('draft')}>Salvar Rascunho</Button>
+                  <Button onClick={() => handleSaveAssessment('completed')}>Finalizar Avaliação</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
           <TabsContent value="history">
             <Card className="bg-card border-border w-full">
-              <CardHeader className="p-6 border-b border-border"><CardTitle className="text-foreground text-xl flex items-center gap-2"><Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução</CardTitle></CardHeader>
+              <CardHeader className="p-6 border-b border-border">
+                <CardTitle className="text-foreground text-xl flex items-center gap-2">
+                  <Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução
+                </CardTitle>
+              </CardHeader>
               <CardContent className="p-6">
                 {historySessions.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">Nenhum treino realizado ainda.</div>
                 ) : (
                   <div className="space-y-4">
                     {historySessions.map(session => (
-                      <div key={session.id} className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <div
+                        key={session.id}
+                        className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 cursor-pointer hover:bg-muted transition-colors"
+                        onClick={() => handleHistorySessionClick(session)}
+                      >
                         <div className="flex items-center gap-5 w-full md:w-auto">
-                          {/* Ícone de Status */}
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`} >
                             {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
                           </div>
                           <div>
@@ -506,19 +637,179 @@ const ClientDetails: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                        <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
 
-          {/* Demais Abas Mantidas */}
-          <TabsContent value="workouts"><Card className="bg-card border-border"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-foreground text-lg">Treinos</CardTitle><Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" /> Atribuir</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedWorkoutId}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Treino..." /></SelectTrigger><SelectContent className="bg-card border-border text-foreground">{availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-muted border-border text-foreground" /><Button onClick={handleAssignWorkout} className="w-full bg-blue-600 hover:bg-blue-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientWorkouts.map(cw => (<div key={cw.id} className="bg-muted/50 p-4 rounded-lg border border-border mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-foreground">{cw.workout.name}</h4><div className="text-sm text-muted-foreground">{cw.workout.days_per_week}x semana</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_workouts', cw.id)} className="text-destructive hover:bg-destructive/10 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4" /> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="meal-plans"><Card className="bg-card border-border"><CardHeader className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"><CardTitle className="text-foreground text-lg">Dietas</CardTitle><Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}><DialogTrigger asChild><Button size="sm" className="bg-green-600 w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" /> Atribuir</Button></DialogTrigger><DialogContent className="bg-card border-border text-foreground w-[95%] rounded-lg"><DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader><div className="space-y-4 mt-4"><Select onValueChange={setSelectedMealPlanId}><SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Dieta..." /></SelectTrigger><SelectContent className="bg-card border-border text-foreground">{availableMealPlans.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-muted border-border text-foreground" /><Button onClick={handleAssignMealPlan} className="w-full bg-green-600 hover:bg-green-500">Confirmar</Button></div></DialogContent></Dialog></CardHeader><CardContent className="p-6">{clientMealPlans.map(cm => (<div key={cm.id} className="bg-muted/50 p-4 rounded-lg border border-border mb-3 flex flex-col sm:flex-row justify-between items-center gap-3"><div><h4 className="text-base font-bold text-foreground">{cm.meal_plan.name}</h4><div className="text-sm text-muted-foreground">{cm.meal_plan.daily_calories_target} kcal</div></div><Button size="sm" variant="ghost" onClick={() => handleRemoveAssignment('client_meal_plans', cm.id)} className="text-destructive hover:bg-destructive/10 w-full sm:w-auto gap-2"><Trash2 className="h-4 w-4" /> Remover</Button></div>))}</CardContent></Card></TabsContent>
-          <TabsContent value="info"><div className="space-y-6"><Card className="bg-card border-border"><CardHeader className="p-6 pb-2"><CardTitle className="text-foreground text-lg">Objetivos</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-muted-foreground">{clientDetails?.goals || '---'}</CardContent></Card><Card className="bg-card border-border"><CardHeader className="p-6 pb-2"><CardTitle className="text-foreground text-lg">Restrições</CardTitle></CardHeader><CardContent className="p-6 pt-2 text-muted-foreground">{clientDetails?.health_restrictions || '---'}</CardContent></Card></div></TabsContent>
+            <Dialog open={isHistoryDetailOpen} onOpenChange={setIsHistoryDetailOpen}>
+              <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
+                  <div className="text-sm text-muted-foreground flex gap-3">
+                    <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
+                    <span>•</span>
+                    <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds)}</span>
+                  </div>
+                </DialogHeader>
+                <ScrollArea className="max-h-[60vh] pr-4 mt-4">
+                  {historyLogsLoading ? (
+                    <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
+                  ) : historyLogs.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
+                  ) : (
+                    <div className="space-y-4">
+                      {historyLogs.map((log, index) => (
+                        <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
+                          <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'Exercício'}</h4>
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-background p-2 rounded border border-border">
+                              <span className="text-muted-foreground block text-xs uppercase">Carga</span>
+                              <span className="font-mono font-bold">{log.weight} kg</span>
+                            </div>
+                            <div className="bg-background p-2 rounded border border-border">
+                              <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
+                              <span className="font-mono font-bold">{log.reps}</span>
+                            </div>
+                          </div>
+                          {log.notes && (
+                            <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
+                              "{log.notes}"
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
+          <TabsContent value="workouts">
+            <Card className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-foreground flex items-center gap-2"><Dumbbell className="h-5 w-5 text-primary" /> Treinos Atribuídos</CardTitle>
+                <Button onClick={() => setIsAssignWorkoutOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Treino</Button>
+              </CardHeader>
+              <CardContent>
+                {clientWorkouts.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhum treino atribuído.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {clientWorkouts.map(item => (
+                      <div key={item.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-primary/10 p-2 rounded-full"><Dumbbell className="h-5 w-5 text-primary" /></div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{item.workout?.name}</h4>
+                            <p className="text-sm text-muted-foreground">Início: {new Date(item.start_date).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={item.status === 'active' ? 'default' : 'secondary'}>{item.status === 'active' ? 'Ativo' : 'Inativo'}</Badge>
+                          <Button variant="ghost" size="icon" onClick={() => handleRemoveAssignment('client_workouts', item.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
+              <DialogContent className="bg-card border-border text-foreground">
+                <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label>Selecione o Treino</Label>
+                    <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
+                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                      <SelectContent>
+                        {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Data de Início</Label>
+                    <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                  </div>
+                </div>
+                <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
+          <TabsContent value="meal-plans">
+            <Card className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-foreground flex items-center gap-2"><Utensils className="h-5 w-5 text-primary" /> Dietas Atribuídas</CardTitle>
+                <Button onClick={() => setIsAssignMealPlanOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Dieta</Button>
+              </CardHeader>
+              <CardContent>
+                {clientMealPlans.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma dieta atribuída.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {clientMealPlans.map(item => (
+                      <div key={item.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-green-500/10 p-2 rounded-full"><Utensils className="h-5 w-5 text-green-500" /></div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{item.meal_plan?.name}</h4>
+                            <p className="text-sm text-muted-foreground">Início: {new Date(item.start_date).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={item.status === 'active' ? 'default' : 'secondary'}>{item.status === 'active' ? 'Ativo' : 'Inativo'}</Badge>
+                          <Button variant="ghost" size="icon" onClick={() => handleRemoveAssignment('client_meal_plans', item.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Dialog open={isAssignMealPlanOpen} onOpenChange={setIsAssignMealPlanOpen}>
+              <DialogContent className="bg-card border-border text-foreground">
+                <DialogHeader><DialogTitle>Atribuir Dieta</DialogTitle></DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label>Selecione a Dieta</Label>
+                    <Select value={selectedMealPlanId} onValueChange={setSelectedMealPlanId}>
+                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                      <SelectContent>
+                        {availableMealPlans.map(m => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Data de Início</Label>
+                    <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                  </div>
+                </div>
+                <DialogFooter><Button onClick={handleAssignMealPlan} disabled={!selectedMealPlanId}>Confirmar</Button></DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
+          <TabsContent value="info">
+            <Card className="bg-card border-border">
+              <CardHeader><CardTitle className="text-foreground">Informações Pessoais</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1"><Label className="text-muted-foreground">Nome Completo</Label><div className="font-medium">{clientProfile?.full_name}</div></div>
+                  <div className="space-y-1"><Label className="text-muted-foreground">Email</Label><div className="font-medium flex items-center gap-2"><Mail className="h-4 w-4" /> {clientProfile?.email || 'Não informado'}</div></div>
+                  <div className="space-y-1"><Label className="text-muted-foreground">Telefone</Label><div className="font-medium flex items-center gap-2"><Phone className="h-4 w-4" /> {clientProfile?.phone || 'Não informado'}</div></div>
+                  <div className="space-y-1"><Label className="text-muted-foreground">Data de Nascimento</Label><div className="font-medium">{clientDetails?.birth_date ? new Date(clientDetails.birth_date).toLocaleDateString() : 'Não informado'}</div></div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
