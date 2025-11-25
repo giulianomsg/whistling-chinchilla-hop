@@ -403,14 +403,17 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Condições Diagnosticadas</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {COMMON_CONDITIONS.map(cond => (
-                            <div
+                            <label
                               key={cond}
                               className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'bg-red-500/20 border-red-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`}
-                              onClick={() => toggleAnamnesisList('diagnosed_conditions', cond)}
                             >
-                              <Checkbox checked={!!anamnesisForm.diagnosed_conditions?.includes(cond)} className="pointer-events-none border-white/30" />
+                              <Checkbox
+                                checked={!!anamnesisForm.diagnosed_conditions?.includes(cond)}
+                                onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', cond)}
+                                className="border-white/30"
+                              />
                               <span className={`text-xs font-bold ${anamnesisForm.diagnosed_conditions?.includes(cond) ? 'text-red-200' : 'text-gray-400'}`}>{cond}</span>
-                            </div>
+                            </label>
                           ))}
                         </div>
                       </div>
@@ -419,14 +422,17 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-400 mb-3 block text-xs uppercase tracking-wider">Sintomas Recorrentes</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {COMMON_SYMPTOMS.map(sym => (
-                            <div
+                            <label
                               key={sym}
                               className={`flex items-center space-x-2 p-3 rounded border cursor-pointer transition-colors ${anamnesisForm.symptoms?.includes(sym) ? 'bg-yellow-500/20 border-yellow-500/50' : 'bg-black/20 border-white/5 hover:bg-white/5'}`}
-                              onClick={() => toggleAnamnesisList('symptoms', sym)}
                             >
-                              <Checkbox checked={!!anamnesisForm.symptoms?.includes(sym)} className="pointer-events-none border-white/30" />
+                              <Checkbox
+                                checked={!!anamnesisForm.symptoms?.includes(sym)}
+                                onCheckedChange={() => toggleAnamnesisList('symptoms', sym)}
+                                className="border-white/30"
+                              />
                               <span className={`text-xs font-bold ${anamnesisForm.symptoms?.includes(sym) ? 'text-yellow-200' : 'text-gray-400'}`}>{sym}</span>
-                            </div>
+                            </label>
                           ))}
                         </div>
                       </div>
@@ -470,14 +476,17 @@ const ProfileSettings: React.FC = () => {
                         <Label className="text-gray-300 mb-3 block">Atividades de Trabalho</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {WORK_ACTIVITIES.map(act => (
-                            <div
+                            <label
                               key={act}
                               className="flex items-center space-x-2 cursor-pointer"
-                              onClick={() => toggleAnamnesisList('work_activities', act)}
                             >
-                              <Checkbox checked={!!anamnesisForm.work_activities?.includes(act)} className="pointer-events-none border-white/30" />
+                              <Checkbox
+                                checked={!!anamnesisForm.work_activities?.includes(act)}
+                                onCheckedChange={() => toggleAnamnesisList('work_activities', act)}
+                                className="border-white/30"
+                              />
                               <span className="text-sm text-gray-400">{act}</span>
-                            </div>
+                            </label>
                           ))}
                         </div>
                       </div>
