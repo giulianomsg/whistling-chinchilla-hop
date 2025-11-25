@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
@@ -114,6 +116,7 @@ const ClientDetails: React.FC = () => {
   const [selectedMealPlanId, setSelectedMealPlanId] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
   const [editingAssessmentId, setEditingAssessmentId] = useState<string | null>(null)
+  const [isAnamnesisEditing, setIsAnamnesisEditing] = useState(false)
 
   const [anamnesisForm, setAnamnesisForm] = useState({
     occupation: '', work_hours: '', work_activities: [] as string[], last_exam_date: '',
@@ -345,8 +348,16 @@ const ClientDetails: React.FC = () => {
   const currentXP = clientProfile?.current_xp || 0
   const currentLevel = clientProfile?.level || 1
   const xpProgress = ((currentXP % 1000) / 1000) * 100
+
   const healthAnalysis = analyzeHealth(anamnesisForm, { bmi: latestAssessment ? Number((latestAssessment.weight / ((latestAssessment.height / 100) ** 2)).toFixed(2)) : 0 })
-  const getRiskColor = (level: string) => { return 'text-green-600' }
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case 'low': return 'text-green-500'
+      case 'medium': return 'text-yellow-500'
+      case 'high': return 'text-red-500'
+      default: return 'text-muted-foreground'
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8 w-full overflow-x-hidden">
@@ -359,49 +370,108 @@ const ClientDetails: React.FC = () => {
             <TabsList className="bg-muted border border-border justify-start p-1 flex min-w-max h-10">
               <TabsTrigger value="dashboard" className="px-4 py-1.5 text-sm"><LayoutDashboard className="w-4 h-4 mr-2" /> Visão Geral</TabsTrigger>
               <TabsTrigger value="photos" className="px-4 py-1.5 text-sm"><Camera className="w-4 h-4 mr-2" /> Fotos</TabsTrigger>
+              <TabsTrigger value="anamnesis" className="px-4 py-1.5 text-sm"><FileText className="w-4 h-4 mr-2" /> Anamnese</TabsTrigger>
+              <TabsTrigger value="biometrics" className="px-4 py-1.5 text-sm"><Scale className="w-4 h-4 mr-2" /> Biometria</TabsTrigger>
+              <TabsTrigger value="history" className="px-4 py-1.5 text-sm"><Activity className="w-4 h-4 mr-2" /> Histórico</TabsTrigger>
               <TabsTrigger value="workouts" className="px-4 py-1.5 text-sm">Treinos</TabsTrigger>
               <TabsTrigger value="meal-plans" className="px-4 py-1.5 text-sm">Dietas</TabsTrigger>
-              <TabsTrigger value="biometrics" className="px-4 py-1.5 text-sm"><Scale className="w-4 h-4 mr-2" /> Biometria</TabsTrigger>
-              <TabsTrigger value="anamnesis" className="px-4 py-1.5 text-sm"><FileText className="w-4 h-4 mr-2" /> Anamnese</TabsTrigger>
-              <TabsTrigger value="history" className="px-4 py-1.5 text-sm">Histórico</TabsTrigger>
+              <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
             </TabsList>
           </div>
+          <TabsContent value="dashboard" className="space-y-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 bg-card p-6 rounded-xl border border-border shadow-sm">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-md">
+                <AvatarImage src={clientProfile?.avatar_url} />
+                <AvatarFallback className="text-2xl">{clientProfile?.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="space-y-1 flex-1">
+                <h2 className="text-2xl font-bold text-foreground">{clientProfile?.full_name}</h2>
+                <div className="flex flex-wrap gap-2 text-muted-foreground text-sm">
+                  <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email || 'Sem email'}</span>
+                  {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Badge variant="secondary">Nível {currentLevel}</Badge>
+                  <Badge variant="outline">{clientProfile?.objective || 'Sem objetivo definido'}</Badge>
+                </div>
+              </div>
+            </div>
 
-          <TabsContent value="dashboard">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="md:col-span-1 bg-card border-border shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Nível Atual</CardTitle>
-                  <Trophy className="h-4 w-4 text-yellow-500" />
+            {healthAnalysis.risks.redFlags.length > 0 && (
+              <Alert variant="destructive" className="border-red-500/50 bg-red-500/10 text-red-600">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Atenção: Fatores de Risco Identificados</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-disc list-inside mt-2">
+                    {healthAnalysis.risks.redFlags.map(flag => <li key={flag}>{flag}</li>)}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-2 bg-card border-border shadow-sm h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Activity className="h-5 w-5 text-blue-500" /> Análise de Saúde
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-foreground">Nível {currentLevel}</div>
-                  <Progress value={xpProgress} className="h-2 mt-2 bg-muted" indicatorClassName="bg-yellow-500" />
-                  <p className="text-xs text-muted-foreground mt-2">{Math.floor(currentXP % 1000)} / 1000 XP para o próximo nível</p>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm"><span>Cardiovascular</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>{healthAnalysis.risks.cardio.level === 'low' ? 'Baixo' : healthAnalysis.risks.cardio.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.cardio.level === 'low' ? 33 : healthAnalysis.risks.cardio.level === 'medium' ? 66 : 100} className="h-2" />
+                      {healthAnalysis.risks.cardio.factors.length > 0 && <p className="text-xs text-muted-foreground">Fatores: {healthAnalysis.risks.cardio.factors.join(', ')}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm"><span>Metabólico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>{healthAnalysis.risks.metabolic.level === 'low' ? 'Baixo' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.metabolic.level === 'low' ? 33 : healthAnalysis.risks.metabolic.level === 'medium' ? 66 : 100} className="h-2" />
+                      {healthAnalysis.risks.metabolic.factors.length > 0 && <p className="text-xs text-muted-foreground">Fatores: {healthAnalysis.risks.metabolic.factors.join(', ')}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm"><span>Ortopédico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>{healthAnalysis.risks.orthopedic.level === 'low' ? 'Baixo' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
+                      <Progress value={healthAnalysis.risks.orthopedic.level === 'low' ? 33 : healthAnalysis.risks.orthopedic.level === 'medium' ? 66 : 100} className="h-2" />
+                      {healthAnalysis.risks.orthopedic.factors.length > 0 && <p className="text-xs text-muted-foreground">Fatores: {healthAnalysis.risks.orthopedic.factors.join(', ')}</p>}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-              <Card className="md:col-span-1 bg-card border-border shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Treino Ativo</CardTitle>
-                  <Dumbbell className="h-4 w-4 text-blue-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-foreground">{activeWorkout?.workout?.name || 'Nenhum'}</div>
-                  <p className="text-xs text-muted-foreground mt-1">Foco: {activeWorkout?.workout?.focus || '--'}</p>
-                </CardContent>
-              </Card>
-              <Card className="md:col-span-1 bg-card border-border shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Dieta Ativa</CardTitle>
-                  <Utensils className="h-4 w-4 text-green-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-foreground">{activeMealPlan?.meal_plan?.name || 'Nenhuma'}</div>
-                  <p className="text-xs text-muted-foreground mt-1">{activeMealPlan?.meal_plan?.daily_calories || 0} kcal/dia</p>
-                </CardContent>
-              </Card>
+
+              <div className="space-y-6">
+                <Card className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-yellow-500/20 shadow-sm">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-yellow-700 dark:text-yellow-500 flex items-center gap-2">
+                      <Trophy className="h-4 w-4" /> Gamificação
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-end justify-between mb-2">
+                      <span className="text-3xl font-bold text-foreground">{currentLevel}</span>
+                      <span className="text-sm text-muted-foreground mb-1">Nível Atual</span>
+                    </div>
+                    <Progress value={xpProgress} className="h-2 bg-yellow-500/20" indicatorClassName="bg-yellow-500" />
+                    <p className="text-xs text-muted-foreground mt-2 text-right">{Math.floor(currentXP % 1000)} / 1000 XP</p>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="bg-card border-border shadow-sm">
+                    <CardHeader className="p-4 pb-2"><Dumbbell className="h-5 w-5 text-blue-500 mb-2" /><CardTitle className="text-xs text-muted-foreground">Treino</CardTitle></CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <div className="font-bold text-sm truncate">{activeWorkout?.workout?.name || 'Nenhum'}</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card border-border shadow-sm">
+                    <CardHeader className="p-4 pb-2"><Utensils className="h-5 w-5 text-green-500 mb-2" /><CardTitle className="text-xs text-muted-foreground">Dieta</CardTitle></CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <div className="font-bold text-sm truncate">{activeMealPlan?.meal_plan?.name || 'Nenhuma'}</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </div>
           </TabsContent>
+
           <TabsContent value="photos">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
@@ -428,111 +498,85 @@ const ClientDetails: React.FC = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent value="anamnesis">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="md:col-span-2 bg-card border-border">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-foreground flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Ficha de Anamnese</CardTitle>
-                  <Button onClick={handleSaveAnamnesis} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Save className="h-4 w-4 mr-2" /> Salvar Alterações</Button>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" /> Histórico Médico</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Condições Diagnosticadas</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {COMMON_CONDITIONS.map(condition => (
-                            <div key={condition} className="flex items-center space-x-2">
-                              <Checkbox id={condition} checked={anamnesisForm.diagnosed_conditions?.includes(condition)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', condition)} />
-                              <label htmlFor={condition} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{condition}</label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Sintomas Recentes</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {COMMON_SYMPTOMS.map(symptom => (
-                            <div key={symptom} className="flex items-center space-x-2">
-                              <Checkbox id={symptom} checked={anamnesisForm.symptoms?.includes(symptom)} onCheckedChange={() => toggleAnamnesisList('symptoms', symptom)} />
-                              <label htmlFor={symptom} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{symptom}</label>
-                            </div>
-                          ))}
-                        </div>
+            <Card className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-foreground flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Ficha de Anamnese</CardTitle>
+                <Button onClick={handleSaveAnamnesis} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Save className="h-4 w-4 mr-2" /> Salvar Alterações</Button>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" /> Histórico Médico</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Condições Diagnosticadas</Label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {COMMON_CONDITIONS.map(condition => (
+                          <div key={condition} className="flex items-center space-x-2">
+                            <Checkbox id={condition} checked={anamnesisForm.diagnosed_conditions?.includes(condition)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', condition)} />
+                            <label htmlFor={condition} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{condition}</label>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2"><Label>Cirurgias Prévias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} placeholder="Liste cirurgias e datas..." className="h-20" /></div>
-                      <div className="space-y-2"><Label>Lesões Musculoesqueléticas</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} placeholder="Fraturas, torções, dores crônicas..." className="h-20" /></div>
-                      <div className="space-y-2"><Label>Medicamentos em Uso</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} placeholder="Nome, dosagem e frequência..." className="h-20" /></div>
-                      <div className="space-y-2"><Label>Histórico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} placeholder="Doenças cardíacas, diabetes na família..." className="h-20" /></div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Apple className="h-4 w-4 text-green-500" /> Estilo de Vida</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <Label>Fumante?</Label>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
-                          <span className="text-sm">{anamnesisForm.smoker ? 'Sim' : 'Não'}</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Consumo de Álcool</Label>
-                        <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="never">Nunca</SelectItem>
-                            <SelectItem value="socially">Socialmente</SelectItem>
-                            <SelectItem value="frequently">Frequentemente</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Nível de Estresse</Label>
-                        <Select value={anamnesisForm.stress_level} onValueChange={v => updateAnamnesis('stress_level', v)}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">Baixo</SelectItem>
-                            <SelectItem value="medium">Médio</SelectItem>
-                            <SelectItem value="high">Alto</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <div className="space-y-2">
+                      <Label>Sintomas Recentes</Label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {COMMON_SYMPTOMS.map(symptom => (
+                          <div key={symptom} className="flex items-center space-x-2">
+                            <Checkbox id={symptom} checked={anamnesisForm.symptoms?.includes(symptom)} onCheckedChange={() => toggleAnamnesisList('symptoms', symptom)} />
+                            <label htmlFor={symptom} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{symptom}</label>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-              <div className="space-y-6">
-                <Card className="bg-card border-border">
-                  <CardHeader><CardTitle className="text-base flex items-center gap-2"><Activity className="h-4 w-4 text-blue-500" /> Análise de Saúde</CardTitle></CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Risco Cardiovascular</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.cardio.level)}`}>{healthAnalysis.risks.cardio.level === 'low' ? 'Baixo' : healthAnalysis.risks.cardio.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
-                      <Progress value={healthAnalysis.risks.cardio.level === 'low' ? 33 : healthAnalysis.risks.cardio.level === 'medium' ? 66 : 100} className="h-2" />
-                      {healthAnalysis.risks.cardio.factors.length > 0 && <p className="text-xs text-muted-foreground mt-1">Fatores: {healthAnalysis.risks.cardio.factors.join(', ')}</p>}
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Risco Metabólico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.metabolic.level)}`}>{healthAnalysis.risks.metabolic.level === 'low' ? 'Baixo' : healthAnalysis.risks.metabolic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
-                      <Progress value={healthAnalysis.risks.metabolic.level === 'low' ? 33 : healthAnalysis.risks.metabolic.level === 'medium' ? 66 : 100} className="h-2" />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Risco Ortopédico</span><span className={`font-bold ${getRiskColor(healthAnalysis.risks.orthopedic.level)}`}>{healthAnalysis.risks.orthopedic.level === 'low' ? 'Baixo' : healthAnalysis.risks.orthopedic.level === 'medium' ? 'Moderado' : 'Alto'}</span></div>
-                      <Progress value={healthAnalysis.risks.orthopedic.level === 'low' ? 33 : healthAnalysis.risks.orthopedic.level === 'medium' ? 66 : 100} className="h-2" />
-                    </div>
-                    {healthAnalysis.risks.redFlags.length > 0 && (
-                      <div className="bg-red-500/10 p-3 rounded-md border border-red-500/20">
-                        <h4 className="text-red-500 text-xs font-bold flex items-center gap-1 mb-1"><AlertTriangle className="h-3 w-3" /> Atenção (Red Flags)</h4>
-                        <ul className="list-disc list-inside text-xs text-red-400">{healthAnalysis.risks.redFlags.map(flag => <li key={flag}>{flag}</li>)}</ul>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2"><Label>Cirurgias Prévias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} placeholder="Liste cirurgias e datas..." className="h-20" /></div>
+                    <div className="space-y-2"><Label>Lesões Musculoesqueléticas</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} placeholder="Fraturas, torções, dores crônicas..." className="h-20" /></div>
+                    <div className="space-y-2"><Label>Medicamentos em Uso</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} placeholder="Nome, dosagem e frequência..." className="h-20" /></div>
+                    <div className="space-y-2"><Label>Histórico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} placeholder="Doenças cardíacas, diabetes na família..." className="h-20" /></div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-foreground flex items-center gap-2"><Apple className="h-4 w-4 text-green-500" /> Estilo de Vida</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Fumante?</Label>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <Switch checked={anamnesisForm.smoker} onCheckedChange={c => updateAnamnesis('smoker', c)} />
+                        <span className="text-sm">{anamnesisForm.smoker ? 'Sim' : 'Não'}</span>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Consumo de Álcool</Label>
+                      <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="never">Nunca</SelectItem>
+                          <SelectItem value="socially">Socialmente</SelectItem>
+                          <SelectItem value="frequently">Frequentemente</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Nível de Estresse</Label>
+                      <Select value={anamnesisForm.stress_level} onValueChange={v => updateAnamnesis('stress_level', v)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Baixo</SelectItem>
+                          <SelectItem value="medium">Médio</SelectItem>
+                          <SelectItem value="high">Alto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
+
           <TabsContent value="biometrics">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
@@ -607,6 +651,7 @@ const ClientDetails: React.FC = () => {
               </DialogContent>
             </Dialog>
           </TabsContent>
+
           <TabsContent value="history">
             <Card className="bg-card border-border w-full">
               <CardHeader className="p-6 border-b border-border">
@@ -691,6 +736,7 @@ const ClientDetails: React.FC = () => {
               </DialogContent>
             </Dialog>
           </TabsContent>
+
           <TabsContent value="workouts">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
