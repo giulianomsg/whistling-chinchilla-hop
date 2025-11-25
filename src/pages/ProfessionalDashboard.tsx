@@ -4,9 +4,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Users, Dumbbell, CheckCircle, Calendar, Clock, Loader2, 
-  TrendingUp, Activity, Target, Utensils, ArrowRight, User, 
+import {
+  Users, Dumbbell, CheckCircle, Calendar, Clock, Loader2,
+  TrendingUp, Activity, Target, Utensils, ArrowRight, User,
   Play, Pause, AlertCircle, RefreshCw, Trophy, Medal
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
@@ -70,7 +70,7 @@ const ProfessionalDashboard: React.FC = () => {
         .eq('professional_id', user.id)
         .order('created_at', { ascending: false })
         .limit(10)
-      
+
       setRecentActivities(activities || [])
 
       // 3. Ranking de Alunos (NOVO)
@@ -83,7 +83,7 @@ const ProfessionalDashboard: React.FC = () => {
         `)
         .eq('professional_id', user.id)
         .eq('status', 'active')
-      
+
       // Processa e ordena
       const processedRanking = (rankingData || [])
         .map((item: any) => item.client)
@@ -102,19 +102,19 @@ const ProfessionalDashboard: React.FC = () => {
   const formatDuration = (seconds: number | null) => {
     if (!seconds) return 'N/A'
     const m = Math.floor(seconds / 60)
-    return m > 60 ? `${Math.floor(m/60)}h ${m%60}min` : `${m} min`
+    return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
   }
 
   const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'started': return { className: 'bg-green-500/20 text-green-400 border-green-500/50', icon: <Play className="h-3 w-3"/>, text: 'Treinando' }
-      case 'paused': return { className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50', icon: <Pause className="h-3 w-3"/>, text: 'Pausado' }
-      case 'completed': return { className: 'bg-blue-500/20 text-blue-400 border-blue-500/50', icon: <CheckCircle className="h-3 w-3"/>, text: 'Concluído' }
-      default: return { className: 'bg-red-500/20 text-red-400 border-red-500/50', icon: <AlertCircle className="h-3 w-3"/>, text: 'Abandonado' }
+      case 'started': return { className: 'bg-green-500/20 text-green-400 border-green-500/50', icon: <Play className="h-3 w-3" />, text: 'Treinando' }
+      case 'paused': return { className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50', icon: <Pause className="h-3 w-3" />, text: 'Pausado' }
+      case 'completed': return { className: 'bg-blue-500/20 text-blue-400 border-blue-500/50', icon: <CheckCircle className="h-3 w-3" />, text: 'Concluído' }
+      default: return { className: 'bg-red-500/20 text-red-400 border-red-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Abandonado' }
     }
   }
 
-  if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary"/></div>
+  if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -122,51 +122,51 @@ const ProfessionalDashboard: React.FC = () => {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Olá, {profile?.full_name || 'Profissional'}! 👋</h1>
-            <p className="mt-2 text-gray-400">Painel de controle em tempo real.</p>
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">Olá, {profile?.full_name || 'Profissional'}! 👋</h1>
+            <p className="mt-2 text-muted-foreground">Painel de controle em tempo real.</p>
           </div>
           <div className="flex gap-2">
-            <Badge variant="secondary" className="bg-white/10 text-gray-200 border-none">{format(new Date(), 'dd/MM/yyyy')}</Badge>
-            <Button variant="outline" size="sm" onClick={() => setRefreshKey(p => p + 1)} className="border-white/10 text-gray-300 hover:bg-white/10"><RefreshCw className="h-4 w-4"/></Button>
+            <Badge variant="secondary" className="bg-card text-foreground border-border">{format(new Date(), 'dd/MM/yyyy')}</Badge>
+            <Button variant="outline" size="sm" onClick={() => setRefreshKey(p => p + 1)} className="border-border text-muted-foreground hover:bg-accent"><RefreshCw className="h-4 w-4" /></Button>
           </div>
         </div>
 
         {/* Métricas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="glass-card"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary"/></CardHeader><CardContent><div className="text-2xl font-bold text-white">{metrics.totalClients}</div></CardContent></Card>
-          <Card className="glass-card"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-400"/></CardHeader><CardContent><div className="text-2xl font-bold text-white">{metrics.activeWorkouts}</div></CardContent></Card>
-          <Card className="glass-card"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-400"/></CardHeader><CardContent><div className="text-2xl font-bold text-white">{metrics.completedSessions}</div></CardContent></Card>
-          <Card className="glass-card"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-gray-400">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-400"/></CardHeader><CardContent><div className="text-2xl font-bold text-white">{metrics.activeSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Lista de Atividades Recentes */}
           <div className="lg:col-span-2">
-            <Card className="glass-card">
-              <CardHeader><CardTitle className="text-white flex items-center gap-2"><Activity className="h-5 w-5 text-orange-400"/> Atividade Recente</CardTitle></CardHeader>
+            <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
+              <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
               <CardContent>
                 {recentActivities.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">Nenhuma atividade recente.</div>
+                  <div className="text-center py-8 text-muted-foreground">Nenhuma atividade recente.</div>
                 ) : (
                   <div className="space-y-3">
                     {recentActivities.map((activity) => {
                       const info = getStatusInfo(activity.status)
                       return (
-                        <div key={activity.id} className="flex items-center justify-between p-3 border border-white/5 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer" onClick={() => navigate(`/app/clients/${activity.client_id}`)}>
+                        <div key={activity.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card hover:bg-accent cursor-pointer transition-colors" onClick={() => navigate(`/app/clients/${activity.client_id}`)}>
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary"><User className="h-4 w-4"/></div>
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary"><User className="h-4 w-4" /></div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium text-white">{activity.client?.full_name || 'Aluno'}</span>
+                                <span className="font-medium text-foreground">{activity.client?.full_name || 'Aluno'}</span>
                                 <Badge className={`text-[10px] h-5 px-1 ${info.className}`}>{info.icon} <span className="ml-1">{info.text}</span></Badge>
                               </div>
-                              <div className="text-xs text-gray-400 flex gap-3 mt-0.5">
-                                <span><Dumbbell className="h-3 w-3 inline mr-1"/>{activity.workout?.name}</span>
-                                <span><Clock className="h-3 w-3 inline mr-1"/>{formatDuration(activity.duration_seconds)}</span>
+                              <div className="text-xs text-muted-foreground flex gap-3 mt-0.5">
+                                <span><Dumbbell className="h-3 w-3 inline mr-1" />{activity.workout?.name}</span>
+                                <span><Clock className="h-3 w-3 inline mr-1" />{formatDuration(activity.duration_seconds)}</span>
                               </div>
                             </div>
                           </div>
-                          <ArrowRight className="h-4 w-4 text-gray-500"/>
+                          <ArrowRight className="h-4 w-4 text-muted-foreground" />
                         </div>
                       )
                     })}
@@ -178,7 +178,7 @@ const ProfessionalDashboard: React.FC = () => {
 
           {/* RANKING DE ALUNOS (NOVA FUNCIONALIDADE) */}
           <div className="lg:col-span-1">
-            <Card className="glass-card bg-gradient-to-b from-slate-900/80 to-black/40">
+            <Card className="bg-gradient-to-b from-slate-900/80 to-black/40 border-border shadow-xl">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-yellow-400 animate-pulse" /> Ranking de XP
@@ -192,10 +192,10 @@ const ProfessionalDashboard: React.FC = () => {
                     {rankedClients.map((client, index) => (
                       <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
                         <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-gray-500">
-                          {index === 0 ? <Medal className="h-6 w-6 text-yellow-400 mx-auto"/> : 
-                           index === 1 ? <Medal className="h-6 w-6 text-gray-300 mx-auto"/> : 
-                           index === 2 ? <Medal className="h-6 w-6 text-amber-600 mx-auto"/> : 
-                           `#${index + 1}`}
+                          {index === 0 ? <Medal className="h-6 w-6 text-yellow-400 mx-auto" /> :
+                            index === 1 ? <Medal className="h-6 w-6 text-gray-300 mx-auto" /> :
+                              index === 2 ? <Medal className="h-6 w-6 text-amber-600 mx-auto" /> :
+                                `#${index + 1}`}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-center">
@@ -215,11 +215,11 @@ const ProfessionalDashboard: React.FC = () => {
             </Card>
 
             {/* Ações Rápidas */}
-            <Card className="glass-card mt-6">
-              <CardHeader><CardTitle className="text-white text-sm">Acesso Rápido</CardTitle></CardHeader>
+            <Card className="bg-card/50 backdrop-blur-md border-border mt-6 shadow-xl">
+              <CardHeader><CardTitle className="text-foreground text-sm">Acesso Rápido</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-white/10" onClick={() => navigate('/app/clients')}><Users className="mr-2 h-4 w-4"/> Novo Aluno</Button>
-                <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-white/10" onClick={() => navigate('/app/planner')}><Dumbbell className="mr-2 h-4 w-4"/> Criar Treino</Button>
+                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/clients')}><Users className="mr-2 h-4 w-4" /> Novo Aluno</Button>
+                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/planner')}><Dumbbell className="mr-2 h-4 w-4" /> Criar Treino</Button>
               </CardContent>
             </Card>
           </div>
