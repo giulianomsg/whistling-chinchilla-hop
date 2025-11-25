@@ -325,33 +325,33 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       </Card>
 
       {/* Player Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="bg-black/40 p-2 rounded-lg"><Timer className="h-6 w-6 text-primary animate-pulse" /></div>
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
+            <div className="bg-black/40 p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
             <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider">Tempo de Treino</p>
-              <p className="text-2xl font-mono font-bold text-white tracking-widest">{formatTime(elapsedTime)}</p>
+              <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider">Tempo de Treino</p>
+              <p className="text-xl md:text-2xl font-mono font-bold text-white tracking-widest">{formatTime(elapsedTime)}</p>
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full md:w-auto">
             {!isSessionActive ? (
-              <Button size="lg" onClick={() => handleSessionAction('start')} className="bg-green-500 hover:bg-green-600 text-black font-bold px-8">
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-black font-bold px-8 h-12 md:h-11">
                 {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar
               </Button>
             ) : (
               <>
                 {sessionStatus === 'started' ? (
-                  <Button size="lg" variant="outline" onClick={() => handleSessionAction('pause')} className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10">
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-12 md:h-11">
                     <Pause className="mr-2 h-5 w-5" /> Pausar
                   </Button>
                 ) : (
-                  <Button size="lg" onClick={() => handleSessionAction('resume')} className="bg-blue-500 text-white hover:bg-blue-600">
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-12 md:h-11">
                     <Play className="mr-2 h-5 w-5" /> Retomar
                   </Button>
                 )}
-                <Button size="lg" variant="destructive" onClick={() => handleSessionAction('finish')} className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white">
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-12 md:h-11">
                   <Square className="mr-2 h-5 w-5 fill-current" /> Finalizar
                 </Button>
               </>
