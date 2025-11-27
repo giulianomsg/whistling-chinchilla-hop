@@ -391,7 +391,7 @@ const ClientDetails: React.FC = () => {
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <Badge variant="secondary">NÃ­vel {currentLevel}</Badge>
+                  <Badge variant="secondary">Nível {currentLevel}</Badge>
                   <Badge variant="outline">{clientProfile?.objective || 'Sem objetivo definido'}</Badge>
                 </div>
               </div>
