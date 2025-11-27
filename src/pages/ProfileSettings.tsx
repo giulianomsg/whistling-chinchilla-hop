@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn } from 'lucide-react'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 
@@ -106,6 +106,11 @@ const ProfileSettings: React.FC = () => {
     fullName: '',
     phone: '',
     avatarUrl: '',
+    dataNascimento: '',
+    nomePai: '',
+    nomeMae: '',
+    responsavelLegal: '',
+    cpf: '',
     bio: '',
     specialty: '',
     consultationPrice: '',
@@ -145,6 +150,11 @@ const ProfileSettings: React.FC = () => {
             fullName: profile.full_name || '',
             phone: profile.phone || '',
             avatarUrl: profile.avatar_url || '',
+            dataNascimento: profile.data_nascimento || '',
+            nomePai: profile.nome_pai || '',
+            nomeMae: profile.nome_mae || '',
+            responsavelLegal: profile.responsavel_legal || '',
+            cpf: profile.cpf || '',
             bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
           }
 
@@ -269,7 +279,16 @@ const ProfileSettings: React.FC = () => {
 
     try {
       const { error: profileError } = await supabase.from('profiles')
-        .update({ full_name: formData.fullName, phone: formData.phone, updated_at: new Date().toISOString() })
+        .update({
+          full_name: formData.fullName,
+          phone: formData.phone,
+          data_nascimento: formData.dataNascimento || null,
+          nome_pai: formData.nomePai || null,
+          nome_mae: formData.nomeMae || null,
+          responsavel_legal: formData.responsavelLegal || null,
+          cpf: formData.cpf || null,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', user.id)
 
       if (profileError) throw profileError
@@ -334,71 +353,202 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Informações Pessoais</CardTitle>
-              <CardDescription className="text-muted-foreground">Dados visíveis na plataforma.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="flex flex-col items-center gap-4">
-                {renderAvatar()}
-                <div>
-                  <input ref={fileInputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" disabled={uploading} />
-                  <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-card border-border hover:bg-accent text-foreground gap-2">
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                    Alterar Foto
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-1 w-full space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div><Label className="text-muted-foreground">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                  <div><Label className="text-muted-foreground">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-background border-border text-foreground pl-10" /></div></div>
-                </div>
-                <div><Label className="text-muted-foreground">Email</Label><Input value={user?.email || ''} disabled className="bg-muted border-border text-muted-foreground mt-1.5 cursor-not-allowed" /></div>
-              </div>
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="personal" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-5 bg-muted/50 p-1 rounded-lg">
+              <TabsTrigger value="personal">Pessoal</TabsTrigger>
+              {userRole === 'professional' && <TabsTrigger value="professional">Profissional</TabsTrigger>}
+              {userRole === 'client' && <TabsTrigger value="anamnesis">Anamnese</TabsTrigger>}
+              {userRole === 'client' && <TabsTrigger value="achievements">Conquistas</TabsTrigger>}
+            </TabsList>
 
-          {userRole === 'professional' && (
-            <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-foreground">Dados Profissionais</CardTitle>
-                <CardDescription className="text-muted-foreground">Especialidade e detalhes.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-muted-foreground">Tipo de Profissional</Label>
-                    <Select value={formData.specialty} onValueChange={v => handleInputChange('specialty', v)}>
-                      <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent className="bg-popover text-popover-foreground border-border">
-                        <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
-                        <SelectItem value="nutritionist">Nutricionista</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div><Label className="text-muted-foreground">Valor da Consulta (R$)</Label><Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                </div>
-                <div><Label className="text-muted-foreground">Biografia / Sobre Mim</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
-                <div><Label className="text-muted-foreground">Certificações (CRN / CREF)</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-              </CardContent>
-            </Card>
-          )}
-
-          {userRole === 'client' && (
-            <div className="space-y-8">
+            <TabsContent value="personal" className="mt-6 space-y-6">
               <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-foreground flex items-center gap-2"><Activity className="text-primary" /> Ficha de Anamnese</CardTitle>
-                  <CardDescription className="text-muted-foreground">Informações de saúde essenciais.</CardDescription>
+                  <CardTitle className="text-foreground">Informações Pessoais</CardTitle>
+                  <CardDescription className="text-muted-foreground">Dados visíveis na plataforma.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4 pt-6">
-                  <div><Label className="text-muted-foreground">Objetivo Principal (Resumo)</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                <CardContent className="flex flex-col md:flex-row gap-8 items-start">
+                  <div className="flex flex-col items-center gap-4">
+                    {renderAvatar()}
+                    <div>
+                      <input ref={fileInputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" disabled={uploading} />
+                      <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-card border-border hover:bg-accent text-foreground gap-2">
+                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                        Alterar Foto
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex-1 w-full space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><Label className="text-muted-foreground">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                      <div><Label className="text-muted-foreground">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-background border-border text-foreground pl-10" /></div></div>
+                      <div><Label className="text-muted-foreground">Data de Nascimento</Label><Input type="date" value={formData.dataNascimento} onChange={e => handleInputChange('dataNascimento', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                      <div><Label className="text-muted-foreground">CPF</Label><Input value={formData.cpf} onChange={e => handleInputChange('cpf', e.target.value)} className="bg-background border-border text-foreground mt-1.5" placeholder="000.000.000-00" /></div>
+
+                      <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div><Label className="text-muted-foreground">Nome do Pai</Label><Input value={formData.nomePai} onChange={e => handleInputChange('nomePai', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        <div><Label className="text-muted-foreground">Nome da Mãe</Label><Input value={formData.nomeMae} onChange={e => handleInputChange('nomeMae', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        <div><Label className="text-muted-foreground">Responsável Legal</Label><Input value={formData.responsavelLegal} onChange={e => handleInputChange('responsavelLegal', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                      </div>
+                    </div>
+                    <div><Label className="text-muted-foreground">Email</Label><Input value={user?.email || ''} disabled className="bg-muted border-border text-muted-foreground mt-1.5 cursor-not-allowed" /></div>
+                  </div>
                 </CardContent>
               </Card>
-            </div >
-          )}
+            </TabsContent>
+
+            {userRole === 'professional' && (
+              <TabsContent value="professional" className="mt-6 space-y-6">
+                <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-foreground">Dados Profissionais</CardTitle>
+                    <CardDescription className="text-muted-foreground">Especialidade e detalhes.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-muted-foreground">Tipo de Profissional</Label>
+                        <Select value={formData.specialty} onValueChange={v => handleInputChange('specialty', v)}>
+                          <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                          <SelectContent className="bg-popover text-popover-foreground border-border">
+                            <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
+                            <SelectItem value="nutritionist">Nutricionista</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div><Label className="text-muted-foreground">Valor da Consulta (R$)</Label><Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                    </div>
+                    <div><Label className="text-muted-foreground">Biografia / Sobre Mim</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
+                    <div><Label className="text-muted-foreground">Certificações (CRN / CREF)</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
+
+            {userRole === 'client' && (
+              <>
+                <TabsContent value="anamnesis" className="mt-6 space-y-6">
+                  <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
+                    <CardHeader>
+                      <CardTitle className="text-foreground flex items-center gap-2"><Activity className="text-primary" /> Ficha de Anamnese</CardTitle>
+                      <CardDescription className="text-muted-foreground">Informações de saúde essenciais.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6 pt-6">
+
+                      {/* Objetivos e Restrições */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><Label className="text-muted-foreground">Objetivo Principal</Label><Textarea value={formData.goals} onChange={e => handleInputChange('goals', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        <div><Label className="text-muted-foreground">Restrições de Saúde</Label><Textarea value={formData.restrictions} onChange={e => handleInputChange('restrictions', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                      </div>
+
+                      {/* Condições e Sintomas */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <Label className="text-lg font-semibold text-foreground">Condições Diagnosticadas</Label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {COMMON_CONDITIONS.map(c => (
+                              <div key={c} className="flex items-center space-x-2">
+                                <Checkbox id={`cond-${c}`} checked={anamnesisForm.diagnosed_conditions.includes(c)} onCheckedChange={() => toggleAnamnesisList('diagnosed_conditions', c)} />
+                                <label htmlFor={`cond-${c}`} className="text-sm text-muted-foreground cursor-pointer">{c}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <Label className="text-lg font-semibold text-foreground">Sintomas Frequentes</Label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {COMMON_SYMPTOMS.map(s => (
+                              <div key={s} className="flex items-center space-x-2">
+                                <Checkbox id={`symp-${s}`} checked={anamnesisForm.symptoms.includes(s)} onCheckedChange={() => toggleAnamnesisList('symptoms', s)} />
+                                <label htmlFor={`symp-${s}`} className="text-sm text-muted-foreground cursor-pointer">{s}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Histórico Médico */}
+                      <div className="space-y-4">
+                        <Label className="text-lg font-semibold text-foreground">Histórico Médico</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div><Label className="text-muted-foreground">Histórico Familiar</Label><Textarea value={anamnesisForm.family_history} onChange={e => updateAnamnesis('family_history', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Medicamentos em Uso</Label><Textarea value={anamnesisForm.medications} onChange={e => updateAnamnesis('medications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Cirurgias Prévias</Label><Textarea value={anamnesisForm.surgeries} onChange={e => updateAnamnesis('surgeries', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Lesões</Label><Textarea value={anamnesisForm.injuries} onChange={e => updateAnamnesis('injuries', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Alergias</Label><Textarea value={anamnesisForm.allergies} onChange={e => updateAnamnesis('allergies', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        </div>
+                      </div>
+
+                      {/* Estilo de Vida */}
+                      <div className="space-y-4">
+                        <Label className="text-lg font-semibold text-foreground">Estilo de Vida</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="flex items-center justify-between p-3 border border-border rounded-md">
+                            <Label className="text-muted-foreground">Fumante?</Label>
+                            <Switch checked={anamnesisForm.smoker} onCheckedChange={v => updateAnamnesis('smoker', v)} />
+                          </div>
+                          <div>
+                            <Label className="text-muted-foreground">Consumo de Álcool</Label>
+                            <Select value={anamnesisForm.alcohol} onValueChange={v => updateAnamnesis('alcohol', v)}>
+                              <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue /></SelectTrigger>
+                              <SelectContent className="bg-popover border-border"><SelectItem value="never">Nunca</SelectItem><SelectItem value="socially">Socialmente</SelectItem><SelectItem value="frequently">Frequentemente</SelectItem></SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-muted-foreground">Nível de Atividade</Label>
+                            <Select value={anamnesisForm.activity_level} onValueChange={v => updateAnamnesis('activity_level', v)}>
+                              <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue /></SelectTrigger>
+                              <SelectContent className="bg-popover border-border"><SelectItem value="sedentary">Sedentário</SelectItem><SelectItem value="light">Leve</SelectItem><SelectItem value="moderate">Moderado</SelectItem><SelectItem value="intense">Intenso</SelectItem></SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div><Label className="text-muted-foreground">Profissão</Label><Input value={anamnesisForm.occupation} onChange={e => updateAnamnesis('occupation', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Horas de Trabalho/Dia</Label><Input value={anamnesisForm.work_hours} onChange={e => updateAnamnesis('work_hours', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground mb-2 block">Atividades no Trabalho</Label>
+                          <div className="flex flex-wrap gap-4">
+                            {WORK_ACTIVITIES.map(w => (
+                              <div key={w} className="flex items-center space-x-2">
+                                <Checkbox id={`work-${w}`} checked={anamnesisForm.work_activities.includes(w)} onCheckedChange={() => toggleAnamnesisList('work_activities', w)} />
+                                <label htmlFor={`work-${w}`} className="text-sm text-muted-foreground cursor-pointer">{w}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sono e Nutrição */}
+                      <div className="space-y-4">
+                        <Label className="text-lg font-semibold text-foreground">Sono e Nutrição</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div><Label className="text-muted-foreground">Horas de Sono</Label><Input value={anamnesisForm.sleep_hours} onChange={e => updateAnamnesis('sleep_hours', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div>
+                            <Label className="text-muted-foreground">Qualidade do Sono</Label>
+                            <Select value={anamnesisForm.sleep_quality} onValueChange={v => updateAnamnesis('sleep_quality', v)}>
+                              <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue /></SelectTrigger>
+                              <SelectContent className="bg-popover border-border"><SelectItem value="good">Boa</SelectItem><SelectItem value="average">Média</SelectItem><SelectItem value="poor">Ruim</SelectItem></SelectContent>
+                            </Select>
+                          </div>
+                          <div><Label className="text-muted-foreground">Água (Litros/dia)</Label><Input value={anamnesisForm.water_intake} onChange={e => updateAnamnesis('water_intake', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div><Label className="text-muted-foreground">Histórico de Dietas</Label><Textarea value={anamnesisForm.diet_history} onChange={e => updateAnamnesis('diet_history', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                          <div><Label className="text-muted-foreground">Aversões Alimentares</Label><Textarea value={anamnesisForm.food_aversions} onChange={e => updateAnamnesis('food_aversions', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        </div>
+                      </div>
+
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="achievements" className="mt-6">
+                  <AchievementsList />
+                </TabsContent>
+              </>
+            )}
+          </Tabs>
 
           <div className="flex justify-end pt-4 border-t border-border">
             <Button type="submit" disabled={loading} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold px-8 min-w-[150px]">

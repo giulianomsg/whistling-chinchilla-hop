@@ -99,7 +99,10 @@ const Chat: React.FC = () => {
             if (msg.receiver_id === user.id || msg.sender_id === user.id) {
               if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
                 setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
-                if (msg.receiver_id === user.id) supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
+                if (msg.receiver_id === user.id) {
+                  new Audio('/notification.mp3').play().catch(e => console.error('Audio play error:', e))
+                  supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: msg.sender_id })
+                }
               }
               fetchContacts()
             }
