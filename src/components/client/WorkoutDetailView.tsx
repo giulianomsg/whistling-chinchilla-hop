@@ -15,14 +15,15 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
-import { useAuth } from '@/contexts/AuthContext' // Importar contexto
+import { useAuth } from '@/contexts/AuthContext'
+import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
 }
 
 const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) => {
-  const { refreshProfile } = useAuth() // Se o seu contexto tiver refresh, senão o fetch abaixo resolve
+  const { refreshProfile } = useAuth()
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [openVideoId, setOpenVideoId] = useState<string | null>(null)
@@ -40,6 +41,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [selectedExercise, setSelectedExercise] = useState<any>(null)
   const [logForm, setLogForm] = useState({ weight: '', reps: '', notes: '' })
   const [savingLog, setSavingLog] = useState(false)
+
+  // Gamification State
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
+  const [summaryData, setSummaryData] = useState({ xpEarned: 0, currentXP: 0, newLevel: 1, oldLevel: 1 })
 
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
@@ -150,25 +155,36 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           }).eq('id', clientWorkout.client_id)
 
           if (!updateError) {
-            // 4. Feedback
-            if (newLevel > (freshProfile.level || 1)) {
-              showSuccess(`PARABÉNS! Você subiu para o Nível ${newLevel}! 🏆`)
-            } else {
-              showSuccess(`Treino finalizado! +${xpGained} XP ganhos!`)
-            }
+            // 4. Feedback via Modal
+            setSummaryData({
+              xpEarned: xpGained,
+              currentXP: newTotalXP,
+              newLevel: newLevel,
+              oldLevel: freshProfile.level || 1
+            })
+            setShowSummaryModal(true)
 
-            // Tenta atualizar o contexto global se existir a função
             if (refreshProfile) refreshProfile()
           } else {
             console.error('Erro update XP:', updateError)
+            // Fallback se der erro no update do profile, mas a sessão fechou
+            setSessionStatus('completed'); setIsSessionActive(false)
+            setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
           }
         }
-
-        setSessionStatus('completed'); setIsSessionActive(false)
-        setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
       }
     } catch (error) { showError('Erro na sessão'); console.error(error) }
     finally { setSessionLoading(false) }
+  }
+
+  const handleCloseSummary = () => {
+    setShowSummaryModal(false)
+    setSessionStatus('completed')
+    setIsSessionActive(false)
+    setSessionId(null)
+    setElapsedTime(0)
+    setSessionStatus('idle')
+    setExecutionLogs([])
   }
 
   const handleExerciseClick = (exercise: any) => {
@@ -414,6 +430,15 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <WorkoutSummaryModal
+        isOpen={showSummaryModal}
+        onClose={handleCloseSummary}
+        xpEarned={summaryData.xpEarned}
+        currentXP={summaryData.currentXP}
+        newLevel={summaryData.newLevel}
+        oldLevel={summaryData.oldLevel}
+      />
     </div>
   )
 }

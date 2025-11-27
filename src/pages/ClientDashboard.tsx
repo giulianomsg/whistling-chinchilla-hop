@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
+import { getRankTitle, getLevelProgress } from '@/utils/gamification'
 
 interface ClientWorkout {
   id: string
@@ -191,18 +192,10 @@ const ClientDashboard: React.FC = () => {
 
   // --- CÁLCULO DE GAMIFICAÇÃO CORRIGIDO ---
   const currentXP = xpStats.current_xp
-  const xpPerLevel = 1000
   // Garante que o nível calculado bata com o do banco, ou recalcula se necessário
-  const currentLevel = xpStats.level || Math.max(1, Math.floor(currentXP / xpPerLevel) + 1)
+  const currentLevel = xpStats.level || Math.max(1, Math.floor(Math.sqrt(currentXP / 100)))
 
-  // XP necessário para o próximo nível
-  const xpForNextLevel = xpPerLevel // Faltam X para o próximo (em barra relativa)
-
-  // XP acumulado no nível atual (ex: Total 1250 -> Nível 2 -> 250XP no nível atual)
-  const xpInThisLevel = currentXP % xpPerLevel
-
-  // Porcentagem
-  const xpProgress = (xpInThisLevel / xpPerLevel) * 100
+  const levelStats = getLevelProgress(currentXP, currentLevel)
 
   if (loading || pageLoading) {
     return (
@@ -243,7 +236,13 @@ const ClientDashboard: React.FC = () => {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-end mb-2">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2"><Trophy className="h-5 w-5 text-yellow-400" /> Progresso de XP</h3>
+                    <div>
+                      <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                        <Trophy className="h-5 w-5 text-yellow-400" />
+                        {getRankTitle(currentLevel)}
+                      </h3>
+                      <p className="text-xs text-blue-200">Progresso para o Nível {currentLevel + 1}</p>
+                    </div>
                     <span className="text-sm text-primary font-mono">{currentXP} Total XP</span>
                   </div>
 
@@ -251,15 +250,15 @@ const ClientDashboard: React.FC = () => {
                   <div className="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
                     <div
                       className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] transition-all duration-1000 ease-out relative"
-                      style={{ width: `${xpProgress}%` }}
+                      style={{ width: `${levelStats.progress}%` }}
                     >
                       <div className="absolute inset-0 bg-white/20 animate-pulse-fast"></div>
                     </div>
                   </div>
 
                   <div className="flex justify-between mt-2 text-xs text-gray-400">
-                    <span>XP Atual: {xpInThisLevel}</span>
-                    <span>Próximo Nível: {xpPerLevel} XP</span>
+                    <span>XP Nível: {levelStats.xpInLevel}</span>
+                    <span>Próximo: {levelStats.xpRequiredForNext} XP</span>
                   </div>
                 </div>
               </div>
