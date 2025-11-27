@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from './AuthContext'
 import { toast } from 'sonner'
@@ -14,29 +14,33 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user } = useAuth()
   const [totalUnreadCount, setTotalUnreadCount] = useState(0)
 
-  // Ref para o áudio
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  // Função para tocar som usando Web Audio API (não depende de arquivos externos)
+  const playNotificationSound = () => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioContext) return
 
-  // Inicializar áudio e desbloquear no primeiro clique
-  useEffect(() => {
-    audioRef.current = new Audio('/notification.mp3')
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
 
-    const unlockAudio = () => {
-      if (audioRef.current) {
-        audioRef.current.play().then(() => {
-          audioRef.current?.pause()
-          if (audioRef.current) audioRef.current.currentTime = 0
-          console.log('🔊 [CHAT_CONTEXT] Áudio desbloqueado com sucesso')
-          document.removeEventListener('click', unlockAudio)
-        }).catch((e) => {
-          console.log('🔇 [CHAT_CONTEXT] Tentativa de desbloqueio falhou (normal se não houver interação):', e)
-        })
-      }
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      // Configuração do som (um "ding" agradável)
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime) // C5
+      osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1) // C6
+
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+    } catch (error) {
+      console.error('🔇 [CHAT_CONTEXT] Erro ao tocar som via Web Audio API:', error)
     }
-
-    document.addEventListener('click', unlockAudio)
-    return () => document.removeEventListener('click', unlockAudio)
-  }, [])
+  }
 
   // Buscar contagem inicial de mensagens não lidas
   const fetchUnreadCount = async () => {
@@ -94,14 +98,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Incrementar contador
             setTotalUnreadCount(prev => prev + 1)
 
-            // Tocar som de notificação APENAS se eu não for o remetente (segurança extra)
+            // Tocar som de notificação APENAS se eu não for o remetente
             if (newMessage.sender_id !== user.id) {
-              if (audioRef.current) {
-                audioRef.current.currentTime = 0
-                audioRef.current.play().catch((e) => {
-                  console.error('🔇 [CHAT_CONTEXT] Erro ao tocar notificação:', e)
-                })
-              }
+              playNotificationSound()
             }
 
             // Buscar nome do remetente para o toast
