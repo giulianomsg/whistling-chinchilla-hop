@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { useChat } from '@/contexts/ChatContext'
 import {
   LayoutDashboard,
   Users,
@@ -73,19 +74,31 @@ const DashboardLayout: React.FC = () => {
   const isActive = (path: string) => location.pathname === path
 
   // Componente de Link da Sidebar
-  const SidebarLink = ({ item, mobile = false }: { item: any, mobile?: boolean }) => (
-    <Link
-      to={item.path}
-      onClick={() => mobile && setIsMobileOpen(false)}
-      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${isActive(item.path)
+  const SidebarLink = ({ item, mobile = false }: { item: any, mobile?: boolean }) => {
+    const { totalUnreadCount } = useChat()
+    const isChat = item.path === '/app/chat'
+
+    return (
+      <Link
+        to={item.path}
+        onClick={() => mobile && setIsMobileOpen(false)}
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${isActive(item.path)
           ? 'bg-primary/20 text-primary border border-primary/20'
           : 'text-gray-400 hover:text-foreground hover:bg-accent'
-        }`}
-    >
-      <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-primary' : 'text-gray-500 group-hover:text-foreground'}`} />
-      <span className="font-medium">{item.label}</span>
-    </Link>
-  )
+          }`}
+      >
+        <div className="relative">
+          <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-primary' : 'text-gray-500 group-hover:text-foreground'}`} />
+          {isChat && totalUnreadCount > 0 && (
+            <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white animate-pulse">
+              {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+            </span>
+          )}
+        </div>
+        <span className="font-medium">{item.label}</span>
+      </Link>
+    )
+  }
 
   // Menu de Usuário (Três Pontos)
   const UserMenu = () => (
