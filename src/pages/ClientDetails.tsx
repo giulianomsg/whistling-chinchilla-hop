@@ -656,7 +656,7 @@ const ClientDetails: React.FC = () => {
             <Card className="bg-card border-border w-full">
               <CardHeader className="p-6 border-b border-border">
                 <CardTitle className="text-foreground text-xl flex items-center gap-2">
-                  <Activity className="h-6 w-6 text-orange-500" /> HistÃ³rico de ExecuÃ§Ã£o
+                  <Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -683,7 +683,7 @@ const ClientDetails: React.FC = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'ConcluÃ­do' : 'Abandonado'}</Badge>
+                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
                           <ChevronRight className="h-5 w-5 text-muted-foreground" />
                         </div>
                       </div>
@@ -699,7 +699,7 @@ const ClientDetails: React.FC = () => {
                   <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
                   <div className="text-sm text-muted-foreground flex gap-3">
                     <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
-                    <span>â€¢</span>
+                    <span>•</span>
                     <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds)}</span>
                   </div>
                 </DialogHeader>
@@ -707,19 +707,19 @@ const ClientDetails: React.FC = () => {
                   {historyLogsLoading ? (
                     <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
                   ) : historyLogs.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercÃ­cio encontrado.</div>
+                    <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
                   ) : (
                     <div className="space-y-4">
                       {historyLogs.map((log, index) => (
                         <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
-                          <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'ExercÃ­cio'}</h4>
+                          <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'Exercício'}</h4>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div className="bg-background p-2 rounded border border-border">
                               <span className="text-muted-foreground block text-xs uppercase">Carga</span>
                               <span className="font-mono font-bold">{log.weight} kg</span>
                             </div>
                             <div className="bg-background p-2 rounded border border-border">
-                              <span className="text-muted-foreground block text-xs uppercase">RepetiÃ§Ãµes</span>
+                              <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
                               <span className="font-mono font-bold">{log.reps}</span>
                             </div>
                           </div>
@@ -740,12 +740,12 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="workouts">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-foreground flex items-center gap-2"><Dumbbell className="h-5 w-5 text-primary" /> Treinos AtribuÃ­dos</CardTitle>
+                <CardTitle className="text-foreground flex items-center gap-2"><Dumbbell className="h-5 w-5 text-primary" /> Treinos Atribuídos</CardTitle>
                 <Button onClick={() => setIsAssignWorkoutOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Treino</Button>
               </CardHeader>
               <CardContent>
                 {clientWorkouts.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhum treino atribuÃ­do.</div>
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhum treino atribuído.</div>
                 ) : (
                   <div className="space-y-4">
                     {clientWorkouts.map(item => (
@@ -754,7 +754,7 @@ const ClientDetails: React.FC = () => {
                           <div className="bg-primary/10 p-2 rounded-full"><Dumbbell className="h-5 w-5 text-primary" /></div>
                           <div>
                             <h4 className="font-bold text-foreground">{item.workout?.name}</h4>
-                            <p className="text-sm text-muted-foreground">InÃ­cio: {new Date(item.start_date).toLocaleDateString()}</p>
+                            <p className="text-sm text-muted-foreground">Início: {new Date(item.start_date).toLocaleDateString()}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -782,7 +782,7 @@ const ClientDetails: React.FC = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Data de InÃ­cio</Label>
+                    <Label>Data de Início</Label>
                     <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
                   </div>
                 </div>
@@ -793,12 +793,12 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="meal-plans">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-foreground flex items-center gap-2"><Utensils className="h-5 w-5 text-primary" /> Dietas AtribuÃ­das</CardTitle>
+                <CardTitle className="text-foreground flex items-center gap-2"><Utensils className="h-5 w-5 text-primary" /> Dietas Atribuídas</CardTitle>
                 <Button onClick={() => setIsAssignMealPlanOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Dieta</Button>
               </CardHeader>
               <CardContent>
                 {clientMealPlans.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma dieta atribuÃ­da.</div>
+                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma dieta atribuída.</div>
                 ) : (
                   <div className="space-y-4">
                     {clientMealPlans.map(item => (
@@ -807,180 +807,7 @@ const ClientDetails: React.FC = () => {
                           <div className="bg-green-500/10 p-2 rounded-full"><Utensils className="h-5 w-5 text-green-500" /></div>
                           <div>
                             <h4 className="font-bold text-foreground">{item.meal_plan?.name}</h4>
-                            <p className="text-sm text-muted-foreground">InÃ­cio: {new Date(item.start_date).toLocaleDateString()}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Badge variant={item.status === 'active' ? 'default' : 'secondary'}>{item.status === 'active' ? 'Ativo' : 'Inativo'}</Badge>
-                          <Button variant="ghost" size="icon" onClick={() => handleRemoveAssignment('client_meal_plans', item.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-                <DialogFooter className="gap-2">
-                  <Button variant="outline" onClick={() => handleSaveAssessment('draft')}>Salvar Rascunho</Button>
-                  <Button onClick={() => handleSaveAssessment('completed')}>Finalizar AvaliaÃ§Ã£o</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </TabsContent>
-
-          <TabsContent value="history">
-            <Card className="bg-card border-border w-full">
-              <CardHeader className="p-6 border-b border-border">
-                <CardTitle className="text-foreground text-xl flex items-center gap-2">
-                  <Activity className="h-6 w-6 text-orange-500" /> HistÃ³rico de ExecuÃ§Ã£o
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                {historySessions.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">Nenhum treino realizado ainda.</div>
-                ) : (
-                  <div className="space-y-4">
-                    {historySessions.map(session => (
-                      <div
-                        key={session.id}
-                        className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 cursor-pointer hover:bg-muted transition-colors"
-                        onClick={() => handleHistorySessionClick(session)}
-                      >
-                        <div className="flex items-center gap-5 w-full md:w-auto">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`} >
-                            {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
-                          </div>
-                          <div>
-                            <h4 className="text-lg font-bold text-foreground">{session.workout?.name || 'Treino Avulso'}</h4>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                              <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {new Date(session.created_at).toLocaleDateString()}</span>
-                              <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {session.duration_seconds ? `${Math.floor(session.duration_seconds / 60)} min` : '--'}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'ConcluÃ­do' : 'Abandonado'}</Badge>
-                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Dialog open={isHistoryDetailOpen} onOpenChange={setIsHistoryDetailOpen}>
-              <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
-                  <div className="text-sm text-muted-foreground flex gap-3">
-                    <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
-                    <span>â€¢</span>
-                    <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds)}</span>
-                  </div>
-                </DialogHeader>
-                <ScrollArea className="max-h-[60vh] pr-4 mt-4">
-                  {historyLogsLoading ? (
-                    <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
-                  ) : historyLogs.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercÃ­cio encontrado.</div>
-                  ) : (
-                    <div className="space-y-4">
-                      {historyLogs.map((log, index) => (
-                        <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
-                          <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'ExercÃ­cio'}</h4>
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div className="bg-background p-2 rounded border border-border">
-                              <span className="text-muted-foreground block text-xs uppercase">Carga</span>
-                              <span className="font-mono font-bold">{log.weight} kg</span>
-                            </div>
-                            <div className="bg-background p-2 rounded border border-border">
-                              <span className="text-muted-foreground block text-xs uppercase">RepetiÃ§Ãµes</span>
-                              <span className="font-mono font-bold">{log.reps}</span>
-                            </div>
-                          </div>
-                          {log.notes && (
-                            <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
-                              "{log.notes}"
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
-          </TabsContent>
-
-          <TabsContent value="workouts">
-            <Card className="bg-card border-border">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-foreground flex items-center gap-2"><Dumbbell className="h-5 w-5 text-primary" /> Treinos AtribuÃ­dos</CardTitle>
-                <Button onClick={() => setIsAssignWorkoutOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Treino</Button>
-              </CardHeader>
-              <CardContent>
-                {clientWorkouts.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhum treino atribuÃ­do.</div>
-                ) : (
-                  <div className="space-y-4">
-                    {clientWorkouts.map(item => (
-                      <div key={item.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border">
-                        <div className="flex items-center gap-4">
-                          <div className="bg-primary/10 p-2 rounded-full"><Dumbbell className="h-5 w-5 text-primary" /></div>
-                          <div>
-                            <h4 className="font-bold text-foreground">{item.workout?.name}</h4>
-                            <p className="text-sm text-muted-foreground">InÃ­cio: {new Date(item.start_date).toLocaleDateString()}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Badge variant={item.status === 'active' ? 'default' : 'secondary'}>{item.status === 'active' ? 'Ativo' : 'Inativo'}</Badge>
-                          <Button variant="ghost" size="icon" onClick={() => handleRemoveAssignment('client_workouts', item.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-              <DialogContent className="bg-card border-border text-foreground">
-                <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>Selecione o Treino</Label>
-                    <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
-                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent>
-                        {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Data de InÃ­cio</Label>
-                    <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-                  </div>
-                </div>
-                <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </TabsContent>
-          <TabsContent value="meal-plans">
-            <Card className="bg-card border-border">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-foreground flex items-center gap-2"><Utensils className="h-5 w-5 text-primary" /> Dietas AtribuÃ­das</CardTitle>
-                <Button onClick={() => setIsAssignMealPlanOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Atribuir Dieta</Button>
-              </CardHeader>
-              <CardContent>
-                {clientMealPlans.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma dieta atribuÃ­da.</div>
-                ) : (
-                  <div className="space-y-4">
-                    {clientMealPlans.map(item => (
-                      <div key={item.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border">
-                        <div className="flex items-center gap-4">
-                          <div className="bg-green-500/10 p-2 rounded-full"><Utensils className="h-5 w-5 text-green-500" /></div>
-                          <div>
-                            <h4 className="font-bold text-foreground">{item.meal_plan?.name}</h4>
-                            <p className="text-sm text-muted-foreground">InÃ­cio: {new Date(item.start_date).toLocaleDateString()}</p>
+                            <p className="text-sm text-muted-foreground">Início: {new Date(item.start_date).toLocaleDateString()}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
