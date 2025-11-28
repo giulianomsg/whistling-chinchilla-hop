@@ -26,6 +26,7 @@ import {
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
+import { AchievementsList } from '@/components/gamification/AchievementsList'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
@@ -375,9 +376,13 @@ const ClientDetails: React.FC = () => {
               <TabsTrigger value="history" className="px-4 py-1.5 text-sm"><Activity className="w-4 h-4 mr-2" /> Histórico</TabsTrigger>
               <TabsTrigger value="workouts" className="px-4 py-1.5 text-sm">Treinos</TabsTrigger>
               <TabsTrigger value="meal-plans" className="px-4 py-1.5 text-sm">Dietas</TabsTrigger>
+              <TabsTrigger value="achievements" className="px-4 py-1.5 text-sm"><Trophy className="w-4 h-4 mr-2" /> Conquistas</TabsTrigger>
               <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
             </TabsList>
           </div>
+          <TabsContent value="achievements">
+            <AchievementsList />
+          </TabsContent>
           <TabsContent value="dashboard" className="space-y-6">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6 bg-card p-6 rounded-xl border border-border shadow-sm">
               <Avatar className="h-24 w-24 border-4 border-background shadow-md">
@@ -391,7 +396,7 @@ const ClientDetails: React.FC = () => {
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <Badge variant="secondary">NÃ­vel {currentLevel}</Badge>
+                  <Badge variant="secondary">Nível {currentLevel}</Badge>
                   <Badge variant="outline">{clientProfile?.objective || 'Sem objetivo definido'}</Badge>
                 </div>
               </div>

@@ -14,6 +14,34 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user } = useAuth()
   const [totalUnreadCount, setTotalUnreadCount] = useState(0)
 
+  // Função para tocar som usando Web Audio API (não depende de arquivos externos)
+  const playNotificationSound = () => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioContext) return
+
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      // Configuração do som (um "ding" agradável)
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime) // C5
+      osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1) // C6
+
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+    } catch (error) {
+      console.error('🔇 [CHAT_CONTEXT] Erro ao tocar som via Web Audio API:', error)
+    }
+  }
+
   // Buscar contagem inicial de mensagens não lidas
   const fetchUnreadCount = async () => {
     if (!user) return
@@ -62,26 +90,19 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
         async (payload) => {
           const newMessage = payload.new as any
-          
+
           // Verificar se a mensagem é para o usuário atual
           if (newMessage.receiver_id === user.id) {
             console.log('🔔 [CHAT_CONTEXT] Nova mensagem recebida globalmente:', newMessage)
-            
+
             // Incrementar contador
             setTotalUnreadCount(prev => prev + 1)
-            
-            // Tocar som de notificação APENAS se eu não for o remetente (segurança extra)
+
+            // Tocar som de notificação APENAS se eu não for o remetente
             if (newMessage.sender_id !== user.id) {
-                try {
-                  const audio = new Audio('/notification.mp3')
-                  audio.play().catch(() => {
-                    console.log('🔇 [CHAT_CONTEXT] Não foi possível tocar som de notificação (interação necessária)')
-                  })
-                } catch (error) {
-                  console.log('🔇 [CHAT_CONTEXT] Erro ao tocar som:', error)
-                }
+              playNotificationSound()
             }
-            
+
             // Buscar nome do remetente para o toast
             try {
               const { data: senderProfile } = await supabase
@@ -89,9 +110,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .select('full_name')
                 .eq('id', newMessage.sender_id)
                 .single()
-              
+
               const senderName = senderProfile?.full_name || 'Alguém'
-              
+
               // Mostrar toast rápido
               toast(`Nova mensagem de ${senderName}`, {
                 duration: 4000,
