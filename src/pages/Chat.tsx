@@ -10,7 +10,7 @@ import ChatArea from '@/components/chat/ChatArea'
 
 const Chat: React.FC = () => {
   const { user, profile } = useAuth()
-  const { refreshUnreadCount, setActiveChatId } = useChat()
+  const { refreshUnreadCount } = useChat()
   const isMobile = useIsMobile()
 
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -22,12 +22,6 @@ const Chat: React.FC = () => {
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
 
   const channelRef = useRef<any>(null)
-
-  // Atualizar o ID do chat ativo no contexto global
-  useEffect(() => {
-    setActiveChatId(selectedContact?.id || null)
-    return () => setActiveChatId(null)
-  }, [selectedContact, setActiveChatId])
 
   const fetchContacts = async () => {
     if (!user) return
