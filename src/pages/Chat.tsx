@@ -91,11 +91,20 @@ const Chat: React.FC = () => {
       })
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'chat_messages' }, // ESCUTAR TODOS OS EVENTOS (INSERT + UPDATE)
+        { event: '*', schema: 'public', table: 'chat_messages' },
         (payload) => {
           if (payload.eventType === 'UPDATE') {
             const updatedMsg = payload.new as ChatMessage
             setMessages(prev => prev.map(m => m.id === updatedMsg.id ? updatedMsg : m))
+          } else if (payload.eventType === 'INSERT') {
+            const newMsg = payload.new as ChatMessage
+            if (selectedContact && (newMsg.sender_id === selectedContact.id || newMsg.receiver_id === selectedContact.id)) {
+              setMessages(prev => [...prev, newMsg])
+              if (newMsg.sender_id === selectedContact.id) {
+                supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: selectedContact.id })
+              }
+            }
+            fetchContacts()
           }
         }
       )
