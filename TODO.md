@@ -26,6 +26,7 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Visualização de Treino do Cliente (ClientWorkout)
 - [x] Visualização de Dieta do Cliente (ClientMealPlan)
 - [x] Histórico de Treinos
+- [x] Galeria de Progresso (Upload de Fotos)
 
 ### Comunicação (Chat)
 - [x] Chat em Tempo Real (Supabase Realtime)
