@@ -79,6 +79,19 @@ const Chat: React.FC = () => {
     } catch (e) { console.error(e); showError('Erro ao enviar') }
   }
 
+  const handleInputFocus = async () => {
+    if (!selectedContact || !user) return
+
+    // 1. Atualizar no Banco de Dados
+    await supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: selectedContact.id })
+
+    // 2. Atualizar Estado Local (Lista de Contatos)
+    setContacts(prev => prev.map(c => c.id === selectedContact.id ? { ...c, unread_count: 0 } : c))
+
+    // 3. Atualizar Estado Global (Badge do Menu)
+    refreshUnreadCount()
+  }
+
   useEffect(() => {
     if (!user) return
     if (channelRef.current) supabase.removeChannel(channelRef.current)
@@ -150,14 +163,14 @@ const Chat: React.FC = () => {
     <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-border shadow-2xl">
       {isMobile ? (
         selectedContact ? (
-          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={true} online={onlineUsers.has(selectedContact.id)} user={user} />
+          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={true} online={onlineUsers.has(selectedContact.id)} user={user} onInputFocus={handleInputFocus} />
         ) : (
           <ContactsList contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }} searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers} />
         )
       ) : (
         <>
           <ContactsList contacts={contacts} loading={loading} selectedContact={selectedContact} onSelect={(c) => { setSelectedContact(c); fetchMessages(c.id); }} searchTerm={searchTerm} onSearch={setSearchTerm} onlineUsers={onlineUsers} />
-          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={false} online={selectedContact ? onlineUsers.has(selectedContact.id) : false} user={user} />
+          <ChatArea contact={selectedContact} messages={messages} loading={messagesLoading} onSend={handleSendMessage} onBack={() => setSelectedContact(null)} isMobile={false} online={selectedContact ? onlineUsers.has(selectedContact.id) : false} user={user} onInputFocus={handleInputFocus} />
         </>
       )}
     </div>

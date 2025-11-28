@@ -22,6 +22,7 @@ interface ChatAreaProps {
     isMobile: boolean
     online: boolean
     user: any
+    onInputFocus?: () => void
 }
 
 const formatChatTimestamp = (dateString: string) => {
@@ -38,7 +39,7 @@ const getInitials = (fullName: string | null, email: string) => {
     return email?.[0]?.toUpperCase() || 'U'
 }
 
-const ChatArea: React.FC<ChatAreaProps> = ({ contact, messages, loading, onSend, onBack, isMobile, online, user }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({ contact, messages, loading, onSend, onBack, isMobile, online, user, onInputFocus }) => {
 
     const [inputText, setInputText] = useState('')
     const [sending, setSending] = useState(false)
@@ -150,7 +151,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contact, messages, loading, onSend,
                     <Button type="button" variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
                         {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
                     </Button>
-                    <Input placeholder="Digite sua mensagem..." value={inputText} onChange={e => setInputText(e.target.value)} className="flex-1 bg-muted border-border text-foreground focus-visible:ring-primary/50" disabled={sending || uploading} />
+                    <Input placeholder="Digite sua mensagem..." value={inputText} onChange={e => setInputText(e.target.value)} onFocus={onInputFocus} className="flex-1 bg-muted border-border text-foreground focus-visible:ring-primary/50" disabled={sending || uploading} />
                     <Button type="submit" disabled={!inputText.trim() || sending} size="icon" className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-xl w-11 h-11 shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all hover:scale-105">
                         {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                     </Button>
