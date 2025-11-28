@@ -98,13 +98,45 @@ const Chat: React.FC = () => {
             setMessages(prev => prev.map(m => m.id === updatedMsg.id ? updatedMsg : m))
           } else if (payload.eventType === 'INSERT') {
             const newMsg = payload.new as ChatMessage
+
+            // 1. Atualizar mensagens da conversa atual
             if (selectedContact && (newMsg.sender_id === selectedContact.id || newMsg.receiver_id === selectedContact.id)) {
               setMessages(prev => [...prev, newMsg])
+
+              // Se eu recebi a mensagem e estou com a conversa aberta, marcar como lida imediatamente
               if (newMsg.sender_id === selectedContact.id) {
                 supabase.rpc('mark_conversation_as_read', { current_user_id: user.id, other_user_id: selectedContact.id })
               }
             }
-            fetchContacts()
+
+            // 2. Atualizar lista de contatos (Badges e Última Mensagem) em Tempo Real
+            setContacts(prev => prev.map(c => {
+              const isSender = c.id === newMsg.sender_id
+              const isReceiver = c.id === newMsg.receiver_id
+
+              if (isSender || isReceiver) {
+                // Se for o remetente, atualizar badge (exceto se for a conversa aberta)
+                const shouldIncrement = isSender && (!selectedContact || selectedContact.id !== c.id)
+
+                let lastMsg = newMsg.content
+                if (newMsg.message_type === 'image') lastMsg = '📷 Imagem'
+                if (newMsg.message_type === 'file') lastMsg = '📎 Arquivo'
+                if (newMsg.message_type === 'call_invite') lastMsg = '📞 Chamada'
+
+                return {
+                  ...c,
+                  last_message: lastMsg,
+                  last_message_time: newMsg.created_at,
+                  unread_count: shouldIncrement ? (c.unread_count || 0) + 1 : c.unread_count
+                }
+              }
+              return c
+            }).sort((a, b) => new Date(b.last_message_time || 0).getTime() - new Date(a.last_message_time || 0).getTime()))
+
+            // 3. Atualizar contador global se necessário
+            if (newMsg.sender_id !== user.id && (!selectedContact || selectedContact.id !== newMsg.sender_id)) {
+              refreshUnreadCount()
+            }
           }
         }
       )
