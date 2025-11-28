@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 interface ChatContextType {
   totalUnreadCount: number
   refreshUnreadCount: () => Promise<void>
+  setActiveChatId: (id: string | null) => void
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined)
@@ -13,6 +14,11 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined)
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth()
   const [totalUnreadCount, setTotalUnreadCount] = useState(0)
+  const activeChatIdRef = React.useRef<string | null>(null)
+
+  const setActiveChatId = (id: string | null) => {
+    activeChatIdRef.current = id
+  }
 
   // Função para tocar som usando Web Audio API (não depende de arquivos externos)
   const playNotificationSound = () => {
@@ -95,6 +101,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (newMessage.receiver_id === user.id) {
             console.log('🔔 [CHAT_CONTEXT] Nova mensagem recebida globalmente:', newMessage)
 
+            // Se a conversa estiver aberta, NÃO incrementar e NÃO notificar
+            if (activeChatIdRef.current === newMessage.sender_id) {
+              console.log('👀 [CHAT_CONTEXT] Conversa aberta, ignorando notificação.')
+              return
+            }
+
             // Incrementar contador
             setTotalUnreadCount(prev => prev + 1)
 
@@ -139,7 +151,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value: ChatContextType = {
     totalUnreadCount,
-    refreshUnreadCount
+    refreshUnreadCount,
+    setActiveChatId
   }
 
   return (
