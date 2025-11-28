@@ -502,6 +502,32 @@ const ClientDetails: React.FC = () => {
                 )}
               </CardContent>
             </Card>
+
+            <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
+              <DialogContent className="bg-card border-border text-foreground">
+                <DialogHeader><DialogTitle>Nova Foto de Progresso</DialogTitle></DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label>Data</Label>
+                    <Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({ ...newPhoto, date: e.target.value })} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Observações</Label>
+                    <Textarea value={newPhoto.notes} onChange={e => setNewPhoto({ ...newPhoto, notes: e.target.value })} placeholder="Opcional..." />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Foto</Label>
+                    <Input type="file" accept="image/*" onChange={e => setNewPhoto({ ...newPhoto, file: e.target.files?.[0] || null })} />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button onClick={handlePhotoUpload} disabled={uploadingPhoto || !newPhoto.file}>
+                    {uploadingPhoto ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                    Salvar Foto
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           <TabsContent value="anamnesis">

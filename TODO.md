@@ -32,6 +32,9 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Envio de Imagens e Arquivos (Supabase Storage)
 - [x] Chamadas de Vídeo e Voz (Integração Jitsi Meet)
 - [x] Contador de Mensagens Não Lidas
+    - [x] Atualização em tempo real na lista de contatos
+    - [x] Atualização do contador global no menu
+    - [x] Limpar badges ao focar no input de mensagem
 
 ### Gamificação
 - [x] Sistema de XP e Níveis
