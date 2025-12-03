@@ -125,14 +125,27 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
-        // --- LÓGICA DE XP CORRIGIDA ---
+        // --- LÓGICA DE XP CORRIGIDA (v2) ---
 
-        // 1. Finalizar Sessão
+        // 1. Validação de Tempo e Atividade
+        // Regra: Treino < 1 min ou sem logs = 0 XP
+        if (elapsedTime < 60 || executionLogs.length === 0) {
+          await supabase.from('workout_sessions')
+            .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
+            .eq('id', sessionId)
+
+          setSessionStatus('completed'); setIsSessionActive(false)
+          showSuccess('Treino finalizado! (Sem XP: muito curto ou sem registros)')
+          setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
+          return
+        }
+
+        // 2. Finalizar Sessão
         await supabase.from('workout_sessions')
           .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
           .eq('id', sessionId)
 
-        // 2. Buscar dados FRESH do banco (não usar cache/contexto aqui para evitar erro de cálculo)
+        // 3. Buscar dados FRESH do banco
         const { data: freshProfile, error: fetchError } = await supabase
           .from('profiles')
           .select('current_xp, level')
@@ -140,22 +153,30 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           .single()
 
         if (!fetchError && freshProfile) {
-          const xpBase = 100
-          const xpDurationBonus = Math.floor(elapsedTime / 60)
-          const xpGained = xpBase + xpDurationBonus
+          // Fórmula:
+          // Tempo: 2 XP por minuto (max 180 XP = 90 min)
+          // Esforço: 15 XP por exercício registrado
+          // Bônus: 50 XP se registrou todos os exercícios planejados
+
+          const timeXP = Math.min(Math.floor(elapsedTime / 60) * 2, 180)
+          const workXP = executionLogs.length * 15
+          const totalExercises = workoutExercises.length
+          const bonusXP = (executionLogs.length >= totalExercises && totalExercises > 0) ? 50 : 0
+
+          const xpGained = timeXP + workXP + bonusXP
 
           const currentXP = freshProfile.current_xp || 0
           const newTotalXP = currentXP + xpGained
-          const newLevel = Math.floor(newTotalXP / 1000) + 1 // Regra: 1000 XP por nível
+          const newLevel = Math.floor(newTotalXP / 1000) + 1
 
-          // 3. Atualizar Banco
+          // 4. Atualizar Banco
           const { error: updateError } = await supabase.from('profiles').update({
             current_xp: newTotalXP,
             level: newLevel
           }).eq('id', clientWorkout.client_id)
 
           if (!updateError) {
-            // 4. Feedback via Modal
+            // 5. Feedback via Modal
             setSummaryData({
               xpEarned: xpGained,
               currentXP: newTotalXP,
@@ -167,7 +188,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             if (refreshProfile) refreshProfile()
           } else {
             console.error('Erro update XP:', updateError)
-            // Fallback se der erro no update do profile, mas a sessão fechou
             setSessionStatus('completed'); setIsSessionActive(false)
             setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
           }
