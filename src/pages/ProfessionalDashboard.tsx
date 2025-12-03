@@ -103,26 +103,38 @@ const ProfessionalDashboard: React.FC = () => {
   useEffect(() => {
     loadDashboardData()
 
-    // Real-time subscription
+    if (!user?.id) return
+
+    // 1. Real-time Subscription
+    const channelName = `dashboard-updates-${user.id}`
     const channel = supabase
-      .channel('professional-dashboard-changes')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'workout_sessions',
-          filter: `professional_id=eq.${user?.id}`
+          filter: `professional_id=eq.${user.id}`
         },
-        () => {
-          console.log('Realtime update received!')
+        (payload) => {
+          console.log('🔔 Realtime update received:', payload)
           loadDashboardData(true)
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        console.log(`📡 Subscription status for ${channelName}:`, status)
+      })
+
+    // 2. Polling Fallback (every 30s)
+    const intervalId = setInterval(() => {
+      console.log('🔄 Polling dashboard data...')
+      loadDashboardData(true)
+    }, 30000)
 
     return () => {
       supabase.removeChannel(channel)
+      clearInterval(intervalId)
     }
   }, [user, refreshKey])
 
