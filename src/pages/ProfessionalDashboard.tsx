@@ -126,11 +126,11 @@ const ProfessionalDashboard: React.FC = () => {
         console.log(`📡 Subscription status for ${channelName}:`, status)
       })
 
-    // 2. Polling Fallback (every 30s)
+    // 2. Polling Fallback (every 5s)
     const intervalId = setInterval(() => {
       console.log('🔄 Polling dashboard data...')
       loadDashboardData(true)
-    }, 30000)
+    }, 5000)
 
     return () => {
       supabase.removeChannel(channel)
