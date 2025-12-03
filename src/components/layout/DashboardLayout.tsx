@@ -113,7 +113,7 @@ const DashboardLayout: React.FC = () => {
                   {profile?.full_name?.[0]?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="text-left hidden md:block overflow-hidden">
+              <div className="text-left overflow-hidden">
                 <p className="text-sm font-medium text-foreground truncate w-28">{profile?.full_name || 'Usuário'}</p>
                 <p className="text-xs text-muted-foreground truncate capitalize">{profile?.role === 'professional' ? 'Profissional' : 'Aluno'}</p>
               </div>
@@ -182,9 +182,6 @@ const DashboardLayout: React.FC = () => {
             <SheetContent side="left" className="w-72 bg-card border-r border-border p-0 flex flex-col">
               <div className="p-6 flex items-center justify-between border-b border-border">
                 <span className="text-xl font-bold text-foreground">Menu</span>
-                <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(false)} className="text-muted-foreground">
-                  <X className="h-5 w-5" />
-                </Button>
               </div>
               <nav className="flex-1 px-4 py-6 space-y-2">
                 {menuItems.map((item) => (
