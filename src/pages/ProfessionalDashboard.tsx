@@ -34,6 +34,106 @@ interface RankedClient {
 const ProfessionalDashboard: React.FC = () => {
   const navigate = useNavigate()
   const { user, profile, loading } = useAuth()
+  const [metrics, setMetrics] = useState({ totalClients: 0, activeWorkouts: 0, completedSessions: 0, activeSessions: 0 })
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([])
+  const [rankedClients, setRankedClients] = useState<RankedClient[]>([])
+  const [pageLoading, setPageLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const loadDashboardData = async (silent = false) => {
+    if (!user) return
+    if (!silent) setPageLoading(true)
+    try {
+      // 1. Métricas
+      const [clientsRes, workoutsRes, completedRes, activeRes] = await Promise.all([
+        supabase.from('client_professionals').select('id', { count: 'exact' }).eq('professional_id', user.id).eq('status', 'active'),
+        supabase.from('client_workouts').select('id', { count: 'exact' }).eq('professional_id', user.id).eq('status', 'active'),
+        supabase.from('workout_sessions').select('id', { count: 'exact' }).eq('professional_id', user.id).eq('status', 'completed'),
+        supabase.from('workout_sessions').select('id', { count: 'exact' }).eq('professional_id', user.id).in('status', ['started', 'paused'])
+      ])
+
+      setMetrics({
+        totalClients: clientsRes.count || 0,
+        activeWorkouts: workoutsRes.count || 0,
+        completedSessions: completedRes.count || 0,
+        activeSessions: activeRes.count || 0
+      })
+
+      // 2. Atividades Recentes
+      const { data: activities } = await supabase
+        .from('workout_sessions')
+        .select(`
+          id, client_id, workout_id, duration_seconds, status, created_at,
+          client:profiles!client_id(full_name),
+          workout:workouts!workout_id(name)
+        `)
+        .eq('professional_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      setRecentActivities((activities || []).map((a: any) => ({
+        ...a,
+        client: Array.isArray(a.client) ? a.client[0] : a.client,
+        workout: Array.isArray(a.workout) ? a.workout[0] : a.workout
+      })))
+
+      // 3. Ranking de Alunos (NOVO)
+      const { data: rankingData } = await supabase
+        .from('client_professionals')
+        .select(`
+          client:profiles!client_id (
+            id, full_name, avatar_url, current_xp, level
+          )
+        `)
+        .eq('professional_id', user.id)
+        .eq('status', 'active')
+
+      // Processa e ordena
+      const processedRanking = (rankingData || [])
+        .map((item: any) => item.client)
+        .filter((client: any) => client !== null)
+        .sort((a: any, b: any) => (b.current_xp || 0) - (a.current_xp || 0))
+        .slice(0, 5) // Top 5
+
+      setRankedClients(processedRanking)
+
+    } catch (error) { console.error(error) }
+    finally { if (!silent) setPageLoading(false) }
+  }
+
+  useEffect(() => {
+    if (!loading && user) {
+      loadDashboardData()
+
+      // Realtime Subscription
+      const channel = supabase
+        .channel('professional-dashboard-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'workout_sessions',
+            filter: `professional_id=eq.${user.id}`
+          },
+          () => {
+            console.log('Realtime update received!')
+            loadDashboardData(true)
+          }
+        )
+        .subscribe()
+
+      return () => {
+        supabase.removeChannel(channel)
+      }
+    }
+  }, [user?.id, loading, refreshKey])
+
+  const formatDuration = (seconds: number | null) => {
+    if (!seconds) return 'N/A'
+    const m = Math.floor(seconds / 60)
+    return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
+  }
 
   const getStatusInfo = (status: string) => {
     switch (status) {
