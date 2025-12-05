@@ -72,3 +72,11 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [ ] Revisar regras de segurança (RLS) no Supabase
 - [ ] Otimizar queries no Dashboard (evitar N+1)
 - [ ] Acessibilidade (A11y) em formulários complexos
+
+## 📝 Novas implementações
+
+- [ ] Acessar os treinos executados pela agenda
+- [ ] Crie perfil de Nível de Força (como do site https://my.strengthlevel.com/ e https://strengthlevel.pt/) com calculadora de força, Padrões de força e progressão de força para homens e mulheres
+- [ ] Acompanhamento de progresso de metas com dashboards
+- [ ] Registro de Metas de peso e medidas
+- [ ] 
