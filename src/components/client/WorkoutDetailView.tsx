@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3,
-  CheckCircle, Circle, Save
+  CheckCircle, Circle, Save, List, Eye
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -339,19 +339,52 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                           </div>
                           {we.notes && <p className="text-sm text-yellow-200/80 bg-yellow-900/20 p-2 rounded mb-2">⚠️ {we.notes}</p>}
 
-                          {we.exercise.gif_url && (
-                            <div className="mb-3 rounded-lg overflow-hidden border border-white/10 bg-black/20">
-                              <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-auto object-cover max-h-[200px]" />
+                          {/* Mídia e Instruções Side-by-Side */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            {we.exercise.gif_url ? (
+                              <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/20 relative group">
+                                <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
+                              </div>
+                            ) : null}
+
+                            <div className="space-y-4 text-sm">
+                              {we.exercise.instructions?.length > 0 && (
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                  <div className="flex items-center gap-2 mb-2 text-blue-400 font-semibold">
+                                    <span className="bg-blue-500/20 p-1 rounded"><List className="h-3 w-3" /></span> Instruções
+                                  </div>
+                                  <ul className="space-y-1 text-gray-300 list-disc list-inside marker:text-blue-500/50">
+                                    {we.exercise.instructions.map((inst: string, idx: number) => (
+                                      <li key={idx} className="leading-snug">{inst}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {we.exercise.tips?.length > 0 && (
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                  <div className="flex items-center gap-2 mb-2 text-yellow-400 font-semibold">
+                                    <span className="bg-yellow-500/20 p-1 rounded"><Eye className="h-3 w-3" /></span> Dicas
+                                  </div>
+                                  <ul className="space-y-1 text-gray-300 list-disc list-inside marker:text-yellow-500/50">
+                                    {we.exercise.tips.map((tip: string, idx: number) => (
+                                      <li key={idx} className="leading-snug">{tip}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
                             </div>
-                          )}
+                          </div>
 
                           {we.exercise.video_url && (
-                            <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(openVideoId === we.id ? null : we.id)} className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20">
-                              <PlayCircle className="h-4 w-4 mr-2" /> Ver Vídeo
+                            <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(openVideoId === we.id ? null : we.id)} className="w-full md:w-auto text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 border border-blue-500/20">
+                              <PlayCircle className="h-4 w-4 mr-2" />
+                              {openVideoId === we.id ? 'Fechar Vídeo' : 'Ver Vídeo no Youtube'}
                             </Button>
                           )}
                           {openVideoId === we.id && we.exercise.video_url && (
-                            <div className="mt-3 aspect-video rounded overflow-hidden bg-black">
+                            <div className="mt-3 aspect-video rounded overflow-hidden bg-black shadow-lg border border-white/10">
                               <iframe width="100%" height="100%" src={getEmbedUrl(we.exercise.video_url) || ''} allowFullScreen frameBorder="0" />
                             </div>
                           )}
