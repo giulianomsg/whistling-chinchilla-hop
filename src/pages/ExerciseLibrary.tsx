@@ -23,6 +23,7 @@ const ExerciseLibrary: React.FC = () => {
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [previewExercise, setPreviewExercise] = useState<any>(null)
 
   const initialFormState = {
     id: '', name: '', description: '',
@@ -161,9 +162,9 @@ const ExerciseLibrary: React.FC = () => {
                 <div className="flex justify-between items-center border-t border-border pt-2">
                   <Badge variant="outline" className="border-border text-muted-foreground">{ex.difficulty_level}</Badge>
                   <div className="flex gap-2 text-muted-foreground">
-                    {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500" />}
-                    {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500" />}
-                    {ex.is_public && <Eye className="h-4 w-4 text-green-500" />}
+                    {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                    {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                    {<Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
                   </div>
                 </div>
               </CardContent>
@@ -208,6 +209,69 @@ const ExerciseLibrary: React.FC = () => {
             </DialogContent>
           </Dialog>
         ))}
+
+        {/* PREVIEW DIALOG */}
+        <Dialog open={!!previewExercise} onOpenChange={(open) => !open && setPreviewExercise(null)}>
+          <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <Dumbbell className="text-primary h-6 w-6" /> {previewExercise?.name}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6">
+              {/* Media Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {previewExercise?.gif_url ? (
+                  <div className="rounded-lg overflow-hidden border border-border shadow-md bg-black/20 flex items-center justify-center min-h-[200px]">
+                    <img src={previewExercise.gif_url} alt={previewExercise.name} className="w-full h-auto object-cover" />
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-border bg-muted flex items-center justify-center min-h-[200px] text-muted-foreground">
+                    Sem GIF disponível
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <Badge variant="outline" className="mb-2 text-xs uppercase tracking-wider">{previewExercise?.difficulty_level}</Badge>
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {previewExercise?.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">{m}</Badge>)}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{previewExercise?.description || 'Sem descrição.'}</p>
+                  </div>
+
+                  {previewExercise?.video_url && (
+                    <Button variant="outline" className="w-full gap-2" onClick={() => window.open(previewExercise.video_url, '_blank')}>
+                      <Video className="h-4 w-4" /> Assistir Tutorial (Youtube)
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Instructions Section */}
+              {(previewExercise?.instructions?.length > 0 || previewExercise?.tips?.length > 0) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-6">
+                  {previewExercise.instructions?.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-2 flex items-center gap-2 text-blue-500"><List className="h-4 w-4" /> Instruções</h4>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                        {previewExercise.instructions.map((inst: string, idx: number) => <li key={idx}>{inst}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {previewExercise.tips?.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-2 flex items-center gap-2 text-yellow-500"><Eye className="h-4 w-4" /> Dicas</h4>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                        {previewExercise.tips.map((tip: string, idx: number) => <li key={idx}>{tip}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )
