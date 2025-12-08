@@ -339,6 +339,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                           </div>
                           {we.notes && <p className="text-sm text-yellow-200/80 bg-yellow-900/20 p-2 rounded mb-2">⚠️ {we.notes}</p>}
 
+                          {we.exercise.gif_url && (
+                            <div className="mb-3 rounded-lg overflow-hidden border border-white/10 bg-black/20">
+                              <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-auto object-cover max-h-[200px]" />
+                            </div>
+                          )}
+
                           {we.exercise.video_url && (
                             <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(openVideoId === we.id ? null : we.id)} className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20">
                               <PlayCircle className="h-4 w-4 mr-2" /> Ver Vídeo
