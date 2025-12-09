@@ -53,13 +53,24 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return `${h}:${m}:${s}`
   }
 
-  const getEmbedUrl = (url: string) => {
+  const getVideoId = (url: string) => {
+    if (!url) return null
     try {
+      // 1. Try URL object first for standard valid URLs
       const urlObj = new URL(url)
-      if (urlObj.hostname.includes('youtube.com')) return `https://www.youtube.com/embed/${urlObj.searchParams.get('v')}`
-      if (urlObj.hostname === 'youtu.be') return `https://www.youtube.com/embed/${urlObj.pathname.substring(1)}`
-      return url
-    } catch { return null }
+      if (urlObj.hostname === 'youtu.be') return urlObj.pathname.substring(1)
+      if (urlObj.searchParams.get('v')) return urlObj.searchParams.get('v')
+      if (urlObj.pathname.startsWith('/embed/')) return urlObj.pathname.split('/')[2]
+      if (urlObj.pathname.startsWith('/shorts/')) return urlObj.pathname.split('/')[2]
+    } catch (e) {
+      // ignore invalid URL constructor errors
+    }
+
+    // 2. Fallback Regex for partials or weird formats
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?\/]+)/)
+    if (match && match[1]) return match[1]
+
+    return null
   }
 
   const fetchLogs = async (currentSessionId: string) => {
@@ -314,6 +325,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
               <TabsContent key={day} value={`day-${day}`} className="space-y-4 mt-4">
                 {exercisesByDay[day].map((we: any, idx: number) => {
                   const isCompleted = executionLogs.some(log => log.workout_exercise_id === we.id)
+                  const videoId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
+                  const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : null
+
                   return (
                     <div key={we.id} className={`bg-black/20 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-white/5'} rounded-lg p-4 transition-colors`}>
                       <div className="flex gap-4">
@@ -339,18 +353,18 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                           </div>
                           {we.notes && <p className="text-sm text-yellow-200/80 bg-yellow-900/20 p-2 rounded mb-2">⚠️ {we.notes}</p>}
 
-                          {/* Mídia e Instruções Side-by-Side */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          {/* Mídia e Instruções Side-by-Side (200px vs Auto) */}
+                          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 mb-4 items-start">
                             {we.exercise.gif_url ? (
-                              <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/20 relative group">
+                              <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/20 relative group self-start shadow-md">
                                 <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
                               </div>
-                            ) : null}
+                            ) : <div className="hidden md:block"></div> /* Spacer if no gif */}
 
-                            <div className="space-y-4 text-sm">
+                            <div className="space-y-4 text-sm w-full">
                               {we.exercise.instructions?.length > 0 && (
-                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                                   <div className="flex items-center gap-2 mb-2 text-blue-400 font-semibold">
                                     <span className="bg-blue-500/20 p-1 rounded"><List className="h-3 w-3" /></span> Instruções
                                   </div>
@@ -363,7 +377,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                               )}
 
                               {we.exercise.tips?.length > 0 && (
-                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                                   <div className="flex items-center gap-2 mb-2 text-yellow-400 font-semibold">
                                     <span className="bg-yellow-500/20 p-1 rounded"><Eye className="h-3 w-3" /></span> Dicas
                                   </div>
@@ -377,15 +391,47 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                             </div>
                           </div>
 
-                          {we.exercise.video_url && (
-                            <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(openVideoId === we.id ? null : we.id)} className="w-full md:w-auto text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 border border-blue-500/20">
-                              <PlayCircle className="h-4 w-4 mr-2" />
-                              {openVideoId === we.id ? 'Fechar Vídeo' : 'Ver Vídeo no Youtube'}
-                            </Button>
-                          )}
-                          {openVideoId === we.id && we.exercise.video_url && (
-                            <div className="mt-3 aspect-video rounded overflow-hidden bg-black shadow-lg border border-white/10">
-                              <iframe width="100%" height="100%" src={getEmbedUrl(we.exercise.video_url) || ''} allowFullScreen frameBorder="0" />
+                          {/* Video Section with Thumbnail Preview */}
+                          {videoId && (
+                            <div className="mt-4">
+                              {openVideoId === we.id ? (
+                                <div className="space-y-2">
+                                  <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-white/10">
+                                    <iframe
+                                      width="100%"
+                                      height="100%"
+                                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                                      allowFullScreen
+                                      frameBorder="0"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    />
+                                  </div>
+                                  <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(null)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 w-full md:w-auto">
+                                    Fechar Vídeo
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div
+                                  className="relative aspect-video max-w-sm rounded-lg overflow-hidden cursor-pointer group border border-white/10"
+                                  onClick={() => setOpenVideoId(we.id)}
+                                >
+                                  {thumbnailUrl ? (
+                                    <img src={thumbnailUrl} alt="Video Thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                                      <PlayCircle className="h-12 w-12 text-slate-600" />
+                                    </div>
+                                  )}
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-all">
+                                    <div className="bg-black/60 p-3 rounded-full backdrop-blur-sm group-hover:scale-110 transition-transform">
+                                      <PlayCircle className="h-8 w-8 text-white" />
+                                    </div>
+                                  </div>
+                                  <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-xs text-white font-medium">
+                                    Ver Vídeo
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
