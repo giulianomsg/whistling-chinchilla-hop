@@ -392,78 +392,98 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                           </div>
 
                           {/* Video Section with Thumbnail Preview */}
-                          ) : (
-                          <div
-                            className="relative aspect-video max-w-sm rounded-lg overflow-hidden cursor-pointer group border border-white/10"
-                            onClick={() => setOpenVideoId(we.id)}
-                          >
-                            {thumbnailUrl ? (
-                              <img src={thumbnailUrl} alt="Video Thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                            ) : (
-                              <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                                <PlayCircle className="h-12 w-12 text-slate-600" />
-                              </div>
-                            )}
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-all">
-                              <div className="bg-black/60 p-3 rounded-full backdrop-blur-sm group-hover:scale-110 transition-transform">
-                                <PlayCircle className="h-8 w-8 text-white" />
-                              </div>
-                            </div>
-                            <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-xs text-white font-medium">
-                              Ver Vídeo
-                            </div>
-                          </div>
+                          {videoId && (
+                            <div className="mt-4">
+                              {openVideoId === we.id ? (
+                                <div className="space-y-2">
+                                  <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-white/10">
+                                    <iframe
+                                      width="100%"
+                                      height="100%"
+                                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                                      title="YouTube video player"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                      referrerPolicy="strict-origin-when-cross-origin"
+                                      allowFullScreen
+                                      className="border-0"
+                                    />
+                                  </div>
+                                  <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(null)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 w-full md:w-auto">
+                                    Fechar Vídeo
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div
+                                  className="relative aspect-video max-w-sm rounded-lg overflow-hidden cursor-pointer group border border-white/10"
+                                  onClick={() => setOpenVideoId(we.id)}
+                                >
+                                  {thumbnailUrl ? (
+                                    <img src={thumbnailUrl} alt="Video Thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                                      <PlayCircle className="h-12 w-12 text-slate-600" />
+                                    </div>
+                                  )}
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-all">
+                                    <div className="bg-black/60 p-3 rounded-full backdrop-blur-sm group-hover:scale-110 transition-transform">
+                                      <PlayCircle className="h-8 w-8 text-white" />
+                                    </div>
+                                  </div>
+                                  <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-xs text-white font-medium">
+                                    Ver Vídeo
+                                  </div>
+                                </div>
                               )}
-                        </div>
+                            </div>
                           )}
+                        </div>
                       </div>
                     </div>
-                    </div>
-            )
+                  )
                 })}
-          </TabsContent>
+              </TabsContent>
             ))}
-        </Tabs>
-      </CardContent>
-    </Card>
+          </Tabs>
+        </CardContent>
+      </Card>
 
-      {/* Player Footer */ }
-  <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
-    <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
-      <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
-        <div className="bg-black/40 p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
-        <div>
-          <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider">Tempo de Treino</p>
-          <p className="text-xl md:text-2xl font-mono font-bold text-white tracking-widest">{formatTime(elapsedTime)}</p>
+      {/* Player Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
+            <div className="bg-black/40 p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
+            <div>
+              <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider">Tempo de Treino</p>
+              <p className="text-xl md:text-2xl font-mono font-bold text-white tracking-widest">{formatTime(elapsedTime)}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 w-full md:w-auto">
+            {!isSessionActive ? (
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-black font-bold px-8 h-12 md:h-11">
+                {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar
+              </Button>
+            ) : (
+              <>
+                {sessionStatus === 'started' ? (
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-12 md:h-11">
+                    <Pause className="mr-2 h-5 w-5" /> Pausar
+                  </Button>
+                ) : (
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-12 md:h-11">
+                    <Play className="mr-2 h-5 w-5" /> Retomar
+                  </Button>
+                )}
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-12 md:h-11">
+                  <Square className="mr-2 h-5 w-5 fill-current" /> Finalizar
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-3 w-full md:w-auto">
-        {!isSessionActive ? (
-          <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-black font-bold px-8 h-12 md:h-11">
-            {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar
-          </Button>
-        ) : (
-          <>
-            {sessionStatus === 'started' ? (
-              <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-12 md:h-11">
-                <Pause className="mr-2 h-5 w-5" /> Pausar
-              </Button>
-            ) : (
-              <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-12 md:h-11">
-                <Play className="mr-2 h-5 w-5" /> Retomar
-              </Button>
-            )}
-            <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-12 md:h-11">
-              <Square className="mr-2 h-5 w-5 fill-current" /> Finalizar
-            </Button>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-
-  {/* Log Modal */ }
+      {/* Log Modal */}
       <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>
         <DialogContent className="sm:max-w-md bg-slate-900 border-white/10 text-white">
           <DialogHeader>
@@ -526,7 +546,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         newLevel={summaryData.newLevel}
         oldLevel={summaryData.oldLevel}
       />
-    </div >
+    </div>
   )
 }
 
