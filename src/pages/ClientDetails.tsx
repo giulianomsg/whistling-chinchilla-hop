@@ -394,8 +394,26 @@ const ClientDetails: React.FC = () => {
                 <div className="flex flex-wrap gap-2 text-muted-foreground text-sm">
                   <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email || 'Sem email'}</span>
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
-                  {clientProfile?.whatsapp && <span className="flex items-center gap-1 text-green-500"><Phone className="h-3 w-3" /> {clientProfile.whatsapp}</span>}
-                  {clientProfile?.telegram && <span className="flex items-center gap-1 text-blue-500"><MessageSquare className="h-3 w-3" /> {clientProfile.telegram}</span>}
+                  {clientProfile?.whatsapp && (
+                    <a
+                      href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-green-500 hover:underline"
+                    >
+                      <Phone className="h-3 w-3" /> {clientProfile.whatsapp}
+                    </a>
+                  )}
+                  {clientProfile?.telegram && (
+                    <a
+                      href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-blue-500 hover:underline"
+                    >
+                      <MessageSquare className="h-3 w-3" /> {clientProfile.telegram}
+                    </a>
+                  )}
                 </div>
                 <div className="flex gap-2 mt-3">
                   <Badge variant="secondary">Nível {currentLevel}</Badge>
@@ -885,6 +903,39 @@ const ClientDetails: React.FC = () => {
                   <div className="space-y-1"><Label className="text-muted-foreground">Nome Completo</Label><div className="font-medium">{clientProfile?.full_name}</div></div>
                   <div className="space-y-1"><Label className="text-muted-foreground">Email</Label><div className="font-medium flex items-center gap-2"><Mail className="h-4 w-4" /> {clientProfile?.email || 'Não informado'}</div></div>
                   <div className="space-y-1"><Label className="text-muted-foreground">Telefone</Label><div className="font-medium flex items-center gap-2"><Phone className="h-4 w-4" /> {clientProfile?.phone || 'Não informado'}</div></div>
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">WhatsApp</Label>
+                    <div className="font-medium flex items-center gap-2">
+                      {clientProfile?.whatsapp ? (
+                        <a
+                          href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:underline"
+                        >
+                          <Phone className="h-4 w-4" /> {clientProfile.whatsapp}
+                        </a>
+                      ) : 'Não informado'}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Telegram</Label>
+                    <div className="font-medium flex items-center gap-2">
+                      {clientProfile?.telegram ? (
+                        <a
+                          href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:underline"
+                        >
+                          <MessageSquare className="h-4 w-4" /> {clientProfile.telegram}
+                        </a>
+                      ) : 'Não informado'}
+                    </div>
+                  </div>
+
                   <div className="space-y-1"><Label className="text-muted-foreground">CPF</Label><div className="font-medium">{clientProfile?.cpf || 'Não informado'}</div></div>
                   <div className="space-y-1"><Label className="text-muted-foreground">Data de Nascimento</Label><div className="font-medium">{clientProfile?.data_nascimento ? new Date(clientProfile.data_nascimento).toLocaleDateString() : 'Não informado'}</div></div>
 
