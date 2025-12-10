@@ -405,11 +405,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                                     </div>
                                   )}
                                 </div>
-                              ) : (
-                                <div className="aspect-video rounded-lg bg-black/20 border border-white/5 flex items-center justify-center text-gray-500 text-xs h-full">
-                                  Sem Vídeo
-                                </div>
-                              )}
+                              ) : null}
                             </div>
                           </div>
 
