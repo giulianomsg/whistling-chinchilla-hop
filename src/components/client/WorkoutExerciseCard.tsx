@@ -41,40 +41,40 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     const hasInfo = (we.exercise?.instructions?.length > 0) || (we.exercise?.tips?.length > 0)
 
     return (
-        <div className={`bg-black/20 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-white/5'} rounded-lg overflow-hidden transition-all`}>
+        <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-lg overflow-hidden transition-all shadow-sm`}>
             <div className="p-4">
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`text-base font-bold ${isCompleted ? 'text-green-400' : 'text-white'}`}>{we.exercise.name}</h4>
-                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-400 text-[10px] h-5 px-1.5">Feito</Badge>}
+                            <h4 className={`text-base font-bold ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>{we.exercise.name}</h4>
+                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5">Feito</Badge>}
                         </div>
 
-                        <div className="flex flex-wrap gap-2 text-xs text-gray-400 mb-3">
-                            <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">{we.sets} séries</span>
-                            <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">{we.reps} reps</span>
-                            {we.weight && <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">{we.weight}kg</span>}
-                            {we.rest_time_seconds && <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">{we.rest_time_seconds}s</span>}
+                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-3">
+                            <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.sets} séries</span>
+                            <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.reps} reps</span>
+                            {we.weight && <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.weight}kg</span>}
+                            {we.rest_time_seconds && <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.rest_time_seconds}s</span>}
                         </div>
                     </div>
 
                     <Button
                         size="icon"
                         onClick={() => onLogClick(we)}
-                        className={`h-10 w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-white/5 hover:bg-white/10 text-gray-400 border border-white/10'}`}
+                        className={`h-10 w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
                     >
                         {isCompleted ? <CheckCircle className="h-6 w-6" /> : <Circle className="h-6 w-6" />}
                     </Button>
                 </div>
 
                 {/* Toolbar */}
-                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-white/5">
+                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-border">
                     {hasGif && (
                         <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => setShowGif(!showGif)}
-                            className={`h-8 px-2 text-xs gap-1.5 ${showGif ? 'bg-primary/20 text-primary hover:bg-primary/30' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            className={`h-8 px-2 text-xs gap-1.5 ${showGif ? 'bg-primary/20 text-primary hover:bg-primary/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                         >
                             <ImageIcon className="h-3.5 w-3.5" />
                             GIF
@@ -87,7 +87,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             size="sm"
                             variant="ghost"
                             onClick={() => setShowVideo(!showVideo)}
-                            className={`h-8 px-2 text-xs gap-1.5 ${showVideo ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            className={`h-8 px-2 text-xs gap-1.5 ${showVideo ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                         >
                             <VideoIcon className="h-3.5 w-3.5" />
                             Vídeo
@@ -100,7 +100,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             size="sm"
                             variant="ghost"
                             onClick={() => setShowInfo(!showInfo)}
-                            className={`h-8 px-2 text-xs gap-1.5 ${showInfo ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            className={`h-8 px-2 text-xs gap-1.5 ${showInfo ? 'bg-blue-500/20 text-blue-500 hover:bg-blue-500/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                         >
                             <Info className="h-3.5 w-3.5" />
                             Detalhes
@@ -112,13 +112,13 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
 
             {/* Expandable Content Area */}
             {(showGif || showVideo || showInfo) && (
-                <div className="bg-black/20 border-t border-white/5 p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                <div className="bg-muted/30 border-t border-border p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
 
                     {/* Gif View */}
                     {showGif && we.exercise.gif_url && (
                         <div className="space-y-2">
                             <p className="text-xs font-semibold text-primary/80 uppercase tracking-wider">Demonstração</p>
-                            <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/40 relative mx-auto max-w-[250px]">
+                            <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px]">
                                 <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-full object-cover" />
                             </div>
                         </div>
@@ -127,8 +127,8 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                     {/* Video View */}
                     {showVideo && videoId && (
                         <div className="space-y-2">
-                            <p className="text-xs font-semibold text-red-400/80 uppercase tracking-wider">Vídeo Completo</p>
-                            <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-white/10">
+                            <p className="text-xs font-semibold text-red-500/80 uppercase tracking-wider">Vídeo Completo</p>
+                            <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-border">
                                 <iframe
                                     width="100%"
                                     height="100%"
@@ -147,9 +147,9 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                     {showInfo && (
                         <div className="space-y-4">
                             {we.exercise.instructions?.length > 0 && (
-                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
-                                    <p className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2">Instruções</p>
-                                    <ul className="space-y-1 text-sm text-gray-300 list-disc list-inside marker:text-blue-500/50">
+                                <div className="bg-card p-3 rounded-lg border border-border shadow-sm">
+                                    <p className="text-xs font-semibold text-blue-500 uppercase tracking-wider mb-2">Instruções</p>
+                                    <ul className="space-y-1 text-sm text-foreground list-disc list-inside marker:text-blue-500/50">
                                         {we.exercise.instructions.map((inst: string, idx: number) => (
                                             <li key={idx} className="leading-snug">{inst}</li>
                                         ))}
@@ -157,9 +157,9 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                                 </div>
                             )}
                             {we.exercise.tips?.length > 0 && (
-                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                <div className="bg-card p-3 rounded-lg border border-border shadow-sm">
                                     <p className="text-xs font-semibold text-yellow-500/80 uppercase tracking-wider mb-2">Dicas</p>
-                                    <ul className="space-y-1 text-sm text-gray-300 list-disc list-inside marker:text-yellow-500/50">
+                                    <ul className="space-y-1 text-sm text-foreground list-disc list-inside marker:text-yellow-500/50">
                                         {we.exercise.tips.map((tip: string, idx: number) => (
                                             <li key={idx} className="leading-snug">{tip}</li>
                                         ))}

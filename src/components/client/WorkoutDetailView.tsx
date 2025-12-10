@@ -292,32 +292,33 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     <div className="space-y-6 pb-24">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white/5 border border-white/10 p-4 rounded-lg text-center">
-          <p className="text-2xl font-bold text-blue-400">{workoutExercises.length}</p>
-          <p className="text-xs text-gray-400">Exercícios</p>
+        <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
+          <p className="text-2xl font-bold text-blue-500">{workoutExercises.length}</p>
+          <p className="text-xs text-muted-foreground">Exercícios</p>
         </div>
-        <div className="bg-white/5 border border-white/10 p-4 rounded-lg text-center">
-          <p className="text-2xl font-bold text-green-400">{workoutExercises.reduce((s, i) => s + i.sets, 0)}</p>
-          <p className="text-xs text-gray-400">Séries</p>
+        <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
+          <p className="text-2xl font-bold text-green-500">{workoutExercises.reduce((s, i) => s + i.sets, 0)}</p>
+          <p className="text-xs text-muted-foreground">Séries</p>
         </div>
-        <div className="bg-white/5 border border-white/10 p-4 rounded-lg text-center">
-          <p className="text-2xl font-bold text-purple-400">{clientWorkout.workout.days_per_week}</p>
-          <p className="text-xs text-gray-400">Dias/Semana</p>
+        <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
+          <p className="text-2xl font-bold text-purple-500">{clientWorkout.workout.days_per_week}</p>
+          <p className="text-xs text-muted-foreground">Dias/Semana</p>
         </div>
-        <div className="bg-white/5 border border-white/10 p-4 rounded-lg text-center">
-          <p className="text-2xl font-bold text-orange-400"><BarChart3 className="h-6 w-6 mx-auto" /></p>
-          <p className="text-xs text-gray-400">Estatísticas</p>
+        <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
+          <p className="text-2xl font-bold text-orange-500"><BarChart3 className="h-6 w-6 mx-auto" /></p>
+          <p className="text-xs text-muted-foreground">Estatísticas</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <Card className="bg-white/5 border-white/10 backdrop-blur-md">
-        <CardHeader><CardTitle className="text-white">Exercícios</CardTitle></CardHeader>
+      {/* Tabs */}
+      <Card className="bg-card border-border backdrop-blur-md shadow-sm">
+        <CardHeader><CardTitle className="text-foreground">Exercícios</CardTitle></CardHeader>
         <CardContent>
           <Tabs defaultValue="day-1">
-            <TabsList className="bg-black/20 w-full justify-start overflow-x-auto">
+            <TabsList className="bg-muted w-full justify-start overflow-x-auto">
               {Object.keys(exercisesByDay).map(day => (
-                <TabsTrigger key={day} value={`day-${day}`} className="data-[state=active]:bg-primary data-[state=active]:text-black text-gray-400">
+                <TabsTrigger key={day} value={`day-${day}`} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground">
                   Dia {day}
                 </TabsTrigger>
               ))}
@@ -342,19 +343,19 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       </Card>
 
       {/* Player Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-white/10 backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 border-t border-border backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
           <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
-            <div className="bg-black/40 p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
+            <div className="bg-muted p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
             <div>
-              <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider">Tempo de Treino</p>
-              <p className="text-xl md:text-2xl font-mono font-bold text-white tracking-widest">{formatTime(elapsedTime)}</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">Tempo de Treino</p>
+              <p className="text-xl md:text-2xl font-mono font-bold text-foreground tracking-widest">{formatTime(elapsedTime)}</p>
             </div>
           </div>
 
           <div className="flex gap-3 w-full md:w-auto">
             {!isSessionActive ? (
-              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-black font-bold px-8 h-12 md:h-11">
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-8 h-12 md:h-11">
                 {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar
               </Button>
             ) : (
@@ -379,67 +380,68 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       {/* Log Modal */}
       <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>
-        <DialogContent className="sm:max-w-md bg-slate-900 border-white/10 text-white">
-          <DialogHeader>
-            <DialogTitle>Registrar Execução</DialogTitle>
-            <DialogDescription className="text-gray-400">
-              {selectedExercise?.exercise?.name}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="weight" className="text-gray-300">Carga (kg)</Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  placeholder="0"
-                  value={logForm.weight}
-                  onChange={e => setLogForm({ ...logForm, weight: e.target.value })}
-                  className="bg-black/20 border-white/10 text-white"
-                />
+        <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>
+          <DialogContent className="sm:max-w-md bg-card border-border text-foreground">
+            <DialogHeader>
+              <DialogTitle>Registrar Execução</DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                {selectedExercise?.exercise?.name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="weight" className="text-muted-foreground">Carga (kg)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    placeholder="0"
+                    value={logForm.weight}
+                    onChange={e => setLogForm({ ...logForm, weight: e.target.value })}
+                    className="bg-muted border-border text-foreground"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="reps" className="text-muted-foreground">Repetições</Label>
+                  <Input
+                    id="reps"
+                    type="number"
+                    placeholder="0"
+                    value={logForm.reps}
+                    onChange={e => setLogForm({ ...logForm, reps: e.target.value })}
+                    className="bg-muted border-border text-foreground"
+                  />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="reps" className="text-gray-300">Repetições</Label>
-                <Input
-                  id="reps"
-                  type="number"
-                  placeholder="0"
-                  value={logForm.reps}
-                  onChange={e => setLogForm({ ...logForm, reps: e.target.value })}
-                  className="bg-black/20 border-white/10 text-white"
+                <Label htmlFor="notes" className="text-muted-foreground">Observações</Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Como foi a série? (Opcional)"
+                  value={logForm.notes}
+                  onChange={e => setLogForm({ ...logForm, notes: e.target.value })}
+                  className="bg-muted border-border text-foreground"
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="notes" className="text-gray-300">Observações</Label>
-              <Textarea
-                id="notes"
-                placeholder="Como foi a série? (Opcional)"
-                value={logForm.notes}
-                onChange={e => setLogForm({ ...logForm, notes: e.target.value })}
-                className="bg-black/20 border-white/10 text-white"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">Cancelar</Button>
-            <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
-              {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-              Salvar Registro
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-border text-muted-foreground hover:bg-muted hover:text-foreground">Cancelar</Button>
+              <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
+                {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                Salvar Registro
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-      <WorkoutSummaryModal
-        isOpen={showSummaryModal}
-        onClose={handleCloseSummary}
-        xpEarned={summaryData.xpEarned}
-        currentXP={summaryData.currentXP}
-        newLevel={summaryData.newLevel}
-        oldLevel={summaryData.oldLevel}
-      />
+        <WorkoutSummaryModal
+          isOpen={showSummaryModal}
+          onClose={handleCloseSummary}
+          xpEarned={summaryData.xpEarned}
+          currentXP={summaryData.currentXP}
+          newLevel={summaryData.newLevel}
+          oldLevel={summaryData.oldLevel}
+        />
     </div>
   )
 }
