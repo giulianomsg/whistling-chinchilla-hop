@@ -186,8 +186,8 @@ const ProfileSettings: React.FC = () => {
             nomeMae: profile.nome_mae || '',
             responsavelLegal: profile.responsavel_legal || '',
             cpf: profile.cpf || '',
-            whatsapp: profile.whatsapp || '',
-            telegram: profile.telegram || '',
+            whatsapp: '',
+            telegram: '',
             bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
           }
 
@@ -206,8 +206,11 @@ const ProfileSettings: React.FC = () => {
           } else if (role === 'client') {
             const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
             if (clientData) {
+              console.log('Dados do Cliente Carregados:', clientData)
               newFormData.goals = clientData.goals || ''
               newFormData.restrictions = clientData.health_restrictions || ''
+              newFormData.whatsapp = clientData.whatsapp || ''
+              newFormData.telegram = clientData.telegram || ''
 
               if (clientData.anamnesis_data) {
                 const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
