@@ -145,10 +145,11 @@ const ClientDetails: React.FC = () => {
   const [newPhoto, setNewPhoto] = useState({ date: new Date().toISOString().split('T')[0], notes: '', file: null as File | null })
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
 
-  // Rejection State
   const [rejectionReason, setRejectionReason] = useState('')
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
   const [selectedScheduleId, setSelectedScheduleId] = useState('')
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
+  const [cancellationReason, setCancellationReason] = useState('')
 
   useEffect(() => {
     const loadData = async () => {
@@ -248,7 +249,7 @@ const ClientDetails: React.FC = () => {
         showSuccess('Treino agendado (Aguardando cliente)')
         // Refresh agenda
         const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
-        setScheduledWorkouts(data || [])
+        setScheduledWorkouts([...(data || [])]) // Spread to ensure new ref
       } else {
         // Regular Assignment (Client_Workouts)
         const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
@@ -415,8 +416,9 @@ const ClientDetails: React.FC = () => {
       const { error } = await supabase.from('scheduled_workouts').update({ status: 'confirmed' }).eq('id', scheduleId)
       if (error) throw error
       showSuccess('Treino confirmado!')
+      // Force refresh
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
-      setScheduledWorkouts(data || [])
+      setScheduledWorkouts([...(data || [])])
     } catch (e) { showError('Erro ao confirmar') }
   }
 
@@ -483,6 +485,25 @@ const ClientDetails: React.FC = () => {
       case 'high': return 'text-red-500'
       default: return 'text-muted-foreground'
     }
+  }
+
+  const handleCancelWithReason = async () => {
+    if (!cancellationReason.trim()) return showError('Informe o motivo')
+    try {
+      const { error } = await supabase.from('scheduled_workouts')
+        .update({ status: 'cancelled', cancellation_reason: cancellationReason })
+        .eq('id', selectedScheduleId)
+
+      if (error) throw error
+      showSuccess('Agendamento cancelado.')
+
+      // Refresh
+      const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+      setScheduledWorkouts([...(data || [])])
+
+      setIsCancelDialogOpen(false)
+      setCancellationReason('')
+    } catch (e) { showError('Erro ao cancelar') }
   }
 
   return (
@@ -573,15 +594,18 @@ const ClientDetails: React.FC = () => {
                               </div>
                             </div>
                             {/* Actions for Pro */}
-                            {schedule.status === 'pending_approval' && schedule.created_by === id && (
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="outline" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleRejectSchedule(schedule.id)}>Rejeitar</Button>
-                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aprovar</Button>
-                              </div>
-                            )}
-                            {schedule.status === 'confirmed' && (
-                              <Button size="sm" variant="ghost" disabled><CheckCircle className="h-4 w-4 text-green-500 mr-2" /> Agendado</Button>
-                            )}
+                            <div className="flex items-center gap-2">
+                              {schedule.status === 'pending_approval' && schedule.created_by === id ? (
+                                <div className="flex gap-2">
+                                  <Button size="sm" variant="outline" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => { setSelectedScheduleId(schedule.id); setIsRejectDialogOpen(true) }}>Rejeitar</Button>
+                                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aprovar</Button>
+                                </div>
+                              ) : (
+                                (schedule.status === 'confirmed' || schedule.status === 'pending_approval') && (
+                                  <Button size="sm" variant="ghost" className="text-destructive hover:bg-destructive/10" onClick={() => { setSelectedScheduleId(schedule.id); setIsCancelDialogOpen(true) }}>Cancelar</Button>
+                                )
+                              )}
+                            </div>
                           </div>
                         ))
                     )}
@@ -613,7 +637,6 @@ const ClientDetails: React.FC = () => {
                   </div>
                 </Card>
               </div>
-            </div>
           </TabsContent>
           <TabsContent value="achievements">
             <AchievementsList />
@@ -1052,6 +1075,8 @@ const ClientDetails: React.FC = () => {
                 </ScrollArea>
               </DialogContent>
             </Dialog>
+           </div>
+          </div>
           </TabsContent>
 
           <TabsContent value="workouts">
@@ -1232,9 +1257,10 @@ const ClientDetails: React.FC = () => {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
-      </div>
-      {/* Moved Dialogs outside TabsContent */}
+        </Tabs >
+      </div >
+
+
       <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
         <DialogContent className="bg-card border-border text-foreground">
           <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
@@ -1243,7 +1269,6 @@ const ClientDetails: React.FC = () => {
               <Label>Data</Label>
               <div className="border rounded p-2 text-sm">{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione no calendário'}</div>
             </div>
-            {/* Added time input */}
             <div className="space-y-2">
               <Label>Horário</Label>
               <Input type="time" value={selectedTime} onChange={e => setSelectedTime(e.target.value)} />
@@ -1280,8 +1305,28 @@ const ClientDetails: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+
+      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <DialogContent className="bg-card border-border text-foreground">
+          <DialogHeader><DialogTitle>Cancelar Agendamento</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <Label>Motivo do Cancelamento</Label>
+            <Textarea
+              value={cancellationReason}
+              onChange={e => setCancellationReason(e.target.value)}
+              placeholder="Motivo do cancelamento (Obrigatório)"
+              className="resize-none"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)}>Voltar</Button>
+            <Button variant="destructive" onClick={handleCancelWithReason} disabled={!cancellationReason.trim()}>Confirmar Cancelamento</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div >
   )
 }
+
 
 export default ClientDetails

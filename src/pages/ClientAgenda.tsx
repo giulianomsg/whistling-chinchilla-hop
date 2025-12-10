@@ -63,6 +63,8 @@ const ClientAgenda: React.FC = () => {
     const [rejectionReason, setRejectionReason] = useState('')
     const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
     const [selectedScheduleId, setSelectedScheduleId] = useState('')
+    const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
+    const [cancellationReason, setCancellationReason] = useState('')
 
     // History Detail State
     const [selectedHistorySession, setSelectedHistorySession] = useState<WorkoutSession | null>(null)
@@ -223,15 +225,16 @@ const ClientAgenda: React.FC = () => {
         }
     }
 
-    const handleCancelSchedule = async (id: string) => {
+    const handleCancelWithReason = async () => {
+        if (!cancellationReason.trim()) { toast.error('Informe o motivo'); return; }
         try {
-            const { error } = await supabase.from('scheduled_workouts').delete().eq('id', id)
+            const { error } = await supabase.from('scheduled_workouts').update({ status: 'cancelled', cancellation_reason: cancellationReason }).eq('id', selectedScheduleId)
             if (error) throw error
             toast.success('Agendamento cancelado.')
-            setScheduledWorkouts(prev => prev.filter(s => s.id !== id))
-        } catch (error) {
-            toast.error('Erro ao cancelar.')
-        }
+            setScheduledWorkouts(prev => prev.filter(s => s.id !== selectedScheduleId))
+            setIsCancelDialogOpen(false)
+            setCancellationReason('')
+        } catch (e) { toast.error('Erro ao cancelar') }
     }
 
     const handleApproveSchedule = async (scheduleId: string) => {
@@ -241,7 +244,7 @@ const ClientAgenda: React.FC = () => {
             toast.success('Agendamento confirmado!')
             // Refresh
             const { data } = await supabase.from('scheduled_workouts').select('*, workout:workouts(name)').eq('client_id', user!.id).order('scheduled_at', { ascending: true })
-            if (data) setScheduledWorkouts(data)
+            if (data) setScheduledWorkouts([...data])
         } catch (e) { toast.error('Erro ao confirmar') }
     }
 
@@ -382,7 +385,7 @@ const ClientAgenda: React.FC = () => {
                                                                 variant="ghost"
                                                                 size="sm"
                                                                 className="text-muted-foreground hover:text-destructive"
-                                                                onClick={() => handleCancelSchedule(schedule.id)}
+                                                                onClick={() => { setSelectedScheduleId(schedule.id); setIsCancelDialogOpen(true) }}
                                                             >
                                                                 Cancelar
                                                             </Button>
@@ -504,6 +507,26 @@ const ClientAgenda: React.FC = () => {
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsRejectDialogOpen(false)}>Cancelar</Button>
                             <Button variant="destructive" onClick={confirmRejection} disabled={!rejectionReason.trim()}>Rejeitar</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Dialog de Cancelamento */}
+                <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+                    <DialogContent className="bg-card border-border text-foreground">
+                        <DialogHeader><DialogTitle>Cancelar Agendamento</DialogTitle></DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <Label>Motivo do Cancelamento</Label>
+                            <Textarea
+                                value={cancellationReason}
+                                onChange={e => setCancellationReason(e.target.value)}
+                                placeholder="Motivo do cancelamento (Obrigatório)"
+                                className="resize-none"
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)}>Voltar</Button>
+                            <Button variant="destructive" onClick={handleCancelWithReason} disabled={!cancellationReason.trim()}>Confirmar Cancelamento</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

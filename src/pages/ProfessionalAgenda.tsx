@@ -154,8 +154,13 @@ const ProfessionalAgenda: React.FC = () => {
                                                         <p className="text-sm text-muted-foreground">{schedule.workout?.name || 'Treino'}</p>
                                                     </div>
                                                 </div>
-                                                <Badge variant={schedule.status === 'confirmed' ? 'default' : 'outline'} className={schedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}>
-                                                    {schedule.status === 'pending_approval' ? 'Pendente' : 'Confirmado'}
+                                                <Badge variant={
+                                                    schedule.status === 'confirmed' ? 'default' :
+                                                        schedule.status === 'cancelled' ? 'destructive' : 'outline'
+                                                } className={schedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}>
+                                                    {schedule.status === 'pending_approval' ? 'Pendente' :
+                                                        schedule.status === 'confirmed' ? 'Confirmado' :
+                                                            schedule.status === 'cancelled' ? 'Cancelado' : schedule.status}
                                                 </Badge>
                                             </div>
                                         ))}
@@ -191,6 +196,25 @@ const ProfessionalAgenda: React.FC = () => {
                                     <div className="text-xs text-muted-foreground">Treino</div>
                                     <div className="font-medium">{selectedSchedule.workout?.name}</div>
                                 </div>
+                                <div className="space-y-1">
+                                    <div className="text-xs text-muted-foreground">Status</div>
+                                    <Badge variant={
+                                        selectedSchedule.status === 'confirmed' ? 'default' :
+                                            selectedSchedule.status === 'cancelled' ? 'destructive' : 'outline'
+                                    } className={selectedSchedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}>
+                                        {selectedSchedule.status === 'pending_approval' ? 'Pendente' :
+                                            selectedSchedule.status === 'confirmed' ? 'Confirmado' :
+                                                selectedSchedule.status === 'cancelled' ? 'Cancelado' : selectedSchedule.status}
+                                    </Badge>
+                                </div>
+                                {selectedSchedule.cancellation_reason && (
+                                    <div className="space-y-1">
+                                        <div className="text-xs text-red-500 font-medium">Motivo do Cancelamento</div>
+                                        <div className="text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-2 rounded border border-red-100 dark:border-red-800">
+                                            {selectedSchedule.cancellation_reason}
+                                        </div>
+                                    </div>
+                                )}
                                 {selectedSchedule.notes && (
                                     <div className="space-y-1">
                                         <div className="text-xs text-muted-foreground">Observações</div>
@@ -207,7 +231,7 @@ const ProfessionalAgenda: React.FC = () => {
                     </DialogContent>
                 </Dialog>
             </div>
-        </div>
+        </div >
     )
 }
 
