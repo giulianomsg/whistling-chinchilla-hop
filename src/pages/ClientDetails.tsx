@@ -392,35 +392,37 @@ const ClientDetails: React.FC = () => {
               </Avatar>
               <div className="space-y-1 flex-1">
                 <h2 className="text-2xl font-bold text-foreground">{clientProfile?.full_name}</h2>
-                <div className="flex flex-wrap gap-2 text-muted-foreground text-sm">
-                  <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email || 'Sem email'}</span>
-                  {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
+                <div className="flex flex-col gap-2 mt-2 text-muted-foreground text-sm">
+                  <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {clientProfile?.email || 'Sem email'}</span>
+                  {clientProfile?.phone && <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {clientProfile.phone}</span>}
+
                   {clientProfile?.whatsapp && (
-                    <div className="flex items-center gap-1">
-                      <span className="flex items-center gap-1"><i className="fa-brands fa-whatsapp text-green-500" /> {clientProfile.whatsapp}</span>
+                    <div className="flex items-center gap-2">
                       <a
                         href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-green-500 hover:text-green-600"
+                        className="flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
                         title="Abrir WhatsApp"
                       >
-                        <i className="fa-solid fa-arrow-up-right-from-square text-sm" />
+                        <i className="fa-brands fa-whatsapp text-sm" />
                       </a>
+                      <span>{clientProfile.whatsapp}</span>
                     </div>
                   )}
+
                   {clientProfile?.telegram && (
-                    <div className="flex items-center gap-1">
-                      <span className="flex items-center gap-1"><i className="fa-brands fa-telegram text-blue-500" /> {clientProfile.telegram}</span>
+                    <div className="flex items-center gap-2">
                       <a
                         href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:text-blue-600"
+                        className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
                         title="Abrir Telegram"
                       >
-                        <i className="fa-solid fa-arrow-up-right-from-square text-sm" />
+                        <i className="fa-brands fa-telegram text-sm" />
                       </a>
+                      <span>{clientProfile.telegram}</span>
                     </div>
                   )}
                 </div>
