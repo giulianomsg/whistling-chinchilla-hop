@@ -637,6 +637,7 @@ const ClientDetails: React.FC = () => {
                   </div>
                 </Card>
               </div>
+            </div>
           </TabsContent>
           <TabsContent value="achievements">
             <AchievementsList />
@@ -1075,8 +1076,7 @@ const ClientDetails: React.FC = () => {
                 </ScrollArea>
               </DialogContent>
             </Dialog>
-           </div>
-          </div>
+
           </TabsContent>
 
           <TabsContent value="workouts">
@@ -1258,75 +1258,75 @@ const ClientDetails: React.FC = () => {
             </Card>
           </TabsContent>
         </Tabs >
+
+
+
+        <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
+          <DialogContent className="bg-card border-border text-foreground">
+            <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Data</Label>
+                <div className="border rounded p-2 text-sm">{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione no calendário'}</div>
+              </div>
+              <div className="space-y-2">
+                <Label>Horário</Label>
+                <Input type="time" value={selectedTime} onChange={e => setSelectedTime(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Selecione o Treino</Label>
+                <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
+                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+          <DialogContent className="bg-card border-border text-foreground">
+            <DialogHeader><DialogTitle>Rejeitar Solicitação</DialogTitle></DialogHeader>
+            <div className="space-y-4 py-4">
+              <Label>Motivo da Rejeição</Label>
+              <Textarea
+                value={rejectionReason}
+                onChange={e => setRejectionReason(e.target.value)}
+                placeholder="Por que você está rejeitando este horário?"
+                className="resize-none"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setIsRejectDialogOpen(false)}>Cancelar</Button>
+              <Button variant="destructive" onClick={confirmRejection} disabled={!rejectionReason.trim()}>Rejeitar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+          <DialogContent className="bg-card border-border text-foreground">
+            <DialogHeader><DialogTitle>Cancelar Agendamento</DialogTitle></DialogHeader>
+            <div className="space-y-4 py-4">
+              <Label>Motivo do Cancelamento</Label>
+              <Textarea
+                value={cancellationReason}
+                onChange={e => setCancellationReason(e.target.value)}
+                placeholder="Motivo do cancelamento (Obrigatório)"
+                className="resize-none"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)}>Voltar</Button>
+              <Button variant="destructive" onClick={handleCancelWithReason} disabled={!cancellationReason.trim()}>Confirmar Cancelamento</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div >
-
-
-      <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
-          <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Data</Label>
-              <div className="border rounded p-2 text-sm">{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione no calendário'}</div>
-            </div>
-            <div className="space-y-2">
-              <Label>Horário</Label>
-              <Input type="time" value={selectedTime} onChange={e => setSelectedTime(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Selecione o Treino</Label>
-              <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
-                <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                <SelectContent>
-                  {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
-          <DialogHeader><DialogTitle>Rejeitar Solicitação</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <Label>Motivo da Rejeição</Label>
-            <Textarea
-              value={rejectionReason}
-              onChange={e => setRejectionReason(e.target.value)}
-              placeholder="Por que você está rejeitando este horário?"
-              className="resize-none"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsRejectDialogOpen(false)}>Cancelar</Button>
-            <Button variant="destructive" onClick={confirmRejection} disabled={!rejectionReason.trim()}>Rejeitar</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
-          <DialogHeader><DialogTitle>Cancelar Agendamento</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <Label>Motivo do Cancelamento</Label>
-            <Textarea
-              value={cancellationReason}
-              onChange={e => setCancellationReason(e.target.value)}
-              placeholder="Motivo do cancelamento (Obrigatório)"
-              className="resize-none"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)}>Voltar</Button>
-            <Button variant="destructive" onClick={handleCancelWithReason} disabled={!cancellationReason.trim()}>Confirmar Cancelamento</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div >
-  )
+      )
 }
 
 
-export default ClientDetails
+      export default ClientDetails
