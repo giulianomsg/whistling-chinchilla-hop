@@ -2,9 +2,9 @@
 -- PostgreSQL database cluster dump
 --
 
--- Started on 2025-11-26 22:24:04
+-- Started on 2025-12-10 00:18:25
 
-\restrict 4BcZgL7yYXCOZFfE87udFqudLULbzEMVhJbwbXOaEhfhnxxxoXjjkdg4UsKCfwF
+\restrict idlFMsh8ctsNWvqwg8Fuu0gZRPSpYD72Np6DdXYHVMWEF0RWmlsAQYDRBNoCjcr
 
 SET default_transaction_read_only = off;
 
@@ -26,7 +26,7 @@ ALTER ROLE dashboard_user WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB NOLOGIN R
 CREATE ROLE pgbouncer;
 ALTER ROLE pgbouncer WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:l4cSyliC3ZxkiHIsPE9LXQ==$GY5iprnWIipWbCA965yQTOH14lBCsQqMP7t7+7sHjWA=:H1zJVtz7cN3WwYtRPGVByPnxPhFltQktD2WK5jpsezM=';
 CREATE ROLE postgres;
-ALTER ROLE postgres WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:iVNmPH7qBA7xq1QhFb7vBA==$D15uPDrZbpthLvWs7NreYHatjmdwll1ynEBpAlg166Q=:k3dcpBn1+kn8nhbhO0Ui8OloMBhNpRJNIgx1OwIYu8U=';
+ALTER ROLE postgres WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:3R1hP7oUk7s7p/WfPu7V5Q==$R2fycfBFaM3fQPlJh2EU08RFdvYz/Erq2oeCHhJrxc8=:KcROmFIIVEBjx1eKVTKqn9Y708UCylSeLvMClJ0D2XE=';
 CREATE ROLE service_role;
 ALTER ROLE service_role WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION BYPASSRLS;
 CREATE ROLE supabase_admin;
@@ -130,7 +130,7 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 
 
 
-\unrestrict 4BcZgL7yYXCOZFfE87udFqudLULbzEMVhJbwbXOaEhfhnxxxoXjjkdg4UsKCfwF
+\unrestrict idlFMsh8ctsNWvqwg8Fuu0gZRPSpYD72Np6DdXYHVMWEF0RWmlsAQYDRBNoCjcr
 
 --
 -- Databases
@@ -146,12 +146,12 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 -- PostgreSQL database dump
 --
 
-\restrict XgS0RB1odcZAjHbwg7BHWkktkTyMTbjHrhcQG0W2YecWI91vl8ctKFt8tkOupd2
+\restrict y0Cpx8hXNTm0wSu6bWt4coNrqgfvg25JcDI2lWrW9LTHDyg65Apo4Z4jBGPewMa
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2025-11-26 22:24:11
+-- Started on 2025-12-10 00:18:32
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -165,13 +165,13 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
--- Completed on 2025-11-26 22:24:29
+-- Completed on 2025-12-10 00:18:49
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict XgS0RB1odcZAjHbwg7BHWkktkTyMTbjHrhcQG0W2YecWI91vl8ctKFt8tkOupd2
+\unrestrict y0Cpx8hXNTm0wSu6bWt4coNrqgfvg25JcDI2lWrW9LTHDyg65Apo4Z4jBGPewMa
 
 --
 -- Database "postgres" dump
@@ -183,12 +183,12 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
-\restrict Bc5pYVO33JyJp6ZrMFCcERfGN4itgj6IQ2fBoxNwiHryEUB68vo0WybrSHpGkGR
+\restrict NQlf2TPnKyxn9vEchafijhckjDY78Hb02gb9yQ1oycmB5VAKMPG8hpnAPaKihkT
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2025-11-26 22:24:29
+-- Started on 2025-12-10 00:18:49
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -368,7 +368,7 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
--- TOC entry 1234 (class 1247 OID 16784)
+-- TOC entry 1228 (class 1247 OID 16784)
 -- Name: aal_level; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -382,7 +382,7 @@ CREATE TYPE auth.aal_level AS ENUM (
 ALTER TYPE auth.aal_level OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1258 (class 1247 OID 16925)
+-- TOC entry 1252 (class 1247 OID 16925)
 -- Name: code_challenge_method; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -395,7 +395,7 @@ CREATE TYPE auth.code_challenge_method AS ENUM (
 ALTER TYPE auth.code_challenge_method OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1231 (class 1247 OID 16778)
+-- TOC entry 1225 (class 1247 OID 16778)
 -- Name: factor_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -408,7 +408,7 @@ CREATE TYPE auth.factor_status AS ENUM (
 ALTER TYPE auth.factor_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1228 (class 1247 OID 16773)
+-- TOC entry 1222 (class 1247 OID 16773)
 -- Name: factor_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -422,7 +422,7 @@ CREATE TYPE auth.factor_type AS ENUM (
 ALTER TYPE auth.factor_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1276 (class 1247 OID 17028)
+-- TOC entry 1270 (class 1247 OID 17028)
 -- Name: oauth_authorization_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -437,7 +437,7 @@ CREATE TYPE auth.oauth_authorization_status AS ENUM (
 ALTER TYPE auth.oauth_authorization_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1288 (class 1247 OID 17101)
+-- TOC entry 1282 (class 1247 OID 17101)
 -- Name: oauth_client_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -450,7 +450,7 @@ CREATE TYPE auth.oauth_client_type AS ENUM (
 ALTER TYPE auth.oauth_client_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1270 (class 1247 OID 17006)
+-- TOC entry 1264 (class 1247 OID 17006)
 -- Name: oauth_registration_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -463,7 +463,7 @@ CREATE TYPE auth.oauth_registration_type AS ENUM (
 ALTER TYPE auth.oauth_registration_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1279 (class 1247 OID 17038)
+-- TOC entry 1273 (class 1247 OID 17038)
 -- Name: oauth_response_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -475,7 +475,7 @@ CREATE TYPE auth.oauth_response_type AS ENUM (
 ALTER TYPE auth.oauth_response_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1264 (class 1247 OID 16967)
+-- TOC entry 1258 (class 1247 OID 16967)
 -- Name: one_time_token_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -492,7 +492,7 @@ CREATE TYPE auth.one_time_token_type AS ENUM (
 ALTER TYPE auth.one_time_token_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1318 (class 1247 OID 17312)
+-- TOC entry 1312 (class 1247 OID 17312)
 -- Name: action; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -508,7 +508,7 @@ CREATE TYPE realtime.action AS ENUM (
 ALTER TYPE realtime.action OWNER TO supabase_admin;
 
 --
--- TOC entry 1309 (class 1247 OID 17272)
+-- TOC entry 1303 (class 1247 OID 17272)
 -- Name: equality_op; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -526,7 +526,7 @@ CREATE TYPE realtime.equality_op AS ENUM (
 ALTER TYPE realtime.equality_op OWNER TO supabase_admin;
 
 --
--- TOC entry 1312 (class 1247 OID 17287)
+-- TOC entry 1306 (class 1247 OID 17287)
 -- Name: user_defined_filter; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -540,7 +540,7 @@ CREATE TYPE realtime.user_defined_filter AS (
 ALTER TYPE realtime.user_defined_filter OWNER TO supabase_admin;
 
 --
--- TOC entry 1324 (class 1247 OID 17358)
+-- TOC entry 1318 (class 1247 OID 17358)
 -- Name: wal_column; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -557,7 +557,7 @@ CREATE TYPE realtime.wal_column AS (
 ALTER TYPE realtime.wal_column OWNER TO supabase_admin;
 
 --
--- TOC entry 1321 (class 1247 OID 17325)
+-- TOC entry 1315 (class 1247 OID 17325)
 -- Name: wal_rls; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -572,7 +572,7 @@ CREATE TYPE realtime.wal_rls AS (
 ALTER TYPE realtime.wal_rls OWNER TO supabase_admin;
 
 --
--- TOC entry 1303 (class 1247 OID 17241)
+-- TOC entry 1297 (class 1247 OID 17241)
 -- Name: buckettype; Type: TYPE; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -4087,7 +4087,7 @@ COMMENT ON COLUMN auth.users.is_sso_user IS 'Auth: Set this column to true when 
 
 
 --
--- TOC entry 416 (class 1259 OID 29858)
+-- TOC entry 410 (class 1259 OID 29858)
 -- Name: achievements; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -4189,7 +4189,9 @@ CREATE TABLE public.client_details (
     emergency_contact jsonb,
     health_restrictions text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    whatsapp text,
+    telegram text
 );
 
 
@@ -4390,6 +4392,8 @@ CREATE TABLE public.professional_details (
     is_active boolean DEFAULT true,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    whatsapp text,
+    telegram text,
     CONSTRAINT professional_details_specialty_check CHECK ((specialty = ANY (ARRAY['personal_trainer'::text, 'nutritionist'::text])))
 );
 
@@ -4430,6 +4434,11 @@ CREATE TABLE public.profiles (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     current_xp integer DEFAULT 0,
     level integer DEFAULT 1,
+    data_nascimento date,
+    cpf text,
+    nome_pai text,
+    nome_mae text,
+    responsavel_legal text,
     CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['admin'::text, 'professional'::text, 'client'::text])))
 );
 
@@ -4497,7 +4506,7 @@ CREATE TABLE public.recipes (
 ALTER TABLE public.recipes OWNER TO postgres;
 
 --
--- TOC entry 417 (class 1259 OID 29871)
+-- TOC entry 411 (class 1259 OID 29871)
 -- Name: user_achievements; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -4512,7 +4521,7 @@ CREATE TABLE public.user_achievements (
 ALTER TABLE public.user_achievements OWNER TO postgres;
 
 --
--- TOC entry 415 (class 1259 OID 28702)
+-- TOC entry 409 (class 1259 OID 28702)
 -- Name: workout_execution_logs; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -4648,11 +4657,11 @@ PARTITION BY RANGE (inserted_at);
 ALTER TABLE realtime.messages OWNER TO supabase_realtime_admin;
 
 --
--- TOC entry 409 (class 1259 OID 22572)
--- Name: messages_2025_11_23; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 412 (class 1259 OID 40104)
+-- Name: messages_2025_12_07; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_23 (
+CREATE TABLE realtime.messages_2025_12_07 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4664,14 +4673,14 @@ CREATE TABLE realtime.messages_2025_11_23 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_23 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_07 OWNER TO supabase_admin;
 
 --
--- TOC entry 410 (class 1259 OID 24982)
--- Name: messages_2025_11_24; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 413 (class 1259 OID 40116)
+-- Name: messages_2025_12_08; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_24 (
+CREATE TABLE realtime.messages_2025_12_08 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4683,14 +4692,14 @@ CREATE TABLE realtime.messages_2025_11_24 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_24 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_08 OWNER TO supabase_admin;
 
 --
--- TOC entry 411 (class 1259 OID 25020)
--- Name: messages_2025_11_25; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 414 (class 1259 OID 44540)
+-- Name: messages_2025_12_09; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_25 (
+CREATE TABLE realtime.messages_2025_12_09 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4702,14 +4711,14 @@ CREATE TABLE realtime.messages_2025_11_25 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_25 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_09 OWNER TO supabase_admin;
 
 --
--- TOC entry 412 (class 1259 OID 26290)
--- Name: messages_2025_11_26; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 415 (class 1259 OID 44552)
+-- Name: messages_2025_12_10; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_26 (
+CREATE TABLE realtime.messages_2025_12_10 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4721,14 +4730,14 @@ CREATE TABLE realtime.messages_2025_11_26 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_26 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_10 OWNER TO supabase_admin;
 
 --
--- TOC entry 413 (class 1259 OID 27574)
--- Name: messages_2025_11_27; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 416 (class 1259 OID 44564)
+-- Name: messages_2025_12_11; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_27 (
+CREATE TABLE realtime.messages_2025_12_11 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4740,14 +4749,14 @@ CREATE TABLE realtime.messages_2025_11_27 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_27 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_11 OWNER TO supabase_admin;
 
 --
--- TOC entry 414 (class 1259 OID 28690)
--- Name: messages_2025_11_28; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 417 (class 1259 OID 44576)
+-- Name: messages_2025_12_12; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_28 (
+CREATE TABLE realtime.messages_2025_12_12 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4759,14 +4768,14 @@ CREATE TABLE realtime.messages_2025_11_28 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_28 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_12 OWNER TO supabase_admin;
 
 --
--- TOC entry 418 (class 1259 OID 29966)
--- Name: messages_2025_11_29; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 418 (class 1259 OID 45691)
+-- Name: messages_2025_12_13; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_11_29 (
+CREATE TABLE realtime.messages_2025_12_13 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4778,7 +4787,7 @@ CREATE TABLE realtime.messages_2025_11_29 (
 );
 
 
-ALTER TABLE realtime.messages_2025_11_29 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_13 OWNER TO supabase_admin;
 
 --
 -- TOC entry 377 (class 1259 OID 17225)
@@ -5017,58 +5026,58 @@ ALTER TABLE storage.vector_indexes OWNER TO supabase_storage_admin;
 
 --
 -- TOC entry 3819 (class 0 OID 0)
--- Name: messages_2025_11_23; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_07; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_23 FOR VALUES FROM ('2025-11-23 00:00:00') TO ('2025-11-24 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_07 FOR VALUES FROM ('2025-12-07 00:00:00') TO ('2025-12-08 00:00:00');
 
 
 --
 -- TOC entry 3820 (class 0 OID 0)
--- Name: messages_2025_11_24; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_08; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_24 FOR VALUES FROM ('2025-11-24 00:00:00') TO ('2025-11-25 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_08 FOR VALUES FROM ('2025-12-08 00:00:00') TO ('2025-12-09 00:00:00');
 
 
 --
 -- TOC entry 3821 (class 0 OID 0)
--- Name: messages_2025_11_25; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_09; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_25 FOR VALUES FROM ('2025-11-25 00:00:00') TO ('2025-11-26 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_09 FOR VALUES FROM ('2025-12-09 00:00:00') TO ('2025-12-10 00:00:00');
 
 
 --
 -- TOC entry 3822 (class 0 OID 0)
--- Name: messages_2025_11_26; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_10; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_26 FOR VALUES FROM ('2025-11-26 00:00:00') TO ('2025-11-27 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_10 FOR VALUES FROM ('2025-12-10 00:00:00') TO ('2025-12-11 00:00:00');
 
 
 --
 -- TOC entry 3823 (class 0 OID 0)
--- Name: messages_2025_11_27; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_11; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_27 FOR VALUES FROM ('2025-11-27 00:00:00') TO ('2025-11-28 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_11 FOR VALUES FROM ('2025-12-11 00:00:00') TO ('2025-12-12 00:00:00');
 
 
 --
 -- TOC entry 3824 (class 0 OID 0)
--- Name: messages_2025_11_28; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_12; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_28 FOR VALUES FROM ('2025-11-28 00:00:00') TO ('2025-11-29 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_12 FOR VALUES FROM ('2025-12-12 00:00:00') TO ('2025-12-13 00:00:00');
 
 
 --
 -- TOC entry 3825 (class 0 OID 0)
--- Name: messages_2025_11_29; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- Name: messages_2025_12_13; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_11_29 FOR VALUES FROM ('2025-11-29 00:00:00') TO ('2025-11-30 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_13 FOR VALUES FROM ('2025-12-13 00:00:00') TO ('2025-12-14 00:00:00');
 
 
 --
@@ -5102,6 +5111,211 @@ INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0f2717da-d298-4d36-91cf-19bc9708ee74', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 00:33:54.731436+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cc4bc628-9390-4297-868a-68c341ccd2a1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 00:33:54.733863+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '58acd0c4-76b2-4ee9-8fcc-2babc3b49e82', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-27 00:36:47.517482+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '94a76637-1d36-4ebc-a03f-de74d04a6e62', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:26:58.720728+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9606d09d-0dc5-42d8-bf4f-8c4ac8128e3c', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:26:58.726603+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '11ba5de6-04e1-4601-8072-1d00bfb88292', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:32:18.016212+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5895df93-6816-44a1-b5d3-2f5f0d854229', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:32:18.028626+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '444425ab-ea58-407a-ab15-18c9bc4aa73c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:35:17.932475+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b447e62c-a8a7-4e06-b4a1-f736e35fbfca', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 01:35:17.93363+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a2be78c4-ad92-45f8-8ad8-0f59dbffd7af', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-27 02:08:12.678882+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3c4c5691-b4b7-41c1-9c39-028ef9cb3dd8', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-27 02:08:39.351978+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1f0f0fe4-57c7-4f71-9ce5-a487772c1662', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 02:09:02.638734+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b05f3865-8abd-4fcd-869b-5b54ab9c8432', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 02:09:02.640017+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '73096e4f-d429-4b6c-bed3-791bd31f1eae', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 02:25:58.485182+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '459d0bee-dcc2-4332-891f-ffbce3d0d31a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 02:25:58.5027+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5508dec8-6a65-493c-9f97-01a54baca4d4', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-27 02:56:55.61688+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1f9d8cb8-7506-4d4a-a380-5396a3ea249b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:06:18.016703+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b5d49168-a262-4dc6-9ff8-3ae2e127dd16', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:06:18.026914+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '33e5a7ad-27cf-4751-99a5-dac9f50b0a3c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:24:58.498573+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '34df19f6-9ea2-4f63-aa5c-b61465c4f6d0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:24:58.516573+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f36021e6-c024-4859-bcca-f25dcfe97416', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:55:18.198897+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e8630be-8c18-468c-b2fd-b5447b0dc8b5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 03:55:18.220147+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b29f818-dc67-414f-8304-df38dc3b5fc4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 04:23:58.528667+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e5a6010-c57d-4e1b-b2df-f5dcad118504', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 04:23:58.544773+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2afde8b5-227a-4666-bc15-7d9bad8cf651', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 04:53:18.316897+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '67323ff1-21b8-40f8-8b46-bba68f7a508a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 04:53:18.328819+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ced9acaf-5090-4a1c-a227-9b953468ae2b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 05:22:58.802303+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '56bb302f-d7ac-45c3-85e3-f9c4661abadc', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 05:22:58.812918+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9265ea66-6447-41a0-82b1-e8beb30bc0b8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 05:51:18.372155+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7ceea51d-fea2-4555-8ced-d5e8e70cf78c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 05:51:18.390577+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '632b55eb-83a8-4aed-8151-8dbd8d784cbb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 06:21:59.109697+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b514655d-3ab6-49d0-827b-09b6c805664d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 06:21:59.128424+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd82643dd-6aca-48eb-b957-8611fff47bcd', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 06:49:18.206419+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5f8eac3b-4768-4dbb-8e72-ad09c91a19c9', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 06:49:18.217274+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5b23e66a-fbde-4e53-8c70-8bd24769609f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 07:20:58.571207+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '66f57050-d9e0-4b09-b540-759bc97a6c57', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 07:20:58.589561+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd47f2e12-28c6-4804-980f-9739978df724', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 07:47:18.269906+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'af41681d-6556-43a9-868b-6b540ea1513b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 07:47:18.278282+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0a0c87b0-a649-40d6-9f8c-4d3461019cf9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 08:19:58.665652+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd8c5ff6b-d892-43d9-9cd9-1eaeda18bec1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 08:19:58.68429+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '273c5c4e-075f-4ead-937b-6ab93c254c7d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 08:45:18.084884+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0868de63-d286-4b23-9b74-89bd774717b9', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 08:45:18.096623+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f6e7b5d3-868a-4c25-b205-698f5876c7e1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 09:18:58.808279+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0e7968eb-2982-4597-8b72-40ad5982fa36', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 09:18:58.830011+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d3571f7-6372-497b-a309-e97b7dabf502', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 09:43:18.15687+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd604eb13-a40f-4894-882f-b3f1928dad41', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 09:43:18.174347+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '86e0e017-180a-4ac4-bf40-9135b87450ce', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 10:17:58.434155+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '087b9b44-29e7-45d3-9e56-0e9abab41c95', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 10:17:58.446905+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '614b147e-77c8-4ca0-aa45-476bbfd39d77', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 11:16:41.685649+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9c5ff898-5ec1-433e-a931-9d8674d31d31', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 11:16:41.698405+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '69cb4343-1f0f-4346-9a91-b3440db37119', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 12:15:58.765645+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9df4e01c-ca0e-4307-ae95-f4a71f0a5010', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 12:15:58.783878+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fe874440-b118-4f42-b718-359934b1a506', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 13:14:58.740282+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '077402d2-46eb-4061-b4af-0bed09f28e9f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 13:14:58.754883+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '655de5ee-025d-4551-8b17-179336f76838', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 14:13:58.729157+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '107f2571-4ee2-4e1f-8b5a-6d9d2a4240d7', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 14:13:58.742353+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd9e10a4b-3753-49ee-92d5-1d615832e3a4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 15:12:58.658429+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9120857c-2ad5-43df-8ae8-c599fdf495c1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 15:12:58.672704+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '47c8c7bc-9788-453d-9d9a-942c01fbbc60', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 16:11:44.689928+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b113451b-bcf1-480e-8663-3c62008e9648', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 16:11:44.696499+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '442ff067-49c3-4511-b883-c5b2f11a6530', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 17:10:58.735439+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8a076f54-3689-4525-b371-d32a71b5e4b9', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 17:10:58.757411+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8a6a1f66-eac2-4d76-a8cb-8132949d3fe8', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-11-27 17:14:48.51659+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6ec6f873-f209-4188-b539-c8c6ee1e38c5', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-11-27 17:15:04.160519+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e8f744b5-8a28-4de0-922f-5f156cbff006', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 20:15:18.838618+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '452a7a5e-aa30-4fc9-96c1-7294b2921fe8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 20:15:18.852005+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0791602c-6a26-41ea-b39d-135ccb90f5c2', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 20:22:40.073527+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e130b616-f532-4c9a-b8c0-294d6cb26591', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-27 20:22:40.075144+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fe8a8299-9d31-4f4d-a8ae-aaa851990676', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:05:13.944315+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '78ffcb8f-35a5-4414-938d-e951c5ccbe2f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:05:13.970681+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e76a6e49-0da8-4209-9330-38e16c379718', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-28 00:07:18.763673+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '00722c47-39f6-4ead-9c80-ca64d0dba62f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:28:06.025424+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '61c3864f-30ce-4e7f-aee6-d0396668aa33', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:28:06.032334+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '72f3655f-892c-4b02-b4e3-ebeb455b9b08', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:29:02.133379+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e6503cbe-2d76-4236-96ec-d5bb6a311254', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 00:29:02.134335+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ce083560-4505-438f-b55e-7ee87e23c30e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 01:25:31.040405+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '941078d7-7dbb-43e6-b95d-40b2c00bcb09', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 01:25:31.052203+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b2639b2f-a634-42f5-885d-f54583ccb083', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 01:27:18.059385+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3d268a45-1c70-41f9-9388-5d9d715eb28b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 01:27:18.061499+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a2ca228d-9c59-448b-855c-426f3aa1bd7d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 02:23:19.227936+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c25eefed-3807-434c-8026-6129fb2d7dae', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 02:23:19.249692+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0aaf6149-1154-4af5-a3d9-7fb4f8138202', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 02:25:18.487666+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1b2b8fcc-0b9c-4f17-a8ef-5ec5df7b39d5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 02:25:18.489574+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6e39318b-735d-4099-a77b-b16b9c369be5', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 03:21:18.916163+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '66b5849a-e02c-4a40-b347-e86459bc61f7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 03:21:18.935169+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c165507d-027c-4347-b38e-20dde92a0373', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 03:23:19.027611+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9ff77261-afd8-4da1-a11b-ff9158f13338', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 03:23:19.036802+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '96628a86-bf06-401b-bc8e-4005cd1aa578', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 04:19:19.259713+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e856bce6-20d0-43d8-aaea-721d4e656a43', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 04:19:19.271007+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2441adbc-5a68-4120-b161-50ef4c7173ba', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 04:21:18.720415+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '179c9d24-2145-488f-a9a1-e580b8b67d40', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 04:21:18.723188+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '505da750-7609-4292-938b-35b7c6d82843', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 05:17:19.305456+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7ee3cff8-c60f-4690-ae41-60f5ccc236e7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 05:17:19.324863+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e100ddb-141f-48ed-b324-e1a6558595fa', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 05:19:18.449365+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '06bffa09-0dda-43e0-8d0c-7e7ce90e2da5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 05:19:18.451625+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '167286b1-5dff-4c78-b936-9f35c610677e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 06:15:18.977222+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '06e01535-e34a-4d78-aae1-757efe935c06', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 06:15:18.986362+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d93a31b-1acb-409c-9cc3-cebc8ef1a1a4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 06:17:18.694314+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a65cb6e7-77a1-4447-b702-411253d15d3e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 06:17:18.696563+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4fa30d93-7394-4ad7-881c-47ff05232cf1', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 07:13:18.963964+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd4c237a6-ad53-4562-b109-6582bdd2db37', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 07:13:18.984048+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7f4009b8-0457-43bb-8206-19405aa0dc86', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 07:15:18.959312+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e93f876-6ff8-4f04-a547-e56e163b84be', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 07:15:18.965817+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd972e6df-9764-4fdb-a047-5287e854993f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 08:11:18.959347+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0327d742-f2a3-4fa3-8f51-b64d934243bf', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 08:11:18.983763+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a8aae316-7cfe-4263-abca-dc657bf09d3e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 08:13:18.487518+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '31b57c33-f697-4046-8fc0-166bfb918bf9', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 08:13:18.489214+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7945e867-1495-49d3-8e0f-841d6f5becfd', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 09:09:19.116972+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '93ec210a-dc91-4b8a-bd11-a24818e84da7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 09:09:19.131995+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '86d12c68-521c-496e-aebb-13c399f46957', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 09:11:18.663643+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c2649d32-a16a-4bed-9d3a-957599a8f886', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 09:11:18.665207+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b59c67a7-8e50-45ba-ac49-f89a7b7383f1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 17:30:00.030657+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a8ffe97c-8080-424f-b709-bbe2c2f3d023', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 17:30:00.047674+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4f1300f0-d638-4c78-9f0b-bf6f7f1f56fa', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 17:30:14.17301+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9f37c483-428c-4c56-8d65-e4d7246c92c2', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 17:30:14.173915+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '95a34688-0eff-49c9-9e4c-e3edbca12fb7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 18:28:58.641579+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3e2e2ba9-9da3-4061-b031-a0c36080eef1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-28 18:28:58.668184+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8e161e24-8329-439f-a680-8b55b2553adb', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-29 14:50:57.350032+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cf13f2e8-f200-4bc6-9dfe-0fda50a62cbc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-29 14:50:57.375835+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aa48134a-96c0-454a-81ff-d3936f861008', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-11-29 14:55:06.314261+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '32dac136-ad63-41bb-8803-0a03e84a91c2', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-29 14:55:09.691497+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ec1cf697-a519-4356-b850-b5ee422508cf', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-11-29 15:14:36.948463+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6952b8e5-9cfa-4eb0-8576-ba29a4948f8e', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-29 15:14:43.981641+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b273bf64-4f77-4e3f-97dc-fe50a5e27f84', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-29 22:45:58.345142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '68d86440-58c1-4ccf-81d5-a70556d70a0e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-11-29 22:45:58.370255+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8107cfb3-d71b-4b17-acbb-984c078b7dfd', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-11-30 00:01:12.817271+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '91106b28-6e58-4bbe-99a2-a1d216df6b7a', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-03 01:02:23.634331+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0c5d4a4b-f317-4a4b-813d-56cfe3e8de7e', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-03 01:23:36.131217+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ccbeb40c-6712-47db-921a-d5ddbaa7fc45', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 02:01:18.470339+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3efc0db3-9d01-45a5-877d-6a5c99d9db73', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 02:01:18.48987+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '60d1e030-ec9d-4dac-9e6f-8701721de32e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 02:22:18.460444+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ded945df-b3db-4ad5-b292-6ef0fde92bb3', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 02:22:18.484033+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0be20da5-2ca3-4d27-b265-278faf608be2', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 03:00:03.631841+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a22a039b-e07c-493d-b06f-5a8470d405f1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 03:00:03.639169+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3968639e-9ddc-4fc7-83ca-0009552777da', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 03:21:17.615078+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fd3db57c-6292-4ee0-ab0b-f4303ca3680f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 03:21:17.638208+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f237a143-3ed3-4dd8-9309-96500fb999d4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 16:17:45.144079+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2724391b-6060-4eed-b2a0-cd5a1b0c40ea', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-03 16:17:45.173232+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '92c8b085-c476-4b3d-bb7b-920eb7a9be62', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 14:45:17.97274+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eaf559a8-a783-400b-947f-4ee0a5b28994', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 14:45:17.971547+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7e4d226e-bc89-46f5-96c8-b890bfcb0eea', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 14:45:17.997596+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '74256bca-6ad8-4c89-9ad9-893fb4fad521', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 14:45:17.998795+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'de95205e-ebfa-41ba-86e1-e79d93732897', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 15:44:19.996287+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '66dfcdb1-175e-4eca-acec-580deb8396ed', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 15:44:19.998689+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1a78fbb0-9cc1-443b-a844-0768aed9bba0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 15:44:20.012516+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8e025505-9321-4ee4-899d-0dfc5d5aac4e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 15:44:20.012622+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd9ed376b-828c-41a0-8522-5d5fcff312e4', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 17:12:00.82801+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bbfebcd8-a33d-49ed-a337-3cb9e6482cd3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 17:12:00.850025+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '95b422c6-5eca-47dd-a7e1-f1dbffc4e2e4', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 18:11:19.719018+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f31fefa8-6635-43ae-bdf2-d071128d4822', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 18:11:19.736683+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3f503d1a-fa20-4653-b3d4-227f933d65b7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 19:10:19.854486+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '29945ae3-2b27-4e19-9ab8-2fe4ae02e0b6', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-04 19:10:19.875084+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '448a0472-2f17-4e4b-9766-b329c3fe6496', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 01:02:59.883255+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '65a1ff39-ce38-4cd1-9b6b-e3d14b587fb7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 01:02:59.907027+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b6b7683-6165-40ee-b9d3-bf8493da0c5c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 01:57:37.308899+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2bf27235-859d-4b56-8f5a-56ce96487288', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 01:57:37.321098+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9508626c-31af-417a-9cdf-7b5728df9ce0', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 02:01:19.566549+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bc497a8d-2552-49f2-b109-86c01feed3ee', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-05 02:01:19.577904+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e3ab37bd-6269-467c-a567-99a29eabe673', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 15:34:49.6472+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4e672a71-9afc-4954-848a-75f55bfcb5d5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 15:34:49.677602+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7761da2e-0e8b-4f96-bec8-511beda69bde', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 15:34:50.310366+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2f88ff45-b656-489d-b352-2083abf1f49a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 15:34:50.311915+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ce777e8e-c263-4c98-8873-b34735d5ffa3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 16:50:53.992742+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '19ca59e0-8266-486b-bfca-bb726fdf0d06', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 16:50:53.992934+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3b42cffd-a53e-44ab-984a-e2d759528883', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 16:50:54.00935+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b15bcdfc-8d1a-4905-a35f-139d8e3adde5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 16:50:54.010512+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba63f156-3065-4fe9-b755-fc378bfb101e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 18:35:33.148966+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '73392445-0500-480b-a093-368bfe044302', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 18:35:33.14974+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '861c4387-fd31-4709-8ff4-2090c14ec5d6', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 18:35:33.171918+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'afd456e0-adb8-40e9-856a-00a259c8555b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 18:35:33.172571+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a7d00f5a-8dbd-45e2-b0a5-b9c4c0f04f52', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 19:34:04.340204+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '939a5c83-538c-434f-869d-336b924d95e0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 19:34:04.361167+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '064c326d-2422-4222-abec-0ef415b73681', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 19:34:22.209008+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5543f8dd-4a05-4f2b-90e6-a886aa5c85d2', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 19:34:22.210365+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '252a3194-59d5-4cf0-b2da-b8d581ce8134', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 20:32:39.897431+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd3f697b3-9d35-498f-8142-3f3e7403ee69', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 20:32:39.912297+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '930459f5-f689-4f64-ae54-577cae25706b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 20:33:01.8305+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cb491ebe-9f42-4e7d-98a7-a58c697f206c', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 20:33:01.831195+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '57d278e9-ce93-4727-b4e7-1f7a4417a851', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 23:43:34.981833+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd2a9dac8-ca8e-4312-b4b6-88873e2f2296', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 23:43:34.981724+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9952cb77-3848-41bd-8a33-46df6b51a45f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 23:43:35.002671+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0b7fa76a-58a9-48ba-b31d-b07af16a5bff', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-08 23:43:35.002813+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'af7f733e-9286-4227-8472-a9341b785672', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 00:20:34.172038+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fd8a9c08-9784-4a82-a459-c6c778230eff', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 00:20:34.208028+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e0033b86-c179-4ad7-803a-68302ec9171b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 00:20:46.550404+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5cb678e5-3173-429d-9b37-ad284736292b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 00:20:46.55118+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '08e8290d-86aa-4ac8-a291-2b07967d4ec1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:03:22.788068+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '06ee8235-92e5-4dc0-ae55-280032ba8d85', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:03:22.805409+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e2921de7-455c-4a52-9021-c7b413215055', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:19:27.532438+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9afae259-20bf-464e-91d8-58c52647139a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:19:27.538896+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2c3b8ebe-ffe9-413d-a3b0-bbdf8e9a88a4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:24:07.418276+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e68814c5-8544-499e-8992-c26070b0b3b2', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 01:24:07.427963+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'db06d0a8-ebed-43e0-be16-1ef8eb33a83d', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 01:50:43.231021+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fcd7f842-834c-4c3b-91e9-85fdaa5450eb', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 01:56:04.669929+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '27948806-e2db-4099-8466-025764e7b433', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 01:56:17.227112+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f6b26898-4509-4bf0-854e-096961632fc8', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 01:56:42.686752+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f47faf04-7dd8-4c35-b797-5ca4a6a16da6', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 02:03:42.353416+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '223b1668-b20c-489a-9d9c-1d5d79933c37', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:17:52.25301+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'feea4168-0ade-44aa-b14c-683d6747d510', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:17:52.256511+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '544b7d88-6969-4150-bb55-fb46e777c711', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:22:45.084535+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '76fcea8d-fad9-422c-b7f3-6d1b1d6b307f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:22:45.098039+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0134cc7-06db-4b6a-9fcd-051c67617dbd', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:29:08.807125+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aa7308f2-463e-40a9-9b04-97a8f65545fe', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 02:29:08.810661+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0becdab4-97af-40c7-bb4f-bfe4b3a12281', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-10 02:30:56.372921+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fa480227-d968-4bda-9424-9ed2621330f7', '{"action":"user_modified","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 02:36:31.111344+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e7559e55-a576-4184-af04-af93c0493255', '{"action":"user_modified","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-10 02:38:43.920184+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8db754ea-45a7-4f52-b1a3-282954908506', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 03:16:45.300127+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7ee5792a-5ea4-4edb-9628-31c3c1664ae1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-10 03:16:45.312999+00', '');
 
 
 --
@@ -5138,11 +5352,11 @@ INSERT INTO auth.identities VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'bf5
 -- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.mfa_amr_claims VALUES ('7a35a9cd-9dd5-45e4-9a28-261914267fe7', '2025-11-25 00:42:06.526627+00', '2025-11-25 00:42:06.526627+00', 'password', 'dc74121f-99eb-45de-af24-42f3f93923bb');
-INSERT INTO auth.mfa_amr_claims VALUES ('ac6a24ea-f306-4b38-9ad1-25a810c9ac8e', '2025-11-25 13:51:14.609092+00', '2025-11-25 13:51:14.609092+00', 'password', '4409ff24-a60b-49a1-93c6-92054b4d3c62');
-INSERT INTO auth.mfa_amr_claims VALUES ('1469c7d9-444a-4b80-9a8d-f48d60fabe6d', '2025-11-25 15:13:20.666442+00', '2025-11-25 15:13:20.666442+00', 'password', 'd2585960-ac3d-46db-8634-d8ca8d553011');
-INSERT INTO auth.mfa_amr_claims VALUES ('01d70851-717a-4a8a-9eac-bcd489016b50', '2025-11-26 20:31:56.996108+00', '2025-11-26 20:31:56.996108+00', 'password', '1c310da8-afc6-4de1-830b-10888e676ac9');
-INSERT INTO auth.mfa_amr_claims VALUES ('84e9bdc1-fbe6-49cc-937d-3da77dce8110', '2025-11-27 00:36:47.561542+00', '2025-11-27 00:36:47.561542+00', 'password', 'ef1440d3-c15b-41bc-9799-a00897f89d52');
+INSERT INTO auth.mfa_amr_claims VALUES ('a937373b-4d24-402d-bc65-557909dd665f', '2025-11-29 15:14:44.011427+00', '2025-11-29 15:14:44.011427+00', 'password', 'b8179c03-e8af-45c0-98ef-4b92908e37bf');
+INSERT INTO auth.mfa_amr_claims VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', '2025-11-30 00:01:12.863596+00', '2025-11-30 00:01:12.863596+00', 'password', 'a429053e-b634-41c4-8c95-fdef5c3c3679');
+INSERT INTO auth.mfa_amr_claims VALUES ('bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb', '2025-12-03 01:02:23.766555+00', '2025-12-03 01:02:23.766555+00', 'password', '4be51d35-55d7-4c79-9495-414543c43ac6');
+INSERT INTO auth.mfa_amr_claims VALUES ('27a49fd3-d747-49d1-9d11-75455d3ac701', '2025-12-03 01:23:36.223346+00', '2025-12-03 01:23:36.223346+00', 'password', 'daec54b3-9d95-41fa-b548-8e20e140b261');
+INSERT INTO auth.mfa_amr_claims VALUES ('2d81d935-94bc-4c43-b1a2-be119aa52648', '2025-12-10 02:30:56.390051+00', '2025-12-10 02:30:56.390051+00', 'password', '07e5f29b-9632-4616-b2cd-13f6ff24ed3c');
 
 
 --
@@ -5199,82 +5413,48 @@ INSERT INTO auth.mfa_amr_claims VALUES ('84e9bdc1-fbe6-49cc-937d-3da77dce8110', 
 -- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 588, 'xqehb3ee4pkc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 16:23:58.812572+00', '2025-11-26 17:22:57.884588+00', '6dre2goty27t', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 521, 's2pthtkh36xq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 14:13:45.916162+00', '2025-11-25 15:11:46.105918+00', 'gloeoixdat4k', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 590, 'sd4irvgshocj', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 17:22:57.886733+00', '2025-11-26 19:35:36.707652+00', 'xqehb3ee4pkc', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 523, 'j4s2hiq3pi5z', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 15:11:46.12337+00', '2025-11-25 16:09:45.76842+00', 's2pthtkh36xq', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 525, '6474rtc7tuu2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 15:48:58.525427+00', '2025-11-25 16:47:58.623841+00', 'b7cs64irlaeu', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 592, 'vzh73qrlp3te', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-26 20:31:56.976047+00', '2025-11-26 21:30:58.739537+00', NULL, '01d70851-717a-4a8a-9eac-bcd489016b50');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 527, '6leckaizjxtg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 16:47:58.634811+00', '2025-11-25 17:46:57.760403+00', '6474rtc7tuu2', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 594, 'jkkd7tabp76v', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-26 21:30:58.757296+00', '2025-11-26 22:29:58.738809+00', 'vzh73qrlp3te', '01d70851-717a-4a8a-9eac-bcd489016b50');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 531, '6uoaxxudmgys', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 18:05:45.754815+00', '2025-11-25 19:03:45.989184+00', 'gliqxrtodb4y', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 533, 'xjptzk2ep6nf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 18:45:57.982492+00', '2025-11-25 19:44:57.996594+00', '2svt32wo2um3', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 596, 'cb3hp46qu2de', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-26 23:28:58.692924+00', '2025-11-27 00:27:58.794403+00', '6bqmgduohhjl', '01d70851-717a-4a8a-9eac-bcd489016b50');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 580, 'sv3dz52jvxh6', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 09:33:45.87417+00', '2025-11-27 00:33:54.734495+00', 'ltrz2ubldeg4', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 537, 'heub6m753n4w', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 20:01:46.075526+00', '2025-11-25 20:59:45.684903+00', 'wwvfy4qq5xim', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 598, 'trkgmoolhmw4', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-11-27 00:33:54.736442+00', '2025-11-27 00:33:54.736442+00', 'sv3dz52jvxh6', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 542, '3dcfw3ylfgm7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 20:59:45.695267+00', '2025-11-25 21:57:46.122644+00', 'heub6m753n4w', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 544, 'qbewgtlbnl4e', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 21:42:35.013645+00', '2025-11-25 22:41:58.1931+00', 'pgd4hanazdzr', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 548, '2w2qnu2jujmh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 22:55:45.700976+00', '2025-11-25 23:53:46.064833+00', 'uopds6smq3tm', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 550, 'k5wsusy4ooud', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 23:53:46.075789+00', '2025-11-26 00:51:45.872542+00', '2w2qnu2jujmh', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 552, 'rba6ctrn3cmn', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 00:39:58.587045+00', '2025-11-26 01:38:58.785583+00', 'pjuy4pjlp65o', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 556, 'jxqrr3izhgmw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 01:49:45.801402+00', '2025-11-26 02:47:46.205178+00', '6i5mfrpabdel', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 558, '3fskl7owd5qs', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 02:37:58.596533+00', '2025-11-26 03:36:58.816359+00', 'i4vp7qo7hfnw', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 562, 'cg7mgxup372t', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 03:45:45.956277+00', '2025-11-26 04:43:45.749141+00', 'zq4jpqdcpoqc', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 564, 'pogyvf7sgqmy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 04:35:59.040387+00', '2025-11-26 05:34:58.998356+00', 'kcpy7sthmlfj', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 568, 'lyq7cmytc3cq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 05:41:45.825091+00', '2025-11-26 06:39:45.788+00', '3hbayi4zsnnh', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 570, 'opruolh2uqez', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 06:33:58.844566+00', '2025-11-26 07:32:58.990086+00', 'gqgyifyo247m', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 574, 'h7dn42ka7fqd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 07:37:45.767171+00', '2025-11-26 08:35:45.696634+00', 'bnclg5twnjmz', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 514, 'ejqyboj37zhi', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 12:17:45.813568+00', '2025-11-25 13:15:45.828094+00', 'h5palvruwp6g', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 576, 'fbks2k7ikwi5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 08:31:58.780069+00', '2025-11-26 09:30:58.894381+00', '6fhiyydvsj37', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 582, 'pzlklshdewgd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 10:29:58.421924+00', '2025-11-26 11:28:59.113568+00', 'rq4w6impc73f', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 584, 'awq7gknmnjyx', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 12:27:58.716615+00', '2025-11-26 13:26:58.718372+00', 'jtv2uer73x5b', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 586, 'pfpqcg2raxkr', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 14:25:59.081459+00', '2025-11-26 15:24:58.794477+00', 'vn3pc5krhlsg', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 517, 'gloeoixdat4k', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 13:15:45.849801+00', '2025-11-25 14:13:45.898598+00', 'ejqyboj37zhi', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 520, 'zmgbdcipfu6c', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 13:51:14.607041+00', '2025-11-25 14:49:57.713857+00', NULL, 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 591, '7lqg3p23uamd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 19:35:36.717745+00', '2025-11-26 20:33:37.808491+00', 'sd4irvgshocj', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 522, 'b7cs64irlaeu', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 14:49:57.723094+00', '2025-11-25 15:48:58.505653+00', 'zmgbdcipfu6c', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 593, 'efpbcnsixyqo', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-11-26 20:33:37.81061+00', '2025-11-26 20:33:37.81061+00', '7lqg3p23uamd', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 526, '5obf4fdc2bkv', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 16:09:45.784003+00', '2025-11-25 17:07:46.046385+00', 'j4s2hiq3pi5z', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 595, '6bqmgduohhjl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-26 22:29:58.752194+00', '2025-11-26 23:28:58.68393+00', 'jkkd7tabp76v', '01d70851-717a-4a8a-9eac-bcd489016b50');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 528, 'gliqxrtodb4y', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 17:07:46.057883+00', '2025-11-25 18:05:45.739053+00', '5obf4fdc2bkv', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 597, 'jp2znqv7uch2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-11-27 00:27:58.801768+00', '2025-11-27 00:27:58.801768+00', 'cb3hp46qu2de', '01d70851-717a-4a8a-9eac-bcd489016b50');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 530, '2svt32wo2um3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 17:46:57.777589+00', '2025-11-25 18:45:57.977783+00', '6leckaizjxtg', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 599, '53ccskwaoszn', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-11-27 00:36:47.549712+00', '2025-11-27 00:36:47.549712+00', NULL, '84e9bdc1-fbe6-49cc-937d-3da77dce8110');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 534, 'wwvfy4qq5xim', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 19:03:45.997695+00', '2025-11-25 20:01:46.054576+00', '6uoaxxudmgys', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 524, '72wubkndk4ec', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 15:13:20.643847+00', '2025-11-25 20:28:26.007221+00', NULL, '1469c7d9-444a-4b80-9a8d-f48d60fabe6d');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 536, 'uq7bpeekj6ar', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 19:44:58.00335+00', '2025-11-25 20:43:58.317936+00', 'xjptzk2ep6nf', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 489, '5uu6jdcs44b3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 00:42:06.502314+00', '2025-11-25 01:39:16.905812+00', NULL, '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 541, 'pgd4hanazdzr', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 20:43:58.32275+00', '2025-11-25 21:42:35.004076+00', 'uq7bpeekj6ar', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 491, 'lcdkspig6ihy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 01:39:16.922832+00', '2025-11-25 02:37:45.792667+00', '5uu6jdcs44b3', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 493, 'dhsolr525qtf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 02:37:45.812331+00', '2025-11-25 03:35:45.957172+00', 'lcdkspig6ihy', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 545, 'uopds6smq3tm', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 21:57:46.134934+00', '2025-11-25 22:55:45.694204+00', '3dcfw3ylfgm7', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 547, '33w7odkng7hn', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 22:41:58.211443+00', '2025-11-25 23:40:58.702437+00', 'qbewgtlbnl4e', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 495, 'lheffctvybx2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 03:35:45.97652+00', '2025-11-25 04:33:17.69149+00', 'dhsolr525qtf', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 538, '2wf53eezsqhy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 20:28:26.024224+00', '2025-11-26 00:07:34.721666+00', '72wubkndk4ec', '1469c7d9-444a-4b80-9a8d-f48d60fabe6d');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 551, 'lmlo7fyvruhf', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-11-26 00:07:34.732848+00', '2025-11-26 00:07:34.732848+00', '2wf53eezsqhy', '1469c7d9-444a-4b80-9a8d-f48d60fabe6d');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 497, 'khiscc5kfcq2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 04:33:17.716039+00', '2025-11-25 05:31:45.767585+00', 'lheffctvybx2', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 549, 'pjuy4pjlp65o', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 23:40:58.714379+00', '2025-11-26 00:39:58.572268+00', '33w7odkng7hn', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 499, 'h2dkekqckkvk', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 05:31:45.780535+00', '2025-11-25 06:29:45.83441+00', 'khiscc5kfcq2', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 553, '6i5mfrpabdel', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 00:51:45.882846+00', '2025-11-26 01:49:45.798343+00', 'k5wsusy4ooud', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 555, 'i4vp7qo7hfnw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 01:38:58.807933+00', '2025-11-26 02:37:58.577376+00', 'rba6ctrn3cmn', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 501, 'wnvnody6kdut', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 06:29:45.859257+00', '2025-11-25 07:27:46.025942+00', 'h2dkekqckkvk', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 503, 'zysy5yk6fm2q', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 07:27:46.043471+00', '2025-11-25 08:25:45.901371+00', 'wnvnody6kdut', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 559, 'zq4jpqdcpoqc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 02:47:46.214174+00', '2025-11-26 03:45:45.945978+00', 'jxqrr3izhgmw', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 561, 'kcpy7sthmlfj', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 03:36:58.833777+00', '2025-11-26 04:35:59.018787+00', '3fskl7owd5qs', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 505, 'ewlvtzob4git', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 08:25:45.917658+00', '2025-11-25 09:23:46.109211+00', 'zysy5yk6fm2q', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 507, '2exfrfagyq2h', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 09:23:46.124999+00', '2025-11-25 10:21:45.875113+00', 'ewlvtzob4git', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 565, '3hbayi4zsnnh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 04:43:45.76219+00', '2025-11-26 05:41:45.821897+00', 'cg7mgxup372t', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 567, 'gqgyifyo247m', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 05:34:59.014831+00', '2025-11-26 06:33:58.824134+00', 'pogyvf7sgqmy', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 509, 'hgxxpgziijxf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 10:21:45.894801+00', '2025-11-25 11:19:45.935226+00', '2exfrfagyq2h', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 571, 'bnclg5twnjmz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 06:39:45.791224+00', '2025-11-26 07:37:45.765799+00', 'lyq7cmytc3cq', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 511, 'h5palvruwp6g', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-25 11:19:45.953174+00', '2025-11-25 12:17:45.809456+00', 'hgxxpgziijxf', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 573, '6fhiyydvsj37', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 07:32:59.009611+00', '2025-11-26 08:31:58.757447+00', 'opruolh2uqez', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 577, 'ltrz2ubldeg4', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 08:35:45.698586+00', '2025-11-26 09:33:45.872089+00', 'h7dn42ka7fqd', '7a35a9cd-9dd5-45e4-9a28-261914267fe7');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 579, 'rq4w6impc73f', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 09:30:58.908554+00', '2025-11-26 10:29:58.400843+00', 'fbks2k7ikwi5', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 583, 'jtv2uer73x5b', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 11:28:59.128499+00', '2025-11-26 12:27:58.699209+00', 'pzlklshdewgd', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 585, 'vn3pc5krhlsg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 13:26:58.737323+00', '2025-11-26 14:25:59.063198+00', 'awq7gknmnjyx', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 587, '6dre2goty27t', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-26 15:24:58.810754+00', '2025-11-26 16:23:58.796066+00', 'pfpqcg2raxkr', 'ac6a24ea-f306-4b38-9ad1-25a810c9ac8e');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 674, 'w3o6pj6u5nv7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 17:12:00.873188+00', '2025-12-04 18:11:19.741256+00', 'biypdvm5ydpc', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 660, 'p546yz5uyfl7', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-29 15:14:43.997318+00', '2025-11-29 22:45:58.374744+00', NULL, 'a937373b-4d24-402d-bc65-557909dd665f');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 663, 'dpkgcz4mvaia', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 01:02:23.713424+00', '2025-12-03 02:01:18.491126+00', NULL, 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 675, 'm3goeff3ip7j', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 18:11:19.754968+00', '2025-12-04 19:10:19.878211+00', 'w3o6pj6u5nv7', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 666, '3bl33l7xf33v', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 02:22:18.502278+00', '2025-12-03 03:21:17.63943+00', 'sdlpj3ivsahc', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 678, 'opvjeydk6lhp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-05 01:57:37.327708+00', '2025-12-08 15:34:50.312576+00', 'zwkm7o4mxkac', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 682, 'n267lkg5rv4x', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 16:50:54.020911+00', '2025-12-08 18:35:33.173752+00', 'e2jsmdbzwbcx', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 685, 'jvr5iveelti7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 18:35:33.187061+00', '2025-12-08 19:34:22.211004+00', 'nml2utdroykp', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 691, 'texingsc6v5e', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 23:43:35.018706+00', '2025-12-10 00:20:34.210129+00', 'te7ebfelkerw', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 669, 'y5jpkutcnrij', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 16:17:45.197769+00', '2025-12-10 01:03:22.807864+00', 's4hqnlmuncxb', 'a937373b-4d24-402d-bc65-557909dd665f');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 694, 'lh2shh54cu3f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 01:03:22.8208+00', '2025-12-10 02:29:08.811245+00', 'y5jpkutcnrij', 'a937373b-4d24-402d-bc65-557909dd665f');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 697, 'kqdjoslwcdft', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 02:17:52.270398+00', '2025-12-10 03:16:45.315642+00', 'fyq7vocqageg', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 701, 'rrkcuj3rlpmy', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-10 03:16:45.32868+00', '2025-12-10 03:16:45.32868+00', 'kqdjoslwcdft', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 676, 'rpuyae7insqz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 19:10:19.89329+00', '2025-12-05 01:02:59.908898+00', 'm3goeff3ip7j', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 664, 'sdlpj3ivsahc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 01:23:36.182627+00', '2025-12-03 02:22:18.485981+00', NULL, '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 661, 's4hqnlmuncxb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-29 22:45:58.397415+00', '2025-12-03 16:17:45.175864+00', 'p546yz5uyfl7', 'a937373b-4d24-402d-bc65-557909dd665f');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 667, 'm2smd4rmltd5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 03:00:03.656727+00', '2025-12-04 14:45:17.999861+00', 'hcfvniaro4e6', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 679, 'dks673jyzke2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-05 02:01:19.583539+00', '2025-12-08 15:34:49.680759+00', '5go2whuqkwrm', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 683, 'nml2utdroykp', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 16:50:54.020908+00', '2025-12-08 18:35:33.173751+00', 'vvioyrttpqwf', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 670, '6sengj5fnsgj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-04 14:45:18.018907+00', '2025-12-04 15:44:20.013259+00', 'hhuy47xpd6uh', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 671, 'ds4wrojrqycz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 14:45:18.019633+00', '2025-12-04 15:44:20.013983+00', 'm2smd4rmltd5', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 687, '32rwu5iy4kzk', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 19:34:22.211398+00', '2025-12-08 20:32:39.913607+00', 'jvr5iveelti7', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 686, 'dztzksemwyo2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 19:34:04.371346+00', '2025-12-08 20:33:01.831843+00', 's2j5wi3y44rr', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 690, 'uvkzjzwrk43h', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 23:43:35.018001+00', '2025-12-10 00:20:46.551829+00', '667weffb3p3e', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 695, 'fyq7vocqageg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 01:19:27.547552+00', '2025-12-10 02:17:52.257758+00', 'o74a27cyo6uq', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 698, 'txhrfnxsgris', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-10 02:22:45.111114+00', '2025-12-10 02:22:45.111114+00', 'qlmr4gv6pgvb', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 662, 'tab3m6wxzt3y', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-11-30 00:01:12.843894+00', '2025-11-30 00:01:12.843894+00', NULL, '3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 672, 'zwkm7o4mxkac', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-04 15:44:20.025189+00', '2025-12-05 01:57:37.323071+00', '6sengj5fnsgj', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 677, '5go2whuqkwrm', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-05 01:02:59.926223+00', '2025-12-05 02:01:19.580008+00', 'rpuyae7insqz', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 665, 'hcfvniaro4e6', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 02:01:18.503186+00', '2025-12-03 03:00:03.641167+00', 'dpkgcz4mvaia', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 681, 'e2jsmdbzwbcx', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 15:34:50.312942+00', '2025-12-08 16:50:54.010163+00', 'opvjeydk6lhp', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 680, 'vvioyrttpqwf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 15:34:49.697911+00', '2025-12-08 16:50:54.012943+00', 'dks673jyzke2', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 684, 's2j5wi3y44rr', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 18:35:33.187079+00', '2025-12-08 19:34:04.365699+00', 'n267lkg5rv4x', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 668, 'hhuy47xpd6uh', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 03:21:17.659409+00', '2025-12-04 14:45:17.999884+00', '3bl33l7xf33v', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 689, 'te7ebfelkerw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 20:33:01.832259+00', '2025-12-08 23:43:35.004181+00', 'dztzksemwyo2', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 673, 'biypdvm5ydpc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 15:44:20.025865+00', '2025-12-04 17:12:00.853515+00', 'ds4wrojrqycz', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 688, '667weffb3p3e', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 20:32:39.924043+00', '2025-12-08 23:43:35.004193+00', '32rwu5iy4kzk', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 693, 'o74a27cyo6uq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 00:20:46.557759+00', '2025-12-10 01:19:27.543185+00', 'uvkzjzwrk43h', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 692, 'epcjrdaik6yj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 00:20:34.234959+00', '2025-12-10 01:24:07.428639+00', 'texingsc6v5e', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 696, 'qlmr4gv6pgvb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 01:24:07.437833+00', '2025-12-10 02:22:45.099377+00', 'epcjrdaik6yj', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 699, 'o4mlpxtqxqu2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-10 02:29:08.814538+00', '2025-12-10 02:29:08.814538+00', 'lh2shh54cu3f', 'a937373b-4d24-402d-bc65-557909dd665f');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 700, 'me3in7hzjko4', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-10 02:30:56.387409+00', '2025-12-10 02:30:56.387409+00', NULL, '2d81d935-94bc-4c43-b1a2-be119aa52648');
 
 
 --
@@ -5378,11 +5558,11 @@ INSERT INTO auth.schema_migrations VALUES ('20251111201300');
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.sessions VALUES ('ac6a24ea-f306-4b38-9ad1-25a810c9ac8e', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-25 13:51:14.597842+00', '2025-11-26 20:33:37.813893+00', NULL, 'aal1', NULL, '2025-11-26 20:33:37.813792', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '186.225.138.87', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('01d70851-717a-4a8a-9eac-bcd489016b50', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-26 20:31:56.967628+00', '2025-11-27 00:27:58.82026+00', NULL, 'aal1', NULL, '2025-11-27 00:27:58.819543', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '186.225.138.87', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('7a35a9cd-9dd5-45e4-9a28-261914267fe7', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-25 00:42:06.472892+00', '2025-11-27 00:33:54.741821+00', NULL, 'aal1', NULL, '2025-11-27 00:33:54.74172', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '189.68.174.182', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('84e9bdc1-fbe6-49cc-937d-3da77dce8110', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-27 00:36:47.533356+00', '2025-11-27 00:36:47.533356+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '189.68.174.182', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('1469c7d9-444a-4b80-9a8d-f48d60fabe6d', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-25 15:13:20.604576+00', '2025-11-26 00:07:34.747574+00', NULL, 'aal1', NULL, '2025-11-26 00:07:34.747462', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36', '189.68.174.182', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('27a49fd3-d747-49d1-9d11-75455d3ac701', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-12-03 01:23:36.154783+00', '2025-12-10 02:22:45.13309+00', NULL, 'aal1', NULL, '2025-12-10 02:22:45.132983', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('a937373b-4d24-402d-bc65-557909dd665f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-29 15:14:43.988589+00', '2025-12-10 02:29:08.818481+00', NULL, 'aal1', NULL, '2025-12-10 02:29:08.81838', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('2d81d935-94bc-4c43-b1a2-be119aa52648', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-10 02:30:56.375994+00', '2025-12-10 02:30:56.375994+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-03 01:02:23.670108+00', '2025-12-10 03:16:45.358915+00', NULL, 'aal1', NULL, '2025-12-10 03:16:45.357629', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-30 00:01:12.827769+00', '2025-11-30 00:01:12.827769+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '189.18.117.238', NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -5407,15 +5587,15 @@ INSERT INTO auth.sessions VALUES ('1469c7d9-444a-4b80-9a8d-f48d60fabe6d', 'f2bb6
 -- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'f2bb6acc-835a-414c-8856-836415b23896', 'authenticated', 'authenticated', 'profissional@capifit.com', '$2a$10$dk.qa.nLD7wm3wkqohwtMeYT1Qt1jW.ublImwK5/gVPVc4lFw3MJ2', '2025-11-16 22:09:35.759426+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-25 15:13:20.603843+00', '{"provider": "email", "providers": ["email"]}', '{"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}', NULL, '2025-11-16 22:09:35.744308+00', '2025-11-27 00:33:54.739731+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'f2bb6acc-835a-414c-8856-836415b23896', 'authenticated', 'authenticated', 'profissional@capifit.com', '$2a$10$dk.qa.nLD7wm3wkqohwtMeYT1Qt1jW.ublImwK5/gVPVc4lFw3MJ2', '2025-11-16 22:09:35.759426+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-10 02:30:56.375308+00', '{"provider": "email", "providers": ["email"]}', '{"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}', NULL, '2025-11-16 22:09:35.744308+00', '2025-12-10 03:16:45.342542+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'authenticated', 'authenticated', 'admin@capifit.com', '$2a$10$MZ6JN.1Cid87Ze/ntbc/cubpoNEYiaC77VBvw8etFf0ecZqQkdq2a', '2025-11-16 22:10:09.629885+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-16 23:47:16.875772+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-16 22:10:09.626622+00', '2025-11-16 23:47:16.880781+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '7171a1a8-524b-4cee-9040-886c74afe93f', 'authenticated', 'authenticated', 'cliente@capifit.com', '$2a$10$jE025Etdhl6forKhm4vtKOjVSH7WmlQ2MSAF1M196DXtkcVspFxI.', '2025-11-26 19:46:42.713604+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-26 19:46:42.693884+00', '2025-11-26 19:46:42.715755+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'authenticated', 'authenticated', 'cliente1@capifit.com', '$2a$10$RSBXDZVWHGGH.3hUsUjMde1XkU3ufrE2Gpp2EFvd8yMjN4TKNe8DS', '2025-11-26 20:31:24.801059+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-27 00:36:47.533249+00', '{"provider": "email", "providers": ["email"]}', '{"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}', NULL, '2025-11-26 20:31:24.783033+00', '2025-11-27 00:36:47.560058+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'authenticated', 'authenticated', 'cliente1@capifit.com', '$2a$10$RSBXDZVWHGGH.3hUsUjMde1XkU3ufrE2Gpp2EFvd8yMjN4TKNe8DS', '2025-11-26 20:31:24.801059+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-03 01:23:36.154097+00', '{"provider": "email", "providers": ["email"]}', '{"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}', NULL, '2025-11-26 20:31:24.783033+00', '2025-12-10 02:29:08.815713+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
--- TOC entry 4760 (class 0 OID 29858)
--- Dependencies: 416
+-- TOC entry 4754 (class 0 OID 29858)
+-- Dependencies: 410
 -- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -5447,8 +5627,60 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 -- Data for Name: chat_messages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.chat_messages VALUES ('1698f0c8-e3c6-4770-8b88-6e768afcb89b', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, false, '2025-11-27 01:09:07.935024+00', NULL, '2025-11-27 01:09:07.935024+00', '2025-11-27 01:09:07.935024+00');
-INSERT INTO public.chat_messages VALUES ('0f662767-b09d-45e1-a227-3850baee61b0', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, false, '2025-11-27 01:10:12.611267+00', NULL, '2025-11-27 01:10:12.611267+00', '2025-11-27 01:10:12.611267+00');
+INSERT INTO public.chat_messages VALUES ('0f662767-b09d-45e1-a227-3850baee61b0', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 01:10:12.611267+00', '2025-11-27 02:06:32.635642+00', '2025-11-27 01:10:12.611267+00', '2025-11-27 02:06:32.635642+00');
+INSERT INTO public.chat_messages VALUES ('1698f0c8-e3c6-4770-8b88-6e768afcb89b', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-27 01:09:07.935024+00', '2025-11-27 02:06:40.55127+00', '2025-11-27 01:09:07.935024+00', '2025-11-27 02:06:40.55127+00');
+INSERT INTO public.chat_messages VALUES ('46ca5c25-155f-4d89-8e76-83f07d606468', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-27 02:07:09.763067+00', '2025-11-27 02:09:15.837903+00', '2025-11-27 02:07:09.763067+00', '2025-11-27 02:09:15.837903+00');
+INSERT INTO public.chat_messages VALUES ('794808f8-8727-443c-8219-2fd4ca5f242b', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 02:06:46.397117+00', '2025-11-27 02:09:38.360183+00', '2025-11-27 02:06:46.397117+00', '2025-11-27 02:09:38.360183+00');
+INSERT INTO public.chat_messages VALUES ('08f07e2b-37ea-4d52-ad88-38fd15e7323b', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Teste', 'text', NULL, true, '2025-11-27 02:09:20.749797+00', '2025-11-27 02:09:38.360183+00', '2025-11-27 02:09:20.749797+00', '2025-11-27 02:09:38.360183+00');
+INSERT INTO public.chat_messages VALUES ('4e887447-1150-4cd7-b550-3b98fe8a3c86', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-27 02:09:41.763782+00', '2025-11-27 02:09:49.812485+00', '2025-11-27 02:09:41.763782+00', '2025-11-27 02:09:49.812485+00');
+INSERT INTO public.chat_messages VALUES ('3ef8f529-5d17-4536-b335-6a5a6062840f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-27 02:09:52.724055+00', '2025-11-27 02:10:25.695262+00', '2025-11-27 02:09:52.724055+00', '2025-11-27 02:10:25.695262+00');
+INSERT INTO public.chat_messages VALUES ('37d9bd2e-ae47-4f08-bc66-81b5019cf1b3', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 02:10:32.998628+00', '2025-11-27 20:22:50.225857+00', '2025-11-27 02:10:32.998628+00', '2025-11-27 20:22:50.225857+00');
+INSERT INTO public.chat_messages VALUES ('5cd66216-e37e-4324-98fd-f45ce4e0b42e', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'testre', 'text', NULL, true, '2025-11-27 20:22:58.537832+00', '2025-11-27 20:23:11.799363+00', '2025-11-27 20:22:58.537832+00', '2025-11-27 20:23:11.799363+00');
+INSERT INTO public.chat_messages VALUES ('4c5f9d80-9585-4b87-a6e3-dec3fd95afb9', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-27 20:33:10.871098+00', '2025-11-27 20:39:42.7864+00', '2025-11-27 20:33:10.871098+00', '2025-11-27 20:39:42.7864+00');
+INSERT INTO public.chat_messages VALUES ('ea716c0e-5390-4e6f-aff8-153a03afebda', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 20:39:51.866652+00', '2025-11-27 20:40:39.612266+00', '2025-11-27 20:39:51.866652+00', '2025-11-27 20:40:39.612266+00');
+INSERT INTO public.chat_messages VALUES ('38e921c7-311a-4148-b848-61ce3705f728', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 20:40:45.948195+00', '2025-11-27 20:40:53.153559+00', '2025-11-27 20:40:45.948195+00', '2025-11-27 20:40:53.153559+00');
+INSERT INTO public.chat_messages VALUES ('77983630-58f5-46b3-8fbc-58a68fdbebfc', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-27 20:41:07.02348+00', '2025-11-27 20:46:54.321605+00', '2025-11-27 20:41:07.02348+00', '2025-11-27 20:46:54.321605+00');
+INSERT INTO public.chat_messages VALUES ('c2b7f909-ce6b-4eec-bc5e-3aa896eb4164', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'yrdyr', 'text', NULL, true, '2025-11-27 20:47:05.937326+00', '2025-11-28 00:08:47.785384+00', '2025-11-27 20:47:05.937326+00', '2025-11-28 00:08:47.785384+00');
+INSERT INTO public.chat_messages VALUES ('6de06888-eccd-4ce4-91a7-2a9abbce4e65', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Teste', 'text', NULL, true, '2025-11-28 00:07:40.680361+00', '2025-11-28 00:08:47.785384+00', '2025-11-28 00:07:40.680361+00', '2025-11-28 00:08:47.785384+00');
+INSERT INTO public.chat_messages VALUES ('1ead2ccc-483d-415a-a031-24f38e9b3b68', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Teste', 'text', NULL, true, '2025-11-28 00:07:54.267764+00', '2025-11-28 00:08:47.785384+00', '2025-11-28 00:07:54.267764+00', '2025-11-28 00:08:47.785384+00');
+INSERT INTO public.chat_messages VALUES ('68e4ffec-1afc-4c76-85fe-5f5e786cc60c', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Oi', 'text', NULL, true, '2025-11-28 00:08:16.41357+00', '2025-11-28 00:08:47.785384+00', '2025-11-28 00:08:16.41357+00', '2025-11-28 00:08:47.785384+00');
+INSERT INTO public.chat_messages VALUES ('f4384db7-342f-46ad-8a7e-191905a4a6f9', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Oi', 'text', NULL, true, '2025-11-28 00:09:14.128577+00', '2025-11-28 00:09:21.559516+00', '2025-11-28 00:09:14.128577+00', '2025-11-28 00:09:21.559516+00');
+INSERT INTO public.chat_messages VALUES ('1ebe66ef-6ef9-4e89-a39c-d62068e45d81', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'Oi', 'text', NULL, true, '2025-11-28 00:08:53.412669+00', '2025-11-28 00:28:14.391938+00', '2025-11-28 00:08:53.412669+00', '2025-11-28 00:28:14.391938+00');
+INSERT INTO public.chat_messages VALUES ('a002a0f6-ba24-424a-89ae-1940bd1fc4a1', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'oi', 'text', NULL, true, '2025-11-28 00:29:12.055152+00', '2025-11-28 00:42:01.744451+00', '2025-11-28 00:29:12.055152+00', '2025-11-28 00:42:01.744451+00');
+INSERT INTO public.chat_messages VALUES ('55de8cd8-22db-4f36-839f-9b02d7d1f5b5', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'Imagem', 'image', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/chat-attachments/f2bb6acc-835a-414c-8856-836415b23896/40c8f472-3b15-4233-a029-729024b84ad1.png?t=1764290487640', true, '2025-11-28 00:40:36.028848+00', '2025-11-28 00:42:01.744451+00', '2025-11-28 00:40:36.028848+00', '2025-11-28 00:42:01.744451+00');
+INSERT INTO public.chat_messages VALUES ('c207e5c3-888c-4d20-89c0-dec30e72d68f', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'oi', 'text', NULL, true, '2025-11-28 00:43:30.494135+00', '2025-11-28 00:44:18.510264+00', '2025-11-28 00:43:30.494135+00', '2025-11-28 00:44:18.510264+00');
+INSERT INTO public.chat_messages VALUES ('6850c315-c506-40cf-940c-979f5dd1c198', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'opa', 'text', NULL, true, '2025-11-28 00:44:31.871212+00', '2025-11-28 00:44:46.705774+00', '2025-11-28 00:44:31.871212+00', '2025-11-28 00:44:46.705774+00');
+INSERT INTO public.chat_messages VALUES ('0619bbc5-008f-44bc-bf6f-e9513efb464e', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 00:45:26.858333+00', '2025-11-28 00:51:55.575486+00', '2025-11-28 00:45:26.858333+00', '2025-11-28 00:51:55.575486+00');
+INSERT INTO public.chat_messages VALUES ('922c6021-69e2-4c26-8300-f1d3d65c81af', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'oi', 'text', NULL, true, '2025-11-28 00:52:16.318058+00', '2025-11-28 00:52:35.668208+00', '2025-11-28 00:52:16.318058+00', '2025-11-28 00:52:35.668208+00');
+INSERT INTO public.chat_messages VALUES ('ecbe1f08-b62c-40a3-b75b-3af3873921ba', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'oi', 'text', NULL, true, '2025-11-28 00:52:01.756722+00', '2025-11-28 00:53:07.191906+00', '2025-11-28 00:52:01.756722+00', '2025-11-28 00:53:07.191906+00');
+INSERT INTO public.chat_messages VALUES ('25afffba-f55c-40c3-ba8c-3af42549a86c', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'oi', 'text', NULL, true, '2025-11-28 00:52:29.431034+00', '2025-11-28 00:53:07.191906+00', '2025-11-28 00:52:29.431034+00', '2025-11-28 00:53:07.191906+00');
+INSERT INTO public.chat_messages VALUES ('a9f2cf89-bd62-4d72-aab5-b3791c9c479f', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 00:52:44.441019+00', '2025-11-28 00:53:07.191906+00', '2025-11-28 00:52:44.441019+00', '2025-11-28 00:53:07.191906+00');
+INSERT INTO public.chat_messages VALUES ('dfe65b49-582c-4959-9aba-2a176cf5023b', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 00:53:40.511167+00', '2025-11-28 01:00:52.995324+00', '2025-11-28 00:53:40.511167+00', '2025-11-28 01:00:52.995324+00');
+INSERT INTO public.chat_messages VALUES ('dc92e237-6077-47e6-8bfd-277d3a7e58e3', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:01:06.31296+00', '2025-11-28 01:01:34.336493+00', '2025-11-28 01:01:06.31296+00', '2025-11-28 01:01:34.336493+00');
+INSERT INTO public.chat_messages VALUES ('baa5dc2c-80f5-4aef-9055-14f045e8b4b5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:13:02.849276+00', '2025-11-28 01:21:18.039575+00', '2025-11-28 01:13:02.849276+00', '2025-11-28 01:21:18.039575+00');
+INSERT INTO public.chat_messages VALUES ('61543687-aa02-40dd-a39e-1dbb95414a3d', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:21:33.50143+00', '2025-11-28 01:22:03.026909+00', '2025-11-28 01:21:33.50143+00', '2025-11-28 01:22:03.026909+00');
+INSERT INTO public.chat_messages VALUES ('24e2e7ab-b43c-48e5-93a6-8e546527530a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:21:43.777254+00', '2025-11-28 01:22:03.026909+00', '2025-11-28 01:21:43.777254+00', '2025-11-28 01:22:03.026909+00');
+INSERT INTO public.chat_messages VALUES ('8df106c7-b3c2-43cb-8d74-396493bafbbe', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:21:46.949826+00', '2025-11-28 01:22:21.150343+00', '2025-11-28 01:21:46.949826+00', '2025-11-28 01:22:21.150343+00');
+INSERT INTO public.chat_messages VALUES ('5fc63f23-e507-45a4-bc9a-9fd9641a30da', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:22:07.875772+00', '2025-11-28 01:34:51.381941+00', '2025-11-28 01:22:07.875772+00', '2025-11-28 01:34:51.381941+00');
+INSERT INTO public.chat_messages VALUES ('7a2035a7-8cbd-4a97-8831-1eedc3e4ef8d', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:22:16.4511+00', '2025-11-28 01:34:51.381941+00', '2025-11-28 01:22:16.4511+00', '2025-11-28 01:34:51.381941+00');
+INSERT INTO public.chat_messages VALUES ('f0c83457-83b8-4598-aa6e-92bdf184f74f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:22:30.856008+00', '2025-11-28 01:34:51.381941+00', '2025-11-28 01:22:30.856008+00', '2025-11-28 01:34:51.381941+00');
+INSERT INTO public.chat_messages VALUES ('312c8e3a-affd-4666-8bb3-3d0d3b3bafcc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:22:36.960814+00', '2025-11-28 01:34:51.381941+00', '2025-11-28 01:22:36.960814+00', '2025-11-28 01:34:51.381941+00');
+INSERT INTO public.chat_messages VALUES ('c0e5c729-23c9-41ba-9e71-eb67d7930c86', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:22:41.071792+00', '2025-11-28 01:41:18.56436+00', '2025-11-28 01:22:41.071792+00', '2025-11-28 01:41:18.56436+00');
+INSERT INTO public.chat_messages VALUES ('50d6c5aa-0c4b-4bde-ace2-f040a8414e87', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:22:45.572635+00', '2025-11-28 01:41:18.56436+00', '2025-11-28 01:22:45.572635+00', '2025-11-28 01:41:18.56436+00');
+INSERT INTO public.chat_messages VALUES ('a5f6d814-4e02-4702-8ba1-2da4ccd60149', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:22:51.031703+00', '2025-11-28 01:41:18.56436+00', '2025-11-28 01:22:51.031703+00', '2025-11-28 01:41:18.56436+00');
+INSERT INTO public.chat_messages VALUES ('0f6fe87c-98d6-4c6f-ad44-c0385e7f93cd', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:41:25.395031+00', '2025-11-28 01:41:40.227309+00', '2025-11-28 01:41:25.395031+00', '2025-11-28 01:41:40.227309+00');
+INSERT INTO public.chat_messages VALUES ('3c25ab8b-54d1-4018-98b8-669e472210f3', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:42:08.348556+00', '2025-11-28 01:47:48.768967+00', '2025-11-28 01:42:08.348556+00', '2025-11-28 01:47:48.768967+00');
+INSERT INTO public.chat_messages VALUES ('fe105c42-edba-4dbe-b5e7-c2d95fa14ea0', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'Anamnese-Adulto.pdf', 'file', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/chat-attachments/bf547c35-e240-45db-bdb1-5a1fc4bc8081/e12d9de1-df77-4035-ad8f-083ad465e497.pdf', true, '2025-11-28 01:42:23.021146+00', '2025-11-28 01:47:48.768967+00', '2025-11-28 01:42:23.021146+00', '2025-11-28 01:47:48.768967+00');
+INSERT INTO public.chat_messages VALUES ('71df6ed9-c5ea-48ed-9cf2-022d34a30568', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:47:41.421595+00', '2025-11-28 01:47:48.768967+00', '2025-11-28 01:47:41.421595+00', '2025-11-28 01:47:48.768967+00');
+INSERT INTO public.chat_messages VALUES ('e60006d2-e6c8-4896-acda-42d4a0f3a65f', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 01:48:15.428179+00', '2025-11-28 01:48:20.465705+00', '2025-11-28 01:48:15.428179+00', '2025-11-28 01:48:20.465705+00');
+INSERT INTO public.chat_messages VALUES ('1c9aa68c-c008-41d2-8312-01a03796ee69', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 01:48:26.26432+00', '2025-11-28 01:48:28.707618+00', '2025-11-28 01:48:26.26432+00', '2025-11-28 01:48:28.707618+00');
+INSERT INTO public.chat_messages VALUES ('78b4780e-e794-42b1-8c35-e1646f240663', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-11-28 17:31:23.788392+00', '2025-11-28 17:31:31.148624+00', '2025-11-28 17:31:23.788392+00', '2025-11-28 17:31:31.148624+00');
+INSERT INTO public.chat_messages VALUES ('a40b983c-2eea-4d00-a894-b8dfb9691a19', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 17:31:44.837556+00', '2025-11-28 17:31:55.8646+00', '2025-11-28 17:31:44.837556+00', '2025-11-28 17:31:55.8646+00');
+INSERT INTO public.chat_messages VALUES ('224eabb8-201b-4928-8010-2fb4baa6be81', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'teste', 'text', NULL, true, '2025-11-28 17:38:35.117903+00', '2025-11-28 17:39:09.275838+00', '2025-11-28 17:38:35.117903+00', '2025-11-28 17:39:09.275838+00');
+INSERT INTO public.chat_messages VALUES ('760c70d5-8a12-403d-a1ff-3c34d61f9107', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'oi', 'text', NULL, true, '2025-11-28 17:38:46.612687+00', '2025-11-28 17:39:09.275838+00', '2025-11-28 17:38:46.612687+00', '2025-11-28 17:39:09.275838+00');
+INSERT INTO public.chat_messages VALUES ('c8101998-3517-41f8-ac07-68ba306a75c0', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'asdfsadf', 'text', NULL, true, '2025-11-28 17:38:55.483879+00', '2025-11-28 17:39:09.275838+00', '2025-11-28 17:38:55.483879+00', '2025-11-28 17:39:09.275838+00');
+INSERT INTO public.chat_messages VALUES ('40334026-e984-4821-8b3d-624eb8c48ef1', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'asdfasdf', 'text', NULL, true, '2025-11-28 17:39:01.923039+00', '2025-11-28 17:39:09.275838+00', '2025-11-28 17:39:01.923039+00', '2025-11-28 17:39:09.275838+00');
+INSERT INTO public.chat_messages VALUES ('32f51beb-e45b-4151-939c-b85db9538f24', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'Gráfico layout de fluxo de trabalho de empresa (1).pdf', 'file', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/chat-attachments/bf547c35-e240-45db-bdb1-5a1fc4bc8081/1687ac47-9efb-4345-9967-100988688f86.pdf', true, '2025-11-28 17:39:38.657823+00', '2025-11-28 17:39:43.062172+00', '2025-11-28 17:39:38.657823+00', '2025-11-28 17:39:43.062172+00');
 
 
 --
@@ -5457,7 +5689,7 @@ INSERT INTO public.chat_messages VALUES ('0f662767-b09d-45e1-a227-3850baee61b0',
 -- Data for Name: client_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client_details VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', '', '{"smoker": false, "alcohol": "never", "injuries": "", "symptoms": ["Fraqueza"], "allergies": "", "surgeries": "", "occupation": "Auxiliar Administrativo", "work_hours": "", "medications": "", "sleep_hours": "4", "supplements": "", "diet_history": "", "stress_level": "", "water_intake": "2", "sleep_quality": "average", "activity_level": "sedentary", "family_history": "", "food_aversions": "", "work_activities": ["Sentar na cadeira"], "diagnosed_conditions": ["Anemia"]}', NULL, '', '2025-11-26 20:34:28.304168+00', '2025-11-26 20:34:27.949+00');
+INSERT INTO public.client_details VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', '', '{"smoker": false, "alcohol": "never", "injuries": "", "symptoms": ["Fraqueza", "Dores Articulares"], "allergies": "", "surgeries": "", "occupation": "Auxiliar Administrativo", "work_hours": "", "medications": "", "sleep_hours": "4", "supplements": "", "diet_history": "", "stress_level": "", "water_intake": "2", "sleep_quality": "average", "activity_level": "sedentary", "family_history": "", "food_aversions": "", "last_exam_date": "", "work_activities": ["Sentar na cadeira"], "diagnosed_conditions": ["Anemia"], "physical_restrictions": ""}', NULL, '', '2025-11-26 20:34:28.304168+00', '2025-12-10 02:03:42.655472+00', '(17) 98803-1873', '@raizen_off');
 
 
 --
@@ -5493,8 +5725,8 @@ INSERT INTO public.client_workouts VALUES ('4bec07c2-2fa3-4aaf-b34f-609a4ea41276
 -- Data for Name: exercises_library; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.exercises_library VALUES ('b3a7592c-33bb-4255-b167-225fe69aceb5', 'Supino Inclinado', 'Concentrado com 2 segundos de contração.', '{"Peito superior e Ombros"}', '{Halteres}', 'intermediate', 'https://www.youtube.com/watch?v=WP1VLAt8hbM', NULL, NULL, NULL, 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:25:34.674338+00', '2025-11-17 03:23:39.607973+00');
-INSERT INTO public.exercises_library VALUES ('b42e4102-659a-4aea-89e6-a8f0914e85a9', 'Supino Reto', 'Concentrado com 2 segundos de contração.', '{"Peito e Ombros"}', '{Halteres}', 'beginner', 'https://youtu.be/72UUJVBuT7o', NULL, NULL, NULL, 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:17:43.822207+00', '2025-11-18 04:12:56.616597+00');
+INSERT INTO public.exercises_library VALUES ('b3a7592c-33bb-4255-b167-225fe69aceb5', 'Supino Inclinado', 'Concentrado com 2 segundos de contração.', '{"Peito superior e Ombros"}', '{Halteres}', 'intermediate', 'https://www.youtube.com/watch?v=qpGlwaXwrHE', 'https://capifit.app.br/gifs_exercicios/supino-inclinado-com-barra.gif', '{"teste 1","teste 2","teste 3"}', '{"Teste 4","Teste 5","Teste 6"}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:25:34.674338+00', '2025-12-09 00:38:31.426885+00');
+INSERT INTO public.exercises_library VALUES ('b42e4102-659a-4aea-89e6-a8f0914e85a9', 'Supino Reto', 'Concentrado com 2 segundos de contração.', '{"Peito e Ombros"}', '{Halteres}', 'beginner', '', 'https://capifit.app.br/gifs_exercicios/supino-reto-com-barra.gif', '{}', '{}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:17:43.822207+00', '2025-12-08 20:17:56.573693+00');
 
 
 --
@@ -5538,7 +5770,7 @@ INSERT INTO public.meal_plans VALUES ('abc28005-3841-4e16-a20d-77496f245e47', 'P
 -- Data for Name: professional_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'personal_trainer', 'teste', '{"raw_text": "teste"}', 100.00, NULL, true, '2025-11-22 19:09:25.500172+00', '2025-11-24 11:27:25.476318+00');
+INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'personal_trainer', 'teste', '{"raw_text": "teste"}', 100.00, NULL, true, '2025-11-22 19:09:25.500172+00', '2025-12-10 02:38:44.165036+00', NULL, NULL);
 
 
 --
@@ -5555,10 +5787,10 @@ INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b
 -- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.profiles VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'cliente1@capifit.com', 'Vinicius Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462', '(17) 3236-6250', 'client', '2025-11-26 20:31:24.782035+00', '2025-11-27 01:12:55.996996+00', 201, 1);
-INSERT INTO public.profiles VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'admin@capifit.com', 'Administrador', NULL, NULL, 'admin', '2025-11-16 22:10:09.626227+00', '2025-11-17 07:16:33.067738+00', 0, 1);
-INSERT INTO public.profiles VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'profissional@capifit.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', '(17) 98803-1873', 'professional', '2025-11-16 22:09:35.743201+00', '2025-11-24 11:27:24.812452+00', 0, 1);
-INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cliente@capifit.com', NULL, NULL, NULL, 'client', '2025-11-26 19:46:42.693554+00', '2025-11-26 19:46:42.693554+00', 0, 1);
+INSERT INTO public.profiles VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'cliente1@capifit.com', 'Vinicius Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462', '(17) 3236-6250', 'client', '2025-11-26 20:31:24.782035+00', '2025-12-10 02:03:42.028429+00', 689, 2, '2006-12-15', '287.025.358-31', 'Giuliano Moretti Santos Garcia', 'Amanda Garcia', NULL);
+INSERT INTO public.profiles VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'admin@capifit.com', 'Administrador', NULL, NULL, 'admin', '2025-11-16 22:10:09.626227+00', '2025-11-17 07:16:33.067738+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'profissional@capifit.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', '(17) 98803-1873', 'professional', '2025-11-16 22:09:35.743201+00', '2025-12-10 02:38:43.656453+00', 0, 1, '1979-08-04', '287.025.358-31', 'José Garcia dos Santos', 'Maria Ivone Santos Garcia', NULL);
+INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cliente@capifit.com', NULL, NULL, NULL, 'client', '2025-11-26 19:46:42.693554+00', '2025-11-26 19:46:42.693554+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -5567,6 +5799,7 @@ INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cli
 -- Data for Name: progress_photos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/progress-photos/bf547c35-e240-45db-bdb1-5a1fc4bc8081/1765331786687.jpg', '2025-12-10', '', '2025-12-10 01:56:36.276666+00');
 
 
 --
@@ -5586,16 +5819,16 @@ INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cli
 
 
 --
--- TOC entry 4761 (class 0 OID 29871)
--- Dependencies: 417
+-- TOC entry 4755 (class 0 OID 29871)
+-- Dependencies: 411
 -- Data for Name: user_achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 4759 (class 0 OID 28702)
--- Dependencies: 415
+-- TOC entry 4753 (class 0 OID 28702)
+-- Dependencies: 409
 -- Data for Name: workout_execution_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -5603,6 +5836,14 @@ INSERT INTO public.workout_execution_logs VALUES ('1081fb2a-2d58-4860-b5d1-43d34
 INSERT INTO public.workout_execution_logs VALUES ('ac37a499-a210-4a43-84f4-bec2943f7c63', '0690fdab-eeba-40be-bf90-ad00aab3efeb', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-26 20:36:21.121+00');
 INSERT INTO public.workout_execution_logs VALUES ('a0dd6a9b-ddfa-43ec-8268-2e6e324b56b8', '7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-27 01:13:24.556+00');
 INSERT INTO public.workout_execution_logs VALUES ('a3a72348-793a-4576-a388-70d9c3661162', '7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-27 01:13:31.564+00');
+INSERT INTO public.workout_execution_logs VALUES ('db9d7926-e614-4377-9134-303ef5a4c284', 'a6c52971-2566-48a0-a8c4-fb783d6ead46', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-28 17:36:43.386+00');
+INSERT INTO public.workout_execution_logs VALUES ('1ab63072-23b7-4730-9278-c54ba00dec99', 'a6c52971-2566-48a0-a8c4-fb783d6ead46', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-28 17:36:53.427+00');
+INSERT INTO public.workout_execution_logs VALUES ('0f4e4c64-58b8-4c42-8ea1-2048faaa412b', '5252f64e-648f-4629-ad0e-a680c7421cbd', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-29 15:15:17.661+00');
+INSERT INTO public.workout_execution_logs VALUES ('e46ca0e8-bb2b-475e-a249-6ed4c0599122', '5252f64e-648f-4629-ad0e-a680c7421cbd', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-29 15:15:24.683+00');
+INSERT INTO public.workout_execution_logs VALUES ('d0d7336e-2e30-4f8d-8398-74c52dfe1f21', '3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-12-03 01:24:28.111+00');
+INSERT INTO public.workout_execution_logs VALUES ('ec9635ee-cc5e-42f5-bfaa-93c136a92f21', '3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-12-03 01:24:33.111+00');
+INSERT INTO public.workout_execution_logs VALUES ('21dd65b5-9311-4037-b6f3-b3ce2a0cdf7b', 'e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-12-03 03:05:57.058+00');
+INSERT INTO public.workout_execution_logs VALUES ('0315550b-3c6e-4688-aeb3-594b6b5c6b08', 'e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-12-03 03:06:19.522+00');
 
 
 --
@@ -5611,8 +5852,8 @@ INSERT INTO public.workout_execution_logs VALUES ('a3a72348-793a-4576-a388-70d9c
 -- Data for Name: workout_exercises; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.workout_exercises VALUES ('f06daea9-e0be-480d-aa9c-2cf79c3c30c6', '03e89f3e-8752-4333-996b-a00717743216', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 1, 99, 3, '10', 0.00, 60, '');
-INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', '03e89f3e-8752-4333-996b-a00717743216', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', 1, 99, 3, '10', 0.00, 60, '');
+INSERT INTO public.workout_exercises VALUES ('f06daea9-e0be-480d-aa9c-2cf79c3c30c6', '03e89f3e-8752-4333-996b-a00717743216', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 1, 99, 3, '10', 10.00, 60, 'Nota Opcional');
+INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', '03e89f3e-8752-4333-996b-a00717743216', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', 1, 99, 3, '10', 10.00, 60, 'Nota Opcional');
 
 
 --
@@ -5631,6 +5872,14 @@ INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c15
 
 INSERT INTO public.workout_sessions VALUES ('0690fdab-eeba-40be-bf90-ad00aab3efeb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-26 20:36:06.989907+00', '2025-11-26 20:37:10.726+00', 64, 'completed', '2025-11-26 20:36:06.989907+00', '2025-11-26 20:37:11.520881+00', 'manual', NULL, 0.50, 1.28, NULL, NULL, NULL, NULL, 0, 'strength');
 INSERT INTO public.workout_sessions VALUES ('7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-27 01:12:25.222898+00', '2025-11-27 01:13:47.404+00', 82, 'completed', '2025-11-27 01:12:25.222898+00', '2025-11-27 01:12:55.450276+00', 'manual', NULL, 0.50, 1.64, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('a6c52971-2566-48a0-a8c4-fb783d6ead46', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-28 17:36:21.308294+00', '2025-11-28 17:36:58.276+00', 37, 'completed', '2025-11-28 17:36:21.308294+00', '2025-11-28 17:36:58.62409+00', 'manual', NULL, 0.50, 0.74, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('5252f64e-648f-4629-ad0e-a680c7421cbd', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-29 15:15:02.774458+00', '2025-11-29 15:15:47.08+00', 44, 'completed', '2025-11-29 15:15:02.774458+00', '2025-11-29 15:15:47.330458+00', 'manual', NULL, 0.50, 0.88, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 01:23:53.740152+00', '2025-12-03 01:24:38.615+00', 45, 'completed', '2025-12-03 01:23:53.740152+00', '2025-12-03 01:24:40.747676+00', 'manual', NULL, 0.50, 0.90, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('80999f19-6ad8-4312-b741-a7b52ca31392', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 01:40:47.159794+00', '2025-12-03 01:40:54.748+00', 8, 'completed', '2025-12-03 01:40:47.159794+00', '2025-12-03 01:40:56.867846+00', 'manual', NULL, 0.50, 0.16, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('1e9aa093-8a9a-4cd0-9a63-0d17baf8ae3a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 02:55:15.474874+00', '2025-12-03 02:55:41.956+00', 26, 'completed', '2025-12-03 02:55:15.474874+00', '2025-12-03 02:55:44.146145+00', 'manual', NULL, 0.50, 0.52, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 03:05:20.670206+00', '2025-12-03 03:06:26.586+00', 66, 'completed', '2025-12-03 03:05:20.670206+00', '2025-12-03 03:06:28.798868+00', 'manual', NULL, 0.50, 1.32, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('ebb30fcd-34a5-4384-ba0a-67e9e055712c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 03:16:47.53459+00', '2025-12-03 03:17:09.928+00', 22, 'completed', '2025-12-03 03:16:47.53459+00', '2025-12-03 03:17:12.146262+00', 'manual', NULL, 0.50, 0.44, NULL, NULL, NULL, NULL, 0, 'strength');
+INSERT INTO public.workout_sessions VALUES ('c1f4b539-aa94-45a2-be7c-cbe09cfdc12d', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-08 20:08:56.842391+00', '2025-12-08 20:20:12.262+00', 675, 'completed', '2025-12-08 20:08:56.842391+00', '2025-12-08 20:20:18.961916+00', 'manual', NULL, 0.50, 13.50, NULL, NULL, NULL, NULL, 6, 'strength');
 
 
 --
@@ -5643,57 +5892,57 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4753 (class 0 OID 22572)
--- Dependencies: 409
--- Data for Name: messages_2025_11_23; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4754 (class 0 OID 24982)
--- Dependencies: 410
--- Data for Name: messages_2025_11_24; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4755 (class 0 OID 25020)
--- Dependencies: 411
--- Data for Name: messages_2025_11_25; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4756 (class 0 OID 26290)
+-- TOC entry 4756 (class 0 OID 40104)
 -- Dependencies: 412
--- Data for Name: messages_2025_11_26; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_07; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4757 (class 0 OID 27574)
+-- TOC entry 4757 (class 0 OID 40116)
 -- Dependencies: 413
--- Data for Name: messages_2025_11_27; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_08; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4758 (class 0 OID 28690)
+-- TOC entry 4758 (class 0 OID 44540)
 -- Dependencies: 414
--- Data for Name: messages_2025_11_28; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_09; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4762 (class 0 OID 29966)
+-- TOC entry 4759 (class 0 OID 44552)
+-- Dependencies: 415
+-- Data for Name: messages_2025_12_10; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4760 (class 0 OID 44564)
+-- Dependencies: 416
+-- Data for Name: messages_2025_12_11; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4761 (class 0 OID 44576)
+-- Dependencies: 417
+-- Data for Name: messages_2025_12_12; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4762 (class 0 OID 45691)
 -- Dependencies: 418
--- Data for Name: messages_2025_11_29; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_13; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
@@ -5777,9 +6026,8 @@ INSERT INTO realtime.schema_migrations VALUES (20251103001201, '2025-11-16 15:24
 -- Data for Name: subscription; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1337, '8601db78-cb07-11f0-bb50-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764189116}], "aud": "authenticated", "exp": 1764206878, "iat": 1764203278, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "01d70851-717a-4a8a-9eac-bcd489016b50", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-11-27 00:28:01.585747');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1347, '9c6e8cb4-cb2d-11f0-82e6-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764031326}], "aud": "authenticated", "exp": 1764207234, "iat": 1764203634, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "f2bb6acc-835a-414c-8856-836415b23896", "role": "authenticated", "email": "profissional@capifit.com", "phone": "", "session_id": "7a35a9cd-9dd5-45e4-9a28-261914267fe7", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}}', DEFAULT, '2025-11-27 01:08:40.734477');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1357, 'bc175018-cb2e-11f0-a212-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764203807}], "aud": "authenticated", "exp": 1764207407, "iat": 1764203807, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "84e9bdc1-fbe6-49cc-937d-3da77dce8110", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-11-27 01:16:43.345202');
+INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1816, '5acde734-d571-11f0-8cfc-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764723743}], "aud": "authenticated", "exp": 1765340205, "iat": 1765336605, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "f2bb6acc-835a-414c-8856-836415b23896", "role": "authenticated", "email": "profissional@capifit.com", "phone": "", "session_id": "bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}}', DEFAULT, '2025-12-10 03:16:46.630536');
+INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1803, '65985c30-d56c-11f0-a892-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764725016}], "aud": "authenticated", "exp": 1765336965, "iat": 1765333365, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "27a49fd3-d747-49d1-9d11-75455d3ac701", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-12-10 02:22:48.088776');
 
 
 --
@@ -5874,6 +6122,11 @@ INSERT INTO storage.migrations VALUES (48, 'iceberg-catalog-ids', '2666dff93346e
 
 INSERT INTO storage.objects VALUES ('df10326f-f884-4e21-af56-0c6547d721cf', 'avatars', 'f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-22 19:31:44.95827+00', '2025-11-22 19:31:44.95827+00', '2025-11-22 19:31:44.95827+00', '{"eTag": "\"b50bde7d77a4189c68a03d590738b5e3\"", "size": 385313, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T19:31:45.000Z", "contentLength": 385313, "httpStatusCode": 200}', DEFAULT, 'bf16cb61-9942-467b-b13e-1b3e56cc3648', 'f2bb6acc-835a-414c-8856-836415b23896', '{}', 2);
 INSERT INTO storage.objects VALUES ('45bc2558-8e8b-4a8f-af43-409a7f795d6c', 'avatars', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-26 20:34:21.523619+00', '2025-11-26 20:34:21.523619+00', '2025-11-26 20:34:21.523619+00', '{"eTag": "\"7d951db06cc55618a32288428f1e9762\"", "size": 34741, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-26T20:34:22.000Z", "contentLength": 34741, "httpStatusCode": 200}', DEFAULT, '48441b3e-1882-4bf1-9df0-f90947781053', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '{}', 2);
+INSERT INTO storage.objects VALUES ('aeba6fc4-ef77-40e8-a74e-53d12abe7186', 'chat-attachments', 'f2bb6acc-835a-414c-8856-836415b23896/40c8f472-3b15-4233-a029-729024b84ad1.png', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-28 00:40:34.860652+00', '2025-11-28 00:40:34.860652+00', '2025-11-28 00:40:34.860652+00', '{"eTag": "\"769009879170225d17c85123168ad6ae-2\"", "size": 5459327, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2025-11-28T00:40:35.000Z", "contentLength": 5459327, "httpStatusCode": 200}', DEFAULT, 'd78d82ea-3cc9-46e0-b947-aafbf5700df2', 'f2bb6acc-835a-414c-8856-836415b23896', '{}', 2);
+INSERT INTO storage.objects VALUES ('6dceb18a-fe28-4167-a8bd-2102e61ba43d', 'chat-attachments', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081/e12d9de1-df77-4035-ad8f-083ad465e497.pdf', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-28 01:42:22.748788+00', '2025-11-28 01:42:22.748788+00', '2025-11-28 01:42:22.748788+00', '{"eTag": "\"7ba6e2786fc38c77737f7b6d51030698\"", "size": 74476, "mimetype": "application/pdf", "cacheControl": "max-age=3600", "lastModified": "2025-11-28T01:42:23.000Z", "contentLength": 74476, "httpStatusCode": 200}', DEFAULT, '22af6561-0b62-4200-879c-73f9f353be63', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '{}', 2);
+INSERT INTO storage.objects VALUES ('11d7a00e-3137-4986-a928-ca741a6c5f67', 'progress-photos', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081/1764295024275.jpg', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-28 01:56:12.81617+00', '2025-11-28 01:56:12.81617+00', '2025-11-28 01:56:12.81617+00', '{"eTag": "\"71d195a5f444a683a8b338c1ef377e75\"", "size": 125839, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-28T01:56:13.000Z", "contentLength": 125839, "httpStatusCode": 200}', DEFAULT, 'edb1599e-74f4-4cab-b18e-696e79e4a41d', 'f2bb6acc-835a-414c-8856-836415b23896', '{}', 2);
+INSERT INTO storage.objects VALUES ('c0cd3b23-499a-4557-be03-f1c3165ff0e1', 'chat-attachments', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081/1687ac47-9efb-4345-9967-100988688f86.pdf', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-28 17:39:38.207462+00', '2025-11-28 17:39:38.207462+00', '2025-11-28 17:39:38.207462+00', '{"eTag": "\"580c434af94056e077c807141e3497ce\"", "size": 285975, "mimetype": "application/pdf", "cacheControl": "max-age=3600", "lastModified": "2025-11-28T17:39:39.000Z", "contentLength": 285975, "httpStatusCode": 200}', DEFAULT, '1db29159-613b-429b-baa4-259d66d7d887', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '{}', 2);
+INSERT INTO storage.objects VALUES ('d2556d6a-b427-45b3-88f4-a98c434f7058', 'progress-photos', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081/1765331786687.jpg', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-12-10 01:56:35.944124+00', '2025-12-10 01:56:35.944124+00', '2025-12-10 01:56:35.944124+00', '{"eTag": "\"3f8eb98b7d82019fb9939d003af10698\"", "size": 762364, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-12-10T01:56:36.000Z", "contentLength": 762364, "httpStatusCode": 200}', DEFAULT, 'e31f2531-0dff-47cc-8bba-2aed3b11c8d4', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '{}', 2);
 
 
 --
@@ -5884,6 +6137,9 @@ INSERT INTO storage.objects VALUES ('45bc2558-8e8b-4a8f-af43-409a7f795d6c', 'ava
 
 INSERT INTO storage.prefixes VALUES ('avatars', 'f2bb6acc-835a-414c-8856-836415b23896', DEFAULT, '2025-11-22 19:02:03.48467+00', '2025-11-22 19:02:03.48467+00');
 INSERT INTO storage.prefixes VALUES ('avatars', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', DEFAULT, '2025-11-26 20:34:21.523619+00', '2025-11-26 20:34:21.523619+00');
+INSERT INTO storage.prefixes VALUES ('chat-attachments', 'f2bb6acc-835a-414c-8856-836415b23896', DEFAULT, '2025-11-28 00:40:34.860652+00', '2025-11-28 00:40:34.860652+00');
+INSERT INTO storage.prefixes VALUES ('chat-attachments', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', DEFAULT, '2025-11-28 01:42:22.748788+00', '2025-11-28 01:42:22.748788+00');
+INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', DEFAULT, '2025-11-28 01:56:12.81617+00', '2025-11-28 01:56:12.81617+00');
 
 
 --
@@ -5924,7 +6180,7 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'bf547c35-e240-45db-bdb1-5a1fc4b
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 599, true);
+SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 701, true);
 
 
 --
@@ -5933,7 +6189,7 @@ SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 599, true);
 -- Name: subscription_id_seq; Type: SEQUENCE SET; Schema: realtime; Owner: supabase_admin
 --
 
-SELECT pg_catalog.setval('realtime.subscription_id_seq', 1357, true);
+SELECT pg_catalog.setval('realtime.subscription_id_seq', 1817, true);
 
 
 --
@@ -6189,7 +6445,7 @@ ALTER TABLE ONLY auth.users
 
 
 --
--- TOC entry 4275 (class 2606 OID 29870)
+-- TOC entry 4257 (class 2606 OID 29870)
 -- Name: achievements achievements_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6198,7 +6454,7 @@ ALTER TABLE ONLY public.achievements
 
 
 --
--- TOC entry 4277 (class 2606 OID 29868)
+-- TOC entry 4259 (class 2606 OID 29868)
 -- Name: achievements achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6387,7 +6643,7 @@ ALTER TABLE ONLY public.recipes
 
 
 --
--- TOC entry 4279 (class 2606 OID 29877)
+-- TOC entry 4261 (class 2606 OID 29877)
 -- Name: user_achievements user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6396,7 +6652,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4281 (class 2606 OID 29879)
+-- TOC entry 4263 (class 2606 OID 29879)
 -- Name: user_achievements user_achievements_user_id_achievement_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6405,7 +6661,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4273 (class 2606 OID 28710)
+-- TOC entry 4255 (class 2606 OID 28710)
 -- Name: workout_execution_logs workout_execution_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6459,66 +6715,66 @@ ALTER TABLE ONLY realtime.messages
 
 
 --
--- TOC entry 4256 (class 2606 OID 22580)
--- Name: messages_2025_11_23 messages_2025_11_23_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4266 (class 2606 OID 40112)
+-- Name: messages_2025_12_07 messages_2025_12_07_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_11_23
-    ADD CONSTRAINT messages_2025_11_23_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4259 (class 2606 OID 24990)
--- Name: messages_2025_11_24 messages_2025_11_24_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_11_24
-    ADD CONSTRAINT messages_2025_11_24_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_07
+    ADD CONSTRAINT messages_2025_12_07_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4262 (class 2606 OID 25028)
--- Name: messages_2025_11_25 messages_2025_11_25_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4269 (class 2606 OID 40124)
+-- Name: messages_2025_12_08 messages_2025_12_08_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_11_25
-    ADD CONSTRAINT messages_2025_11_25_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4265 (class 2606 OID 26298)
--- Name: messages_2025_11_26 messages_2025_11_26_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_11_26
-    ADD CONSTRAINT messages_2025_11_26_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_08
+    ADD CONSTRAINT messages_2025_12_08_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4268 (class 2606 OID 27582)
--- Name: messages_2025_11_27 messages_2025_11_27_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4272 (class 2606 OID 44548)
+-- Name: messages_2025_12_09 messages_2025_12_09_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_11_27
-    ADD CONSTRAINT messages_2025_11_27_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4271 (class 2606 OID 28698)
--- Name: messages_2025_11_28 messages_2025_11_28_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_11_28
-    ADD CONSTRAINT messages_2025_11_28_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_09
+    ADD CONSTRAINT messages_2025_12_09_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4284 (class 2606 OID 29974)
--- Name: messages_2025_11_29 messages_2025_11_29_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4275 (class 2606 OID 44560)
+-- Name: messages_2025_12_10 messages_2025_12_10_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_11_29
-    ADD CONSTRAINT messages_2025_11_29_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_10
+    ADD CONSTRAINT messages_2025_12_10_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4278 (class 2606 OID 44572)
+-- Name: messages_2025_12_11 messages_2025_12_11_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_11
+    ADD CONSTRAINT messages_2025_12_11_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4281 (class 2606 OID 44584)
+-- Name: messages_2025_12_12 messages_2025_12_12_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_12
+    ADD CONSTRAINT messages_2025_12_12_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4284 (class 2606 OID 45699)
+-- Name: messages_2025_12_13 messages_2025_12_13_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_13
+    ADD CONSTRAINT messages_2025_12_13_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
@@ -7224,59 +7480,59 @@ CREATE INDEX messages_inserted_at_topic_index ON ONLY realtime.messages USING bt
 
 
 --
--- TOC entry 4254 (class 1259 OID 22581)
--- Name: messages_2025_11_23_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4264 (class 1259 OID 40113)
+-- Name: messages_2025_12_07_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_11_23_inserted_at_topic_idx ON realtime.messages_2025_11_23 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4257 (class 1259 OID 24991)
--- Name: messages_2025_11_24_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_11_24_inserted_at_topic_idx ON realtime.messages_2025_11_24 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_07_inserted_at_topic_idx ON realtime.messages_2025_12_07 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4260 (class 1259 OID 25029)
--- Name: messages_2025_11_25_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4267 (class 1259 OID 40125)
+-- Name: messages_2025_12_08_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_11_25_inserted_at_topic_idx ON realtime.messages_2025_11_25 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4263 (class 1259 OID 26299)
--- Name: messages_2025_11_26_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_11_26_inserted_at_topic_idx ON realtime.messages_2025_11_26 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_08_inserted_at_topic_idx ON realtime.messages_2025_12_08 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4266 (class 1259 OID 27583)
--- Name: messages_2025_11_27_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4270 (class 1259 OID 44549)
+-- Name: messages_2025_12_09_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_11_27_inserted_at_topic_idx ON realtime.messages_2025_11_27 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4269 (class 1259 OID 28699)
--- Name: messages_2025_11_28_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_11_28_inserted_at_topic_idx ON realtime.messages_2025_11_28 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_09_inserted_at_topic_idx ON realtime.messages_2025_12_09 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4282 (class 1259 OID 29975)
--- Name: messages_2025_11_29_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4273 (class 1259 OID 44561)
+-- Name: messages_2025_12_10_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_11_29_inserted_at_topic_idx ON realtime.messages_2025_11_29 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_10_inserted_at_topic_idx ON realtime.messages_2025_12_10 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4276 (class 1259 OID 44573)
+-- Name: messages_2025_12_11_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_11_inserted_at_topic_idx ON realtime.messages_2025_12_11 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4279 (class 1259 OID 44585)
+-- Name: messages_2025_12_12_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_12_inserted_at_topic_idx ON realtime.messages_2025_12_12 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4282 (class 1259 OID 45700)
+-- Name: messages_2025_12_13_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_13_inserted_at_topic_idx ON realtime.messages_2025_12_13 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
@@ -7377,114 +7633,114 @@ CREATE UNIQUE INDEX vector_indexes_name_bucket_id_idx ON storage.vector_indexes 
 
 --
 -- TOC entry 4285 (class 0 OID 0)
--- Name: messages_2025_11_23_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_07_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_23_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_07_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4286 (class 0 OID 0)
--- Name: messages_2025_11_23_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_07_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_23_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_07_pkey;
 
 
 --
 -- TOC entry 4287 (class 0 OID 0)
--- Name: messages_2025_11_24_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_08_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_24_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_08_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4288 (class 0 OID 0)
--- Name: messages_2025_11_24_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_08_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_24_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_08_pkey;
 
 
 --
 -- TOC entry 4289 (class 0 OID 0)
--- Name: messages_2025_11_25_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_09_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_25_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_09_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4290 (class 0 OID 0)
--- Name: messages_2025_11_25_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_09_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_25_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_09_pkey;
 
 
 --
 -- TOC entry 4291 (class 0 OID 0)
--- Name: messages_2025_11_26_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_10_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_26_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_10_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4292 (class 0 OID 0)
--- Name: messages_2025_11_26_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_10_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_26_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_10_pkey;
 
 
 --
 -- TOC entry 4293 (class 0 OID 0)
--- Name: messages_2025_11_27_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_11_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_27_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_11_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4294 (class 0 OID 0)
--- Name: messages_2025_11_27_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_11_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_27_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_11_pkey;
 
 
 --
 -- TOC entry 4295 (class 0 OID 0)
--- Name: messages_2025_11_28_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_12_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_28_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_12_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4296 (class 0 OID 0)
--- Name: messages_2025_11_28_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_12_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_28_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_12_pkey;
 
 
 --
 -- TOC entry 4297 (class 0 OID 0)
--- Name: messages_2025_11_29_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_13_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_11_29_inserted_at_topic_idx;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_13_inserted_at_topic_idx;
 
 
 --
 -- TOC entry 4298 (class 0 OID 0)
--- Name: messages_2025_11_29_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: messages_2025_12_13_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_11_29_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_13_pkey;
 
 
 --
@@ -8604,7 +8860,7 @@ CREATE POLICY "View client details logic" ON public.client_details FOR SELECT TO
 
 --
 -- TOC entry 4588 (class 0 OID 29858)
--- Dependencies: 416
+-- Dependencies: 410
 -- Name: achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
@@ -9242,7 +9498,7 @@ CREATE POLICY recipes_update_creator ON public.recipes FOR UPDATE USING ((create
 
 --
 -- TOC entry 4589 (class 0 OID 29871)
--- Dependencies: 417
+-- Dependencies: 411
 -- Name: user_achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
@@ -9250,7 +9506,7 @@ ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 
 --
 -- TOC entry 4587 (class 0 OID 28702)
--- Dependencies: 415
+-- Dependencies: 409
 -- Name: workout_execution_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
@@ -11058,7 +11314,7 @@ GRANT ALL ON TABLE extensions.pg_stat_statements_info TO dashboard_user;
 
 --
 -- TOC entry 4933 (class 0 OID 0)
--- Dependencies: 416
+-- Dependencies: 410
 -- Name: TABLE achievements; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11267,7 +11523,7 @@ GRANT ALL ON TABLE public.recipes TO service_role;
 
 --
 -- TOC entry 4952 (class 0 OID 0)
--- Dependencies: 417
+-- Dependencies: 411
 -- Name: TABLE user_achievements; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11278,7 +11534,7 @@ GRANT ALL ON TABLE public.user_achievements TO service_role;
 
 --
 -- TOC entry 4953 (class 0 OID 0)
--- Dependencies: 415
+-- Dependencies: 409
 -- Name: TABLE workout_execution_logs; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11346,72 +11602,72 @@ GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO service_role;
 
 --
 -- TOC entry 4959 (class 0 OID 0)
--- Dependencies: 409
--- Name: TABLE messages_2025_11_23; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 412
+-- Name: TABLE messages_2025_12_07; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_23 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_23 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_07 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_07 TO dashboard_user;
 
 
 --
 -- TOC entry 4960 (class 0 OID 0)
--- Dependencies: 410
--- Name: TABLE messages_2025_11_24; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 413
+-- Name: TABLE messages_2025_12_08; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_24 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_24 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_08 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_08 TO dashboard_user;
 
 
 --
 -- TOC entry 4961 (class 0 OID 0)
--- Dependencies: 411
--- Name: TABLE messages_2025_11_25; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 414
+-- Name: TABLE messages_2025_12_09; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_25 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_25 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_09 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_09 TO dashboard_user;
 
 
 --
 -- TOC entry 4962 (class 0 OID 0)
--- Dependencies: 412
--- Name: TABLE messages_2025_11_26; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 415
+-- Name: TABLE messages_2025_12_10; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_26 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_26 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_10 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_10 TO dashboard_user;
 
 
 --
 -- TOC entry 4963 (class 0 OID 0)
--- Dependencies: 413
--- Name: TABLE messages_2025_11_27; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 416
+-- Name: TABLE messages_2025_12_11; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_27 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_27 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_11 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_11 TO dashboard_user;
 
 
 --
 -- TOC entry 4964 (class 0 OID 0)
--- Dependencies: 414
--- Name: TABLE messages_2025_11_28; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Dependencies: 417
+-- Name: TABLE messages_2025_12_12; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_28 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_28 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_12 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_12 TO dashboard_user;
 
 
 --
 -- TOC entry 4965 (class 0 OID 0)
 -- Dependencies: 418
--- Name: TABLE messages_2025_11_29; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: TABLE messages_2025_12_13; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_11_29 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_11_29 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_13 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_13 TO dashboard_user;
 
 
 --
@@ -11883,15 +12139,15 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 
 ALTER EVENT TRIGGER pgrst_drop_watch OWNER TO supabase_admin;
 
--- Completed on 2025-11-26 22:26:13
+-- Completed on 2025-12-10 00:20:35
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Bc5pYVO33JyJp6ZrMFCcERfGN4itgj6IQ2fBoxNwiHryEUB68vo0WybrSHpGkGR
+\unrestrict NQlf2TPnKyxn9vEchafijhckjDY78Hb02gb9yQ1oycmB5VAKMPG8hpnAPaKihkT
 
--- Completed on 2025-11-26 22:26:13
+-- Completed on 2025-12-10 00:20:35
 
 --
 -- PostgreSQL database cluster dump complete
