@@ -380,68 +380,67 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       {/* Log Modal */}
       <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>
-        <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>
-          <DialogContent className="sm:max-w-md bg-card border-border text-foreground">
-            <DialogHeader>
-              <DialogTitle>Registrar Execução</DialogTitle>
-              <DialogDescription className="text-muted-foreground">
-                {selectedExercise?.exercise?.name}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="weight" className="text-muted-foreground">Carga (kg)</Label>
-                  <Input
-                    id="weight"
-                    type="number"
-                    placeholder="0"
-                    value={logForm.weight}
-                    onChange={e => setLogForm({ ...logForm, weight: e.target.value })}
-                    className="bg-muted border-border text-foreground"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="reps" className="text-muted-foreground">Repetições</Label>
-                  <Input
-                    id="reps"
-                    type="number"
-                    placeholder="0"
-                    value={logForm.reps}
-                    onChange={e => setLogForm({ ...logForm, reps: e.target.value })}
-                    className="bg-muted border-border text-foreground"
-                  />
-                </div>
+        <DialogContent className="sm:max-w-md bg-card border-border text-foreground">
+          <DialogHeader>
+            <DialogTitle>Registrar Execução</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {selectedExercise?.exercise?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="weight" className="text-muted-foreground">Carga (kg)</Label>
+                <Input
+                  id="weight"
+                  type="number"
+                  placeholder="0"
+                  value={logForm.weight}
+                  onChange={e => setLogForm({ ...logForm, weight: e.target.value })}
+                  className="bg-muted border-border text-foreground"
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="notes" className="text-muted-foreground">Observações</Label>
-                <Textarea
-                  id="notes"
-                  placeholder="Como foi a série? (Opcional)"
-                  value={logForm.notes}
-                  onChange={e => setLogForm({ ...logForm, notes: e.target.value })}
+                <Label htmlFor="reps" className="text-muted-foreground">Repetições</Label>
+                <Input
+                  id="reps"
+                  type="number"
+                  placeholder="0"
+                  value={logForm.reps}
+                  onChange={e => setLogForm({ ...logForm, reps: e.target.value })}
                   className="bg-muted border-border text-foreground"
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-border text-muted-foreground hover:bg-muted hover:text-foreground">Cancelar</Button>
-              <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
-                {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                Salvar Registro
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            <div className="space-y-2">
+              <Label htmlFor="notes" className="text-muted-foreground">Observações</Label>
+              <Textarea
+                id="notes"
+                placeholder="Como foi a série? (Opcional)"
+                value={logForm.notes}
+                onChange={e => setLogForm({ ...logForm, notes: e.target.value })}
+                className="bg-muted border-border text-foreground"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-border text-muted-foreground hover:bg-muted hover:text-foreground">Cancelar</Button>
+            <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
+              {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+              Salvar Registro
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-        <WorkoutSummaryModal
-          isOpen={showSummaryModal}
-          onClose={handleCloseSummary}
-          xpEarned={summaryData.xpEarned}
-          currentXP={summaryData.currentXP}
-          newLevel={summaryData.newLevel}
-          oldLevel={summaryData.oldLevel}
-        />
+      <WorkoutSummaryModal
+        isOpen={showSummaryModal}
+        onClose={handleCloseSummary}
+        xpEarned={summaryData.xpEarned}
+        currentXP={summaryData.currentXP}
+        newLevel={summaryData.newLevel}
+        oldLevel={summaryData.oldLevel}
+      />
     </div>
   )
 }
