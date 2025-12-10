@@ -23,6 +23,9 @@ import {
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
   AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink
 } from 'lucide-react'
+import { ptBR } from 'date-fns/locale'
+import { isSameDay, isAfter, startOfDay, format } from 'date-fns'
+import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
@@ -108,6 +111,8 @@ const ClientDetails: React.FC = () => {
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
+  const [scheduledWorkouts, setScheduledWorkouts] = useState<any[]>([])
+  const [selectedAgendaDate, setSelectedAgendaDate] = useState<Date | undefined>(new Date())
 
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
@@ -165,7 +170,12 @@ const ClientDetails: React.FC = () => {
         setProgressPhotos(cPhotos.data || [])
         setHistorySessions(cHistory.data || [])
         setAvailableWorkouts(myWorkouts.data || [])
+        setAvailableWorkouts(myWorkouts.data || [])
         setAvailableMealPlans(myMealPlans.data || [])
+
+        // Agenda Fetch
+        const { data: sWorkouts } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+        setScheduledWorkouts(sWorkouts || [])
 
         if (detailsRes.data?.anamnesis_data) {
           const data = typeof detailsRes.data.anamnesis_data === 'string' ? JSON.parse(detailsRes.data.anamnesis_data) : detailsRes.data.anamnesis_data
@@ -185,13 +195,32 @@ const ClientDetails: React.FC = () => {
 
   const handleAssignWorkout = async () => {
     try {
-      const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
-      if (error) throw error
-      showSuccess('Treino atribuído!')
+      if (activeTab === 'agenda') {
+        if (!selectedAgendaDate) return
+        const { error } = await supabase.from('scheduled_workouts').insert({
+          client_id: id,
+          workout_id: selectedWorkoutId,
+          created_by: user!.id,
+          scheduled_at: selectedAgendaDate.toISOString(),
+          status: 'pending_approval', // Pro creating -> needs client approval? Or Confirmed? 
+          // PLAN says: Pro schedules -> Status pending_approval (needs Client).
+          notes: 'Agendado pelo professor'
+        })
+        if (error) throw error
+        showSuccess('Treino agendado (Aguardando cliente)')
+        // Refresh agenda
+        const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+        setScheduledWorkouts(data || [])
+      } else {
+        // Regular Assignment (Client_Workouts)
+        const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
+        if (error) throw error
+        showSuccess('Treino atribuído!')
+        const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
+        setClientWorkouts(data || [])
+        setActiveTab('workouts')
+      }
       setIsAssignWorkoutOpen(false)
-      const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
-      setClientWorkouts(data || [])
-      setActiveTab('workouts')
     } catch (err) { showError('Erro ao atribuir') }
   }
 
@@ -342,6 +371,46 @@ const ClientDetails: React.FC = () => {
     setHistoryLogsLoading(false)
   }
 
+  // --- Agenda Handlers ---
+  const handleApproveSchedule = async (scheduleId: string) => {
+    try {
+      const { error } = await supabase.from('scheduled_workouts').update({ status: 'confirmed' }).eq('id', scheduleId)
+      if (error) throw error
+      showSuccess('Treino confirmado!')
+      const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+      setScheduledWorkouts(data || [])
+    } catch (e) { showError('Erro ao confirmar') }
+  }
+
+  const handleRejectSchedule = async (scheduleId: string) => {
+    try {
+      const { error } = await supabase.from('scheduled_workouts').update({ status: 'rejected' }).eq('id', scheduleId)
+      if (error) throw error
+      showSuccess('Solicitação rejeitada.')
+      const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+      setScheduledWorkouts(data || [])
+    } catch (e) { showError('Erro ao rejeitar') }
+  }
+
+  const handleProSchedule = async () => {
+    // Note: This function logic works alongside handleAssignWorkout but needs to differentiate context. 
+    // For now, let's assume if we are in 'agenda' tab, handleAssignWorkout uses specific logic, OR we make a dedicated new function.
+    // Let's modify handleAssignWorkout instead to support agenda.
+  }
+
+  const getDayContent = (day: Date) => {
+    const daySchedules = scheduledWorkouts.filter(s => isSameDay(new Date(s.scheduled_at), day))
+    if (daySchedules.length === 0) return null
+    const hasPending = daySchedules.some(s => s.status === 'pending_approval' || s.status === 'pending')
+    const hasConfirmed = daySchedules.some(s => s.status === 'confirmed')
+    const hasCompleted = daySchedules.some(s => s.status === 'completed')
+    let colorClass = 'bg-gray-400'
+    if (hasPending) colorClass = 'bg-yellow-500'
+    else if (hasConfirmed) colorClass = 'bg-blue-500'
+    else if (hasCompleted) colorClass = 'bg-green-500'
+    return <div className={`absolute bottom-1 w-1.5 h-1.5 rounded-full ${colorClass}`} />
+  }
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   const latestAssessment = assessments.find(a => a.measurements?.status === 'completed') || assessments[0]
@@ -379,8 +448,89 @@ const ClientDetails: React.FC = () => {
               <TabsTrigger value="meal-plans" className="px-4 py-1.5 text-sm">Dietas</TabsTrigger>
               <TabsTrigger value="achievements" className="px-4 py-1.5 text-sm"><Trophy className="w-4 h-4 mr-2" /> Conquistas</TabsTrigger>
               <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
+              <TabsTrigger value="agenda" className="px-4 py-1.5 text-sm"><Calendar className="w-4 h-4 mr-2" /> Agenda</TabsTrigger>
             </TabsList>
           </div>
+          <TabsContent value="agenda">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+              {/* Calendar Column */}
+              <div className="md:col-span-4">
+                <Card className="bg-card border-border">
+                  <CardContent className="p-4 flex justify-center">
+                    <CalendarComponent
+                      mode="single"
+                      selected={selectedAgendaDate}
+                      onSelect={setSelectedAgendaDate}
+                      locale={ptBR}
+                      className="rounded-md border border-border"
+                      components={{
+                        DayContent: (props) => (
+                          <div className="relative flex items-center justify-center w-full h-full text-sm">
+                            {props.date.getDate()}
+                            {getDayContent(props.date)}
+                          </div>
+                        )
+                      }}
+                    />
+                  </CardContent>
+                </Card>
+                <div className="mt-4 flex gap-4 justify-center text-sm text-muted-foreground flex-wrap">
+                  <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-yellow-500" /><span>Pendente</span></div>
+                  <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500" /><span>Confirmado</span></div>
+                  <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500" /><span>Concluído</span></div>
+                </div>
+              </div>
+
+              {/* Details Column */}
+              <div className="md:col-span-8 space-y-6">
+                <Card className="bg-card border-border min-h-[400px]">
+                  <CardHeader className="border-b border-border flex flex-row justify-between items-center">
+                    <CardTitle>{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM", { locale: ptBR }) : 'Selecione uma data'}</CardTitle>
+                    {selectedAgendaDate && (
+                      <Button size="sm" onClick={() => { setStartDate(selectedAgendaDate.toISOString().split('T')[0]); setIsAssignWorkoutOpen(true) }}>
+                        <Plus className="h-4 w-4 mr-2" /> Agendar Treino
+                      </Button>
+                    )}
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    {scheduledWorkouts.filter(s => selectedAgendaDate && isSameDay(new Date(s.scheduled_at), selectedAgendaDate)).length === 0 ? (
+                      <div className="text-center py-12 text-muted-foreground">Nenhum agendamento para este dia.</div>
+                    ) : (
+                      scheduledWorkouts
+                        .filter(s => selectedAgendaDate && isSameDay(new Date(s.scheduled_at), selectedAgendaDate))
+                        .map(schedule => (
+                          <div key={schedule.id} className="bg-muted p-4 rounded-lg border border-border flex justify-between items-center">
+                            <div>
+                              <h4 className="font-bold text-foreground">{schedule.workout?.name}</h4>
+                              <div className="flex items-center gap-2 text-sm mt-1">
+                                <Badge variant={schedule.status === 'confirmed' || schedule.status === 'completed' ? 'default' : 'outline'}
+                                  className={schedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}>
+                                  {schedule.status === 'pending_approval' ? 'Aguardando Aprovação' :
+                                    schedule.status === 'confirmed' ? 'Confirmado' :
+                                      schedule.status === 'completed' ? 'Concluído' : schedule.status}
+                                </Badge>
+                                {schedule.created_by !== id && schedule.created_by === user?.id && <span className="text-xs text-muted-foreground">(Criado por você)</span>}
+                                {schedule.created_by === id && <span className="text-xs text-muted-foreground">(Solicitado pelo aluno)</span>}
+                              </div>
+                            </div>
+                            {/* Actions for Pro */}
+                            {schedule.status === 'pending_approval' && schedule.created_by === id && (
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleRejectSchedule(schedule.id)}>Rejeitar</Button>
+                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aprovar</Button>
+                              </div>
+                            )}
+                            {schedule.status === 'confirmed' && (
+                              <Button size="sm" variant="ghost" disabled><CheckCircle className="h-4 w-4 text-green-500 mr-2" /> Agendado</Button>
+                            )}
+                          </div>
+                        ))
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
           <TabsContent value="achievements">
             <AchievementsList />
           </TabsContent>

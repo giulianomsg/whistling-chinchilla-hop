@@ -17,7 +17,8 @@ interface ScheduledWorkout {
     id: string
     workout_id: string
     scheduled_at: string
-    status: 'pending' | 'completed' | 'cancelled'
+    status: 'pending' | 'completed' | 'cancelled' | 'pending_approval' | 'confirmed' | 'rejected'
+    created_by: string
     notes?: string
     workout?: {
         name: string
@@ -75,7 +76,7 @@ const ClientAgenda: React.FC = () => {
                     .from('scheduled_workouts')
                     .select('*, workout:workouts(name)')
                     .eq('client_id', user.id)
-                    //.eq('status', 'pending') // Mostrar todos por enquanto
+                    .neq('status', 'rejected')
                     .order('scheduled_at', { ascending: true })
 
                 if (scheduledError) throw scheduledError
@@ -91,7 +92,12 @@ const ClientAgenda: React.FC = () => {
 
                 setWorkoutSessions(sessions || [])
                 setScheduledWorkouts(scheduled || [])
-                setAvailableWorkouts(workouts || [])
+                // Cast to fix TS error, assuming supabase returns correct structure but TS infers array for join sometimes
+                const typedWorkouts = (workouts as any)?.map((item: any) => ({
+                    id: item.id,
+                    workout: Array.isArray(item.workout) ? item.workout[0] : item.workout
+                }))
+                setAvailableWorkouts(typedWorkouts || [])
             } catch (error) {
                 console.error('Erro ao carregar agenda:', error)
                 toast.error('Não foi possível carregar sua agenda.')
@@ -137,7 +143,8 @@ const ClientAgenda: React.FC = () => {
                 client_id: user.id,
                 workout_id: selectedWorkoutId,
                 scheduled_at: date.toISOString(),
-                status: 'pending'
+                status: 'pending_approval',
+                created_by: user.id
             })
 
             if (error) throw error
@@ -171,6 +178,26 @@ const ClientAgenda: React.FC = () => {
         } catch (error) {
             toast.error('Erro ao cancelar.')
         }
+    }
+
+    const handleApproveSchedule = async (scheduleId: string) => {
+        try {
+            const { error } = await supabase.from('scheduled_workouts').update({ status: 'confirmed' }).eq('id', scheduleId)
+            if (error) throw error
+            toast.success('Agendamento confirmado!')
+            // Refresh
+            const { data } = await supabase.from('scheduled_workouts').select('*, workout:workouts(name)').eq('client_id', user!.id).order('scheduled_at', { ascending: true })
+            if (data) setScheduledWorkouts(data)
+        } catch (e) { toast.error('Erro ao confirmar') }
+    }
+
+    const handleRejectSchedule = async (scheduleId: string) => {
+        try {
+            const { error } = await supabase.from('scheduled_workouts').update({ status: 'rejected' }).eq('id', scheduleId)
+            if (error) throw error
+            toast.success('Agendamento rejeitado.')
+            setScheduledWorkouts(prev => prev.filter(s => s.id !== scheduleId))
+        } catch (e) { toast.error('Erro ao rejeitar') }
     }
 
     // Filtrar dados para o dia selecionado
