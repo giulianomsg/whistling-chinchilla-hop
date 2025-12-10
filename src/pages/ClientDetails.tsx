@@ -394,6 +394,8 @@ const ClientDetails: React.FC = () => {
                 <div className="flex flex-wrap gap-2 text-muted-foreground text-sm">
                   <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email || 'Sem email'}</span>
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
+                  {clientProfile?.whatsapp && <span className="flex items-center gap-1 text-green-500"><Phone className="h-3 w-3" /> {clientProfile.whatsapp}</span>}
+                  {clientProfile?.telegram && <span className="flex items-center gap-1 text-blue-500"><MessageSquare className="h-3 w-3" /> {clientProfile.telegram}</span>}
                 </div>
                 <div className="flex gap-2 mt-3">
                   <Badge variant="secondary">Nível {currentLevel}</Badge>

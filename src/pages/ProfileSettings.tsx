@@ -14,9 +14,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
+import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
 
 // --- UTILITÁRIOS DE IMAGEM ---
 const sanitizeFileName = (fileName: string): string => {
@@ -71,6 +74,9 @@ async function getCroppedImg(
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
 const COMMON_SYMPTOMS = ['Dor no Peito', 'Falta de Ar', 'Tontura', 'Palpitações', 'Dores Articulares', 'Dor nas Costas', 'Fraqueza', 'Tosse com Sangue']
 const WORK_ACTIVITIES = ['Sentar na cadeira', 'Ficar de pé', 'Caminhar', 'Levantar peso', 'Dirigir']
+const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
+const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
+
 
 // --- STATE PADRÃO DA ANAMNESE ---
 const DEFAULT_ANAMNESIS = {
@@ -116,7 +122,9 @@ const ProfileSettings: React.FC = () => {
     consultationPrice: '',
     certifications: '',
     goals: '',
-    restrictions: ''
+    restrictions: '',
+    whatsapp: '',
+    telegram: ''
   })
 
   // --- Estado da Anamnese Completa ---
@@ -130,6 +138,29 @@ const ProfileSettings: React.FC = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // --- Estados das Novas Abas (Cliente) ---
+  const [progressPhotos, setProgressPhotos] = useState<any[]>([])
+  const [assessments, setAssessments] = useState<any[]>([])
+  const [historySessions, setHistorySessions] = useState<any[]>([])
+  const [historyLogs, setHistoryLogs] = useState<any[]>([])
+  const [historyLogsLoading, setHistoryLogsLoading] = useState(false)
+  const [selectedHistorySession, setSelectedHistorySession] = useState<any>(null)
+
+  const [isAddPhotoOpen, setIsAddPhotoOpen] = useState(false)
+  const [newPhoto, setNewPhoto] = useState({ date: new Date().toISOString().split('T')[0], notes: '', file: null as File | null })
+
+  const [isNewAssessmentOpen, setIsNewAssessmentOpen] = useState(false)
+  const [editingAssessmentId, setEditingAssessmentId] = useState<string | null>(null)
+  const initialAssessmentState = {
+    date: new Date().toISOString().split('T')[0],
+    weight: '', height: '',
+    skinfolds: { triceps: '', biceps: '', subscapular: '', chest: '', axillary: '', suprailiac: '', abdominal: '', thigh: '', calf: '' },
+    circumferences: { shoulder: '', chest: '', arm_right: '', arm_left: '', waist: '', abdomen: '', hips: '', thigh_right: '', thigh_left: '', calf_right: '', calf_left: '' },
+    notes: ''
+  }
+  const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
+  const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
 
   // --- EFEITO DE CARREGAMENTO INICIAL ---
   useEffect(() => {
@@ -155,6 +186,8 @@ const ProfileSettings: React.FC = () => {
             nomeMae: profile.nome_mae || '',
             responsavelLegal: profile.responsavel_legal || '',
             cpf: profile.cpf || '',
+            whatsapp: profile.whatsapp || '',
+            telegram: profile.telegram || '',
             bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
           }
 
@@ -186,6 +219,16 @@ const ProfileSettings: React.FC = () => {
                   symptoms: rawData.symptoms || [],
                   work_activities: rawData.work_activities || []
                 }
+              }
+
+              const { data: cPhotos } = await supabase.from('progress_photos').select('*').eq('client_id', userId).order('date', { ascending: false })
+              const { data: cAssessments } = await supabase.from('biometric_data').select('*').eq('client_id', userId).order('date', { ascending: false })
+              const { data: cHistory } = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', userId).order('created_at', { ascending: false }).limit(20)
+
+              if (mounted) {
+                setProgressPhotos(cPhotos || [])
+                setAssessments(cAssessments || [])
+                setHistorySessions(cHistory || [])
               }
             }
           }
@@ -287,6 +330,8 @@ const ProfileSettings: React.FC = () => {
           nome_mae: formData.nomeMae || null,
           responsavel_legal: formData.responsavelLegal || null,
           cpf: formData.cpf || null,
+          whatsapp: formData.whatsapp || null,
+          telegram: formData.telegram || null,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id)
@@ -331,6 +376,122 @@ const ProfileSettings: React.FC = () => {
     }
   }
 
+  // --- HANDLERS PARA FOTOS ---
+  const handlePhotoUpload = async () => {
+    if (!newPhoto.file || !user) return
+    setUploading(true)
+    try {
+      const fileExt = newPhoto.file.name.split('.').pop()
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`
+      const { error: uploadError } = await supabase.storage.from('progress-photos').upload(fileName, newPhoto.file)
+      if (uploadError) throw uploadError
+      const { data: { publicUrl } } = supabase.storage.from('progress-photos').getPublicUrl(fileName)
+      const { error: dbError } = await supabase.from('progress_photos').insert({
+        client_id: user.id, photo_url: publicUrl, date: newPhoto.date, notes: newPhoto.notes
+      })
+      if (dbError) throw dbError
+      showSuccess('Foto adicionada!')
+      setIsAddPhotoOpen(false)
+      setNewPhoto({ date: new Date().toISOString().split('T')[0], notes: '', file: null })
+      const { data } = await supabase.from('progress_photos').select('*').eq('client_id', user.id).order('date', { ascending: false })
+      setProgressPhotos(data || [])
+    } catch (e: any) { showError('Erro no upload: ' + e.message) }
+    finally { setUploading(false) }
+  }
+
+  const handleDeletePhoto = async (photoId: string) => {
+    if (!confirm('Excluir foto?')) return
+    try {
+      await supabase.from('progress_photos').delete().eq('id', photoId)
+      showSuccess('Foto removida.')
+      setProgressPhotos(prev => prev.filter(p => p.id !== photoId))
+    } catch (e) { showError('Erro ao excluir') }
+  }
+
+  // --- HANDLERS PARA AVALIAÇÕES ---
+  const openEditAssessment = (assessment: any) => {
+    setEditingAssessmentId(assessment.id)
+    const measures = typeof assessment.measurements === 'string' ? JSON.parse(assessment.measurements) : assessment.measurements
+    setNewAssessment({
+      date: assessment.date, weight: assessment.weight, height: assessment.height,
+      skinfolds: measures.skinfolds || initialAssessmentState.skinfolds,
+      circumferences: measures.circumferences || initialAssessmentState.circumferences,
+      notes: assessment.notes || ''
+    })
+    setIsNewAssessmentOpen(true)
+  }
+
+  const openNewAssessment = () => { setEditingAssessmentId(null); setNewAssessment(initialAssessmentState); setIsNewAssessmentOpen(true); }
+
+  const updateNested = (section: 'skinfolds' | 'circumferences', field: string, value: string) => {
+    setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
+  }
+
+  const handleSaveAssessment = async (status: 'draft' | 'completed') => {
+    if (!user) return
+    try {
+      const calculated = calculateBiometrics({
+        gender: 'male',
+        age: 25,
+        weight: Number(newAssessment.weight),
+        height: Number(newAssessment.height),
+        skinfolds: Object.fromEntries(Object.entries(newAssessment.skinfolds).map(([k, v]) => [k, Number(v)]))
+      })
+
+      const completion = calculateCompletion({ ...newAssessment, gender: 'male', age: 25 })
+
+      const measurementsData = {
+        skinfolds: newAssessment.skinfolds, circumferences: newAssessment.circumferences,
+        protocol: calculated.protocol, bmi: calculated.bmi, lean_mass: calculated.leanMass, fat_mass: calculated.fatMass,
+        status: status, completion: completion
+      }
+
+      const payload: any = {
+        client_id: user.id, date: newAssessment.date, weight: Number(newAssessment.weight), height: Number(newAssessment.height),
+        body_fat_percentage: calculated.bodyFat, muscle_mass: calculated.leanMass,
+        measurements: measurementsData, notes: newAssessment.notes
+      }
+
+      if (editingAssessmentId) await supabase.from('biometric_data').update(payload).eq('id', editingAssessmentId)
+      else await supabase.from('biometric_data').insert(payload)
+
+      showSuccess(status === 'draft' ? 'Rascunho salvo!' : 'Avaliação salva!')
+      setIsNewAssessmentOpen(false)
+      const { data } = await supabase.from('biometric_data').select('*').eq('client_id', user.id).order('date', { ascending: false })
+      setAssessments(data || [])
+    } catch (e: any) { console.error(e); showError('Erro ao salvar avaliação') }
+  }
+
+  const handleDeleteAssessment = async (assessmentId: string) => {
+    if (!confirm('Tem certeza?')) return
+    try {
+      await supabase.from('biometric_data').delete().eq('id', assessmentId)
+      showSuccess('Avaliação excluída.')
+      setAssessments(prev => prev.filter(a => a.id !== assessmentId))
+    } catch (e) { showError('Erro ao excluir') }
+  }
+
+  // --- HANDLERS PARA HISTÓRICO ---
+  const formatDuration = (sec: number) => {
+    const m = Math.floor(sec / 60)
+    return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
+  }
+
+  const handleHistorySessionClick = async (session: any) => {
+    setSelectedHistorySession(session)
+    setIsHistoryDetailOpen(true)
+    setHistoryLogsLoading(true)
+
+    const { data } = await supabase
+      .from('workout_execution_logs')
+      .select(`*, exercise:exercises_library(name)`)
+      .eq('workout_session_id', session.id)
+      .order('completed_at', { ascending: true })
+
+    setHistoryLogs(data || [])
+    setHistoryLogsLoading(false)
+  }
+
   if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
 
   const renderAvatar = () => {
@@ -354,12 +515,21 @@ const ProfileSettings: React.FC = () => {
 
         <form onSubmit={handleSave} className="space-y-8">
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-5 bg-muted/50 p-1 rounded-lg">
-              <TabsTrigger value="personal">Pessoal</TabsTrigger>
-              {userRole === 'professional' && <TabsTrigger value="professional">Profissional</TabsTrigger>}
-              {userRole === 'client' && <TabsTrigger value="anamnesis">Anamnese</TabsTrigger>}
-              {userRole === 'client' && <TabsTrigger value="achievements">Conquistas</TabsTrigger>}
-            </TabsList>
+            <div className="w-full overflow-x-auto pb-2">
+              <TabsList className="bg-muted/50 p-1 rounded-lg flex w-max h-auto gap-2">
+                <TabsTrigger value="personal" className="px-4">Pessoal</TabsTrigger>
+                {userRole === 'professional' && <TabsTrigger value="professional" className="px-4">Profissional</TabsTrigger>}
+                {userRole === 'client' && (
+                  <>
+                    <TabsTrigger value="photos" className="px-4">Fotos</TabsTrigger>
+                    <TabsTrigger value="assessments" className="px-4">Avaliações</TabsTrigger>
+                    <TabsTrigger value="anamnesis" className="px-4">Anamnese</TabsTrigger>
+                    <TabsTrigger value="history" className="px-4">Histórico</TabsTrigger>
+                    <TabsTrigger value="achievements" className="px-4">Conquistas</TabsTrigger>
+                  </>
+                )}
+              </TabsList>
+            </div>
 
             <TabsContent value="personal" className="mt-6 space-y-6">
               <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
@@ -384,6 +554,8 @@ const ProfileSettings: React.FC = () => {
                       <div><Label className="text-muted-foreground">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-background border-border text-foreground pl-10" /></div></div>
                       <div><Label className="text-muted-foreground">Data de Nascimento</Label><Input type="date" value={formData.dataNascimento} onChange={e => handleInputChange('dataNascimento', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
                       <div><Label className="text-muted-foreground">CPF</Label><Input value={formData.cpf} onChange={e => handleInputChange('cpf', e.target.value)} className="bg-background border-border text-foreground mt-1.5" placeholder="000.000.000-00" /></div>
+                      <div><Label className="text-muted-foreground">WhatsApp</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-green-500" /><Input value={formData.whatsapp} onChange={e => handleInputChange('whatsapp', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="(00) 00000-0000" /></div></div>
+                      <div><Label className="text-muted-foreground">Telegram (Username)</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-blue-500" /><Input value={formData.telegram} onChange={e => handleInputChange('telegram', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="@usuario" /></div></div>
 
                       <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div><Label className="text-muted-foreground">Nome do Pai</Label><Input value={formData.nomePai} onChange={e => handleInputChange('nomePai', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
@@ -427,6 +599,107 @@ const ProfileSettings: React.FC = () => {
 
             {userRole === 'client' && (
               <>
+                <TabsContent value="photos" className="mt-6">
+                  <Card className="bg-card border-border">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <CardTitle className="text-foreground flex items-center gap-2"><Camera className="h-5 w-5 text-primary" /> Galeria de Progresso</CardTitle>
+                      <Button onClick={() => setIsAddPhotoOpen(true)} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Nova Foto</Button>
+                    </CardHeader>
+                    <CardContent>
+                      {progressPhotos.length === 0 ? (
+                        <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma foto registrada.</div>
+                      ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {progressPhotos.map(photo => (
+                            <div key={photo.id} className="group relative aspect-[3/4] rounded-lg overflow-hidden border border-border bg-muted">
+                              <img src={photo.photo_url} alt="Progresso" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                                <p className="text-white text-xs font-medium">{new Date(photo.date).toLocaleDateString()}</p>
+                                {photo.notes && <p className="text-white/80 text-[10px] line-clamp-2 mt-1">{photo.notes}</p>}
+                                <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={(e) => { e.stopPropagation(); handleDeletePhoto(photo.id) }}><Trash2 className="h-3 w-3" /></Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="assessments" className="mt-6">
+                  <Card className="bg-card border-border">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <CardTitle className="text-foreground flex items-center gap-2"><Scale className="h-5 w-5 text-primary" /> Avaliações Físicas</CardTitle>
+                      <Button onClick={openNewAssessment} size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" /> Nova Avaliação</Button>
+                    </CardHeader>
+                    <CardContent>
+                      {assessments.length === 0 ? (
+                        <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">Nenhuma avaliação registrada.</div>
+                      ) : (
+                        <div className="space-y-4">
+                          {assessments.map(assessment => (
+                            <div key={assessment.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors" onClick={() => openEditAssessment(assessment)}>
+                              <div className="flex items-center gap-4">
+                                <div className="bg-blue-500/10 p-2 rounded-full"><Scale className="h-5 w-5 text-blue-500" /></div>
+                                <div>
+                                  <h4 className="font-bold text-foreground">{new Date(assessment.date).toLocaleDateString()}</h4>
+                                  <p className="text-sm text-muted-foreground">{assessment.weight} kg • {assessment.body_fat_percentage ? `${assessment.body_fat_percentage}% GC` : 'Sem GC'}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDeleteAssessment(assessment.id) }} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="history" className="mt-6">
+                  <Card className="bg-card border-border w-full">
+                    <CardHeader className="p-6 border-b border-border">
+                      <CardTitle className="text-foreground text-xl flex items-center gap-2">
+                        <Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      {historySessions.length === 0 ? (
+                        <div className="text-center py-12 text-muted-foreground">Nenhum treino realizado ainda.</div>
+                      ) : (
+                        <div className="space-y-4">
+                          {historySessions.map(session => (
+                            <div
+                              key={session.id}
+                              className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 cursor-pointer hover:bg-muted transition-colors"
+                              onClick={() => handleHistorySessionClick(session)}
+                            >
+                              <div className="flex items-center gap-5 w-full md:w-auto">
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`} >
+                                  {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
+                                </div>
+                                <div>
+                                  <h4 className="text-lg font-bold text-foreground">{session.workout?.name || 'Treino Avulso'}</h4>
+                                  <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {new Date(session.created_at).toLocaleDateString()}</span>
+                                    <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {session.duration_seconds ? formatDuration(session.duration_seconds) : '--'}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
                 <TabsContent value="anamnesis" className="mt-6 space-y-6">
                   <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                     <CardHeader>
@@ -568,6 +841,118 @@ const ProfileSettings: React.FC = () => {
               <div className="flex items-center gap-4"><ZoomIn className="h-4 w-4 text-muted-foreground" /><Slider value={[zoom]} min={1} max={3} step={0.1} onValueChange={(val) => setZoom(val[0])} className="flex-1 cursor-pointer" /></div>
               <DialogFooter className="flex gap-2 justify-between sm:justify-end mt-2"><Button variant="ghost" onClick={() => { setIsCropDialogOpen(false); setImageSrc(null); }} className="text-muted-foreground hover:text-foreground">Cancelar</Button><Button onClick={handleConfirmUpload} disabled={uploading} className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-6">{uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />} Confirmar e Salvar</Button></DialogFooter>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialogs adicionais para o Cliente */}
+        <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
+          <DialogContent className="bg-card border-border text-foreground">
+            <DialogHeader><DialogTitle>Nova Foto de Progresso</DialogTitle></DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Data</Label>
+                <Input type="date" value={newPhoto.date} onChange={e => setNewPhoto({ ...newPhoto, date: e.target.value })} className="bg-background border-border" />
+              </div>
+              <div className="space-y-2">
+                <Label>Observações</Label>
+                <Textarea value={newPhoto.notes} onChange={e => setNewPhoto({ ...newPhoto, notes: e.target.value })} placeholder="Opcional..." className="bg-background border-border" />
+              </div>
+              <div className="space-y-2">
+                <Label>Foto</Label>
+                <Input type="file" accept="image/*" onChange={e => setNewPhoto({ ...newPhoto, file: e.target.files?.[0] || null })} className="bg-background border-border" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handlePhotoUpload} disabled={uploading || !newPhoto.file}>
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                Salvar Foto
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
+          <DialogContent className="bg-card border-border text-foreground max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{editingAssessmentId ? 'Editar Avaliação' : 'Nova Avaliação'}</DialogTitle></DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+              <div className="space-y-4">
+                <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Dados Básicos</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2"><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({ ...newAssessment, date: e.target.value })} className="bg-background border-border" /></div>
+                  <div className="space-y-2"><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({ ...newAssessment, weight: e.target.value })} className="bg-background border-border" /></div>
+                  <div className="space-y-2"><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({ ...newAssessment, height: e.target.value })} className="bg-background border-border" /></div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h3 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4" /> Dobras Cutâneas (mm)</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  {Object.entries(SKINFOLD_LABELS).map(([key, label]) => (
+                    <div key={key} className="space-y-2">
+                      <Label className="text-xs">{label}</Label>
+                      <Input type="number" className="h-8 bg-background border-border" value={newAssessment.skinfolds[key as keyof typeof newAssessment.skinfolds]} onChange={e => updateNested('skinfolds', key, e.target.value)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-4 md:col-span-2">
+                <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Circunferências (cm)</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {Object.entries(CIRCUMFERENCE_LABELS).map(([key, label]) => (
+                    <div key={key} className="space-y-2">
+                      <Label className="text-xs">{label}</Label>
+                      <Input type="number" className="h-8 bg-background border-border" value={newAssessment.circumferences[key as keyof typeof newAssessment.circumferences]} onChange={e => updateNested('circumferences', key, e.target.value)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => handleSaveAssessment('draft')}>Salvar Rascunho</Button>
+              <Button onClick={() => handleSaveAssessment('completed')}>Finalizar Avaliação</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isHistoryDetailOpen} onOpenChange={setIsHistoryDetailOpen}>
+          <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
+              <div className="text-sm text-muted-foreground flex gap-3">
+                <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
+                <span>•</span>
+                <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds)}</span>
+              </div>
+            </DialogHeader>
+            <ScrollArea className="max-h-[60vh] pr-4 mt-4">
+              {historyLogsLoading ? (
+                <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
+              ) : historyLogs.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
+              ) : (
+                <div className="space-y-4">
+                  {historyLogs.map((log, index) => (
+                    <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
+                      <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'Exercício'}</h4>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="bg-background p-2 rounded border border-border">
+                          <span className="text-muted-foreground block text-xs uppercase">Carga</span>
+                          <span className="font-mono font-bold">{log.weight} kg</span>
+                        </div>
+                        <div className="bg-background p-2 rounded border border-border">
+                          <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
+                          <span className="font-mono font-bold">{log.reps}</span>
+                        </div>
+                      </div>
+                      {log.notes && (
+                        <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
+                          "{log.notes}"
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       </div >

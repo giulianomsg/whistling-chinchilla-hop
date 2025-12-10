@@ -82,7 +82,7 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [ ] Integração com redes sociais como (Postagem de conclusão de treinos, indicação do app e etc...).
 
 ## Correções
-- [ ] Gifs de animação para os treinos não estão mostrados no treino do cliente.
+- [x] Gifs de animação para os treinos não estão mostrados no treino do cliente.
 - [x] Previsualização de vídeos de treinos, gifs, instruções e dicas no card do cadastro do exercício, não funciona click no icone nada acontece.
-- [ ] Inserir no perfil de cliente e na visualização do cliente pelo profissional o campo de WhatsApp e Telegram, 
+- [ ] Inserir no perfil de cliente e na visualização do cliente pelo profissional o campo de WhatsApp e Telegram.
 - [ ] Mostrar no perfil do cliente as possibilidade de inserir, editar e excluir fotos em uma aba "Fotos" e as avaliações em uma aba "Avaliações", e também o Histórico de treinos em uma aba "Histórico", como já foi implementado para o profissionais.
