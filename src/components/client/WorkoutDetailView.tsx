@@ -392,20 +392,24 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                                       </Button>
                                     </div>
                                   ) : (
-                                    <div
+                                    <button
+                                      type="button"
                                       className="h-full w-full rounded-lg bg-black/20 border border-white/5 flex items-center justify-center cursor-pointer hover:bg-black/30 transition-colors group py-8"
-                                      onClick={() => setOpenVideoId(we.id)}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenVideoId(we.id);
+                                      }}
                                     >
-                                      <div className="flex flex-col items-center gap-2">
+                                      <div className="flex flex-col items-center gap-2 pointer-events-none">
                                         <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-colors">
                                           <Play className="h-6 w-6 text-primary" />
                                         </div>
                                         <span className="text-sm font-medium text-primary">Ver Vídeo</span>
                                       </div>
-                                    </div>
+                                    </button>
                                   )}
                                 </div>
-                              ) : null}
+                              ) : <div />}
                             </div>
                           </div>
 
