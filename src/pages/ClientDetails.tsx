@@ -393,8 +393,29 @@ const ClientDetails: React.FC = () => {
               <div className="space-y-1 flex-1">
                 <h2 className="text-2xl font-bold text-foreground">{clientProfile?.full_name}</h2>
                 <div className="flex flex-col gap-2 mt-2 text-muted-foreground text-sm">
-                  <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {clientProfile?.email || 'Sem email'}</span>
-                  {clientProfile?.phone && <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {clientProfile.phone}</span>}
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={`mailto:${clientProfile?.email || ''}`}
+                      className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                      title="Enviar Email"
+                    >
+                      <Mail className="h-3 w-3" />
+                    </a>
+                    <span>{clientProfile?.email || 'Sem email'}</span>
+                  </div>
+
+                  {clientProfile?.phone && (
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`tel:${clientProfile.phone.replace(/\D/g, '')}`}
+                        className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                        title="Ligar"
+                      >
+                        <Phone className="h-3 w-3" />
+                      </a>
+                      <span>{clientProfile.phone}</span>
+                    </div>
+                  )}
 
                   {clientProfile?.whatsapp && (
                     <div className="flex items-center gap-2">
@@ -912,8 +933,38 @@ const ClientDetails: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1"><Label className="text-muted-foreground">Nome Completo</Label><div className="font-medium">{clientProfile?.full_name}</div></div>
-                  <div className="space-y-1"><Label className="text-muted-foreground">Email</Label><div className="font-medium flex items-center gap-2"><Mail className="h-4 w-4" /> {clientProfile?.email || 'Não informado'}</div></div>
-                  <div className="space-y-1"><Label className="text-muted-foreground">Telefone</Label><div className="font-medium flex items-center gap-2"><Phone className="h-4 w-4" /> {clientProfile?.phone || 'Não informado'}</div></div>
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Email</Label>
+                    <div className="font-medium flex items-center gap-2">
+                      <span>{clientProfile?.email || 'Não informado'}</span>
+                      {clientProfile?.email && (
+                        <a
+                          href={`mailto:${clientProfile.email}`}
+                          className="text-primary hover:text-primary/80"
+                          title="Enviar Email"
+                        >
+                          <Mail className="h-4 w-4" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Telefone</Label>
+                    <div className="font-medium flex items-center gap-2">
+                      {clientProfile?.phone ? (
+                        <>
+                          <span>{clientProfile.phone}</span>
+                          <a
+                            href={`tel:${clientProfile.phone.replace(/\D/g, '')}`}
+                            className="text-primary hover:text-primary/80"
+                            title="Ligar"
+                          >
+                            <Phone className="h-4 w-4" />
+                          </a>
+                        </>
+                      ) : 'Não informado'}
+                    </div>
+                  </div>
 
                   <div className="space-y-1">
                     <Label className="text-muted-foreground">WhatsApp</Label>
