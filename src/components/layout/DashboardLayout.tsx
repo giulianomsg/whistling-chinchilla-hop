@@ -14,7 +14,8 @@ import {
   LogOut,
   User,
   MoreVertical,
-  Settings
+  Settings,
+  Calendar
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -63,6 +64,7 @@ const DashboardLayout: React.FC = () => {
         ...commonItems,
         { label: 'Meu Treino', icon: Dumbbell, path: '/app/my-workout' },
         { label: 'Minha Dieta', icon: Utensils, path: '/app/my-meal-plan' },
+        { label: 'Agenda', icon: Calendar, path: '/app/agenda' },
       ]
     }
 

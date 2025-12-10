@@ -26,7 +26,8 @@ const ProfessionalDashboard = lazy(() => import("./pages/ProfessionalDashboard")
 const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
 const ClientDetails = lazy(() => import("./pages/ClientDetails"));
 const Chat = lazy(() => import("./pages/Chat"));
-const ProfileSettings = lazy(() => import("./pages/ProfileSettings")); // Nova Página
+const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
+const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página Agenda
 
 const queryClient = new QueryClient();
 
@@ -193,6 +194,16 @@ const AppRoutes: React.FC = () => {
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientHistory />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+        <Route
+          path="agenda"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ClientAgenda />
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }
