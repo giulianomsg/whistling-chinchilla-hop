@@ -330,8 +330,6 @@ const ProfileSettings: React.FC = () => {
           nome_mae: formData.nomeMae || null,
           responsavel_legal: formData.responsavelLegal || null,
           cpf: formData.cpf || null,
-          whatsapp: formData.whatsapp || null,
-          telegram: formData.telegram || null,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id)
@@ -361,6 +359,8 @@ const ProfileSettings: React.FC = () => {
           goals: formData.goals,
           health_restrictions: formData.restrictions,
           anamnesis_data: anamnesisForm,
+          whatsapp: formData.whatsapp,
+          telegram: formData.telegram,
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 
@@ -833,7 +833,10 @@ const ProfileSettings: React.FC = () => {
 
         <Dialog open={isCropDialogOpen} onOpenChange={(open) => { if (!open) setIsCropDialogOpen(false) }}>
           <DialogContent className="bg-popover border-border text-popover-foreground sm:max-w-[500px] h-[550px] flex flex-col">
-            <DialogHeader><DialogTitle>Ajustar Foto</DialogTitle><DialogDescription>Enquadre seu rosto.</DialogDescription></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Ajustar Foto</DialogTitle>
+              <DialogDescription>Enquadre seu rosto para a foto de perfil.</DialogDescription>
+            </DialogHeader>
             <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4 border border-border">
               {imageSrc && <Cropper image={imageSrc} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onCropComplete={onCropComplete} onZoomChange={setZoom} cropShape="round" showGrid={true} />}
             </div>
@@ -847,7 +850,10 @@ const ProfileSettings: React.FC = () => {
         {/* Dialogs adicionais para o Cliente */}
         <Dialog open={isAddPhotoOpen} onOpenChange={setIsAddPhotoOpen}>
           <DialogContent className="bg-card border-border text-foreground">
-            <DialogHeader><DialogTitle>Nova Foto de Progresso</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Nova Foto de Progresso</DialogTitle>
+              <DialogDescription>Adicione uma foto para acompanhar sua evolução.</DialogDescription>
+            </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Data</Label>
@@ -873,7 +879,10 @@ const ProfileSettings: React.FC = () => {
 
         <Dialog open={isNewAssessmentOpen} onOpenChange={setIsNewAssessmentOpen}>
           <DialogContent className="bg-card border-border text-foreground max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader><DialogTitle>{editingAssessmentId ? 'Editar Avaliação' : 'Nova Avaliação'}</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>{editingAssessmentId ? 'Editar Avaliação' : 'Nova Avaliação'}</DialogTitle>
+              <DialogDescription>Insira os dados da avaliação física. O cálculo de gordura e massa magra será feito automaticamente.</DialogDescription>
+            </DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
               <div className="space-y-4">
                 <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Dados Básicos</h3>
@@ -917,6 +926,9 @@ const ProfileSettings: React.FC = () => {
           <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
             <DialogHeader>
               <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
+              <DialogDescription>
+                Detalhes do treino realizado em {selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}
+              </DialogDescription>
               <div className="text-sm text-muted-foreground flex gap-3">
                 <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
                 <span>•</span>
