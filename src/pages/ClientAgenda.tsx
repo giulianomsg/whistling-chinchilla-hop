@@ -12,6 +12,8 @@ import { toast } from 'sonner'
 import { Loader2, Plus, Calendar as CalendarIcon, CheckCircle, Clock } from 'lucide-react'
 import { ptBR } from 'date-fns/locale'
 import { format, isSameDay, isAfter, isBefore, startOfDay } from 'date-fns'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Textarea } from '@/components/ui/textarea'
 
 interface ScheduledWorkout {
     id: string
@@ -54,6 +56,19 @@ const ClientAgenda: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('')
     const [submitting, setSubmitting] = useState(false)
+    const [professionalId, setProfessionalId] = useState<string | null>(null)
+    const [selectedTime, setSelectedTime] = useState('09:00')
+
+    // Rejection State
+    const [rejectionReason, setRejectionReason] = useState('')
+    const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
+    const [selectedScheduleId, setSelectedScheduleId] = useState('')
+
+    // History Detail State
+    const [selectedHistorySession, setSelectedHistorySession] = useState<WorkoutSession | null>(null)
+    const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
+    const [historyLogs, setHistoryLogs] = useState<any[]>([])
+    const [historyLogsLoading, setHistoryLogsLoading] = useState(false)
 
     // Carregar dados
     useEffect(() => {
@@ -70,6 +85,16 @@ const ClientAgenda: React.FC = () => {
                     .order('created_at', { ascending: false })
 
                 if (sessionsError) throw sessionsError
+
+                // Fetch Professional
+                const { data: proLink } = await supabase
+                    .from('client_professionals')
+                    .select('professional_id')
+                    .eq('client_id', user.id)
+                    .eq('status', 'active')
+                    .maybeSingle()
+
+                if (proLink) setProfessionalId(proLink.professional_id)
 
                 // 2. Buscar Agendamentos Futuros
                 const { data: scheduled, error: scheduledError } = await supabase
@@ -134,6 +159,34 @@ const ClientAgenda: React.FC = () => {
 
         setSubmitting(true)
         try {
+            // Parse DateTime
+            const [hours, minutes] = selectedTime.split(':').map(Number)
+            const scheduledDateTime = new Date(date)
+            scheduledDateTime.setHours(hours, minutes, 0, 0)
+
+            if (isBefore(scheduledDateTime, new Date())) {
+                toast.error('Não é possível agendar no passado.')
+                setSubmitting(false)
+                return
+            }
+
+            // Conflict Check
+            if (professionalId) {
+                const { data: isAvailable, error: conflictError } = await supabase.rpc('check_professional_availability', {
+                    p_professional_id: professionalId,
+                    p_start_time: scheduledDateTime.toISOString(),
+                    p_duration_minutes: 60,
+                    p_exclude_schedule_id: null
+                })
+
+                if (isAvailable === false) {
+                    if (!confirm('O professor já tem um agendamento neste horário. Deseja solicitar mesmo assim?')) {
+                        setSubmitting(false)
+                        return
+                    }
+                }
+            }
+
             // Encontrar o workout real ID a partir do client_workout selection
             const selectedClientWorkout = availableWorkouts.find(cw => cw.workout.id === selectedWorkoutId)
 
@@ -142,9 +195,10 @@ const ClientAgenda: React.FC = () => {
             const { error } = await supabase.from('scheduled_workouts').insert({
                 client_id: user.id,
                 workout_id: selectedWorkoutId,
-                scheduled_at: date.toISOString(),
+                scheduled_at: scheduledDateTime.toISOString(),
                 status: 'pending_approval',
-                created_by: user.id
+                created_by: user.id,
+                professional_id: professionalId // Populate pro_id
             })
 
             if (error) throw error
@@ -191,13 +245,39 @@ const ClientAgenda: React.FC = () => {
         } catch (e) { toast.error('Erro ao confirmar') }
     }
 
-    const handleRejectSchedule = async (scheduleId: string) => {
+    const handleRejectSchedule = (scheduleId: string) => {
+        setSelectedScheduleId(scheduleId)
+        setRejectionReason('')
+        setIsRejectDialogOpen(true)
+    }
+
+    const confirmRejection = async () => {
         try {
-            const { error } = await supabase.from('scheduled_workouts').update({ status: 'rejected' }).eq('id', scheduleId)
+            const { error } = await supabase.from('scheduled_workouts').update({
+                status: 'rejected',
+                rejection_reason: rejectionReason
+            }).eq('id', selectedScheduleId)
+
             if (error) throw error
             toast.success('Agendamento rejeitado.')
-            setScheduledWorkouts(prev => prev.filter(s => s.id !== scheduleId))
+            setScheduledWorkouts(prev => prev.filter(s => s.id !== selectedScheduleId))
+            setIsRejectDialogOpen(false)
         } catch (e) { toast.error('Erro ao rejeitar') }
+    }
+
+    const handleHistorySessionClick = async (session: WorkoutSession) => {
+        setSelectedHistorySession(session)
+        setIsHistoryDetailOpen(true)
+        setHistoryLogsLoading(true)
+
+        const { data } = await supabase
+            .from('workout_execution_logs')
+            .select(`*, exercise:exercises_library(name)`)
+            .eq('workout_session_id', session.id)
+            .order('completed_at', { ascending: true })
+
+        setHistoryLogs(data || [])
+        setHistoryLogsLoading(false)
     }
 
     // Filtrar dados para o dia selecionado
@@ -283,16 +363,30 @@ const ClientAgenda: React.FC = () => {
                                                     <div key={schedule.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 flex justify-between items-center">
                                                         <div>
                                                             <h4 className="font-bold text-foreground">{schedule.workout?.name}</h4>
-                                                            <p className="text-sm text-blue-400 capitalize">{schedule.status === 'pending' ? 'Pendente' : schedule.status}</p>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <p className="text-sm text-blue-400 capitalize">
+                                                                    {schedule.status === 'pending_approval' ? 'Aguardando Aprovação' :
+                                                                        schedule.status === 'pending' ? 'Pendente' : schedule.status}
+                                                                </p>
+                                                                {schedule.created_by !== user?.id && <span className="text-xs bg-blue-200 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">Solicitação do Professor</span>}
+                                                            </div>
                                                         </div>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="text-muted-foreground hover:text-destructive"
-                                                            onClick={() => handleCancelSchedule(schedule.id)}
-                                                        >
-                                                            Cancelar
-                                                        </Button>
+
+                                                        {schedule.status === 'pending_approval' && schedule.created_by !== user?.id ? (
+                                                            <div className="flex gap-2">
+                                                                <Button size="sm" variant="outline" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleRejectSchedule(schedule.id)}>Rejeitar</Button>
+                                                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aceitar</Button>
+                                                            </div>
+                                                        ) : (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="text-muted-foreground hover:text-destructive"
+                                                                onClick={() => handleCancelSchedule(schedule.id)}
+                                                            >
+                                                                Cancelar
+                                                            </Button>
+                                                        )}
                                                     </div>
                                                 ))}
                                             </div>
@@ -305,7 +399,11 @@ const ClientAgenda: React.FC = () => {
                                                     <CheckCircle className="h-4 w-4" /> Realizado
                                                 </h3>
                                                 {selectedDateSessions.map(session => (
-                                                    <div key={session.id} className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                                                    <div
+                                                        key={session.id}
+                                                        className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 cursor-pointer hover:bg-green-500/20 transition-colors"
+                                                        onClick={() => handleHistorySessionClick(session)}
+                                                    >
                                                         <div className="flex justify-between items-start">
                                                             <div>
                                                                 <h4 className="font-bold text-foreground">{session.workout?.name}</h4>
@@ -353,6 +451,18 @@ const ClientAgenda: React.FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-2">
+                                <Label>Horário</Label>
+                                <div className="relative">
+                                    <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <input
+                                        type="time"
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-9"
+                                        value={selectedTime}
+                                        onChange={(e) => setSelectedTime(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
                                 <Label>Selecione o Treino</Label>
                                 <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
                                     <SelectTrigger>
@@ -375,6 +485,68 @@ const ClientAgenda: React.FC = () => {
                                 Confirmar Agendamento
                             </Button>
                         </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Dialog de Rejeição */}
+                <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+                    <DialogContent className="bg-card border-border text-foreground">
+                        <DialogHeader><DialogTitle>Rejeitar Solicitação</DialogTitle></DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <Label>Motivo da Rejeição</Label>
+                            <Textarea
+                                value={rejectionReason}
+                                onChange={e => setRejectionReason(e.target.value)}
+                                placeholder="Por que você não pode neste horário?"
+                                className="resize-none"
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button variant="ghost" onClick={() => setIsRejectDialogOpen(false)}>Cancelar</Button>
+                            <Button variant="destructive" onClick={confirmRejection} disabled={!rejectionReason.trim()}>Rejeitar</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Dialog de Detalhes do Histórico */}
+                <Dialog open={isHistoryDetailOpen} onOpenChange={setIsHistoryDetailOpen}>
+                    <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
+                            <div className="text-sm text-muted-foreground flex gap-3">
+                                <span>{selectedHistorySession && format(new Date(selectedHistorySession.created_at), "d 'de' MMMM", { locale: ptBR })}</span>
+                            </div>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[60vh] pr-4 mt-4">
+                            {historyLogsLoading ? (
+                                <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
+                            ) : historyLogs.length === 0 ? (
+                                <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {historyLogs.map((log, index) => (
+                                        <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
+                                            <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'Exercício'}</h4>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div className="bg-background p-2 rounded border border-border">
+                                                    <span className="text-muted-foreground block text-xs uppercase">Carga</span>
+                                                    <span className="font-mono font-bold">{log.weight} kg</span>
+                                                </div>
+                                                <div className="bg-background p-2 rounded border border-border">
+                                                    <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
+                                                    <span className="font-mono font-bold">{log.reps}</span>
+                                                </div>
+                                            </div>
+                                            {log.notes && (
+                                                <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
+                                                    "{log.notes}"
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </ScrollArea>
                     </DialogContent>
                 </Dialog>
             </div>

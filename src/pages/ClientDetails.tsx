@@ -24,7 +24,7 @@ import {
   AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink
 } from 'lucide-react'
 import { ptBR } from 'date-fns/locale'
-import { isSameDay, isAfter, startOfDay, format } from 'date-fns'
+import { isSameDay, isAfter, isBefore, startOfDay, format } from 'date-fns'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -113,6 +113,7 @@ const ClientDetails: React.FC = () => {
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
   const [scheduledWorkouts, setScheduledWorkouts] = useState<any[]>([])
   const [selectedAgendaDate, setSelectedAgendaDate] = useState<Date | undefined>(new Date())
+  const [selectedTime, setSelectedTime] = useState('09:00')
 
   const [isAssignWorkoutOpen, setIsAssignWorkoutOpen] = useState(false)
   const [isAssignMealPlanOpen, setIsAssignMealPlanOpen] = useState(false)
@@ -143,6 +144,11 @@ const ClientDetails: React.FC = () => {
   const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
   const [newPhoto, setNewPhoto] = useState({ date: new Date().toISOString().split('T')[0], notes: '', file: null as File | null })
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
+
+  // Rejection State
+  const [rejectionReason, setRejectionReason] = useState('')
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
+  const [selectedScheduleId, setSelectedScheduleId] = useState('')
 
   useEffect(() => {
     const loadData = async () => {
@@ -196,14 +202,46 @@ const ClientDetails: React.FC = () => {
   const handleAssignWorkout = async () => {
     try {
       if (activeTab === 'agenda') {
-        if (!selectedAgendaDate) return
+        if (!selectedAgendaDate || !selectedTime) return
+
+        // Parse DateTime
+        const [hours, minutes] = selectedTime.split(':').map(Number)
+        const scheduledDateTime = new Date(selectedAgendaDate)
+        scheduledDateTime.setHours(hours, minutes, 0, 0)
+
+        if (isBefore(scheduledDateTime, new Date())) {
+          showError('Não é possível agendar no passado.')
+          return
+        }
+
+        // Conflict Check
+        const { data: isAvailable, error: conflictError } = await supabase.rpc('check_professional_availability', {
+          p_professional_id: user.id,
+          p_start_time: scheduledDateTime.toISOString(),
+          p_duration_minutes: 60, // Default 1h
+          p_exclude_schedule_id: null
+        })
+
+        if (conflictError) {
+          console.error("Conflict check error", conflictError)
+          // Proceed with caution or block? Let's block if confirmed false.
+          // If RPC fails (e.g. migration not applied), we might want to allow. 
+          // But assuming it works:
+        }
+
+        if (isAvailable === false) {
+          if (!confirm('Atenção: Você já tem um agendamento nesse horário (ou muito próximo). Deseja continuar mesmo assim?')) {
+            return
+          }
+        }
+
         const { error } = await supabase.from('scheduled_workouts').insert({
           client_id: id,
           workout_id: selectedWorkoutId,
           created_by: user!.id,
-          scheduled_at: selectedAgendaDate.toISOString(),
-          status: 'pending_approval', // Pro creating -> needs client approval? Or Confirmed? 
-          // PLAN says: Pro schedules -> Status pending_approval (needs Client).
+          scheduled_at: scheduledDateTime.toISOString(),
+          status: 'pending_approval',
+          professional_id: user.id,
           notes: 'Agendado pelo professor'
         })
         if (error) throw error
@@ -382,13 +420,24 @@ const ClientDetails: React.FC = () => {
     } catch (e) { showError('Erro ao confirmar') }
   }
 
-  const handleRejectSchedule = async (scheduleId: string) => {
+  const handleRejectSchedule = (scheduleId: string) => {
+    setSelectedScheduleId(scheduleId)
+    setRejectionReason('')
+    setIsRejectDialogOpen(true)
+  }
+
+  const confirmRejection = async () => {
     try {
-      const { error } = await supabase.from('scheduled_workouts').update({ status: 'rejected' }).eq('id', scheduleId)
+      const { error } = await supabase.from('scheduled_workouts').update({
+        status: 'rejected',
+        rejection_reason: rejectionReason
+      }).eq('id', selectedScheduleId)
+
       if (error) throw error
       showSuccess('Solicitação rejeitada.')
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
       setScheduledWorkouts(data || [])
+      setIsRejectDialogOpen(false)
     } catch (e) { showError('Erro ao rejeitar') }
   }
 
@@ -400,14 +449,20 @@ const ClientDetails: React.FC = () => {
 
   const getDayContent = (day: Date) => {
     const daySchedules = scheduledWorkouts.filter(s => isSameDay(new Date(s.scheduled_at), day))
-    if (daySchedules.length === 0) return null
+    const dayHistory = historySessions.filter(s => isSameDay(new Date(s.created_at), day))
+
+    if (daySchedules.length === 0 && dayHistory.length === 0) return null
+
     const hasPending = daySchedules.some(s => s.status === 'pending_approval' || s.status === 'pending')
     const hasConfirmed = daySchedules.some(s => s.status === 'confirmed')
-    const hasCompleted = daySchedules.some(s => s.status === 'completed')
+    const hasHistory = dayHistory.length > 0
+
+    // Priority: Pending > Confirmed > History
     let colorClass = 'bg-gray-400'
     if (hasPending) colorClass = 'bg-yellow-500'
     else if (hasConfirmed) colorClass = 'bg-blue-500'
-    else if (hasCompleted) colorClass = 'bg-green-500'
+    else if (hasHistory) colorClass = 'bg-green-500'
+
     return <div className={`absolute bottom-1 w-1.5 h-1.5 rounded-full ${colorClass}`} />
   }
 
@@ -487,7 +542,11 @@ const ClientDetails: React.FC = () => {
                   <CardHeader className="border-b border-border flex flex-row justify-between items-center">
                     <CardTitle>{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM", { locale: ptBR }) : 'Selecione uma data'}</CardTitle>
                     {selectedAgendaDate && (
-                      <Button size="sm" onClick={() => { setStartDate(selectedAgendaDate.toISOString().split('T')[0]); setIsAssignWorkoutOpen(true) }}>
+                      <Button
+                        size="sm"
+                        onClick={() => { setStartDate(selectedAgendaDate.toISOString().split('T')[0]); setIsAssignWorkoutOpen(true) }}
+                        disabled={isBefore(startOfDay(selectedAgendaDate), startOfDay(new Date()))}
+                      >
                         <Plus className="h-4 w-4 mr-2" /> Agendar Treino
                       </Button>
                     )}
@@ -527,6 +586,31 @@ const ClientDetails: React.FC = () => {
                         ))
                     )}
                   </CardContent>
+
+                  {/* History Section for the day */}
+                  <div className="border-t border-border p-6 pt-2">
+                    <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Histórico do Dia</h4>
+                    {historySessions.filter(s => selectedAgendaDate && isSameDay(new Date(s.created_at), selectedAgendaDate)).length === 0 ? (
+                      <p className="text-xs text-muted-foreground">Nenhum treino realizado.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {historySessions
+                          .filter(s => selectedAgendaDate && isSameDay(new Date(s.created_at), selectedAgendaDate))
+                          .map(session => (
+                            <div
+                              key={session.id}
+                              className="bg-muted/50 p-3 rounded border border-border flex justify-between items-center cursor-pointer hover:bg-muted"
+                              onClick={() => handleHistorySessionClick(session)}
+                            >
+                              <span className="text-sm font-medium">{session.workout?.name || 'Treino'}</span>
+                              <Badge variant={session.status === 'completed' ? 'default' : 'secondary'} className="text-[10px] h-5">
+                                {session.status === 'completed' ? 'Concluído' : 'Incompleto'}
+                              </Badge>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 </Card>
               </div>
             </div>
@@ -1001,27 +1085,7 @@ const ClientDetails: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
-              <DialogContent className="bg-card border-border text-foreground">
-                <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>Selecione o Treino</Label>
-                    <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
-                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent>
-                        {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Data de Início</Label>
-                    <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-                  </div>
-                </div>
-                <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
-              </DialogContent>
-            </Dialog>
+
           </TabsContent>
           <TabsContent value="meal-plans">
             <Card className="bg-card border-border">
@@ -1170,7 +1234,53 @@ const ClientDetails: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div >
+      {/* Moved Dialogs outside TabsContent */}
+      <Dialog open={isAssignWorkoutOpen} onOpenChange={setIsAssignWorkoutOpen}>
+        <DialogContent className="bg-card border-border text-foreground">
+          <DialogHeader><DialogTitle>Atribuir Treino</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Data</Label>
+              <div className="border rounded p-2 text-sm">{selectedAgendaDate ? format(selectedAgendaDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione no calendário'}</div>
+            </div>
+            {/* Added time input */}
+            <div className="space-y-2">
+              <Label>Horário</Label>
+              <Input type="time" value={selectedTime} onChange={e => setSelectedTime(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Selecione o Treino</Label>
+              <Select value={selectedWorkoutId} onValueChange={setSelectedWorkoutId}>
+                <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                <SelectContent>
+                  {availableWorkouts.map(w => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter><Button onClick={handleAssignWorkout} disabled={!selectedWorkoutId}>Confirmar</Button></DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+        <DialogContent className="bg-card border-border text-foreground">
+          <DialogHeader><DialogTitle>Rejeitar Solicitação</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <Label>Motivo da Rejeição</Label>
+            <Textarea
+              value={rejectionReason}
+              onChange={e => setRejectionReason(e.target.value)}
+              placeholder="Por que você está rejeitando este horário?"
+              className="resize-none"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsRejectDialogOpen(false)}>Cancelar</Button>
+            <Button variant="destructive" onClick={confirmRejection} disabled={!rejectionReason.trim()}>Rejeitar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
 

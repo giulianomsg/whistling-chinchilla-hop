@@ -55,7 +55,9 @@ const DashboardLayout: React.FC = () => {
         { label: 'Planejador de Treinos', icon: Dumbbell, path: '/app/planner' },
         { label: 'Planejador de Dietas', icon: Utensils, path: '/app/meal-planner' },
         { label: 'Biblioteca de Exercícios', icon: BookOpen, path: '/app/library' },
+        { label: 'Biblioteca de Exercícios', icon: BookOpen, path: '/app/library' },
         { label: 'Biblioteca de Alimentos', icon: Utensils, path: '/app/foods' },
+        { label: 'Agenda Global', icon: Calendar, path: '/app/agenda/global' },
       ]
     }
 
