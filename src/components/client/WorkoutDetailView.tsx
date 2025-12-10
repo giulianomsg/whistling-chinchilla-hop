@@ -17,6 +17,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
+import { WorkoutExerciseCard } from './WorkoutExerciseCard'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -323,128 +324,15 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             </TabsList>
             {Object.keys(exercisesByDay).map(day => (
               <TabsContent key={day} value={`day-${day}`} className="space-y-4 mt-4">
-                {exercisesByDay[day].map((we: any, idx: number) => {
-                  const isCompleted = executionLogs.some(log => log.workout_exercise_id === we.id)
-                  const videoId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
-                  const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : null
-
+                {exercisesByDay[day].map((we: any) => {
                   return (
-                    <div key={we.id} className={`bg-black/20 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-white/5'} rounded-lg p-4 transition-colors`}>
-                      <div className="flex gap-4">
-                        <div className="flex flex-col items-center justify-center min-w-[3rem]">
-                          <button
-                            onClick={() => handleExerciseClick(we)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${isCompleted ? 'bg-green-500 text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
-                          >
-                            {isCompleted ? <CheckCircle className="h-6 w-6" /> : <Circle className="h-6 w-6" />}
-                          </button>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <h4 className={`text-lg font-bold mb-2 ${isCompleted ? 'text-green-400' : 'text-white'}`}>{we.exercise.name}</h4>
-                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-400">Concluído</Badge>}
-                          </div>
-
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            <Badge variant="secondary" className="bg-white/10 text-white">{we.sets} séries</Badge>
-                            <Badge variant="outline" className="border-white/20 text-gray-300">{we.reps} reps</Badge>
-                            {we.weight && <Badge variant="outline" className="border-white/20 text-gray-300">{we.weight} kg</Badge>}
-                            {we.rest_time_seconds && <Badge variant="outline" className="border-white/20 text-gray-300">{we.rest_time_seconds}s descanso</Badge>}
-                          </div>
-                          {we.notes && <p className="text-sm text-yellow-200/80 bg-yellow-900/20 p-2 rounded mb-2">⚠️ {we.notes}</p>}
-
-                          {/* MEDIA ROW: Gif + Video Side-by-Side */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            {/* 1. Gif Column */}
-                            <div>
-                              {we.exercise.gif_url ? (
-                                <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/20 relative group shadow-md">
-                                  <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-full object-cover" />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
-                                </div>
-                              ) : (
-                                <div className="aspect-square rounded-lg bg-black/20 border border-white/5 flex items-center justify-center text-gray-500 text-xs">
-                                  Sem GIF
-                                </div>
-                              )}
-                            </div>
-
-                            {/* 2. Video Column */}
-                            <div>
-                              {videoId ? (
-                                <div className="h-full flex flex-col justify-center">
-                                  {openVideoId === we.id ? (
-                                    <div className="space-y-2">
-                                      <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-white/10">
-                                        <iframe
-                                          width="100%"
-                                          height="100%"
-                                          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                                          title="YouTube video player"
-                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                          referrerPolicy="strict-origin-when-cross-origin"
-                                          allowFullScreen
-                                          className="border-0"
-                                        />
-                                      </div>
-                                      <Button size="sm" variant="ghost" onClick={() => setOpenVideoId(null)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 w-full">
-                                        Fechar Vídeo
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="h-full w-full rounded-lg bg-black/20 border border-white/5 flex items-center justify-center cursor-pointer hover:bg-black/30 transition-colors group py-8"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setOpenVideoId(we.id);
-                                      }}
-                                    >
-                                      <div className="flex flex-col items-center gap-2 pointer-events-none">
-                                        <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-colors">
-                                          <Play className="h-6 w-6 text-primary" />
-                                        </div>
-                                        <span className="text-sm font-medium text-primary">Ver Vídeo</span>
-                                      </div>
-                                    </button>
-                                  )}
-                                </div>
-                              ) : <div />}
-                            </div>
-                          </div>
-
-                          {/* DETAILS ROW: Instructions + Tips */}
-                          <div className="w-full space-y-4 text-sm mt-4">
-                            {we.exercise.instructions?.length > 0 && (
-                              <div className="bg-white/5 p-4 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
-                                <div className="flex items-center gap-2 mb-2 text-blue-400 font-semibold">
-                                  <span className="bg-blue-500/20 p-1 rounded"><List className="h-3 w-3" /></span> Instruções
-                                </div>
-                                <ul className="space-y-1 text-gray-300 list-disc list-inside marker:text-blue-500/50">
-                                  {we.exercise.instructions.map((inst: string, idx: number) => (
-                                    <li key={idx} className="leading-snug">{inst}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-
-                            {we.exercise.tips?.length > 0 && (
-                              <div className="bg-white/5 p-4 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
-                                <div className="flex items-center gap-2 mb-2 text-yellow-400 font-semibold">
-                                  <span className="bg-yellow-500/20 p-1 rounded"><Eye className="h-3 w-3" /></span> Dicas
-                                </div>
-                                <ul className="space-y-1 text-gray-300 list-disc list-inside marker:text-yellow-500/50">
-                                  {we.exercise.tips.map((tip: string, idx: number) => (
-                                    <li key={idx} className="leading-snug">{tip}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
+                    <WorkoutExerciseCard
+                      key={we.id}
+                      exercise={we}
+                      executionLogs={executionLogs}
+                      isSessionActive={isSessionActive && sessionStatus === 'started'}
+                      onLogClick={handleExerciseClick}
+                    />
                   )
                 })}
               </TabsContent>
