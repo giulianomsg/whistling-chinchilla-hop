@@ -134,7 +134,30 @@ const ClientAgenda: React.FC = () => {
         }
 
         fetchData()
+
+        const channel = supabase
+            .channel(`my-agenda-${user.id}`)
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'scheduled_workouts', filter: `client_id=eq.${user.id}` },
+                () => {
+                    fetchAgenda()
+                }
+            )
+            .subscribe()
+
+        return () => { supabase.removeChannel(channel) }
     }, [user])
+
+    const fetchAgenda = async () => {
+        if (!user) return
+        const { data } = await supabase
+            .from('scheduled_workouts')
+            .select('*, workout:workouts(name)')
+            .eq('client_id', user.id)
+            .order('scheduled_at', { ascending: true })
+        if (data) setScheduledWorkouts(data)
+    }
 
     // Helpers para o Calendário
     const getDayContent = (day: Date) => {

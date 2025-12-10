@@ -198,7 +198,33 @@ const ClientDetails: React.FC = () => {
       finally { setLoading(false) }
     }
     loadData()
+
+    // Realtime Subscription
+    const channel = supabase
+      .channel(`client-agenda-${id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'scheduled_workouts', filter: `client_id=eq.${id}` },
+        (payload) => {
+          // Simplest strategy: Refetch to ensure joined data (workout name) is correct
+          // Or optimistically update if possible, but we need relations.
+          // Let's refetch partial or just update the specific item if it's an UPDATE.
+          // For simplicity and correctness with joined data, let's reuse the fetch logic from loadData or separate it.
+          // We can't easily call loadData inside useEffect because it does too much.
+          // Let's make a dedicated fetchAgenda function.
+          fetchAgenda()
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   }, [id, user])
+
+  const fetchAgenda = async () => {
+    if (!id) return
+    const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+    setScheduledWorkouts(data || [])
+  }
 
   const handleAssignWorkout = async () => {
     try {
