@@ -397,7 +397,7 @@ const ClientDetails: React.FC = () => {
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
                   {clientProfile?.whatsapp && (
                     <div className="flex items-center gap-1">
-                      <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.whatsapp}</span>
+                      <span className="flex items-center gap-1"><i className="fa-brands fa-whatsapp text-green-500" /> {clientProfile.whatsapp}</span>
                       <a
                         href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
                         target="_blank"
@@ -405,13 +405,13 @@ const ClientDetails: React.FC = () => {
                         className="text-green-500 hover:text-green-600"
                         title="Abrir WhatsApp"
                       >
-                        <ExternalLink className="h-3 w-3" />
+                        <i className="fa-solid fa-arrow-up-right-from-square text-sm" />
                       </a>
                     </div>
                   )}
                   {clientProfile?.telegram && (
                     <div className="flex items-center gap-1">
-                      <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" /> {clientProfile.telegram}</span>
+                      <span className="flex items-center gap-1"><i className="fa-brands fa-telegram text-blue-500" /> {clientProfile.telegram}</span>
                       <a
                         href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
                         target="_blank"
@@ -419,7 +419,7 @@ const ClientDetails: React.FC = () => {
                         className="text-blue-500 hover:text-blue-600"
                         title="Abrir Telegram"
                       >
-                        <ExternalLink className="h-3 w-3" />
+                        <i className="fa-solid fa-arrow-up-right-from-square text-sm" />
                       </a>
                     </div>
                   )}
@@ -926,7 +926,7 @@ const ClientDetails: React.FC = () => {
                             className="text-green-600 hover:text-green-700"
                             title="Abrir WhatsApp"
                           >
-                            <Phone className="h-4 w-4" />
+                            <i className="fa-brands fa-whatsapp text-lg" />
                           </a>
                         </>
                       ) : 'Não informado'}
@@ -946,7 +946,7 @@ const ClientDetails: React.FC = () => {
                             className="text-blue-600 hover:text-blue-700"
                             title="Abrir Telegram"
                           >
-                            <MessageSquare className="h-4 w-4" />
+                            <i className="fa-brands fa-telegram text-lg" />
                           </a>
                         </>
                       ) : 'Não informado'}
