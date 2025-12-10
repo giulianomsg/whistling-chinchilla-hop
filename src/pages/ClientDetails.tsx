@@ -21,7 +21,7 @@ import {
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
-  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight
+  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -396,24 +396,32 @@ const ClientDetails: React.FC = () => {
                   <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {clientProfile?.email || 'Sem email'}</span>
                   {clientProfile?.phone && <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.phone}</span>}
                   {clientProfile?.whatsapp && (
-                    <a
-                      href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-green-500 hover:underline"
-                    >
-                      <Phone className="h-3 w-3" /> {clientProfile.whatsapp}
-                    </a>
+                    <div className="flex items-center gap-1">
+                      <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {clientProfile.whatsapp}</span>
+                      <a
+                        href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-500 hover:text-green-600"
+                        title="Abrir WhatsApp"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
                   )}
                   {clientProfile?.telegram && (
-                    <a
-                      href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-blue-500 hover:underline"
-                    >
-                      <MessageSquare className="h-3 w-3" /> {clientProfile.telegram}
-                    </a>
+                    <div className="flex items-center gap-1">
+                      <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" /> {clientProfile.telegram}</span>
+                      <a
+                        href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-600"
+                        title="Abrir Telegram"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
                   )}
                 </div>
                 <div className="flex gap-2 mt-3">
@@ -909,14 +917,18 @@ const ClientDetails: React.FC = () => {
                     <Label className="text-muted-foreground">WhatsApp</Label>
                     <div className="font-medium flex items-center gap-2">
                       {clientProfile?.whatsapp ? (
-                        <a
-                          href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:underline"
-                        >
-                          <Phone className="h-4 w-4" /> {clientProfile.whatsapp}
-                        </a>
+                        <>
+                          <span>{clientProfile.whatsapp}</span>
+                          <a
+                            href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-600 hover:text-green-700"
+                            title="Abrir WhatsApp"
+                          >
+                            <Phone className="h-4 w-4" />
+                          </a>
+                        </>
                       ) : 'Não informado'}
                     </div>
                   </div>
@@ -925,14 +937,18 @@ const ClientDetails: React.FC = () => {
                     <Label className="text-muted-foreground">Telegram</Label>
                     <div className="font-medium flex items-center gap-2">
                       {clientProfile?.telegram ? (
-                        <a
-                          href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:underline"
-                        >
-                          <MessageSquare className="h-4 w-4" /> {clientProfile.telegram}
-                        </a>
+                        <>
+                          <span>{clientProfile.telegram}</span>
+                          <a
+                            href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-700"
+                            title="Abrir Telegram"
+                          >
+                            <MessageSquare className="h-4 w-4" />
+                          </a>
+                        </>
                       ) : 'Não informado'}
                     </div>
                   </div>
