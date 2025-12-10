@@ -393,23 +393,14 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                                     </div>
                                   ) : (
                                     <div
-                                      className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group border border-white/10 shadow-md"
+                                      className="h-full w-full rounded-lg bg-black/20 border border-white/5 flex items-center justify-center cursor-pointer hover:bg-black/30 transition-colors group py-8"
                                       onClick={() => setOpenVideoId(we.id)}
                                     >
-                                      {thumbnailUrl ? (
-                                        <img src={thumbnailUrl} alt="Video Thumbnail" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                                      ) : (
-                                        <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                                          <PlayCircle className="h-12 w-12 text-slate-600" />
+                                      <div className="flex flex-col items-center gap-2">
+                                        <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-colors">
+                                          <Play className="h-6 w-6 text-primary" />
                                         </div>
-                                      )}
-                                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-all">
-                                        <div className="bg-black/60 p-3 rounded-full backdrop-blur-sm group-hover:scale-110 transition-transform">
-                                          <PlayCircle className="h-8 w-8 text-white" />
-                                        </div>
-                                      </div>
-                                      <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-xs text-white font-medium">
-                                        Ver Vídeo
+                                        <span className="text-sm font-medium text-primary">Ver Vídeo</span>
                                       </div>
                                     </div>
                                   )}
