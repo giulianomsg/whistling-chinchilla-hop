@@ -156,7 +156,8 @@ const ClientDetails: React.FC = () => {
 
         if (profileRes.error) throw profileRes.error
 
-        setClientProfile(profileRes.data)
+        const combinedProfile = { ...profileRes.data, ...detailsRes.data }
+        setClientProfile(combinedProfile)
         setClientDetails(detailsRes.data)
         setClientWorkouts(cWorkouts.data || [])
         setClientMealPlans(cMeals.data || [])
