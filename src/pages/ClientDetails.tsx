@@ -1325,8 +1325,9 @@ const ClientDetails: React.FC = () => {
           </DialogContent>
         </Dialog>
       </div >
-      )
+    </div >
+  )
 }
 
 
-      export default ClientDetails
+export default ClientDetails
