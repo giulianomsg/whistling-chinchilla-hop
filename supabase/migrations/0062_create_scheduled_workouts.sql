@@ -56,9 +56,10 @@ ON public.scheduled_workouts
 FOR SELECT
 USING (
     EXISTS (
-        SELECT 1 FROM public.client_details cd
-        WHERE cd.profile_id = scheduled_workouts.client_id
-        AND cd.professional_id = auth.uid()
+        SELECT 1 FROM public.client_professionals cp
+        WHERE cp.client_id = scheduled_workouts.client_id
+        AND cp.professional_id = auth.uid()
+        AND cp.status = 'active'
     )
 );
 
