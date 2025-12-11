@@ -86,7 +86,6 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Previsualização de vídeos de treinos, gifs, instruções e dicas no card do cadastro do exercício, não funciona click no icone nada acontece.
 - [x] Inserir no perfil de cliente e na visualização do cliente pelo profissional o campo de WhatsApp e Telegram.
 - [x] Mostrar no perfil do cliente as possibilidade de inserir, editar e excluir fotos em uma aba "Fotos" e as avaliações em uma aba "Avaliações", e também o Histórico de treinos em uma aba "Histórico", como já foi implementado para o profissionais.
-- [ ] Corrigir dados de WhatsApp e Telegram do perfil do profissional (já inseri os campos no banco de dados manualmente)
 - [ ] Avisar cancelamentos de agendamentos pelo chat do profissional quando o cliente cancelar e vice versa.
 - [ ] Crie também o recurso de notificações no canto superior direito do app para que o cliente e o profissional possa receber notificações de agendamentos, cancelamentos e etc...
 - [ ] No perfil profissional mostrar o mesmo layout da "Agenda Global" para a página de detalhes do cliente na aba "Agenda", onde ao clicar no badge de cancelamentos ele abre a página de detalhes do agendamento, com o motivo do cancelamento, faça isso para o cliente também.
@@ -104,3 +103,4 @@ vendor-CzePanbK.js:468  POST https://mhjvgxukttoalvwntmyp.supabase.co/rest/v1/sc
 await in (anonymous)
 then @ vendor-CzePanbK.js:443
 "
+- [ ] Corrigir dados de WhatsApp e Telegram do perfil do profissional, eles não estão sendo salvos e nem carregados (já inseri os campos no banco de dados manualmente).
