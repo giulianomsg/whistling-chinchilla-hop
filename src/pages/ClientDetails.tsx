@@ -282,6 +282,26 @@ const ClientDetails: React.FC = () => {
         const { error } = await supabase.from('client_workouts').insert({ client_id: id, workout_id: selectedWorkoutId, professional_id: user!.id, start_date: startDate, status: 'active' })
         if (error) throw error
         showSuccess('Treino atribuído!')
+
+        // Get Workout Name
+        const workoutName = availableWorkouts.find(w => w.id === selectedWorkoutId)?.name || 'Novo Treino'
+
+        // Notify Client
+        await supabase.from('chat_messages').insert({
+          sender_id: user.id,
+          receiver_id: id,
+          content: `💪 Um novo treino "${workoutName}" foi atribuído a você!`,
+          message_type: 'text'
+        })
+
+        await supabase.from('notifications').insert({
+          user_id: id,
+          title: 'Novo Treino Atribuído',
+          message: `O profissional ${user.user_metadata?.full_name || 'Seu treinador'} atribuiu o treino "${workoutName}".`,
+          type: 'success',
+          link: '/app/profile?tab=workouts'
+        })
+
         const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
         setClientWorkouts(data || [])
         setActiveTab('workouts')
@@ -295,6 +315,26 @@ const ClientDetails: React.FC = () => {
       const { error } = await supabase.from('client_meal_plans').insert({ client_id: id, meal_plan_id: selectedMealPlanId, nutritionist_id: user!.id, start_date: startDate, status: 'active' })
       if (error) throw error
       showSuccess('Dieta atribuída!')
+
+      // Get Meal Plan Name
+      const planName = availableMealPlans.find(p => p.id === selectedMealPlanId)?.name || 'Nova Dieta'
+
+      // Notify Client
+      await supabase.from('chat_messages').insert({
+        sender_id: user.id,
+        receiver_id: id,
+        content: `🥗 Uma nova dieta "${planName}" foi atribuída a você!`,
+        message_type: 'text'
+      })
+
+      await supabase.from('notifications').insert({
+        user_id: id,
+        title: 'Nova Dieta Atribuída',
+        message: `O nutricionista ${user.user_metadata?.full_name || 'Seu treinador'} atribuiu a dieta "${planName}".`,
+        type: 'success',
+        link: '/app/profile?tab=meal-plans'
+      })
+
       setIsAssignMealPlanOpen(false)
       const { data } = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
       setClientMealPlans(data || [])
