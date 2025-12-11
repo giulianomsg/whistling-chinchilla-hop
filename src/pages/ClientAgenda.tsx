@@ -21,6 +21,13 @@ interface ScheduledWorkout {
     scheduled_at: string
     status: 'pending' | 'completed' | 'cancelled' | 'pending_approval' | 'confirmed' | 'rejected'
     created_by: string
+    professional_id?: string
+    cancellation_reason?: string
+    created_at?: string
+    confirmed_by?: string
+    confirmed_at?: string
+    cancelled_by?: string
+    cancelled_at?: string
     notes?: string
     workout?: {
         name: string
@@ -230,6 +237,26 @@ const ClientAgenda: React.FC = () => {
             if (error) throw error
 
             toast.success('Treino agendado com sucesso!')
+
+            // Notify Professional via Chat
+            if (professionalId) {
+                const dateStr = format(scheduledDateTime, "dd/MM 'às' HH:mm")
+                await supabase.from('chat_messages').insert({
+                    sender_id: user.id,
+                    receiver_id: professionalId,
+                    content: `📅 Solicitei um novo agendamento para ${dateStr}. Aguardando aprovação.`,
+                    message_type: 'text'
+                })
+
+                await supabase.from('notifications').insert({
+                    user_id: professionalId,
+                    title: 'Novo Agendamento',
+                    message: `O aluno ${user.user_metadata?.full_name || 'Usuário'} solicitou um agendamento para ${dateStr}.`,
+                    type: 'info',
+                    link: '/app/clients' // Link to client list (or specific client details if we could construct it)
+                })
+            }
+
             setIsDialogOpen(false)
 
             // Refresh list
@@ -255,6 +282,27 @@ const ClientAgenda: React.FC = () => {
             const { error } = await supabase.from('scheduled_workouts').update({ status: 'cancelled', cancellation_reason: cancellationReason }).eq('id', selectedScheduleId)
             if (error) throw error
             toast.success('Agendamento cancelado.')
+
+            // Notify Professional via Chat
+            const schedule = scheduledWorkouts.find(s => s.id === selectedScheduleId)
+            if (schedule && schedule.professional_id && user) {
+                const dateStr = format(new Date(schedule.scheduled_at), "dd/MM 'às' HH:mm")
+                await supabase.from('chat_messages').insert({
+                    sender_id: user.id,
+                    receiver_id: schedule.professional_id,
+                    content: `⚠️ Cancelei o agendamento de ${dateStr}. Motivo: ${cancellationReason}`,
+                    message_type: 'text'
+                })
+
+                await supabase.from('notifications').insert({
+                    user_id: schedule.professional_id,
+                    title: 'Agendamento Cancelado pelo Aluno',
+                    message: `O aluno cancelou o agendamento de ${dateStr}.`,
+                    type: 'warning',
+                    link: '/app/clients'
+                })
+            }
+
             setScheduledWorkouts(prev => prev.filter(s => s.id !== selectedScheduleId))
             setIsCancelDialogOpen(false)
             setCancellationReason('')

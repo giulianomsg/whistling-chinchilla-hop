@@ -447,6 +447,27 @@ const ClientDetails: React.FC = () => {
       }).eq('id', scheduleId)
       if (error) throw error
       showSuccess('Treino confirmado!')
+
+      // Notify Client via Chat
+      const schedule = scheduledWorkouts.find(s => s.id === scheduleId)
+      if (schedule && user) {
+        const dateStr = format(new Date(schedule.scheduled_at), "dd/MM 'às' HH:mm")
+        await supabase.from('chat_messages').insert({
+          sender_id: user.id,
+          receiver_id: id,
+          content: `✅ Seu treino agendado para ${dateStr} foi confirmado!`,
+          message_type: 'text'
+        })
+
+        await supabase.from('notifications').insert({
+          user_id: id,
+          title: 'Treino Confirmado',
+          message: `Seu treino para ${dateStr} foi confirmado por ${user.user_metadata?.full_name || 'seu treinador'}.`,
+          type: 'success',
+          link: '/app/agenda'
+        })
+      }
+
       // Force refresh
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
       setScheduledWorkouts([...(data || [])])
@@ -468,6 +489,27 @@ const ClientDetails: React.FC = () => {
 
       if (error) throw error
       showSuccess('Solicitação rejeitada.')
+
+      // Notify Client via Chat
+      const schedule = scheduledWorkouts.find(s => s.id === selectedScheduleId)
+      if (schedule && user) {
+        const dateStr = format(new Date(schedule.scheduled_at), "dd/MM 'às' HH:mm")
+        await supabase.from('chat_messages').insert({
+          sender_id: user.id,
+          receiver_id: id,
+          content: `❌ Sua solicitação de treino para ${dateStr} foi rejeitada. Motivo: ${rejectionReason}`,
+          message_type: 'text'
+        })
+
+        await supabase.from('notifications').insert({
+          user_id: id,
+          title: 'Solicitação Rejeitada',
+          message: `Sua solicitação para ${dateStr} foi rejeitada.`,
+          type: 'error',
+          link: '/app/agenda'
+        })
+      }
+
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
       setScheduledWorkouts(data || [])
       setIsRejectDialogOpen(false)
@@ -529,6 +571,27 @@ const ClientDetails: React.FC = () => {
       }).eq('id', selectedScheduleId)
       if (error) throw error
       showSuccess('Agendamento cancelado.')
+
+      // Notify Client via Chat
+      const schedule = scheduledWorkouts.find(s => s.id === selectedScheduleId)
+      if (schedule && user) {
+        const dateStr = format(new Date(schedule.scheduled_at), "dd/MM 'às' HH:mm")
+        await supabase.from('chat_messages').insert({
+          sender_id: user.id,
+          receiver_id: id,
+          content: `⚠️ O agendamento para ${dateStr} foi cancelado. Motivo: ${cancellationReason}`,
+          message_type: 'text'
+        })
+
+        await supabase.from('notifications').insert({
+          user_id: id,
+          title: 'Agendamento Cancelado',
+          message: `O agendamento para ${dateStr} foi cancelado pelo profissional.`,
+          type: 'warning',
+          link: '/app/agenda'
+        })
+      }
+
       // Refresh logic
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
       setScheduledWorkouts([...(data || [])])

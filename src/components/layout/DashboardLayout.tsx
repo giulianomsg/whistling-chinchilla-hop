@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { NotificationCenter } from '@/components/notifications/NotificationCenter'
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useChat } from '@/contexts/ChatContext'
@@ -175,6 +176,7 @@ const DashboardLayout: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <NotificationCenter />
           <ModeToggle />
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
@@ -200,7 +202,8 @@ const DashboardLayout: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 md:pl-64 pt-16 md:pt-0 min-h-screen transition-all duration-300">
         <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
-          <div className="hidden md:flex justify-end p-4 absolute top-0 right-0 z-10">
+          <div className="hidden md:flex justify-end p-4 absolute top-0 right-0 z-10 gap-2">
+            <NotificationCenter />
             <ModeToggle />
           </div>
           <Outlet />
