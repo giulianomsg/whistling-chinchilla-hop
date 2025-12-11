@@ -202,6 +202,8 @@ const ProfileSettings: React.FC = () => {
               newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
               const certData = profData.certifications as any
               newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
+              newFormData.whatsapp = profData.whatsapp || ''
+              newFormData.telegram = profData.telegram || ''
             }
           } else if (role === 'client') {
             const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
@@ -351,6 +353,8 @@ const ProfileSettings: React.FC = () => {
           specialty: formData.specialty,
           consultation_price: price,
           certifications: { raw_text: formData.certifications },
+          whatsapp: formData.whatsapp,
+          telegram: formData.telegram,
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 

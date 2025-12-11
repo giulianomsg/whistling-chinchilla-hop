@@ -75,7 +75,7 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 
 ## 📝 Novas implementações
 
-- [ ] Criar uma agenda para que o cliente possa agendar e consultar os treinos com o seu profissional, acessar os treinos executados para ver o histórico de treinos e detalhes, receber avisos de pedidos de feedbacks e avaliações, como medições e pesagens.
+- [x] Criar uma agenda para que o cliente possa agendar e consultar os treinos com o seu profissional, acessar os treinos executados para ver o histórico de treinos e detalhes, receber avisos de pedidos de feedbacks e avaliações, como medições e pesagens.
 - [ ] Crie perfil de Nível de Força (como do site strengthlevel.pt) com calculadora de força, padrões de força e progressão de força para homens e mulheres.
 - [ ] Acompanhamento de progresso de metas com gráficos.
 - [ ] Registro de Metas de peso, medidas e objetivos.
@@ -86,21 +86,8 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Previsualização de vídeos de treinos, gifs, instruções e dicas no card do cadastro do exercício, não funciona click no icone nada acontece.
 - [x] Inserir no perfil de cliente e na visualização do cliente pelo profissional o campo de WhatsApp e Telegram.
 - [x] Mostrar no perfil do cliente as possibilidade de inserir, editar e excluir fotos em uma aba "Fotos" e as avaliações em uma aba "Avaliações", e também o Histórico de treinos em uma aba "Histórico", como já foi implementado para o profissionais.
-- [ ] Avisar cancelamentos de agendamentos pelo chat do profissional quando o cliente cancelar e vice versa.
-- [ ] Crie também o recurso de notificações no canto superior direito do app para que o cliente e o profissional possa receber notificações de agendamentos, cancelamentos e etc...
-- [ ] No perfil profissional mostrar o mesmo layout da "Agenda Global" para a página de detalhes do cliente na aba "Agenda", onde ao clicar no badge de cancelamentos ele abre a página de detalhes do agendamento, com o motivo do cancelamento, faça isso para o cliente também.
-- [ ] Corrigir duplicidade do item "Biblioteca de Exercícios" no menu lateral do profissional.
-- [ ] Corrigir erro ao atribuir quando o agendamento e feito pelo profissional, segue abaixo o erro: 
-
-"vendor-CzePanbK.js:468  POST https://mhjvgxukttoalvwntmyp.supabase.co/rest/v1/scheduled_workouts 403 (Forbidden)
-(anonymous) @ vendor-CzePanbK.js:468
-(anonymous) @ vendor-CzePanbK.js:468
-await in (anonymous)
-then @ vendor-CzePanbK.js:443
-vendor-CzePanbK.js:468  POST https://mhjvgxukttoalvwntmyp.supabase.co/rest/v1/scheduled_workouts 403 (Forbidden)
-(anonymous) @ vendor-CzePanbK.js:468
-(anonymous) @ vendor-CzePanbK.js:468
-await in (anonymous)
-then @ vendor-CzePanbK.js:443
-"
-- [ ] Corrigir dados de WhatsApp e Telegram do perfil do profissional, eles não estão sendo salvos e nem carregados (já inseri os campos no banco de dados manualmente).
+- [x] Avisar cancelamentos de agendamentos pelo chat do profissional quando o cliente cancelar e vice versa.
+- [x] No perfil profissional mostrar o mesmo layout da "Agenda Global" para a página de detalhes do cliente na aba "Agenda", onde ao clicar no badge de cancelamentos ele abre a página de detalhes do agendamento, com o motivo do cancelamento, faça isso para o cliente também.
+- [x] Corrigir duplicidade do item "Biblioteca de Exercícios" no menu lateral do profissional.
+- [x] Corrigir erro ao atribuir quando o agendamento e feito pelo profissional, segue abaixo o erro: 
+- [x] Corrigir dados de WhatsApp e Telegram do perfil do profissional, eles não estão sendo salvos e nem carregados (já inseri os campos no banco de dados manualmente).
