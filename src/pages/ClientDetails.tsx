@@ -150,6 +150,7 @@ const ClientDetails: React.FC = () => {
   const [selectedScheduleId, setSelectedScheduleId] = useState('')
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
   const [cancellationReason, setCancellationReason] = useState('')
+  const [selectedAgendaDetails, setSelectedAgendaDetails] = useState<any>(null)
 
   useEffect(() => {
     const loadData = async () => {
@@ -609,11 +610,17 @@ const ClientDetails: React.FC = () => {
                             <div>
                               <h4 className="font-bold text-foreground">{schedule.workout?.name}</h4>
                               <div className="flex items-center gap-2 text-sm mt-1">
-                                <Badge variant={schedule.status === 'confirmed' || schedule.status === 'completed' ? 'default' : 'outline'}
-                                  className={schedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}>
+                                <Badge
+                                  variant={
+                                    schedule.status === 'confirmed' ? 'default' :
+                                      schedule.status === 'cancelled' ? 'destructive' : 'outline'
+                                  }
+                                  className={`cursor-pointer hover:opacity-80 ${schedule.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}`}
+                                  onClick={() => setSelectedAgendaDetails(schedule)}
+                                >
                                   {schedule.status === 'pending_approval' ? 'Aguardando Aprovação' :
                                     schedule.status === 'confirmed' ? 'Confirmado' :
-                                      schedule.status === 'completed' ? 'Concluído' : schedule.status}
+                                      schedule.status === 'cancelled' ? 'Cancelado' : schedule.status}
                                 </Badge>
                                 {schedule.created_by !== id && schedule.created_by === user?.id && <span className="text-xs text-muted-foreground">(Criado por você)</span>}
                                 {schedule.created_by === id && <span className="text-xs text-muted-foreground">(Solicitado pelo aluno)</span>}
@@ -1348,6 +1355,46 @@ const ClientDetails: React.FC = () => {
               <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)}>Voltar</Button>
               <Button variant="destructive" onClick={handleCancelWithReason} disabled={!cancellationReason.trim()}>Confirmar Cancelamento</Button>
             </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={!!selectedAgendaDetails} onOpenChange={(open) => !open && setSelectedAgendaDetails(null)}>
+          <DialogContent className="bg-card border-border text-foreground">
+            <DialogHeader><DialogTitle>Detalhes do Agendamento</DialogTitle></DialogHeader>
+            {selectedAgendaDetails && (
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <div className="text-xs text-muted-foreground">Horário</div>
+                    <div className="font-medium flex items-center gap-2"><Clock className="h-4 w-4" /> {format(new Date(selectedAgendaDetails.scheduled_at), "dd/MM 'às' HH:mm")}</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-xs text-muted-foreground">Treino</div>
+                    <div className="font-medium">{selectedAgendaDetails.workout?.name}</div>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">Status</div>
+                  <Badge
+                    variant={selectedAgendaDetails.status === 'confirmed' ? 'default' : selectedAgendaDetails.status === 'cancelled' ? 'destructive' : 'outline'}
+                    className={selectedAgendaDetails.status === 'pending_approval' ? 'border-yellow-500 text-yellow-600' : ''}
+                  >
+                    {selectedAgendaDetails.status === 'pending_approval' ? 'Pendente' :
+                      selectedAgendaDetails.status === 'confirmed' ? 'Confirmado' :
+                        selectedAgendaDetails.status === 'cancelled' ? 'Cancelado' : selectedAgendaDetails.status}
+                  </Badge>
+                </div>
+                {selectedAgendaDetails.cancellation_reason && (
+                  <div className="space-y-1">
+                    <div className="text-xs text-red-500 font-medium">Motivo do Cancelamento</div>
+                    <div className="text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-2 rounded border border-red-100 dark:border-red-800">
+                      {selectedAgendaDetails.cancellation_reason}
+                    </div>
+                  </div>
+                )}
+                <DialogFooter><Button onClick={() => setSelectedAgendaDetails(null)}>Fechar</Button></DialogFooter>
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div >
