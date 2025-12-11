@@ -91,3 +91,4 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Corrigir duplicidade do item "Biblioteca de Exercícios" no menu lateral do profissional.
 - [x] Corrigir erro ao atribuir quando o agendamento e feito pelo profissional, segue abaixo o erro: 
 - [x] Corrigir dados de WhatsApp e Telegram do perfil do profissional, eles não estão sendo salvos e nem carregados (já inseri os campos no banco de dados manualmente).
+- [ ]  Cliente deve ver perfil do profissional para consulta de dados e de reputação, etc... (imaginar sistema de reputação).
