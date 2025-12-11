@@ -17,10 +17,10 @@ import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
 import {
-  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils,
+  User, Mail, Phone, ArrowLeft, Dumbbell, Utensils, Trash2,
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
-  Pencil, Trash2, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
+  Pencil, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
   AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink
 } from 'lucide-react'
 import { ptBR } from 'date-fns/locale'
@@ -515,22 +515,31 @@ const ClientDetails: React.FC = () => {
   }
 
   const handleCancelWithReason = async () => {
-    if (!cancellationReason.trim()) return showError('Informe o motivo')
+    if (!cancellationReason.trim()) { showError('Informe o motivo'); return; }
     try {
-      const { error } = await supabase.from('scheduled_workouts')
-        .update({ status: 'cancelled', cancellation_reason: cancellationReason })
-        .eq('id', selectedScheduleId)
-
+      const { error } = await supabase.from('scheduled_workouts').update({ status: 'cancelled', cancellation_reason: cancellationReason }).eq('id', selectedScheduleId)
       if (error) throw error
       showSuccess('Agendamento cancelado.')
-
-      // Refresh
+      // Refresh logic
       const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
       setScheduledWorkouts([...(data || [])])
-
       setIsCancelDialogOpen(false)
       setCancellationReason('')
     } catch (e) { showError('Erro ao cancelar') }
+  }
+
+  const handleDeleteSchedule = async (scheduleId: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir este agendamento permanentemente?')) return
+
+    try {
+      const { error } = await supabase.from('scheduled_workouts').delete().eq('id', scheduleId)
+      if (error) throw error
+      showSuccess('Agendamento excluído.')
+      setScheduledWorkouts(prev => prev.filter(s => s.id !== scheduleId))
+    } catch (e) {
+      console.error('Erro delete:', e)
+      showError('Erro ao excluir agendamento')
+    }
   }
 
   return (
@@ -538,7 +547,7 @@ const ClientDetails: React.FC = () => {
       <div className="w-full px-4 md:max-w-7xl md:mx-auto md:px-8">
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-muted-foreground hover:text-foreground pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
-        </div>
+        </div >
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
           <div className="w-full overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             <TabsList className="bg-muted border border-border justify-start p-1 flex min-w-max h-10">
@@ -634,8 +643,14 @@ const ClientDetails: React.FC = () => {
                                   <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aprovar</Button>
                                 </div>
                               ) : (
-                                (schedule.status === 'confirmed' || schedule.status === 'pending_approval') && (
+                                (schedule.status === 'confirmed' || schedule.status === 'pending_approval') ? (
                                   <Button size="sm" variant="ghost" className="text-destructive hover:bg-destructive/10" onClick={() => { setSelectedScheduleId(schedule.id); setIsCancelDialogOpen(true) }}>Cancelar</Button>
+                                ) : (
+                                  (schedule.status === 'cancelled' || schedule.status === 'rejected') && (
+                                    <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-destructive h-8 w-8" onClick={() => handleDeleteSchedule(schedule.id)} title="Excluir permanentemente">
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  )
                                 )
                               )}
                             </div>

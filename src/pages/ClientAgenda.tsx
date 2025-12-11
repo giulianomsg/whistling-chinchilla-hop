@@ -413,14 +413,16 @@ const ClientAgenda: React.FC = () => {
                                                                 <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleApproveSchedule(schedule.id)}>Aceitar</Button>
                                                             </div>
                                                         ) : (
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="text-muted-foreground hover:text-destructive"
-                                                                onClick={() => { setSelectedScheduleId(schedule.id); setIsCancelDialogOpen(true) }}
-                                                            >
-                                                                Cancelar
-                                                            </Button>
+                                                            (schedule.status !== 'cancelled' && schedule.status !== 'rejected') && (
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="text-muted-foreground hover:text-destructive"
+                                                                    onClick={() => { setSelectedScheduleId(schedule.id); setIsCancelDialogOpen(true) }}
+                                                                >
+                                                                    Cancelar
+                                                                </Button>
+                                                            )
                                                         )}
                                                     </div>
                                                 ))}
