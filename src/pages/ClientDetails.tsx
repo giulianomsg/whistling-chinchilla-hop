@@ -328,11 +328,28 @@ const ClientDetails: React.FC = () => {
 
   const handleRemoveAssignment = async (table: 'client_workouts' | 'client_meal_plans', itemId: string) => {
     try {
+      // Get item name for notification
+      let itemName = 'Item'
+      if (table === 'client_workouts') {
+        itemName = clientWorkouts.find(i => i.id === itemId)?.workout?.name || 'Treino'
+      } else {
+        itemName = clientMealPlans.find(i => i.id === itemId)?.meal_plan?.name || 'Dieta'
+      }
+
       const { error } = await supabase.from(table).delete().eq('id', itemId)
       if (error) throw error
       showSuccess('Removido!')
+
       if (table === 'client_workouts') setClientWorkouts(prev => prev.filter(i => i.id !== itemId))
       else setClientMealPlans(prev => prev.filter(i => i.id !== itemId))
+
+      // Notify Client
+      await supabase.from('chat_messages').insert({
+        sender_id: user!.id,
+        receiver_id: id,
+        content: `🗑️ O ${table === 'client_workouts' ? 'treino' : 'plano alimentar'} "${itemName}" foi removido do seu perfil.`,
+        message_type: 'text'
+      })
     } catch (err) { showError('Erro ao remover') }
   }
 
@@ -341,6 +358,14 @@ const ClientDetails: React.FC = () => {
       const { error } = await supabase.from('client_details').upsert({ profile_id: id, anamnesis_data: anamnesisForm, updated_at: new Date().toISOString() })
       if (error) throw error
       showSuccess('Anamnese completa salva!')
+
+      // Notify Client
+      await supabase.from('chat_messages').insert({
+        sender_id: user!.id,
+        receiver_id: id,
+        content: `📋 Sua ficha de anamnese foi atualizada pelo profissional.`,
+        message_type: 'text'
+      })
     } catch (e) { showError('Erro ao salvar') }
   }
 
@@ -391,15 +416,36 @@ const ClientDetails: React.FC = () => {
       setIsNewAssessmentOpen(false)
       const { data } = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
       setAssessments(data || [])
+
+      // Notify Client
+      const action = status === 'draft' ? 'salvo como rascunho' : 'finalizado'
+      await supabase.from('chat_messages').insert({
+        sender_id: user!.id,
+        receiver_id: id,
+        content: `📊 Uma nova avaliação física (${new Date(newAssessment.date).toLocaleDateString('pt-BR')}) foi registrada e o status é: ${action}.`,
+        message_type: 'text'
+      })
+
     } catch (e: any) { console.error(e); showError('Erro ao salvar avaliação') }
   }
 
   const handleDeleteAssessment = async (assessmentId: string) => {
     if (!confirm('Tem certeza?')) return
     try {
+      const assessmentDate = assessments.find(a => a.id === assessmentId)?.date
       await supabase.from('biometric_data').delete().eq('id', assessmentId)
       showSuccess('Avaliação excluída.')
       setAssessments(prev => prev.filter(a => a.id !== assessmentId))
+
+      // Notify Client
+      if (assessmentDate) {
+        await supabase.from('chat_messages').insert({
+          sender_id: user!.id,
+          receiver_id: id,
+          content: `🗑️ A avaliação física de ${new Date(assessmentDate).toLocaleDateString('pt-BR')} foi removida.`,
+          message_type: 'text'
+        })
+      }
     } catch (e) { showError('Erro ao excluir') }
   }
 
@@ -421,6 +467,15 @@ const ClientDetails: React.FC = () => {
       })
       if (dbError) throw dbError
       showSuccess('Foto adicionada!')
+
+      // Notify Client
+      await supabase.from('chat_messages').insert({
+        sender_id: user.id,
+        receiver_id: id,
+        content: `📸 Uma nova foto de progresso de ${new Date(newPhoto.date).toLocaleDateString('pt-BR')} foi adicionada ao seu perfil.`,
+        message_type: 'text'
+      })
+
       setIsAddPhotoOpen(false)
       setNewPhoto({ date: new Date().toISOString().split('T')[0], notes: '', file: null })
       const { data } = await supabase.from('progress_photos').select('*').eq('client_id', id).order('date', { ascending: false })
@@ -432,9 +487,20 @@ const ClientDetails: React.FC = () => {
   const handleDeletePhoto = async (photoId: string) => {
     if (!confirm('Excluir foto?')) return
     try {
+      const photoDate = progressPhotos.find(p => p.id === photoId)?.date
       await supabase.from('progress_photos').delete().eq('id', photoId)
       showSuccess('Foto removida.')
       setProgressPhotos(prev => prev.filter(p => p.id !== photoId))
+
+      // Notify Client
+      if (photoDate) {
+        await supabase.from('chat_messages').insert({
+          sender_id: user!.id,
+          receiver_id: id,
+          content: `🗑️ A foto de progresso de ${new Date(photoDate).toLocaleDateString('pt-BR')} foi removida.`,
+          message_type: 'text'
+        })
+      }
     } catch (e) { showError('Erro ao excluir') }
   }
 
