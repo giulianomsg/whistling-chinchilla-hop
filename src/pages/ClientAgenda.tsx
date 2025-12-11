@@ -247,14 +247,6 @@ const ClientAgenda: React.FC = () => {
                     content: `📅 Solicitei um novo agendamento para ${dateStr}. Aguardando aprovação.`,
                     message_type: 'text'
                 })
-
-                await supabase.from('notifications').insert({
-                    user_id: professionalId,
-                    title: 'Novo Agendamento',
-                    message: `O aluno ${user.user_metadata?.full_name || 'Usuário'} solicitou um agendamento para ${dateStr}.`,
-                    type: 'info',
-                    link: '/app/clients' // Link to client list (or specific client details if we could construct it)
-                })
             }
 
             setIsDialogOpen(false)
@@ -292,14 +284,6 @@ const ClientAgenda: React.FC = () => {
                     receiver_id: schedule.professional_id,
                     content: `⚠️ Cancelei o agendamento de ${dateStr}. Motivo: ${cancellationReason}`,
                     message_type: 'text'
-                })
-
-                await supabase.from('notifications').insert({
-                    user_id: schedule.professional_id,
-                    title: 'Agendamento Cancelado pelo Aluno',
-                    message: `O aluno cancelou o agendamento de ${dateStr}.`,
-                    type: 'warning',
-                    link: '/app/clients'
                 })
             }
 

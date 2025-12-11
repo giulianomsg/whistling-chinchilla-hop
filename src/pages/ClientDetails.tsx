@@ -294,14 +294,6 @@ const ClientDetails: React.FC = () => {
           message_type: 'text'
         })
 
-        await supabase.from('notifications').insert({
-          user_id: id,
-          title: 'Novo Treino Atribuído',
-          message: `O profissional ${user.user_metadata?.full_name || 'Seu treinador'} atribuiu o treino "${workoutName}".`,
-          type: 'success',
-          link: '/app/profile?tab=workouts'
-        })
-
         const { data } = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
         setClientWorkouts(data || [])
         setActiveTab('workouts')
@@ -325,14 +317,6 @@ const ClientDetails: React.FC = () => {
         receiver_id: id,
         content: `🥗 Uma nova dieta "${planName}" foi atribuída a você!`,
         message_type: 'text'
-      })
-
-      await supabase.from('notifications').insert({
-        user_id: id,
-        title: 'Nova Dieta Atribuída',
-        message: `O nutricionista ${user.user_metadata?.full_name || 'Seu treinador'} atribuiu a dieta "${planName}".`,
-        type: 'success',
-        link: '/app/profile?tab=meal-plans'
       })
 
       setIsAssignMealPlanOpen(false)
@@ -498,14 +482,6 @@ const ClientDetails: React.FC = () => {
           content: `✅ Seu treino agendado para ${dateStr} foi confirmado!`,
           message_type: 'text'
         })
-
-        await supabase.from('notifications').insert({
-          user_id: id,
-          title: 'Treino Confirmado',
-          message: `Seu treino para ${dateStr} foi confirmado por ${user.user_metadata?.full_name || 'seu treinador'}.`,
-          type: 'success',
-          link: '/app/agenda'
-        })
       }
 
       // Force refresh
@@ -539,14 +515,6 @@ const ClientDetails: React.FC = () => {
           receiver_id: id,
           content: `❌ Sua solicitação de treino para ${dateStr} foi rejeitada. Motivo: ${rejectionReason}`,
           message_type: 'text'
-        })
-
-        await supabase.from('notifications').insert({
-          user_id: id,
-          title: 'Solicitação Rejeitada',
-          message: `Sua solicitação para ${dateStr} foi rejeitada.`,
-          type: 'error',
-          link: '/app/agenda'
         })
       }
 
@@ -621,14 +589,6 @@ const ClientDetails: React.FC = () => {
           receiver_id: id,
           content: `⚠️ O agendamento para ${dateStr} foi cancelado. Motivo: ${cancellationReason}`,
           message_type: 'text'
-        })
-
-        await supabase.from('notifications').insert({
-          user_id: id,
-          title: 'Agendamento Cancelado',
-          message: `O agendamento para ${dateStr} foi cancelado pelo profissional.`,
-          type: 'warning',
-          link: '/app/agenda'
         })
       }
 
