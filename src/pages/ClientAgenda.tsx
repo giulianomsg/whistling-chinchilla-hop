@@ -258,7 +258,10 @@ const ClientAgenda: React.FC = () => {
             setScheduledWorkouts(prev => prev.filter(s => s.id !== selectedScheduleId))
             setIsCancelDialogOpen(false)
             setCancellationReason('')
-        } catch (e) { toast.error('Erro ao cancelar') }
+        } catch (e) {
+            console.error(e)
+            toast.error('Erro ao cancelar')
+        }
     }
 
     const handleApproveSchedule = async (scheduleId: string) => {
@@ -492,6 +495,24 @@ const ClientAgenda: React.FC = () => {
                                                             selectedAgendaDetails.status === 'cancelled' ? 'Cancelado' : selectedAgendaDetails.status}
                                                 </Badge>
                                             </div>
+                                            {selectedAgendaDetails.created_at && (
+                                                <div className="text-xs text-muted-foreground pt-1 border-t mt-2">
+                                                    Solicitado em: {format(new Date(selectedAgendaDetails.created_at), "dd/MM/yyyy 'às' HH:mm")}
+                                                    {selectedAgendaDetails.created_by === user?.id && " (Por você)"}
+                                                </div>
+                                            )}
+                                            {selectedAgendaDetails.confirmed_by && selectedAgendaDetails.confirmed_at && (
+                                                <div className="text-xs text-blue-600 dark:text-blue-400">
+                                                    Confirmado em: {format(new Date(selectedAgendaDetails.confirmed_at), "dd/MM/yyyy 'às' HH:mm")}
+                                                    {selectedAgendaDetails.confirmed_by === user?.id && " (Por você)"}
+                                                </div>
+                                            )}
+                                            {selectedAgendaDetails.cancelled_by && selectedAgendaDetails.cancelled_at && (
+                                                <div className="text-xs text-red-600 dark:text-red-400">
+                                                    Cancelado em: {format(new Date(selectedAgendaDetails.cancelled_at), "dd/MM/yyyy 'às' HH:mm")}
+                                                    {selectedAgendaDetails.cancelled_by === user?.id && " (Por você)"}
+                                                </div>
+                                            )}
                                             {selectedAgendaDetails.cancellation_reason && (
                                                 <div className="space-y-1">
                                                     <div className="text-xs text-red-500 font-medium">Motivo do Cancelamento</div>

@@ -440,7 +440,11 @@ const ClientDetails: React.FC = () => {
   // --- Agenda Handlers ---
   const handleApproveSchedule = async (scheduleId: string) => {
     try {
-      const { error } = await supabase.from('scheduled_workouts').update({ status: 'confirmed' }).eq('id', scheduleId)
+      const { error } = await supabase.from('scheduled_workouts').update({
+        status: 'confirmed',
+        confirmed_by: user!.id,
+        confirmed_at: new Date().toISOString()
+      }).eq('id', scheduleId)
       if (error) throw error
       showSuccess('Treino confirmado!')
       // Force refresh
@@ -517,7 +521,12 @@ const ClientDetails: React.FC = () => {
   const handleCancelWithReason = async () => {
     if (!cancellationReason.trim()) { showError('Informe o motivo'); return; }
     try {
-      const { error } = await supabase.from('scheduled_workouts').update({ status: 'cancelled', cancellation_reason: cancellationReason }).eq('id', selectedScheduleId)
+      const { error } = await supabase.from('scheduled_workouts').update({
+        status: 'cancelled',
+        cancellation_reason: cancellationReason,
+        cancelled_by: user!.id,
+        cancelled_at: new Date().toISOString()
+      }).eq('id', selectedScheduleId)
       if (error) throw error
       showSuccess('Agendamento cancelado.')
       // Refresh logic
@@ -1399,6 +1408,24 @@ const ClientDetails: React.FC = () => {
                         selectedAgendaDetails.status === 'cancelled' ? 'Cancelado' : selectedAgendaDetails.status}
                   </Badge>
                 </div>
+                {selectedAgendaDetails.created_at && (
+                  <div className="text-xs text-muted-foreground pt-1 border-t mt-2">
+                    Solicitado em: {format(new Date(selectedAgendaDetails.created_at), "dd/MM/yyyy 'às' HH:mm")}
+                    {selectedAgendaDetails.created_by === user?.id && " (Por você)"}
+                  </div>
+                )}
+                {selectedAgendaDetails.confirmed_by && selectedAgendaDetails.confirmed_at && (
+                  <div className="text-xs text-blue-600 dark:text-blue-400">
+                    Confirmado em: {format(new Date(selectedAgendaDetails.confirmed_at), "dd/MM/yyyy 'às' HH:mm")}
+                    {selectedAgendaDetails.confirmed_by === user?.id && " (Por você)"}
+                  </div>
+                )}
+                {selectedAgendaDetails.cancelled_by && selectedAgendaDetails.cancelled_at && (
+                  <div className="text-xs text-red-600 dark:text-red-400">
+                    Cancelado em: {format(new Date(selectedAgendaDetails.cancelled_at), "dd/MM/yyyy 'às' HH:mm")}
+                    {selectedAgendaDetails.cancelled_by === user?.id && " (Por você)"}
+                  </div>
+                )}
                 {selectedAgendaDetails.cancellation_reason && (
                   <div className="space-y-1">
                     <div className="text-xs text-red-500 font-medium">Motivo do Cancelamento</div>
