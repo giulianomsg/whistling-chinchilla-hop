@@ -15,7 +15,8 @@ import {
   User,
   MoreVertical,
   Settings,
-  Calendar
+  Calendar,
+  ShieldCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -48,7 +49,7 @@ const DashboardLayout: React.FC = () => {
       { label: 'Chat', icon: MessageSquare, path: '/app/chat' },
     ]
 
-    if (profile?.role === 'professional' || profile?.role === 'admin') {
+    if (profile?.role === 'professional') {
       return [
         ...commonItems,
         { label: 'Meus Alunos', icon: Users, path: '/app/clients' },
@@ -57,6 +58,19 @@ const DashboardLayout: React.FC = () => {
         { label: 'Biblioteca de Exercícios', icon: BookOpen, path: '/app/library' },
         { label: 'Biblioteca de Alimentos', icon: Utensils, path: '/app/foods' },
         { label: 'Agenda Global', icon: Calendar, path: '/app/agenda/global' },
+      ]
+    }
+
+    if (profile?.role === 'admin') {
+      return [
+        ...commonItems,
+        { label: 'Meus Alunos', icon: Users, path: '/app/clients' },
+        { label: 'Planejador de Treinos', icon: Dumbbell, path: '/app/planner' },
+        { label: 'Planejador de Dietas', icon: Utensils, path: '/app/meal-planner' },
+        { label: 'Biblioteca de Exercícios', icon: BookOpen, path: '/app/library' },
+        { label: 'Biblioteca de Alimentos', icon: Utensils, path: '/app/foods' },
+        { label: 'Agenda Global', icon: Calendar, path: '/app/agenda/global' },
+        { label: 'Gestão de Usuários', icon: ShieldCheck, path: '/app/admin/users' },
       ]
     }
 

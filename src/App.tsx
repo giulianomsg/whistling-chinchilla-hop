@@ -30,6 +30,7 @@ const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página Agenda
 const ClientProfessionals = lazy(() => import("./pages/ClientProfessionals")); // Nova Página Meus Profissionais
 const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // Nova Página Agenda Global
+const AdminUsers = lazy(() => import("./pages/AdminUsers")); // Nova Página Admin Users
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
@@ -106,6 +107,17 @@ const AppRoutes: React.FC = () => {
             <Suspense fallback={<PageLoader />}>
               <PublicProfile />
             </Suspense>
+          }
+        />
+
+        <Route
+          path="admin/users"
+          element={
+            profile?.role === 'admin' ?
+              <Suspense fallback={<PageLoader />}>
+                <AdminUsers />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
           }
         />
 

@@ -20,7 +20,7 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
+  signUp: (email: string, password: string, fullName: string, role?: 'client' | 'professional') => Promise<{ error: any }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -39,11 +39,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error }
   }
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string, role: 'client' | 'professional' = 'client') => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, role: 'client' } }
+      options: { data: { full_name: fullName, role } }
     })
     return { error }
   }
@@ -55,14 +55,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Buscar perfil de forma simples e assíncrona
   const refreshProfile = async () => {
     if (!user) return
-    
+
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
-      
+
       if (data && !error) {
         setProfile(data)
       }
@@ -74,15 +74,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // useEffect principal - simplificado ao máximo
   useEffect(() => {
     console.log('🚀 [AUTH] AuthProvider montado')
-    
+
     // Listener de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log(`🔄 [AUTH] Evento: ${event}`, 'User:', session?.user?.email)
-        
+
         setSession(session)
         setUser(session?.user ?? null)
-        
+
         // Se tem usuário, buscar perfil de forma assíncrona
         if (session?.user) {
           // Criar perfil básico a partir do usuário auth
@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           }
-          
+
           // 🔍 DEBUGGING DETALHADO
           console.log('🔍 [AUTH] Dados do usuário auth:', {
             email: session.user.email,
@@ -104,15 +104,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             metadata_full_name: session.user.user_metadata?.full_name,
             basic_profile_role: basicProfile.role
           })
-          
+
           setProfile(basicProfile)
-          
+
           // Tentar buscar perfil completo em background
           refreshProfile()
         } else {
           setProfile(null)
         }
-        
+
         setLoading(false)
       }
     )

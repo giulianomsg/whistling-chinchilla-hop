@@ -8,21 +8,23 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, Lock, User } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { showSuccess, showError } from '@/utils/toast'
+import { Switch } from "@/components/ui/switch"
 
 export const Auth: React.FC = () => {
   const { signIn, signUp } = useAuth()
-  
+
   // Estados para Login
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [loginLoading, setLoginLoading] = useState(false)
-  
+
   // Estados para Cadastro
   const [signupEmail, setSignupEmail] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
   const [signupFullName, setSignupFullName] = useState('')
   const [signupLoading, setSignupLoading] = useState(false)
-  
+  const [isProfessional, setIsProfessional] = useState(false)
+
   // Estados de feedback
   const [loginError, setLoginError] = useState('')
   const [signupError, setSignupError] = useState('')
@@ -35,7 +37,7 @@ export const Auth: React.FC = () => {
 
     try {
       const { error } = await signIn(loginEmail, loginPassword)
-      
+
       if (error) {
         setLoginError(error.message)
         showError('Erro no login: ' + error.message)
@@ -72,8 +74,9 @@ export const Auth: React.FC = () => {
     }
 
     try {
-      const { error } = await signUp(signupEmail, signupPassword, signupFullName)
-      
+      const role = isProfessional ? 'professional' : 'client'
+      const { error } = await signUp(signupEmail, signupPassword, signupFullName, role)
+
       if (error) {
         setSignupError(error.message)
         showError('Erro no cadastro: ' + error.message)
@@ -128,7 +131,7 @@ export const Auth: React.FC = () => {
                       <AlertDescription>{loginError}</AlertDescription>
                     </Alert>
                   )}
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="login-email">Email</Label>
                     <div className="relative">
@@ -163,9 +166,9 @@ export const Auth: React.FC = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={loginLoading}
                   >
                     {loginLoading ? (
@@ -188,7 +191,7 @@ export const Auth: React.FC = () => {
                       <AlertDescription>{signupError}</AlertDescription>
                     </Alert>
                   )}
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="signup-name">Nome Completo</Label>
                     <div className="relative">
@@ -241,9 +244,14 @@ export const Auth: React.FC = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <div className="flex items-center space-x-2 py-4">
+                    <Switch id="professional-mode" checked={isProfessional} onCheckedChange={setIsProfessional} />
+                    <Label htmlFor="professional-mode">Sou um Profissional</Label>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={signupLoading}
                   >
                     {signupLoading ? (
