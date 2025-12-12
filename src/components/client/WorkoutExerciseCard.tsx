@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, Circle, Play, Info, Image as ImageIcon, Video as VideoIcon, ChevronDown, ChevronUp } from 'lucide-react'
+import { CheckCircle, Circle, Play, Info, Image as ImageIcon, Video as VideoIcon, ChevronDown, ChevronUp, PlayCircle } from 'lucide-react'
 
 interface WorkoutExerciseCardProps {
     exercise: any
     executionLogs: any[]
     isSessionActive: boolean
+    activeTime: number
+    isTimerRunning: boolean
     onLogClick: (exercise: any) => void
+    onToggleTimer: (exerciseId: string) => void
 }
 
 const getVideoId = (url: string) => {
@@ -28,7 +31,11 @@ const getVideoId = (url: string) => {
 export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     exercise: we,
     executionLogs,
-    onLogClick
+    activeTime,
+    isTimerRunning,
+    isSessionActive,
+    onLogClick,
+    onToggleTimer
 }) => {
     const [showGif, setShowGif] = useState(false)
     const [showVideo, setShowVideo] = useState(false)
@@ -58,13 +65,36 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         </div>
                     </div>
 
-                    <Button
-                        size="icon"
-                        onClick={() => onLogClick(we)}
-                        className={`h-10 w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
-                    >
-                        {isCompleted ? <CheckCircle className="h-6 w-6" /> : <Circle className="h-6 w-6" />}
-                    </Button>
+                    <div className="flex flex-col items-center gap-2">
+                        {/* Timer Button */}
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
+                            className={`h-9 px-2 gap-1.5 transition-all text-xs border-dashed ${isTimerRunning
+                                ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
+                                : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
+                            disabled={!isSessionActive}
+                        >
+                            {isTimerRunning ? <PlayCircle className="h-4 w-4 animate-spin" /> : <PlayCircle className="h-4 w-4" />}
+                            <span className="font-mono font-bold w-[40px] text-center">
+                                {(() => {
+                                    const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
+                                    const s = (activeTime % 60).toString().padStart(2, '0')
+                                    return `${m}:${s}`
+                                })()}
+                            </span>
+                        </Button>
+
+                        {/* Check Button */}
+                        <Button
+                            size="icon"
+                            onClick={() => onLogClick(we)}
+                            className={`h-10 w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
+                        >
+                            {isCompleted ? <CheckCircle className="h-6 w-6" /> : <Circle className="h-6 w-6" />}
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Toolbar */}

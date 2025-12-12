@@ -30,6 +30,8 @@ const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página Agenda
 const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // Nova Página Agenda Global
 
+const PublicProfile = lazy(() => import("./pages/PublicProfile"));
+
 const queryClient = new QueryClient();
 
 // Componente de Loading para lazy loading
@@ -92,6 +94,16 @@ const AppRoutes: React.FC = () => {
           element={
             <Suspense fallback={<PageLoader />}>
               <ProfileSettings />
+            </Suspense>
+          }
+        />
+
+        {/* Perfil Público (Reputação) */}
+        <Route
+          path="profile/public/:id"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicProfile />
             </Suspense>
           }
         />

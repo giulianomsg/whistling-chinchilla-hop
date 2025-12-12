@@ -29,6 +29,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [loading, setLoading] = useState(true)
   const [openVideoId, setOpenVideoId] = useState<string | null>(null)
 
+  // Timer States
+  const [exerciseTimers, setExerciseTimers] = useState<Record<string, number>>({})
+  const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
+
   // Session States
   const [isSessionActive, setIsSessionActive] = useState(false)
   const [sessionStatus, setSessionStatus] = useState<'idle' | 'started' | 'paused' | 'completed'>('idle')
@@ -117,6 +121,35 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return () => clearInterval(interval)
   }, [sessionStatus])
 
+  // Active Exercise Timer Effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (activeTimerId && sessionStatus === 'started') {
+      interval = setInterval(() => {
+        setExerciseTimers(prev => ({
+          ...prev,
+          [activeTimerId]: (prev[activeTimerId] || 0) + 1
+        }))
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [activeTimerId, sessionStatus])
+
+  const handleToggleTimer = (exerciseId: string) => {
+    if (!isSessionActive || sessionStatus !== 'started') {
+      showError('Inicie o treino para cronometrar.')
+      return
+    }
+
+    if (activeTimerId === exerciseId) {
+      // Stop current
+      setActiveTimerId(null)
+    } else {
+      // Start new (switch)
+      setActiveTimerId(exerciseId)
+    }
+  }
+
   const handleSessionAction = async (action: 'start' | 'pause' | 'resume' | 'finish') => {
     setSessionLoading(true)
     try {
@@ -166,11 +199,20 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
         if (!fetchError && freshProfile) {
           // Fórmula:
-          // Tempo: 2 XP por minuto (max 180 XP = 90 min)
-          // Esforço: 15 XP por exercício registrado
-          // Bônus: 50 XP se registrou todos os exercícios planejados
+          // Tempo: 2 XP por minuto de TEMPO ATIVO (stopwatches) OU Tempo total se não houver stopwatches usados?
+          // User requested: "Utilizar o 'Tempo Total do Treino' calculado (agregado) como variável input"
 
-          const timeXP = Math.min(Math.floor(elapsedTime / 60) * 2, 180)
+          const totalActiveWorkTime = Object.values(exerciseTimers).reduce((a, b) => a + b, 0)
+
+          // Se o usuário usou os timers, usa a soma. Se não usou (zero), usa o tempo decorrido da sessão como fallback (ou 0?)
+          // "O timer deve contabilizar o tempo de execução... Calcular o Tempo Total... através da somatória"
+          // Let's use the sum of timers. If 0, maybe they didn't use the feature. But let's act strict or generous?
+          // Generous fallback: if aggregate is very low (< 1 min) but session was long, maybe use session time * 0.5 factor?
+          // Let's stick to the request: "Calculated 'Total Workout Time' by summing the individual times"
+
+          const effectiveTimeToCheck = totalActiveWorkTime > 60 ? totalActiveWorkTime : elapsedTime
+
+          const timeXP = Math.min(Math.floor(effectiveTimeToCheck / 60) * 2, 180)
           const workXP = executionLogs.length * 15
           const totalExercises = workoutExercises.length
           const bonusXP = (executionLogs.length >= totalExercises && totalExercises > 0) ? 50 : 0
@@ -201,7 +243,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           } else {
             console.error('Erro update XP:', updateError)
             setSessionStatus('completed'); setIsSessionActive(false)
-            setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
+            setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]); setExerciseTimers({}); setActiveTimerId(null) }, 3000)
           }
         }
       }
@@ -332,7 +374,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                       exercise={we}
                       executionLogs={executionLogs}
                       isSessionActive={isSessionActive && sessionStatus === 'started'}
+                      activeTime={exerciseTimers[we.id] || 0}
+                      isTimerRunning={activeTimerId === we.id}
                       onLogClick={handleExerciseClick}
+                      onToggleTimer={handleToggleTimer}
                     />
                   )
                 })}
