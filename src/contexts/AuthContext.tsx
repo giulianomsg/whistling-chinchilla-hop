@@ -49,7 +49,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+    } catch (error) {
+      console.error("Error signing out:", error)
+    } finally {
+      // Force local cleanup
+      setUser(null)
+      setProfile(null)
+      setSession(null)
+      localStorage.removeItem('sb-mhjvgxukttoalvwntmyp-auth-token') // Optional: Clear Supabase token if needed
+    }
   }
 
   // Buscar perfil de forma simples e assíncrona
