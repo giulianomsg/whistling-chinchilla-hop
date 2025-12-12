@@ -20,4 +20,5 @@ export interface Contact {
     last_message?: string
     last_message_time?: string
     unread_count?: number
+    is_client?: boolean
 }

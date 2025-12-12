@@ -31,6 +31,15 @@ const Chat: React.FC = () => {
 
       if (profile?.role === 'admin') {
         const { data } = await supabase.rpc('get_all_users')
+
+        // Fetch my linked clients to mark them
+        const { data: myClients } = await supabase.from('client_professionals')
+          .select('client_id')
+          .eq('professional_id', user.id)
+          .eq('status', 'active')
+
+        const myClientIds = new Set((myClients || []).map((c: any) => c.client_id))
+
         // Filter out self
         const allUsers = (data || []).filter((u: any) => u.id !== user.id)
         contactsData = allUsers.map((u: any) => ({
@@ -38,7 +47,8 @@ const Chat: React.FC = () => {
           full_name: u.full_name,
           avatar_url: u.avatar_url,
           role: u.role,
-          unread_count: 0
+          unread_count: 0,
+          is_client: myClientIds.has(u.id)
         }))
       } else if (profile?.role === 'client') {
         const { data } = await supabase.from('client_professionals').select(`professional:profiles!professional_id(*)`).eq('client_id', user.id).eq('status', 'active')

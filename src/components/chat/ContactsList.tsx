@@ -67,6 +67,7 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
                                             {contact.role === 'admin' && <Badge variant="destructive" className="h-4 px-1 text-[10px]">Admin</Badge>}
                                             {contact.role === 'professional' && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20">Prof</Badge>}
                                             {contact.role === 'client' && <Badge variant="outline" className="h-4 px-1 text-[10px] text-muted-foreground border-border">Aluno</Badge>}
+                                            {contact.is_client && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20">Meu Aluno</Badge>}
                                         </div>
                                         <span className="text-[10px] text-muted-foreground shrink-0">{formatSidebarDate(contact.last_message_time)}</span>
                                     </div>
