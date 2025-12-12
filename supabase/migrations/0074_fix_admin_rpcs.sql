@@ -56,7 +56,12 @@ BEGIN
     RAISE EXCEPTION 'Access denied';
   END IF;
 
-  -- Validate
+  -- Validate: Self-demotion check
+  IF target_user_id = auth.uid() AND new_role != 'admin' THEN
+    RAISE EXCEPTION 'You cannot remove your own admin privileges.';
+  END IF;
+
+  -- Validate Role
   IF new_role NOT IN ('client', 'professional', 'admin') THEN
     RAISE EXCEPTION 'Invalid role';
   END IF;

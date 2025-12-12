@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,6 +28,7 @@ interface UserData {
 }
 
 const AdminUsers: React.FC = () => {
+    const { user: currentUser } = useAuth()
     const [users, setUsers] = useState<UserData[]>([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
@@ -176,7 +178,7 @@ const AdminUsers: React.FC = () => {
                                                     variant="outline"
                                                     className="border-red-600/30 text-red-600 hover:bg-red-600/10"
                                                     onClick={() => handleUpdateRole(user.id, 'professional')}
-                                                    disabled={actionLoading === user.id}
+                                                    disabled={actionLoading === user.id || user.id === currentUser?.id}
                                                 >
                                                     {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCog className="h-3 w-3 mr-1" />}
                                                     Remover Admin
