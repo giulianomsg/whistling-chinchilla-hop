@@ -185,7 +185,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path="chat"
           element={
-            (profile?.role === 'professional' || profile?.role === 'client') ?
+            (profile?.role === 'professional' || profile?.role === 'client' || profile?.role === 'admin') ?
               <Suspense fallback={<PageLoader />}>
                 <Chat />
               </Suspense> :
