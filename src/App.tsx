@@ -28,6 +28,7 @@ const ClientDetails = lazy(() => import("./pages/ClientDetails"));
 const Chat = lazy(() => import("./pages/Chat"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página Agenda
+const ClientProfessionals = lazy(() => import("./pages/ClientProfessionals")); // Nova Página Meus Profissionais
 const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // Nova Página Agenda Global
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
@@ -229,6 +230,16 @@ const AppRoutes: React.FC = () => {
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientAgenda />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+        <Route
+          path="my-professionals"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ClientProfessionals />
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }

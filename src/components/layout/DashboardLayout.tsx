@@ -65,6 +65,7 @@ const DashboardLayout: React.FC = () => {
         ...commonItems,
         { label: 'Meu Treino', icon: Dumbbell, path: '/app/my-workout' },
         { label: 'Minha Dieta', icon: Utensils, path: '/app/my-meal-plan' },
+        { label: 'Meus Profissionais', icon: Users, path: '/app/my-professionals' },
         { label: 'Agenda', icon: Calendar, path: '/app/agenda' },
       ]
     }

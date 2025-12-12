@@ -23,6 +23,7 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Criador de Treinos (WorkoutPlanner)
 - [x] Criador de Dietas (MealPlanner)
 - [x] Gestão de Alunos (MyClients)
+- [x] Meus Profissionais (ClientProfessionals)
 - [x] Visualização de Treino do Cliente (ClientWorkout)
 - [x] Visualização de Dieta do Cliente (ClientMealPlan)
 - [x] Histórico de Treinos
@@ -91,12 +92,12 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 - [x] Corrigir duplicidade do item "Biblioteca de Exercícios" no menu lateral do profissional.
 - [x] Corrigir erro ao atribuir quando o agendamento e feito pelo profissional, segue abaixo o erro: 
 - [x] Corrigir dados de WhatsApp e Telegram do perfil do profissional, eles não estão sendo salvos e nem carregados (já inseri os campos no banco de dados manualmente).
-- [ ]1 - Desenvolva a estrutura de dados e a interface para o 'Perfil Público do Profissional'. O perfil deve exibir dados cadastrais, bio, certificações e, principalmente, um Sistema de Reputação Multicritério.
+- [x] 1 - Desenvolva a estrutura de dados e a interface para o 'Perfil Público do Profissional'. O perfil deve exibir dados cadastrais, bio, certificações e, principalmente, um Sistema de Reputação Multicritério.
 Requisitos do Sistema de Reputação:
 1.1 - Avaliação Segmentada: O cliente não deve dar apenas uma nota geral. Ele deve avaliar competências específicas (ex: Pontualidade, Didática, Conhecimento Técnico, Acompanhamento).
 1.2 - Cálculo de Expertise: A reputação final deve ser uma média ponderada dessas competências, permitindo filtrar os profissionais melhores ranqueados em áreas específicas (ex: um especialista em Hipertrofia com nota alta nesse quesito).
 1.3 - Visualização: Exibir essas métricas de forma gráfica (ex: barras de progresso ou gráfico de radar) no perfil, gerando confiança baseada em dados granulares.
-- [ ] 2 - Implemente uma funcionalidade de cronometragem ativa para os cards de exercício durante a execução do treino. O sistema deve atender aos seguintes requisitos:
+- [x] 2 - Implemente uma funcionalidade de cronometragem ativa para os cards de exercício durante a execução do treino. O sistema deve atender aos seguintes requisitos:
 2.1 - Interface (UI): Adicionar um botão de alternância (Play/Stop) em cada card de exercício.
 2.2 - Gerenciamento de Estado: O cronômetro deve registrar a duração ativa de cada exercício individualmente.
 2.3 - Lógica de Agregação: Calcular o 'Tempo Total do Treino' através da somatória dos tempos individuais de todos os exercícios finalizados.
