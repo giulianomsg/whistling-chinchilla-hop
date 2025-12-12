@@ -61,7 +61,15 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
                                     {onlineUsers.has(contact.id) && <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background shadow-[0_0_8px_#22c55e]" />}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between mb-1"><h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-foreground' : 'text-foreground/80'}`}>{contact.full_name || contact.email}</h3><span className="text-[10px] text-muted-foreground">{formatSidebarDate(contact.last_message_time)}</span></div>
+                                    <div className="flex justify-between mb-1">
+                                        <div className="flex items-center gap-2 max-w-[70%]">
+                                            <h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-foreground' : 'text-foreground/80'}`}>{contact.full_name || contact.email}</h3>
+                                            {contact.role === 'admin' && <Badge variant="destructive" className="h-4 px-1 text-[10px]">Admin</Badge>}
+                                            {contact.role === 'professional' && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20">Prof</Badge>}
+                                            {contact.role === 'client' && <Badge variant="outline" className="h-4 px-1 text-[10px] text-muted-foreground border-border">Aluno</Badge>}
+                                        </div>
+                                        <span className="text-[10px] text-muted-foreground shrink-0">{formatSidebarDate(contact.last_message_time)}</span>
+                                    </div>
                                     <div className="flex justify-between"><p className="text-xs text-muted-foreground truncate max-w-[140px]">{contact.last_message || 'Iniciar conversa...'}</p>{contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-primary-foreground font-bold border-none">{contact.unread_count}</Badge> : null}</div>
                                 </div>
                             </div>

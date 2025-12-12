@@ -118,7 +118,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contact, messages, loading, onSend,
                 <div className="flex items-center gap-3">
                     {isMobile && <Button variant="ghost" size="icon" onClick={onBack}><ArrowLeft className="h-5 w-5 text-muted-foreground" /></Button>}
                     <Avatar className="border border-border"><AvatarImage src={contact.avatar_url || ''} /><AvatarFallback className="bg-muted text-primary font-bold">{getInitials(contact.full_name, contact.email)}</AvatarFallback></Avatar>
-                    <div><h3 className="font-semibold text-foreground">{contact.full_name || contact.email}</h3><div className="flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${online ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`} /><p className="text-xs text-muted-foreground">{online ? 'Online' : 'Offline'}</p></div></div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground">{contact.full_name || contact.email}</h3>
+                            {contact.role === 'admin' && <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">Administrador</Badge>}
+                            {contact.role === 'professional' && <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-blue-500/10 text-blue-500 border-blue-500/20">Profissional</Badge>}
+                            {contact.role === 'client' && <Badge variant="outline" className="h-5 px-1.5 text-[10px] text-muted-foreground">Aluno</Badge>}
+                        </div>
+                        <div className="flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${online ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`} /><p className="text-xs text-muted-foreground">{online ? 'Online' : 'Offline'}</p></div>
+                    </div>
                 </div>
                 <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => handleCall(false)} className="text-muted-foreground hover:text-primary hover:bg-accent"><Phone className="h-5 w-5" /></Button>
