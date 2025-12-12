@@ -8,6 +8,7 @@ RETURNS TABLE (
   id UUID,
   email TEXT,
   full_name TEXT,
+  avatar_url TEXT,
   role TEXT,
   created_at TIMESTAMPTZ,
   last_sign_in_at TIMESTAMPTZ
@@ -31,6 +32,7 @@ BEGIN
     p.id,
     au.email::TEXT, -- Cast to ensure type matching
     p.full_name,
+    p.avatar_url,
     p.role::TEXT,
     p.created_at,
     au.last_sign_in_at

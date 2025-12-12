@@ -29,7 +29,18 @@ const Chat: React.FC = () => {
       setLoading(true)
       let contactsData: Contact[] = []
 
-      if (profile?.role === 'client') {
+      if (profile?.role === 'admin') {
+        const { data } = await supabase.rpc('get_all_users')
+        // Filter out self
+        const allUsers = (data || []).filter((u: any) => u.id !== user.id)
+        contactsData = allUsers.map((u: any) => ({
+          id: u.id,
+          full_name: u.full_name,
+          avatar_url: u.avatar_url,
+          role: u.role,
+          unread_count: 0
+        }))
+      } else if (profile?.role === 'client') {
         const { data } = await supabase.from('client_professionals').select(`professional:profiles!professional_id(*)`).eq('client_id', user.id).eq('status', 'active')
         contactsData = (data || []).map((i: any) => ({ ...i.professional, unread_count: 0 }))
       } else {
