@@ -33,14 +33,16 @@ const Chat: React.FC = () => {
         const { data } = await supabase.rpc('get_all_users')
 
         // Fetch my linked clients to mark them
-        const { data: myClients } = await supabase.from('client_professionals')
-          .select('client_id')
-          .eq('professional_id', user.id)
-          .eq('status', 'active')
+        const { data: myClients } = await supabase.rpc('get_linked_clients', { prof_id: user.id })
+
 
         const myClientIds = new Set((myClients || []).map((c: any) => c.client_id))
 
         // Filter out self
+        console.log('Admin Debug: User ID', user.id)
+        console.log('Admin Debug: myClients query result', myClients)
+        console.log('Admin Debug: myClientIds size', myClientIds.size)
+
         const allUsers = (data || []).filter((u: any) => u.id !== user.id)
         contactsData = allUsers.map((u: any) => ({
           id: u.id,
