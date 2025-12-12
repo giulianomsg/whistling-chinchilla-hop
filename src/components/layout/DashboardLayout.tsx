@@ -133,7 +133,9 @@ const DashboardLayout: React.FC = () => {
               </Avatar>
               <div className="text-left overflow-hidden">
                 <p className="text-sm font-medium text-foreground truncate w-28">{profile?.full_name || 'Usuário'}</p>
-                <p className="text-xs text-muted-foreground truncate capitalize">{profile?.role === 'professional' ? 'Profissional' : 'Aluno'}</p>
+                <p className="text-xs text-muted-foreground truncate capitalize">
+                  {profile?.role === 'admin' ? 'Administrador' : profile?.role === 'professional' ? 'Profissional' : 'Aluno'}
+                </p>
               </div>
             </div>
             <MoreVertical className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
