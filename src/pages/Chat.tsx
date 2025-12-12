@@ -68,7 +68,10 @@ const Chat: React.FC = () => {
       }))
 
       setContacts(enriched.sort((a, b) => new Date(b.last_message_time || 0).getTime() - new Date(a.last_message_time || 0).getTime()))
-    } catch (e) { console.error(e) } finally { setLoading(false) }
+    } catch (e) {
+      console.error('❌ [CHAT] Error fetching contacts:', e)
+      showError('Erro ao carregar contatos')
+    } finally { setLoading(false) }
   }
 
   const fetchMessages = async (contactId: string) => {
@@ -168,7 +171,7 @@ const Chat: React.FC = () => {
     return () => { if (channelRef.current) supabase.removeChannel(channelRef.current) }
   }, [user, selectedContact])
 
-  useEffect(() => { fetchContacts() }, [user])
+  useEffect(() => { fetchContacts() }, [user, profile])
 
   return (
     <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-border shadow-2xl">
