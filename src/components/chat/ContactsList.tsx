@@ -39,6 +39,32 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
         c.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
+    const onlineClients = filtered.filter(c => c.is_client && onlineUsers.has(c.id))
+    const offlineClients = filtered.filter(c => c.is_client && !onlineUsers.has(c.id))
+    const others = filtered.filter(c => !c.is_client)
+
+    const renderContact = (contact: Contact) => (
+        <div key={contact.id} onClick={() => onSelect(contact)} className={`flex items-center gap-3 p-4 cursor-pointer border-b border-border transition-colors ${selectedContact?.id === contact.id ? 'bg-primary/10 border-l-4 border-l-primary' : 'hover:bg-accent'}`}>
+            <div className="relative">
+                <Avatar className="border border-border"><AvatarImage src={contact.avatar_url || ''} /><AvatarFallback className="bg-muted text-primary font-bold">{getInitials(contact.full_name, contact.email)}</AvatarFallback></Avatar>
+                {onlineUsers.has(contact.id) && <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background shadow-[0_0_8px_#22c55e]" />}
+            </div>
+            <div className="flex-1 min-w-0">
+                <div className="flex justify-between mb-1">
+                    <div className="flex items-center gap-2 max-w-[70%]">
+                        <h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-foreground' : 'text-foreground/80'}`}>{contact.full_name || contact.email}</h3>
+                        {contact.role === 'admin' && <Badge variant="destructive" className="h-4 px-1 text-[10px]">Admin</Badge>}
+                        {contact.role === 'professional' && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20">Prof</Badge>}
+                        {contact.role === 'client' && <Badge variant="outline" className="h-4 px-1 text-[10px] text-muted-foreground border-border">Aluno</Badge>}
+                        {contact.is_client && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20">Meu Aluno</Badge>}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground shrink-0">{formatSidebarDate(contact.last_message_time)}</span>
+                </div>
+                <div className="flex justify-between"><p className="text-xs text-muted-foreground truncate max-w-[140px]">{contact.last_message || 'Iniciar conversa...'}</p>{contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-primary-foreground font-bold border-none">{contact.unread_count}</Badge> : null}</div>
+            </div>
+        </div>
+    )
+
     return (
         <div className="w-full md:w-80 bg-card/80 backdrop-blur-xl border-r border-border flex flex-col h-full">
             <div className="p-4 border-b border-border">
@@ -54,27 +80,34 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {loading ? <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> :
                     filtered.length === 0 ? <div className="text-center py-8 text-muted-foreground">Nenhum contato.</div> :
-                        filtered.map(contact => (
-                            <div key={contact.id} onClick={() => onSelect(contact)} className={`flex items-center gap-3 p-4 cursor-pointer border-b border-border transition-colors ${selectedContact?.id === contact.id ? 'bg-primary/10 border-l-4 border-l-primary' : 'hover:bg-accent'}`}>
-                                <div className="relative">
-                                    <Avatar className="border border-border"><AvatarImage src={contact.avatar_url || ''} /><AvatarFallback className="bg-muted text-primary font-bold">{getInitials(contact.full_name, contact.email)}</AvatarFallback></Avatar>
-                                    {onlineUsers.has(contact.id) && <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background shadow-[0_0_8px_#22c55e]" />}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between mb-1">
-                                        <div className="flex items-center gap-2 max-w-[70%]">
-                                            <h3 className={`font-medium truncate ${selectedContact?.id === contact.id ? 'text-foreground' : 'text-foreground/80'}`}>{contact.full_name || contact.email}</h3>
-                                            {contact.role === 'admin' && <Badge variant="destructive" className="h-4 px-1 text-[10px]">Admin</Badge>}
-                                            {contact.role === 'professional' && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20">Prof</Badge>}
-                                            {contact.role === 'client' && <Badge variant="outline" className="h-4 px-1 text-[10px] text-muted-foreground border-border">Aluno</Badge>}
-                                            {contact.is_client && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20">Meu Aluno</Badge>}
-                                        </div>
-                                        <span className="text-[10px] text-muted-foreground shrink-0">{formatSidebarDate(contact.last_message_time)}</span>
+                        <>
+                            {onlineClients.length > 0 && (
+                                <>
+                                    <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
+                                        Meus Alunos Online ({onlineClients.length})
                                     </div>
-                                    <div className="flex justify-between"><p className="text-xs text-muted-foreground truncate max-w-[140px]">{contact.last_message || 'Iniciar conversa...'}</p>{contact.unread_count ? <Badge className="h-5 px-1.5 bg-primary text-primary-foreground font-bold border-none">{contact.unread_count}</Badge> : null}</div>
-                                </div>
-                            </div>
-                        ))
+                                    {onlineClients.map(renderContact)}
+                                </>
+                            )}
+
+                            {offlineClients.length > 0 && (
+                                <>
+                                    <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
+                                        Meus Alunos Offline ({offlineClients.length})
+                                    </div>
+                                    {offlineClients.map(renderContact)}
+                                </>
+                            )}
+
+                            {others.length > 0 && (
+                                <>
+                                    <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
+                                        Outros Contatos ({others.length})
+                                    </div>
+                                    {others.map(renderContact)}
+                                </>
+                            )}
+                        </>
                 }
             </div>
         </div>

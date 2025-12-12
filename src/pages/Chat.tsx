@@ -33,7 +33,10 @@ const Chat: React.FC = () => {
         const { data } = await supabase.rpc('get_all_users')
 
         // Fetch my linked clients to mark them
-        const { data: myClients } = await supabase.rpc('get_linked_clients', { prof_id: user.id })
+        const { data: myClients, error: rpcError } = await supabase.rpc('get_linked_clients', { prof_id: user.id })
+
+        if (rpcError) console.error('Error fetching linked clients:', rpcError)
+        else console.log('Linked clients fetched:', myClients)
 
 
         const myClientIds = new Set((myClients || []).map((c: any) => c.client_id))
