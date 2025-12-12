@@ -50,7 +50,7 @@ const AdminUsers: React.FC = () => {
         fetchUsers()
     }, [])
 
-    const handleUpdateRole = async (userId: string, newRole: 'client' | 'professional') => {
+    const handleUpdateRole = async (userId: string, newRole: 'client' | 'professional' | 'admin') => {
         try {
             setActionLoading(userId)
             const { error } = await supabase.rpc('admin_update_user_role', {
@@ -59,7 +59,7 @@ const AdminUsers: React.FC = () => {
             })
             if (error) throw error
 
-            showSuccess(`Usuário atualizado para ${newRole === 'professional' ? 'Profissional' : 'Aluno'}!`)
+            showSuccess(`Usuário atualizado para ${newRole === 'admin' ? 'Administrador' : newRole === 'professional' ? 'Profissional' : 'Aluno'}!`)
             fetchUsers()
         } catch (error: any) {
             console.error(error)
@@ -124,33 +124,65 @@ const AdminUsers: React.FC = () => {
                                         {format(new Date(user.created_at), 'dd/MM/yyyy')}
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        {user.role !== 'admin' && (
-                                            <div className="flex justify-end gap-2">
-                                                {user.role === 'client' ? (
+                                        <div className="flex justify-end gap-2">
+                                            {/* Client -> Professional */}
+                                            {user.role === 'client' && (
+                                                <>
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
-                                                        className="border-green-600/30 text-green-600 hover:bg-green-600/10"
+                                                        className="border-blue-500/30 text-blue-500 hover:bg-blue-500/10"
                                                         onClick={() => handleUpdateRole(user.id, 'professional')}
                                                         disabled={actionLoading === user.id}
                                                     >
                                                         {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCog className="h-3 w-3 mr-1" />}
-                                                        Promover a Profissional
+                                                        Virar Profissional
                                                     </Button>
-                                                ) : (
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="border-yellow-600/30 text-yellow-600 hover:bg-yellow-600/10"
-                                                        onClick={() => handleUpdateRole(user.id, 'client')}
-                                                        disabled={actionLoading === user.id}
-                                                    >
-                                                        {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCog className="h-3 w-3 mr-1" />}
-                                                        Reverter para Aluno
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        )}
+                                                </>
+                                            )}
+
+                                            {/* Professional -> Client */}
+                                            {user.role === 'professional' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-yellow-600/30 text-yellow-600 hover:bg-yellow-600/10"
+                                                    onClick={() => handleUpdateRole(user.id, 'client')}
+                                                    disabled={actionLoading === user.id}
+                                                >
+                                                    {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCog className="h-3 w-3 mr-1" />}
+                                                    Voltar para Aluno
+                                                </Button>
+                                            )}
+
+                                            {/* Any non-admin -> Admin */}
+                                            {user.role !== 'admin' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-purple-600/30 text-purple-600 hover:bg-purple-600/10"
+                                                    onClick={() => handleUpdateRole(user.id, 'admin')}
+                                                    disabled={actionLoading === user.id}
+                                                >
+                                                    {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <ShieldCheck className="h-3 w-3 mr-1" />}
+                                                    Virar Admin
+                                                </Button>
+                                            )}
+
+                                            {/* Admin -> Professional (Demote) */}
+                                            {user.role === 'admin' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-red-600/30 text-red-600 hover:bg-red-600/10"
+                                                    onClick={() => handleUpdateRole(user.id, 'professional')}
+                                                    disabled={actionLoading === user.id}
+                                                >
+                                                    {actionLoading === user.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCog className="h-3 w-3 mr-1" />}
+                                                    Remover Admin
+                                                </Button>
+                                            )}
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}

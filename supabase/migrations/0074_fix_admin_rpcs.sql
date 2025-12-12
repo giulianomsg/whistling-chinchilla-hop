@@ -63,7 +63,7 @@ BEGIN
 
   -- Update Profile
   UPDATE public.profiles
-  SET role = new_role::user_role
+  SET role = new_role
   WHERE id = target_user_id;
 
   -- Update Auth Metadata
