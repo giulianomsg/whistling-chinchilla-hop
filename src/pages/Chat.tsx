@@ -44,6 +44,7 @@ const Chat: React.FC = () => {
         const { data } = await supabase.from('client_professionals').select(`professional:profiles!professional_id(*)`).eq('client_id', user.id).eq('status', 'active')
         contactsData = (data || []).map((i: any) => ({ ...i.professional, unread_count: 0 }))
       } else {
+        // ... existing logic for professionals ...
         const { data: clients } = await supabase.from('client_professionals').select(`client:profiles!client_id(*)`).eq('professional_id', user.id).eq('status', 'active')
         const clientContacts = (clients || []).map((i: any) => ({ ...i.client, unread_count: 0 }))
         const { data: msgs } = await supabase.from('chat_messages').select('sender_id, receiver_id').or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
@@ -55,6 +56,20 @@ const Chat: React.FC = () => {
         clientContacts.forEach(c => uniqueMap.set(c.id, c))
         otherProfiles?.forEach(p => { if (!uniqueMap.has(p.id)) uniqueMap.set(p.id, { ...p, unread_count: 0 }) })
         contactsData = Array.from(uniqueMap.values())
+      }
+
+      // FETCH ADMINS FOR EVERYONE (EXCEPT ADMINS THEMSELVES who already have them)
+      if (profile?.role !== 'admin') {
+        const { data: admins } = await supabase.from('profiles').select('*').eq('role', 'admin')
+        if (admins) {
+          // Avoid duplicates if admin is already in the list (e.g. existing chat)
+          const existingIds = new Set(contactsData.map(c => c.id))
+          admins.forEach((admin: any) => {
+            if (!existingIds.has(admin.id) && admin.id !== user.id) {
+              contactsData.push({ ...admin, unread_count: 0 })
+            }
+          })
+        }
       }
 
       const enriched = await Promise.all(contactsData.map(async (c) => {
