@@ -61,7 +61,7 @@ const Chat: React.FC = () => {
       } else {
         // ... existing logic for professionals ...
         const { data: clients } = await supabase.from('client_professionals').select(`client:profiles!client_id(*)`).eq('professional_id', user.id).eq('status', 'active')
-        const clientContacts = (clients || []).map((i: any) => ({ ...i.client, unread_count: 0 }))
+        const clientContacts = (clients || []).map((i: any) => ({ ...i.client, unread_count: 0, is_client: true }))
         const { data: msgs } = await supabase.from('chat_messages').select('sender_id, receiver_id').or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
         const ids = new Set<string>()
         msgs?.forEach(m => { ids.add(m.sender_id); ids.add(m.receiver_id) })
