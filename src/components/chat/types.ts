@@ -21,4 +21,5 @@ export interface Contact {
     last_message_time?: string
     unread_count?: number
     is_client?: boolean
+    is_my_pro?: boolean
 }

@@ -39,9 +39,16 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
         c.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
+    // Groups for Professionals (viewing Clients)
     const onlineClients = filtered.filter(c => c.is_client && onlineUsers.has(c.id))
     const offlineClients = filtered.filter(c => c.is_client && !onlineUsers.has(c.id))
-    const others = filtered.filter(c => !c.is_client)
+
+    // Groups for Clients (viewing Professionals)
+    const onlinePros = filtered.filter(c => c.is_my_pro && onlineUsers.has(c.id))
+    const offlinePros = filtered.filter(c => c.is_my_pro && !onlineUsers.has(c.id))
+
+    // Others (Everyone else)
+    const others = filtered.filter(c => !c.is_client && !c.is_my_pro)
 
     const renderContact = (contact: Contact) => (
         <div key={contact.id} onClick={() => onSelect(contact)} className={`flex items-center gap-3 p-4 cursor-pointer border-b border-border transition-colors ${selectedContact?.id === contact.id ? 'bg-primary/10 border-l-4 border-l-primary' : 'hover:bg-accent'}`}>
@@ -56,7 +63,6 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
                         {contact.role === 'admin' && <Badge variant="destructive" className="h-4 px-1 text-[10px]">Admin</Badge>}
                         {contact.role === 'professional' && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20">Prof</Badge>}
                         {contact.role === 'client' && <Badge variant="outline" className="h-4 px-1 text-[10px] text-muted-foreground border-border">Aluno</Badge>}
-                        {contact.is_client && <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20">Meu Aluno</Badge>}
                     </div>
                     <span className="text-[10px] text-muted-foreground shrink-0">{formatSidebarDate(contact.last_message_time)}</span>
                 </div>
@@ -81,6 +87,7 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
                 {loading ? <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> :
                     filtered.length === 0 ? <div className="text-center py-8 text-muted-foreground">Nenhum contato.</div> :
                         <>
+                            {/* Meus Alunos (Para Profissionais/Admins) */}
                             {onlineClients.length > 0 && (
                                 <>
                                     <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
@@ -96,6 +103,25 @@ const ContactsList: React.FC<ContactsListProps> = ({ contacts, loading, selected
                                         Meus Alunos Offline ({offlineClients.length})
                                     </div>
                                     {offlineClients.map(renderContact)}
+                                </>
+                            )}
+
+                            {/* Meus Profissionais (Para Clientes) */}
+                            {onlinePros.length > 0 && (
+                                <>
+                                    <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
+                                        Meus Profissionais Online ({onlinePros.length})
+                                    </div>
+                                    {onlinePros.map(renderContact)}
+                                </>
+                            )}
+
+                            {offlinePros.length > 0 && (
+                                <>
+                                    <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky top-0 backdrop-blur-sm z-10">
+                                        Meus Profissionais Offline ({offlinePros.length})
+                                    </div>
+                                    {offlinePros.map(renderContact)}
                                 </>
                             )}
 

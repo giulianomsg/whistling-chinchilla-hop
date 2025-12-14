@@ -57,7 +57,7 @@ const Chat: React.FC = () => {
         }))
       } else if (profile?.role === 'client') {
         const { data } = await supabase.from('client_professionals').select(`professional:profiles!professional_id(*)`).eq('client_id', user.id).eq('status', 'active')
-        contactsData = (data || []).map((i: any) => ({ ...i.professional, unread_count: 0 }))
+        contactsData = (data || []).map((i: any) => ({ ...i.professional, unread_count: 0, is_my_pro: true }))
       } else {
         // ... existing logic for professionals ...
         const { data: clients } = await supabase.from('client_professionals').select(`client:profiles!client_id(*)`).eq('professional_id', user.id).eq('status', 'active')

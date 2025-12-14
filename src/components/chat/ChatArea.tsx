@@ -125,7 +125,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contact, messages, loading, onSend,
                             {contact.role === 'admin' && <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">Administrador</Badge>}
                             {contact.role === 'professional' && <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-blue-500/10 text-blue-500 border-blue-500/20">Profissional</Badge>}
                             {contact.role === 'client' && <Badge variant="outline" className="h-5 px-1.5 text-[10px] text-muted-foreground">Aluno</Badge>}
-                            {contact.is_client && <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-green-500/10 text-green-600 border-green-500/20">Meu Aluno</Badge>}
                         </div>
                         <div className="flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${online ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`} /><p className="text-xs text-muted-foreground">{online ? 'Online' : 'Offline'}</p></div>
                     </div>
