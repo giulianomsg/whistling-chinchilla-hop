@@ -35,10 +35,14 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   // Session States
   const [isSessionActive, setIsSessionActive] = useState(false)
-  const [sessionStatus, setSessionStatus] = useState<'idle' | 'started' | 'paused' | 'completed'>('idle')
+  // Session States
+  const [sessionStatus, setSessionStatus] = useState<'idle' | 'started' | 'paused' | 'completed' | 'abandoned'>('idle')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [sessionLoading, setSessionLoading] = useState(false)
+
+  // Persistence: Store start time reference for accurate diffs
+  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null)
 
   // Logging States
   const [executionLogs, setExecutionLogs] = useState<any[]>([])
@@ -86,9 +90,22 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setExecutionLogs(data || [])
   }
 
+  // Heartbeat Function
+  const updateHeartbeat = async (currentSessId: string) => {
+    if (!currentSessId) return
+    // Fire and forget update
+    supabase.from('workout_sessions')
+      .update({ last_activity_at: new Date().toISOString() })
+      .eq('id', currentSessId)
+      .then(({ error }) => { if (error) console.error('Heartbeat fail', error) })
+  }
+
+  // ... (getVideoId etc)
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
+      // ... (fetch workoutExercises)
       const { data } = await supabase.from('workout_exercises')
         .select(`*, exercise:exercises_library(*)`).eq('workout_id', clientWorkout.workout_id)
         .order('day_number').order('order_index')
@@ -96,15 +113,25 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       const { data: session } = await supabase.from('workout_sessions')
         .select('*').eq('client_workout_id', clientWorkout.id)
-        .in('status', ['started', 'paused']).order('created_at', { ascending: false }).limit(1).maybeSingle()
+        .in('status', ['started', 'paused', 'abandoned']).order('created_at', { ascending: false }).limit(1).maybeSingle()
 
       if (session) {
-        setSessionId(session.id); setSessionStatus(session.status); setIsSessionActive(true)
-        if (session.status === 'started') {
-          const elapsed = Math.floor((new Date().getTime() - new Date(session.started_at).getTime()) / 1000)
-          setElapsedTime(elapsed)
-        } else if (session.status === 'paused') {
+        setSessionId(session.id)
+        setSessionStatus(session.status as any)
+
+        if (session.status === 'abandoned') {
+          setIsSessionActive(false)
           setElapsedTime(session.duration_seconds || 0)
+        } else {
+          setIsSessionActive(true)
+          if (session.status === 'started') {
+            const startDetails = new Date(session.started_at).getTime()
+            setSessionStartTime(startDetails)
+            const elapsed = Math.floor((Date.now() - startDetails) / 1000)
+            setElapsedTime(elapsed)
+          } else if (session.status === 'paused') {
+            setElapsedTime(session.duration_seconds || 0)
+          }
         }
         fetchLogs(session.id)
       }
@@ -113,23 +140,24 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     loadData()
   }, [clientWorkout])
 
+  // Robust Timer: Uses timestamps diff instead of +1
   useEffect(() => {
     let interval: NodeJS.Timeout
-    if (sessionStatus === 'started') {
-      interval = setInterval(() => setElapsedTime(p => p + 1), 1000)
+    if (sessionStatus === 'started' && sessionStartTime) {
+      interval = setInterval(() => {
+        const now = Date.now()
+        setElapsedTime(Math.floor((now - sessionStartTime) / 1000))
+      }, 1000)
     }
     return () => clearInterval(interval)
-  }, [sessionStatus])
+  }, [sessionStatus, sessionStartTime])
 
-  // Active Exercise Timer Effect
+  // Active Exercise Timer (Keep simple +1 or refactor similarly? Simple is fine for local Stopwatch)
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (activeTimerId && sessionStatus === 'started') {
       interval = setInterval(() => {
-        setExerciseTimers(prev => ({
-          ...prev,
-          [activeTimerId]: (prev[activeTimerId] || 0) + 1
-        }))
+        setExerciseTimers(prev => ({ ...prev, [activeTimerId]: (prev[activeTimerId] || 0) + 1 }))
       }, 1000)
     }
     return () => clearInterval(interval)
@@ -160,14 +188,17 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         }).select().single()
         if (error) throw error
         setSessionId(data.id); setSessionStatus('started'); setIsSessionActive(true); setElapsedTime(0)
+        setSessionStartTime(Date.now()) // Set local start ref
         setExecutionLogs([]) // Reset logs for new session
         showSuccess('Treino iniciado!')
       } else if (action === 'pause' && sessionId) {
-        await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime }).eq('id', sessionId)
+        await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
         setSessionStatus('paused'); showSuccess('Pausado')
       } else if (action === 'resume' && sessionId) {
+        // Correctly calculate new started_at based on current time - elapsed (to maintain continuity)
         const newStart = new Date(Date.now() - elapsedTime * 1000).toISOString()
-        await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart }).eq('id', sessionId)
+        setSessionStartTime(Date.now() - elapsedTime * 1000) // Restore local ref
+        await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
         // --- LÓGICA DE XP CORRIGIDA (v2) ---
@@ -176,7 +207,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // Regra: Treino < 1 min ou sem logs = 0 XP
         if (elapsedTime < 60 || executionLogs.length === 0) {
           await supabase.from('workout_sessions')
-            .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
+            .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() })
             .eq('id', sessionId)
 
           setSessionStatus('completed'); setIsSessionActive(false)
@@ -312,6 +343,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       if (error) throw error
 
       await fetchLogs(sessionId)
+      await updateHeartbeat(sessionId) // Heartbeat on log
       setIsLogModalOpen(false)
       showSuccess('Registro salvo!')
     } catch (error) {
@@ -418,6 +450,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                   <Square className="mr-2 h-5 w-5 fill-current" /> Finalizar
                 </Button>
               </>
+            )}
+
+            {sessionStatus === 'abandoned' && (
+              <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-12 md:h-11">
+                <Square className="mr-2 h-5 w-5 fill-current" /> Treino Abandonado
+              </Button>
             )}
           </div>
         </div>

@@ -149,7 +149,8 @@ const ProfessionalDashboard: React.FC = () => {
       case 'started': return { className: 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/50', icon: <Play className="h-3 w-3" />, text: 'Treinando' }
       case 'paused': return { className: 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/50', icon: <Pause className="h-3 w-3" />, text: 'Pausado' }
       case 'completed': return { className: 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-500/50', icon: <CheckCircle className="h-3 w-3" />, text: 'Concluído' }
-      default: return { className: 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Abandonado' }
+      case 'abandoned': return { className: 'bg-gray-100 dark:bg-gray-500/20 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Abandonado' }
+      default: return { className: 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/50', icon: <AlertCircle className="h-3 w-3" />, text: 'Cancelado/Erro' }
     }
   }
 
