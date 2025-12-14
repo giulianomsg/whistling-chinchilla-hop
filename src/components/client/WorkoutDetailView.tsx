@@ -398,6 +398,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       await fetchLogs(sessionId)
       await updateHeartbeat(sessionId) // Heartbeat on log
+
+      // Auto-stop timer if it's running for this exercise
+      if (activeTimerId && activeTimerId === selectedExercise.id) {
+        await handleToggleTimer(selectedExercise.id)
+      }
+
       setIsLogModalOpen(false)
       showSuccess('Registro salvo!')
     } catch (error) {
@@ -572,7 +578,13 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                       try {
                         const { error } = await supabase.from('workout_execution_logs').delete().eq('id', logId)
                         if (error) throw error
-                        await fetchLogs(sessionId!)
+
+                        // Update local state immediately
+                        setExecutionLogs(prev => prev.filter(l => l.id !== logId))
+
+                        // Also fetch to be safe (optional, but good for consistency)
+                        fetchLogs(sessionId!)
+
                         setIsLogModalOpen(false)
                         showSuccess('Registro removido.')
                       } catch (e) { showError('Erro ao remover'); console.error(e) }
