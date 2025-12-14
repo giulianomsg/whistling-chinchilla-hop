@@ -74,7 +74,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             className={`h-9 px-2 gap-1.5 transition-all text-xs border-dashed ${isTimerRunning
                                 ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
                                 : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
-                            disabled={!isSessionActive}
+                            disabled={!isSessionActive || isCompleted}
                         >
                             {isTimerRunning ? <PlayCircle className="h-4 w-4 animate-spin" /> : <PlayCircle className="h-4 w-4" />}
                             <span className="font-mono font-bold w-[40px] text-center">

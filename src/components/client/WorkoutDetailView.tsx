@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Timer, Play, Pause, Square, PlayCircle, Loader2, BarChart3,
-  CheckCircle, Circle, Save, List, Eye
+  CheckCircle, Circle, Save, List, Eye, Trash2
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -181,8 +181,13 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   }, [activeTimerId, sessionStatus])
 
   const handleToggleTimer = async (exerciseId: string) => {
+    const isCompleted = executionLogs.some(log => log.workout_exercise_id === exerciseId)
     if (!isSessionActive || sessionStatus !== 'started' || !sessionId) {
       showError('Inicie o treino para cronometrar.')
+      return
+    }
+    if (isCompleted) {
+      showError('Este exercício já foi concluído.')
       return
     }
 
@@ -555,12 +560,39 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-border text-muted-foreground hover:bg-muted hover:text-foreground">Cancelar</Button>
-            <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
-              {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-              Salvar Registro
-            </Button>
+          <DialogFooter className="flex gap-2 justify-end sm:justify-between">
+            {executionLogs.some(l => l.workout_exercise_id === selectedExercise?.id) && (
+              <Button
+                variant="destructive"
+                onClick={async () => {
+                  if (confirm('Tem certeza que deseja remover este registro?')) {
+                    const logId = executionLogs.find(l => l.workout_exercise_id === selectedExercise?.id)?.id
+                    if (logId) {
+                      setSavingLog(true)
+                      try {
+                        const { error } = await supabase.from('workout_execution_logs').delete().eq('id', logId)
+                        if (error) throw error
+                        await fetchLogs(sessionId!)
+                        setIsLogModalOpen(false)
+                        showSuccess('Registro removido.')
+                      } catch (e) { showError('Erro ao remover'); console.error(e) }
+                      finally { setSavingLog(false) }
+                    }
+                  }
+                }}
+                disabled={savingLog}
+                className="mr-auto"
+              >
+                <Trash2 className="h-4 w-4 mr-2" /> Excluir
+              </Button>
+            )}
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsLogModalOpen(false)} className="border-border text-muted-foreground hover:bg-muted hover:text-foreground">Cancelar</Button>
+              <Button onClick={handleSaveLog} disabled={savingLog} className="bg-green-600 hover:bg-green-700 text-white">
+                {savingLog ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                Salvar
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
