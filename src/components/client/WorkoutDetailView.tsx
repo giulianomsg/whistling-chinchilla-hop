@@ -186,10 +186,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       showError('Inicie o treino para cronometrar.')
       return
     }
-    if (isCompleted) {
-      showError('Este exercício já foi concluído.')
-      return
-    }
+
 
     const now = new Date()
     let updatePayload: any = {}
@@ -210,13 +207,21 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // Just stopping current
         setActiveTimerId(null)
       } else {
-        // Switching to new
+        // Switching to new - CHECK GUARD HERE
+        if (isCompleted) {
+          showError('Este exercício já foi concluído.')
+          return
+        }
         updatePayload.active_timer_id = exerciseId
         updatePayload.active_timer_started_at = now.toISOString()
         setActiveTimerId(exerciseId)
       }
     } else {
-      // No active timer, just starting new one
+      // No active timer, just starting new one - CHECK GUARD HERE
+      if (isCompleted) {
+        showError('Este exercício já foi concluído.')
+        return
+      }
       updatePayload.active_timer_id = exerciseId
       updatePayload.active_timer_started_at = now.toISOString()
       setActiveTimerId(exerciseId)
@@ -576,11 +581,14 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                     if (logId) {
                       setSavingLog(true)
                       try {
-                        const { error } = await supabase.from('workout_execution_logs').delete().eq('id', logId)
+                        const { error } = await supabase.from('workout_execution_logs')
+                          .delete()
+                          .match({ workout_session_id: sessionId, workout_exercise_id: selectedExercise.id }) // Delete ALL for this exercise/session
+
                         if (error) throw error
 
-                        // Update local state immediately
-                        setExecutionLogs(prev => prev.filter(l => l.id !== logId))
+                        // Update local state immediately by REMOVING ALL that match
+                        setExecutionLogs(prev => prev.filter(l => l.workout_exercise_id !== selectedExercise.id))
 
                         // Also fetch to be safe (optional, but good for consistency)
                         fetchLogs(sessionId!)
