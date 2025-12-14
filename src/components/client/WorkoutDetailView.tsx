@@ -119,6 +119,23 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         setSessionId(session.id)
         setSessionStatus(session.status as any)
 
+        // Restore Exercise Timers
+        let loadedTimers = (session.exercise_timers_state as Record<string, number>) || {}
+
+        // Restore Active Timer logic
+        if (session.status === 'started' && session.active_timer_id && session.active_timer_started_at) {
+          const activeStart = new Date(session.active_timer_started_at).getTime()
+          const now = Date.now()
+          const additionalSeconds = Math.max(0, Math.floor((now - activeStart) / 1000))
+
+          // Add to existing accumulated time
+          const currentTotal = (loadedTimers[session.active_timer_id] || 0) + additionalSeconds
+          loadedTimers[session.active_timer_id] = currentTotal
+
+          setActiveTimerId(session.active_timer_id)
+        }
+        setExerciseTimers(loadedTimers)
+
         if (session.status === 'abandoned') {
           setIsSessionActive(false)
           setElapsedTime(session.duration_seconds || 0)
@@ -152,7 +169,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return () => clearInterval(interval)
   }, [sessionStatus, sessionStartTime])
 
-  // Active Exercise Timer (Keep simple +1 or refactor similarly? Simple is fine for local Stopwatch)
+  // Active Exercise Timer Effect
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (activeTimerId && sessionStatus === 'started') {
@@ -163,18 +180,50 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return () => clearInterval(interval)
   }, [activeTimerId, sessionStatus])
 
-  const handleToggleTimer = (exerciseId: string) => {
-    if (!isSessionActive || sessionStatus !== 'started') {
+  const handleToggleTimer = async (exerciseId: string) => {
+    if (!isSessionActive || sessionStatus !== 'started' || !sessionId) {
       showError('Inicie o treino para cronometrar.')
       return
     }
 
-    if (activeTimerId === exerciseId) {
-      // Stop current
-      setActiveTimerId(null)
+    const now = new Date()
+    let updatePayload: any = {}
+    let newTimersVal = { ...exerciseTimers }
+
+    // If there is currently an active timer, stop it (save state)
+    if (activeTimerId) {
+      // Stop the active timer
+      const elapsedForActive = exerciseTimers[activeTimerId] || 0
+      // Update local map (it should be up to date via interval, but good to ensure)
+      newTimersVal[activeTimerId] = elapsedForActive
+
+      updatePayload.exercise_timers_state = newTimersVal // Save all states
+      updatePayload.active_timer_id = null
+      updatePayload.active_timer_started_at = null
+
+      if (activeTimerId === exerciseId) {
+        // Just stopping current
+        setActiveTimerId(null)
+      } else {
+        // Switching to new
+        updatePayload.active_timer_id = exerciseId
+        updatePayload.active_timer_started_at = now.toISOString()
+        setActiveTimerId(exerciseId)
+      }
     } else {
-      // Start new (switch)
+      // No active timer, just starting new one
+      updatePayload.active_timer_id = exerciseId
+      updatePayload.active_timer_started_at = now.toISOString()
       setActiveTimerId(exerciseId)
+    }
+
+    // Optimistic Update is already done via setState above (partially), but let's fire DB update
+    try {
+      const { error } = await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
+      if (error) throw error
+    } catch (err) {
+      console.error("Failed to persist timer", err)
+      // Revert if critical? For stopwatch, maybe just log is enough.
     }
   }
 
