@@ -1198,8 +1198,14 @@ const ClientDetails: React.FC = () => {
                         onClick={() => handleHistorySessionClick(session)}
                       >
                         <div className="flex items-center gap-5 w-full md:w-auto">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`} >
-                            {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' :
+                              session.status === 'abandoned' ? 'bg-red-500/10 text-red-500' :
+                                'bg-blue-500/10 text-blue-500'
+                            }`} >
+                            {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> :
+                              session.status === 'abandoned' ? <AlertCircle className="h-6 w-6" /> :
+                                <Play className="h-6 w-6" />
+                            }
                           </div>
                           <div>
                             <h4 className="text-lg font-bold text-foreground">{session.workout?.name || 'Treino Avulso'}</h4>
@@ -1210,7 +1216,16 @@ const ClientDetails: React.FC = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant={session.status === 'completed' ? 'default' : 'destructive'} className="capitalize">{session.status === 'completed' ? 'Concluído' : 'Abandonado'}</Badge>
+                          {/* Status Badge Logic */}
+                          {(() => {
+                            switch (session.status) {
+                              case 'completed': return <Badge variant='default' className="bg-green-600">Concluído</Badge>
+                              case 'abandoned': return <Badge variant='destructive'>Abandonado</Badge>
+                              case 'started': return <Badge variant='secondary' className="bg-blue-500/10 text-blue-500 border-blue-500/20">Em Andamento</Badge>
+                              case 'paused': return <Badge variant='outline' className="text-yellow-500 border-yellow-500/50">Pausado</Badge>
+                              default: return <Badge variant='outline'>{session.status}</Badge>
+                            }
+                          })()}
                           <ChevronRight className="h-5 w-5 text-muted-foreground" />
                         </div>
                       </div>
@@ -1225,9 +1240,9 @@ const ClientDetails: React.FC = () => {
                 <DialogHeader>
                   <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
                   <div className="text-sm text-muted-foreground flex gap-3">
-                    <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at).toLocaleDateString('pt-BR')}</span>
+                    <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at || selectedHistorySession.created_at).toLocaleDateString('pt-BR')}</span>
                     <span>•</span>
-                    <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds)}</span>
+                    <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds || 0)}</span>
                   </div>
                 </DialogHeader>
                 <ScrollArea className="max-h-[60vh] pr-4 mt-4">
@@ -1237,26 +1252,40 @@ const ClientDetails: React.FC = () => {
                     <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
                   ) : (
                     <div className="space-y-4">
-                      {historyLogs.map((log, index) => (
-                        <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
-                          <h4 className="font-bold text-foreground mb-2">{log.exercise?.name || 'Exercício'}</h4>
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div className="bg-background p-2 rounded border border-border">
-                              <span className="text-muted-foreground block text-xs uppercase">Carga</span>
-                              <span className="font-mono font-bold">{log.weight} kg</span>
+                      {historyLogs.map((log, index) => {
+                        // Calculate Duration from stored state if available
+                        const timers = selectedHistorySession?.exercise_timers_state || {}
+                        const durationSeconds = timers[log.workout_exercise_id] || 0
+                        const durationText = durationSeconds > 0 ? formatDuration(durationSeconds) : null
+
+                        return (
+                          <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="font-bold text-foreground">{log.exercise?.name || 'Exercício'}</h4>
+                              {durationText && (
+                                <Badge variant="outline" className="font-mono text-xs flex items-center gap-1">
+                                  <Clock className="h-3 w-3" /> {durationText}
+                                </Badge>
+                              )}
                             </div>
-                            <div className="bg-background p-2 rounded border border-border">
-                              <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
-                              <span className="font-mono font-bold">{log.reps}</span>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div className="bg-background p-2 rounded border border-border">
+                                <span className="text-muted-foreground block text-xs uppercase">Carga</span>
+                                <span className="font-mono font-bold">{log.weight} kg</span>
+                              </div>
+                              <div className="bg-background p-2 rounded border border-border">
+                                <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
+                                <span className="font-mono font-bold">{log.reps}</span>
+                              </div>
                             </div>
+                            {log.notes && (
+                              <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
+                                "{log.notes}"
+                              </div>
+                            )}
                           </div>
-                          {log.notes && (
-                            <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
-                              "{log.notes}"
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   )}
                 </ScrollArea>
