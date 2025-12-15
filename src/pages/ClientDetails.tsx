@@ -200,32 +200,35 @@ const ClientDetails: React.FC = () => {
     }
     loadData()
 
+    const fetchAgenda = async () => {
+      if (!id) return
+      const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
+      setScheduledWorkouts(data || [])
+    }
+
+    const fetchHistory = async () => {
+      if (!id) return
+      const { data } = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', id).order('created_at', { ascending: false }).limit(20)
+      setHistorySessions(data || [])
+    }
+
     // Realtime Subscription
     const channel = supabase
-      .channel(`client-agenda-${id}`)
+      .channel(`client-details-${id}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'scheduled_workouts', filter: `client_id=eq.${id}` },
-        (payload) => {
-          // Simplest strategy: Refetch to ensure joined data (workout name) is correct
-          // Or optimistically update if possible, but we need relations.
-          // Let's refetch partial or just update the specific item if it's an UPDATE.
-          // For simplicity and correctness with joined data, let's reuse the fetch logic from loadData or separate it.
-          // We can't easily call loadData inside useEffect because it does too much.
-          // Let's make a dedicated fetchAgenda function.
-          fetchAgenda()
-        }
+        () => fetchAgenda()
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'workout_sessions', filter: `client_id=eq.${id}` },
+        () => fetchHistory()
       )
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
   }, [id, user])
-
-  const fetchAgenda = async () => {
-    if (!id) return
-    const { data } = await supabase.from('scheduled_workouts').select(`*, workout:workouts(name, id)`).eq('client_id', id).order('scheduled_at', { ascending: true })
-    setScheduledWorkouts(data || [])
-  }
 
   const handleAssignWorkout = async () => {
     try {
@@ -1199,8 +1202,8 @@ const ClientDetails: React.FC = () => {
                       >
                         <div className="flex items-center gap-5 w-full md:w-auto">
                           <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' :
-                              session.status === 'abandoned' ? 'bg-red-500/10 text-red-500' :
-                                'bg-blue-500/10 text-blue-500'
+                            session.status === 'abandoned' ? 'bg-red-500/10 text-red-500' :
+                              'bg-blue-500/10 text-blue-500'
                             }`} >
                             {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> :
                               session.status === 'abandoned' ? <AlertCircle className="h-6 w-6" /> :
