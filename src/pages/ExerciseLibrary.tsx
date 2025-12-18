@@ -81,6 +81,7 @@ const ExerciseLibrary: React.FC = () => {
   const [exercises, setExercises] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all')
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -96,12 +97,21 @@ const ExerciseLibrary: React.FC = () => {
   }
   const [formData, setFormData] = useState(initialFormState)
 
+  // Debounce Effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm)
+    }, 500) // 500ms delay
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
   const fetchExercises = async () => {
     if (!user) return
     setPageLoading(true)
     try {
       let query = supabase.from('exercises_library').select('*').or(`created_by.eq.${user.id},is_public.eq.true`).order('created_at', { ascending: false })
-      if (searchTerm) query = query.ilike('name', `%${searchTerm}%`)
+      if (debouncedSearch) query = query.ilike('name', `%${debouncedSearch}%`)
       if (difficultyFilter !== 'all') query = query.eq('difficulty_level', difficultyFilter)
       const { data } = await query
       setExercises(data || [])
@@ -109,7 +119,7 @@ const ExerciseLibrary: React.FC = () => {
     finally { setPageLoading(false) }
   }
 
-  useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, searchTerm, difficultyFilter])
+  useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, debouncedSearch, difficultyFilter])
 
   // RESET CORRETO AO ABRIR DIALOG
   const openCreateDialog = () => {
