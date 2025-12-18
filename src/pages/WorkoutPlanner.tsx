@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import {
-  Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search
+  Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search, X
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
@@ -214,7 +214,20 @@ const WorkoutPlanner: React.FC = () => {
 
         <div className="relative mb-6">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar planos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border text-foreground" />
+          <Input
+            placeholder="Buscar planos..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="pl-10 pr-10 bg-card border-border text-foreground"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
