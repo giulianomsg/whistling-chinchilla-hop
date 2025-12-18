@@ -108,6 +108,7 @@ const ExerciseLibrary: React.FC = () => {
 
   const fetchExercises = async () => {
     if (!user) return
+    // Only block full page if it's the very first load or if we want to show a spinner in the grid
     setPageLoading(true)
     try {
       let query = supabase.from('exercises_library').select('*').or(`created_by.eq.${user.id},is_public.eq.true`).order('created_at', { ascending: false })
@@ -184,7 +185,8 @@ const ExerciseLibrary: React.FC = () => {
     setIsEditDialogOpen(true)
   }
 
-  if (loading || pageLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
+  // Auth loading only blocks
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -202,47 +204,53 @@ const ExerciseLibrary: React.FC = () => {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {exercises.map(ex => (
-            <Card key={ex.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-foreground text-lg truncate pr-2">{ex.name}</CardTitle>
-                  <div className="flex gap-1 shrink-0">
-                    {ex.created_by === user?.id && (
-                      <>
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(ex)} className="text-muted-foreground hover:text-blue-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                          <AlertDialogContent className="bg-card border-border text-foreground">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
-                            <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </>
-                    )}
+        {pageLoading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="animate-spin h-8 w-8 text-primary" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {exercises.map(ex => (
+              <Card key={ex.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-foreground text-lg truncate pr-2">{ex.name}</CardTitle>
+                    <div className="flex gap-1 shrink-0">
+                      {ex.created_by === user?.id && (
+                        <>
+                          <Button variant="ghost" size="icon" onClick={() => openEdit(ex)} className="text-muted-foreground hover:text-blue-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
+                            <AlertDialogContent className="bg-card border-border text-foreground">
+                              <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
+                              <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* GIF THUMBNAIL */}
-                <GifThumbnail src={ex.gif_url} alt={ex.name} />
+                </CardHeader>
+                <CardContent>
+                  {/* GIF THUMBNAIL */}
+                  <GifThumbnail src={ex.gif_url} alt={ex.name} />
 
-                <div className="flex flex-wrap gap-1 mb-3 h-6 overflow-hidden">
-                  {ex.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-muted text-muted-foreground text-[10px]">{m}</Badge>)}
-                </div>
-                <div className="flex justify-between items-center border-t border-border pt-2">
-                  <Badge variant="outline" className="border-border text-muted-foreground">{ex.difficulty_level}</Badge>
-                  <div className="flex gap-2 text-muted-foreground">
-                    {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
-                    {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
-                    {<Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                  <div className="flex flex-wrap gap-1 mb-3 h-6 overflow-hidden">
+                    {ex.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-muted text-muted-foreground text-[10px]">{m}</Badge>)}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <div className="flex justify-between items-center border-t border-border pt-2">
+                    <Badge variant="outline" className="border-border text-muted-foreground">{ex.difficulty_level}</Badge>
+                    <div className="flex gap-2 text-muted-foreground">
+                      {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                      {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                      {<Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Dialogs (Forms Inline para evitar perda de foco) */}
         {[
