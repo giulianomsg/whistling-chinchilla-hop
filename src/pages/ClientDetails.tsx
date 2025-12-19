@@ -223,61 +223,6 @@ const ClientDetails: React.FC = () => {
       setHistorySessions(data || [])
     }
 
-    // New Strength Calculation
-    const calculateStrengthProfile = async () => {
-      if (!id) return
-      // Fetch all logs joined with exercise info
-      const { data: logs } = await supabase
-        .from('workout_execution_logs')
-        .select(`weight, reps, exercise:exercises_library(name)`)
-        .eq('workout_session_id.client_id', id) // Assuming join or fetch session IDs first. RLS might block direct join filter if not set up.
-      // Simplified: Fetch sessions first, then logs. Or just fetch logs for this user if policy allows.
-      // Let's rely on client side filtering for now to be safe with existing schema.
-
-      // Better approach: fetch logs for the user (via session)
-      const { data: userLogs } = await supabase
-        .from('workout_execution_logs')
-        .select(`weight, reps, exercise:exercises_library(name), workout_session:workout_sessions!inner(client_id)`)
-        .eq('workout_session.client_id', id)
-
-      if (!userLogs) return
-
-      const maxLifts = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
-
-      userLogs.forEach((log: any) => {
-        const name = log.exercise?.name?.toLowerCase() || ''
-        const w = log.weight || 0
-        const r = log.reps || 0
-        if (w === 0) return
-
-        const oneRM = calculateOneRM(w, r)
-
-        if (name.includes('agachamento') || name.includes('squat')) maxLifts.squat = Math.max(maxLifts.squat, oneRM)
-        else if (name.includes('supino') || name.includes('bench press')) maxLifts.bench = Math.max(maxLifts.bench, oneRM)
-        else if (name.includes('levantamento terra') || name.includes('deadlift')) maxLifts.deadlift = Math.max(maxLifts.deadlift, oneRM)
-        else if (name.includes('desenvolvimento') || name.includes('overhead') || name.includes('militar')) maxLifts.overhead = Math.max(maxLifts.overhead, oneRM)
-      })
-
-      // Get latest weight
-      const weight = clientDetails?.weight || assessments[0]?.weight || 70 // default if missing
-
-      const stats = [
-        { subject: 'Agachamento', A: maxLifts.squat / weight, fullMark: 2.5, val: maxLifts.squat },
-        { subject: 'Supino', A: maxLifts.bench / weight, fullMark: 1.9, val: maxLifts.bench },
-        { subject: 'Lev. Terra', A: maxLifts.deadlift / weight, fullMark: 3.0, val: maxLifts.deadlift },
-        { subject: 'Ombros', A: maxLifts.overhead / weight, fullMark: 1.15, val: maxLifts.overhead },
-      ]
-
-      setStrengthStats(stats)
-
-      const total = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
-      const dots = calculateDots(total, weight, clientProfile.gender === 'female' ? 'female' : 'male')
-      setDotsScore(dots)
-    }
-
-    useEffect(() => {
-      if (id && clientDetails) calculateStrengthProfile()
-    }, [id, clientDetails, assessments]) // Recalc when assessments change (weight might change)
 
     // Realtime Subscription
     const channel = supabase
@@ -296,6 +241,58 @@ const ClientDetails: React.FC = () => {
 
     return () => { supabase.removeChannel(channel) }
   }, [id, user])
+
+  // New Strength Calculation
+  const calculateStrengthProfile = async () => {
+    if (!id) return
+    // Better approach: fetch logs for the user (via session)
+    const { data: userLogs } = await supabase
+      .from('workout_execution_logs')
+      .select(`weight, reps, exercise:exercises_library(name), workout_session:workout_sessions!inner(client_id)`)
+      .eq('workout_session.client_id', id)
+
+    if (!userLogs) return
+
+    const maxLifts = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
+
+    userLogs.forEach((log: any) => {
+      const name = log.exercise?.name?.toLowerCase() || ''
+      const w = log.weight || 0
+      const r = log.reps || 0
+      if (w === 0) return
+
+      const oneRM = calculateOneRM(w, r)
+
+      if (name.includes('agachamento') || name.includes('squat')) maxLifts.squat = Math.max(maxLifts.squat, oneRM)
+      else if (name.includes('supino') || name.includes('bench press')) maxLifts.bench = Math.max(maxLifts.bench, oneRM)
+      else if (name.includes('levantamento terra') || name.includes('deadlift')) maxLifts.deadlift = Math.max(maxLifts.deadlift, oneRM)
+      else if (name.includes('desenvolvimento') || name.includes('overhead') || name.includes('militar')) maxLifts.overhead = Math.max(maxLifts.overhead, oneRM)
+    })
+
+    // Get latest weight
+    const weight = clientDetails?.weight || assessments[0]?.weight || 70 // default if missing
+
+    // Ensure we handle division by zero (though utils might handle it, safeguard here)
+    const wSafe = weight > 0 ? weight : 70
+
+    const stats = [
+      { subject: 'Agachamento', A: maxLifts.squat / wSafe, fullMark: 2.5, val: maxLifts.squat },
+      { subject: 'Supino', A: maxLifts.bench / wSafe, fullMark: 1.9, val: maxLifts.bench },
+      { subject: 'Lev. Terra', A: maxLifts.deadlift / wSafe, fullMark: 3.0, val: maxLifts.deadlift },
+      { subject: 'Ombros', A: maxLifts.overhead / wSafe, fullMark: 1.15, val: maxLifts.overhead },
+    ]
+
+    setStrengthStats(stats)
+
+    const total = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
+    const gender = clientProfile?.gender === 'female' ? 'female' : 'male'
+    const dots = calculateDots(total, wSafe, gender)
+    setDotsScore(dots)
+  }
+
+  useEffect(() => {
+    if (id && clientDetails) calculateStrengthProfile()
+  }, [id, clientDetails, assessments])
 
   const handleAssignWorkout = async () => {
     try {
