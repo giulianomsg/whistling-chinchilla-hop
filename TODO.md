@@ -77,10 +77,56 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 ## 📝 Novas implementações
 
 - [x] Criar uma agenda para que o cliente possa agendar e consultar os treinos com o seu profissional, acessar os treinos executados para ver o histórico de treinos e detalhes, receber avisos de pedidos de feedbacks e avaliações, como medições e pesagens.
-- [ ] Crie perfil de Nível de Força (como do site strengthlevel.pt) com calculadora de força, padrões de força e progressão de força para homens e mulheres.
-- [ ] Acompanhamento de progresso de metas com gráficos.
-- [ ] Registro de Metas de peso, medidas e objetivos.
-- [ ] Integração com redes sociais como (Postagem de conclusão de treinos, indicação do app e etc...).
+
+- [ ] Desenvolva um módulo completo de Perfil de Força e Performance Relativa, utilizando padrões matemáticos do Powerlifting para classificar o nível do usuário. O sistema deve operar em três camadas de lógica:
+
+1 - Normalização de Carga (Estimativa de 1RM):
+
+Implemente uma função pura que receba carga e repetições.
+
+Utilize a fórmula de Epley ou Brzycki para converter séries submáximas em uma estimativa de 1RM (Repetição Máxima Teórica).
+
+2 - Cálculo de Coeficiente de Força (A Dica de Ouro):
+
+Não utilize apenas a carga bruta para rankings. Implemente o cálculo do Coeficiente DOTS (ou Wilks) que utiliza o peso corporal do usuário, sexo e carga levantada para gerar uma pontuação de força relativa.
+
+Isso permitirá que o sistema compare de forma justa a performance de um usuário de 60kg com um de 100kg.
+
+3 - Matriz de Classificação por Multiplicador Corporal:
+
+Crie uma estrutura de dados (JSON) que defina os níveis (Iniciante, Novato, Intermediário, Avançado, Elite) baseados em Multiplicadores de Peso Corporal (ex: Supino 1.2x Peso Corporal = Intermediário).
+
+O sistema deve cruzar o 1RM estimado com o peso atual do usuário para determinar em qual faixa ele se encontra para os exercícios base (Squat, Bench Press, Deadlift, Overhead Press).
+
+4 - Visualização de Dados (Radar Chart):
+
+No frontend, utilize um gráfico de radar (Spider Chart) para plotar o equilíbrio do usuário entre os 4 movimentos principais, permitindo identificar visualmente se ele tem, por exemplo, 'Pernas de Elite' mas 'Empurre de Iniciante'.
+
+[ ] Desenvolva a seção de Analytics e Progresso do usuário utilizando uma biblioteca de gráficos (como Recharts ou Chart.js).
+
+1 - Eixo Temporal: Os gráficos devem ter o Eixo X como linha do tempo, permitindo filtros de período (Último mês, 3 meses, 1 ano, Tudo).
+
+2 - Visualização de Volume: Crie um gráfico de linha mostrando a evolução da 'Carga Total Levantada' (Volume Load) por treino ao longo do tempo.
+
+3 - Evolução de Cargas: Crie um gráfico que permita selecionar um exercício específico (ex: Supino) e mostre a progressão do peso máximo utilizado ou do 1RM estimado em cada sessão.
+
+4 - Backend: Crie uma query otimizada que agrupe esses dados históricos para alimentar o frontend sem latência excessiva.
+
+- [ ] Crie o esquema de banco de dados e as interfaces para Biometria e Metas.
+
+1 - Histórico de Medidas: Crie uma tabela body_measurements (peso, % gordura, circunferências: braço, cintura, coxa, peito). A interface deve permitir adicionar novos registros datados e visualizar uma tabela histórica.
+
+2 - Sistema de Metas (Goals): Crie uma tabela user_goals com colunas para: tipo_alvo (ex: peso corporal, carga no agachamento), valor_atual, valor_objetivo e data_limite.
+
+3 - Feedback Visual: Na dashboard, exiba uma barra de progresso percentual para cada meta ativa (ex: 'Você já percorreu 80% do caminho para atingir 80kg').
+
+- [ ] Implemente funcionalidade de Compartilhamento Social (Social Sharing) focada em viralização do app.
+
+1 - Geração de Assets: Utilize uma biblioteca (como html2canvas ou geração de OG Images no servidor) para criar uma imagem estática resumindo o treino finalizado. A imagem deve conter: Logo do App (Branding), Nome do Treino, Duração, Carga Total e uma frase de impacto ou nível atingido.
+
+2 - Web Share API: Utilize a API nativa do navegador (navigator.share) para enviar essa imagem e um texto padrão ('Acabei de treinar com o CapiFit...') diretamente para o Instagram Stories, WhatsApp ou Twitter do usuário.
+
+3 - Link de Indicação: No texto compartilhado, inclua um link parametrizado (ex: capifit.app/ref=USER_ID) para rastrear novos cadastros vindos desse compartilhamento (preparando terreno para um futuro sistema de rewards).
 
 ## Correções
 - [x] Gifs de animação para os treinos não estão mostrados no treino do cliente.

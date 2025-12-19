@@ -112,6 +112,16 @@ const ClientDetails: React.FC = () => {
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
   const [scheduledWorkouts, setScheduledWorkouts] = useState<any[]>([])
+  import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel } from '@/utils/strength'
+  import StrengthRadar from '@/components/analytics/StrengthRadar'
+
+  // ... existing imports ...
+
+  // Inside ClientDetails component:
+  const [strengthStats, setStrengthStats] = useState<any[]>([])
+  const [dotsScore, setDotsScore] = useState(0)
+  const [strengthLevel, setStrengthLevel] = useState<StrengthLevel>('Iniciante')
+
   const [selectedAgendaDate, setSelectedAgendaDate] = useState<Date | undefined>(new Date())
   const [selectedTime, setSelectedTime] = useState('09:00')
 
@@ -211,6 +221,62 @@ const ClientDetails: React.FC = () => {
       const { data } = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', id).order('created_at', { ascending: false }).limit(20)
       setHistorySessions(data || [])
     }
+
+    // New Strength Calculation
+    const calculateStrengthProfile = async () => {
+      if (!id) return
+      // Fetch all logs joined with exercise info
+      const { data: logs } = await supabase
+        .from('workout_execution_logs')
+        .select(`weight, reps, exercise:exercises_library(name)`)
+        .eq('workout_session_id.client_id', id) // Assuming join or fetch session IDs first. RLS might block direct join filter if not set up.
+      // Simplified: Fetch sessions first, then logs. Or just fetch logs for this user if policy allows.
+      // Let's rely on client side filtering for now to be safe with existing schema.
+
+      // Better approach: fetch logs for the user (via session)
+      const { data: userLogs } = await supabase
+        .from('workout_execution_logs')
+        .select(`weight, reps, exercise:exercises_library(name), workout_session:workout_sessions!inner(client_id)`)
+        .eq('workout_session.client_id', id)
+
+      if (!userLogs) return
+
+      const maxLifts = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
+
+      userLogs.forEach((log: any) => {
+        const name = log.exercise?.name?.toLowerCase() || ''
+        const w = log.weight || 0
+        const r = log.reps || 0
+        if (w === 0) return
+
+        const oneRM = calculateOneRM(w, r)
+
+        if (name.includes('agachamento') || name.includes('squat')) maxLifts.squat = Math.max(maxLifts.squat, oneRM)
+        else if (name.includes('supino') || name.includes('bench press')) maxLifts.bench = Math.max(maxLifts.bench, oneRM)
+        else if (name.includes('levantamento terra') || name.includes('deadlift')) maxLifts.deadlift = Math.max(maxLifts.deadlift, oneRM)
+        else if (name.includes('desenvolvimento') || name.includes('overhead') || name.includes('militar')) maxLifts.overhead = Math.max(maxLifts.overhead, oneRM)
+      })
+
+      // Get latest weight
+      const weight = clientDetails?.weight || assessments[0]?.weight || 70 // default if missing
+
+      const stats = [
+        { subject: 'Agachamento', A: maxLifts.squat / weight, fullMark: 2.5, val: maxLifts.squat },
+        { subject: 'Supino', A: maxLifts.bench / weight, fullMark: 1.9, val: maxLifts.bench },
+        { subject: 'Lev. Terra', A: maxLifts.deadlift / weight, fullMark: 3.0, val: maxLifts.deadlift },
+        { subject: 'Ombros', A: maxLifts.overhead / weight, fullMark: 1.15, val: maxLifts.overhead },
+      ]
+
+      setStrengthStats(stats)
+
+      const total = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
+      const dots = calculateDots(total, weight, clientProfile.gender === 'female' ? 'female' : 'male')
+      setDotsScore(dots)
+    }
+
+    useEffect(() => {
+      if (id && clientDetails) calculateStrengthProfile()
+    }, [id, clientDetails, assessments]) // Recalc when assessments change (weight might change)
 
     // Realtime Subscription
     const channel = supabase
@@ -702,8 +768,64 @@ const ClientDetails: React.FC = () => {
               <TabsTrigger value="achievements" className="px-4 py-1.5 text-sm"><Trophy className="w-4 h-4 mr-2" /> Conquistas</TabsTrigger>
               <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
               <TabsTrigger value="agenda" className="px-4 py-1.5 text-sm"><Calendar className="w-4 h-4 mr-2" /> Agenda</TabsTrigger>
+              <TabsTrigger value="performance" className="px-4 py-1.5 text-sm"><TrendingUp className="w-4 h-4 mr-2" /> Performance</TabsTrigger>
             </TabsList>
           </div>
+
+          <TabsContent value="performance">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="bg-card border-border md:col-span-2">
+                <CardHeader><CardTitle>Perfil de Força (Multiplicador Corporal)</CardTitle></CardHeader>
+                <CardContent>
+                  <StrengthRadar stats={strengthStats} />
+                  <div className="grid grid-cols-4 gap-2 text-center text-xs text-muted-foreground mt-4">
+                    {strengthStats.map(s => (
+                      <div key={s.subject} className="bg-muted p-2 rounded">
+                        <div className="font-bold text-foreground">{s.subject}</div>
+                        <div>{s.val}kg (1RM)</div>
+                        <div className="text-blue-500">{(s.A).toFixed(2)}x BW</div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="space-y-6">
+                <Card className="bg-card border-border">
+                  <CardHeader><CardTitle>Score DOTS</CardTitle></CardHeader>
+                  <CardContent className="text-center">
+                    <div className="text-5xl font-black text-blue-500 mb-2">{dotsScore.toFixed(0)}</div>
+                    <p className="text-sm text-muted-foreground">Pontos de Força Relativa</p>
+                    <div className="mt-4 text-xs text-muted-foreground text-left bg-muted p-3 rounded">
+                      O coeficiente DOTS é o padrão ouro do Powerlifting para comparar atletas de diferentes pesos e sexos.
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-card border-border">
+                  <CardHeader><CardTitle>Nível Estimado</CardTitle></CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2">
+                      {strengthStats.map(s => {
+                        const level = getClassificaton(s.val, clientDetails?.weight || 70, s.subject === 'Agachamento' ? 'squat' : s.subject === 'Supino' ? 'bench' : s.subject === 'Lev. Terra' ? 'deadlift' : 'overhead')
+                        return (
+                          <div key={s.subject} className="flex justify-between items-center text-sm border-b border-border/50 pb-2 last:border-0">
+                            <span>{s.subject}</span>
+                            <Badge variant="outline" className={
+                              level === 'Elite' ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' :
+                                level === 'Avançado' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                  level === 'Intermediário' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                                    'text-muted-foreground'
+                            }>{level}</Badge>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
           <TabsContent value="agenda">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               {/* Calendar Column */}
