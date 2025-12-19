@@ -93,7 +93,8 @@ const ExerciseLibrary: React.FC = () => {
     muscles: '', equipment: '',
     difficulty: 'beginner', video_url: '', gif_url: '',
     instructions: '', tips: '',
-    is_public: false
+    is_public: false,
+    base_type: ''
   }
   const [formData, setFormData] = useState(initialFormState)
 
@@ -143,7 +144,8 @@ const ExerciseLibrary: React.FC = () => {
       instructions: formData.instructions.split('\n').filter(Boolean),
       tips: formData.tips.split('\n').filter(Boolean),
       is_public: formData.is_public,
-      created_by: user.id
+      created_by: user.id,
+      base_type: formData.base_type || null
     }
 
     let error
@@ -180,7 +182,8 @@ const ExerciseLibrary: React.FC = () => {
       video_url: ex.video_url || '', gif_url: ex.gif_url || '',
       instructions: (ex.instructions || []).join('\n'),
       tips: (ex.tips || []).join('\n'),
-      is_public: ex.is_public
+      is_public: ex.is_public,
+      base_type: ex.base_type || ''
     })
     setIsEditDialogOpen(true)
   }
@@ -286,8 +289,21 @@ const ExerciseLibrary: React.FC = () => {
                       <SelectContent className="bg-card border-border text-foreground"><SelectItem value="beginner">Iniciante</SelectItem><SelectItem value="intermediate">Intermediário</SelectItem><SelectItem value="advanced">Avançado</SelectItem></SelectContent>
                     </Select>
                   </div>
-                  <div><Label>Músculos</Label><Input className="bg-muted border-border" value={formData.muscles} onChange={e => setFormData({ ...formData, muscles: e.target.value })} /></div>
+                  <div>
+                    <Label>Tipo de Movimento (Powerlifting)</Label>
+                    <Select value={formData.base_type} onValueChange={v => setFormData({ ...formData, base_type: v })}>
+                      <SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Nenhum (Acessório)" /></SelectTrigger>
+                      <SelectContent className="bg-card border-border text-foreground">
+                        <SelectItem value="">Nenhum (Acessório)</SelectItem>
+                        <SelectItem value="squat">Agachamento (Squat)</SelectItem>
+                        <SelectItem value="bench">Supino (Bench Press)</SelectItem>
+                        <SelectItem value="deadlift">Levantamento Terra</SelectItem>
+                        <SelectItem value="overhead">Desenvolvimento (Overhead)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+                <div><Label>Músculos</Label><Input className="bg-muted border-border" value={formData.muscles} onChange={e => setFormData({ ...formData, muscles: e.target.value })} /></div>
                 <div><Label>Equipamentos</Label><Input className="bg-muted border-border" value={formData.equipment} onChange={e => setFormData({ ...formData, equipment: e.target.value })} /></div>
                 <div className="grid grid-cols-2 gap-4">
                   <div><Label>Vídeo URL</Label><Input className="bg-muted border-border" value={formData.video_url} onChange={e => setFormData({ ...formData, video_url: e.target.value })} /></div>
@@ -369,7 +385,7 @@ const ExerciseLibrary: React.FC = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
+    </div >
   )
 }
 

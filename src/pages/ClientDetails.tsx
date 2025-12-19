@@ -248,7 +248,7 @@ const ClientDetails: React.FC = () => {
     // Better approach: fetch logs for the user (via session)
     const { data: userLogs } = await supabase
       .from('workout_execution_logs')
-      .select(`weight, reps, exercise:exercises_library(name), workout_session:workout_sessions!inner(client_id)`)
+      .select(`weight, reps, exercise:exercises_library(name, base_type), workout_session:workout_sessions!inner(client_id, created_at)`)
       .eq('workout_session.client_id', id)
 
     if (!userLogs) return
@@ -258,11 +258,12 @@ const ClientDetails: React.FC = () => {
 
     userLogs.forEach((log: any) => {
       const name = log.exercise?.name || ''
+      const baseType = log.exercise?.base_type || undefined
       const w = log.weight || 0
       const r = log.reps || 0
       if (w === 0) return
 
-      const canonicalId = getCanonicalExerciseId(name)
+      const canonicalId = getCanonicalExerciseId(name, baseType)
       if (!canonicalId) return // Strict mapping
 
       const oneRM = calculateOneRM(w, r)

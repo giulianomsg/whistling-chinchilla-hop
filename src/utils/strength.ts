@@ -84,9 +84,17 @@ export const BIG_4_MAPPING: Record<string, 'squat' | 'bench' | 'deadlift' | 'ove
     'desenvolvimento': 'overhead', 'overhead press': 'overhead', 'militar': 'overhead', 'desenvolvimento militar': 'overhead', 'ohp': 'overhead'
 }
 
-export const getCanonicalExerciseId = (name: string): 'squat' | 'bench' | 'deadlift' | 'overhead' | null => {
+export const getCanonicalExerciseId = (name: string, baseType?: string): 'squat' | 'bench' | 'deadlift' | 'overhead' | null => {
+    // 1. Prefer Explicit Database Type if valid
+    if (baseType) {
+        const t = baseType.toLowerCase()
+        if (['squat', 'bench', 'deadlift', 'overhead'].includes(t)) {
+            return t as 'squat' | 'bench' | 'deadlift' | 'overhead'
+        }
+    }
+
     const n = name.trim().toLowerCase()
-    // Exact match first
+    // 2. Exact match mapping
     if (BIG_4_MAPPING[n]) return BIG_4_MAPPING[n]
 
     return null
