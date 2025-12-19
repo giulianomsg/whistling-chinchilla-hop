@@ -18,6 +18,8 @@ import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
 import { WorkoutExerciseCard } from './WorkoutExerciseCard'
+import { calculateSessionXP } from '@/utils/xpCalculator'
+import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -260,10 +262,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
       } else if (action === 'finish' && sessionId) {
-        // --- LÓGICA DE XP CORRIGIDA (v2) ---
+        // --- LÓGICA DE XP V2.0 (Com Strength Module) ---
 
-        // 1. Validação de Tempo e Atividade
-        // Regra: Treino < 1 min ou sem logs = 0 XP
+        // 1. Validação Básica (Anti-Spam)
         if (elapsedTime < 60 || executionLogs.length === 0) {
           await supabase.from('workout_sessions')
             .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() })
@@ -275,66 +276,103 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           return
         }
 
-        // 2. Finalizar Sessão
+        // 2. Preparar Dados para Calculadora de XP
+        // Necessário enriquecer logs com nomes para identificar PRs
+        const enrichedLogs = executionLogs.map(log => {
+          // Encontrar o exercício original para pegar o nome e ID real do exercício (não o ID do treino)
+          const exerciseDef = workoutExercises.find(we => we.id === log.workout_exercise_id)
+          return {
+            ...log,
+            exercise: { name: exerciseDef?.exercise?.name || '' },
+            exercise_id: exerciseDef?.exercise_id // Ensure we have the library ID
+          }
+        })
+
+        // 3. Buscar Histórico para PRs (Async)
+        // Pegar todos os IDs de exercícios feitos hoje
+        const performedExLibraryIds = [...new Set(enrichedLogs.map(l => l.exercise_id).filter(Boolean))] as string[]
+
+        let history1RMs: Record<string, number> = {}
+
+        if (performedExLibraryIds.length > 0) {
+          // Buscar logs passados desses exercícios para este cliente
+          const { data: historyData } = await supabase
+            .from('workout_execution_logs')
+            .select(`weight, reps, exercise_id, workout_session!inner(client_id)`)
+            .eq('workout_session.client_id', clientWorkout.client_id)
+            .in('exercise_id', performedExLibraryIds)
+
+          if (historyData) {
+            // Calcular Max 1RM por Canonical ID
+            historyData.forEach((h: any) => {
+              // Precisamos do nome para Canonical ID. 
+              // Como não fizemos join com library (caro), vamos tentar mapear pelo ID se tivermos no front.
+              // Ou melhor: Vamos pegar o nome do current workoutExercises que corresponde a esse ID.
+              // Se o exercício mudou de nome na library, falha. Mas assumindo consistência:
+              const exName = workoutExercises.find(we => we.exercise_id === h.exercise_id)?.exercise?.name || ''
+              const cId = getCanonicalExerciseId(exName)
+              if (cId) {
+                const rm = calculateOneRM(h.weight, h.reps)
+                if (rm > (history1RMs[cId] || 0)) history1RMs[cId] = rm
+              }
+            })
+          }
+        }
+
+        // 4. Buscar Peso do Usuário (Para Tiers)
+        const { data: freshProfile } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
+        const { data: freshBody } = await supabase.from('biometric_data').select('weight').eq('client_id', clientWorkout.client_id).order('date', { ascending: false }).limit(1).maybeSingle()
+
+        const userWeight = freshBody?.weight || 70
+        const currentXP = freshProfile?.current_xp || 0
+        const currentLevel = freshProfile?.level || 1
+
+        // 5. Calcular XP
+        const xpResult = calculateSessionXP(
+          elapsedTime,
+          exerciseTimers,
+          enrichedLogs,
+          workoutExercises,
+          userWeight,
+          history1RMs
+        )
+
+        const xpGained = xpResult.total
+
+        // 6. Atualizar Sessão
         await supabase.from('workout_sessions')
           .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
           .eq('id', sessionId)
 
-        // 3. Buscar dados FRESH do banco
-        const { data: freshProfile, error: fetchError } = await supabase
-          .from('profiles')
-          .select('current_xp, level')
-          .eq('id', clientWorkout.client_id)
-          .single()
+        // 7. Atualizar Perfil (Level Up)
+        const newTotalXP = currentXP + xpGained
+        const newLevel = Math.floor(newTotalXP / 1000) + 1
 
-        if (!fetchError && freshProfile) {
-          // Fórmula:
-          // Tempo: 2 XP por minuto de TEMPO ATIVO (stopwatches) OU Tempo total se não houver stopwatches usados?
-          // User requested: "Utilizar o 'Tempo Total do Treino' calculado (agregado) como variável input"
+        const { error: updateError } = await supabase.from('profiles').update({
+          current_xp: newTotalXP,
+          level: newLevel
+        }).eq('id', clientWorkout.client_id)
 
-          const totalActiveWorkTime = Object.values(exerciseTimers).reduce((a, b) => a + b, 0)
-
-          // Se o usuário usou os timers, usa a soma. Se não usou (zero), usa o tempo decorrido da sessão como fallback (ou 0?)
-          // "O timer deve contabilizar o tempo de execução... Calcular o Tempo Total... através da somatória"
-          // Let's use the sum of timers. If 0, maybe they didn't use the feature. But let's act strict or generous?
-          // Generous fallback: if aggregate is very low (< 1 min) but session was long, maybe use session time * 0.5 factor?
-          // Let's stick to the request: "Calculated 'Total Workout Time' by summing the individual times"
-
-          const effectiveTimeToCheck = totalActiveWorkTime > 60 ? totalActiveWorkTime : elapsedTime
-
-          const timeXP = Math.min(Math.floor(effectiveTimeToCheck / 60) * 2, 180)
-          const workXP = executionLogs.length * 15
-          const totalExercises = workoutExercises.length
-          const bonusXP = (executionLogs.length >= totalExercises && totalExercises > 0) ? 50 : 0
-
-          const xpGained = timeXP + workXP + bonusXP
-
-          const currentXP = freshProfile.current_xp || 0
-          const newTotalXP = currentXP + xpGained
-          const newLevel = Math.floor(newTotalXP / 1000) + 1
-
-          // 4. Atualizar Banco
-          const { error: updateError } = await supabase.from('profiles').update({
-            current_xp: newTotalXP,
-            level: newLevel
-          }).eq('id', clientWorkout.client_id)
-
-          if (!updateError) {
-            // 5. Feedback via Modal
-            setSummaryData({
-              xpEarned: xpGained,
-              currentXP: newTotalXP,
-              newLevel: newLevel,
-              oldLevel: freshProfile.level || 1
-            })
-            setShowSummaryModal(true)
-
-            if (refreshProfile) refreshProfile()
-          } else {
-            console.error('Erro update XP:', updateError)
-            setSessionStatus('completed'); setIsSessionActive(false)
-            setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]); setExerciseTimers({}); setActiveTimerId(null) }, 3000)
+        if (!updateError) {
+          // Logs de Detalhes (Toasts sequenciais ou console)
+          if (xpResult.details.length > 0) {
+            console.log("XP Details:", xpResult.details)
+            // Show top detail if exists
+            xpResult.details.forEach(d => showSuccess(d))
           }
+
+          setSummaryData({
+            xpEarned: xpGained,
+            currentXP: newTotalXP,
+            newLevel: newLevel,
+            oldLevel: currentLevel
+          })
+          setShowSummaryModal(true)
+          if (refreshProfile) refreshProfile()
+        } else {
+          console.error('Erro update XP:', updateError)
+          setSessionStatus('completed'); setIsSessionActive(false)
+          setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]); setExerciseTimers({}); setActiveTimerId(null) }, 3000)
         }
       }
     } catch (error) { showError('Erro na sessão'); console.error(error) }

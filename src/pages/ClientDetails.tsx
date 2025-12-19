@@ -773,7 +773,7 @@ const ClientDetails: React.FC = () => {
           <TabsContent value="performance">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-card border-border md:col-span-2">
-                <CardHeader><CardTitle>Perfil de Força (Multiplicador Corporal)</CardTitle></CardHeader>
+                <CardHeader><CardTitle>Perfil de Força (Nível)</CardTitle></CardHeader>
                 <CardContent>
                   <StrengthRadar stats={strengthStats} />
                   <div className="grid grid-cols-4 gap-2 text-center text-xs text-muted-foreground mt-4">
@@ -781,7 +781,7 @@ const ClientDetails: React.FC = () => {
                       <div key={s.subject} className="bg-muted p-2 rounded">
                         <div className="font-bold text-foreground">{s.subject}</div>
                         <div>{s.val}kg (1RM)</div>
-                        <div className="text-blue-500">{(s.A).toFixed(2)}x BW</div>
+                        <div className="text-blue-500">Nível {s.A.toFixed(1)}</div>
                       </div>
                     ))}
                   </div>
