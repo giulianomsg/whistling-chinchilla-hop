@@ -72,16 +72,45 @@ export const STRENGTH_STANDARDS: Record<string, Record<StrengthLevel, number>> =
     }
 }
 
-export const getClassificaton = (oneRM: number, bodyWeight: number, liftType: 'squat' | 'bench' | 'deadlift' | 'overhead'): StrengthLevel => {
-    if (!bodyWeight || bodyWeight === 0) return 'Iniciante'
+// Canonical Mapping for "Big 4" Compound Movements
+export const BIG_4_MAPPING: Record<string, 'squat' | 'bench' | 'deadlift' | 'overhead'> = {
+    // Squat Variations
+    'agachamento': 'squat', 'squat': 'squat', 'agachamento livre': 'squat', 'agachamento barra costas': 'squat',
+    // Bench Variations
+    'supino': 'bench', 'bench press': 'bench', 'supino reto': 'bench', 'supino reto com barra': 'bench',
+    // Deadlift Variations
+    'levantamento terra': 'deadlift', 'deadlift': 'deadlift', 'terra': 'deadlift', 'lev. terra': 'deadlift',
+    // Overhead Variations
+    'desenvolvimento': 'overhead', 'overhead press': 'overhead', 'militar': 'overhead', 'desenvolvimento militar': 'overhead', 'ohp': 'overhead'
+}
+
+export const getCanonicalExerciseId = (name: string): 'squat' | 'bench' | 'deadlift' | 'overhead' | null => {
+    const n = name.trim().toLowerCase()
+    // Exact match first
+    if (BIG_4_MAPPING[n]) return BIG_4_MAPPING[n]
+
+    return null
+}
+
+export const getClassificaton = (oneRM: number, bodyWeight: number, liftType: 'squat' | 'bench' | 'deadlift' | 'overhead'): { level: StrengthLevel, score: number, multiplier: number } => {
+    if (!bodyWeight || bodyWeight === 0) return { level: 'Iniciante', score: 1.0, multiplier: 1.0 }
 
     const ratio = oneRM / bodyWeight
     const standards = STRENGTH_STANDARDS[liftType]
 
-    if (ratio >= standards['Elite']) return 'Elite'
-    if (ratio >= standards['Avançado']) return 'Avançado'
-    if (ratio >= standards['Intermediário']) return 'Intermediário'
-    if (ratio >= standards['Novato']) return 'Novato'
+    // Calculate generic "Tier Score" (1.0 - 5.0)
+    let baseScore = 1.0
+    let multiplier = 1.0 // XP Multiplier
 
-    return 'Iniciante'
+    if (ratio >= standards['Elite']) { baseScore = 5.0; multiplier = 1.5 }
+    else if (ratio >= standards['Avançado']) { baseScore = 4.0; multiplier = 1.5 }
+    else if (ratio >= standards['Intermediário']) { baseScore = 3.0; multiplier = 1.2 }
+    else if (ratio >= standards['Novato']) { baseScore = 2.0; multiplier = 1.0 }
+    else { baseScore = 1.0; multiplier = 1.0 }
+
+    return {
+        level: baseScore >= 5 ? 'Elite' : baseScore >= 4 ? 'Avançado' : baseScore >= 3 ? 'Intermediário' : baseScore >= 2 ? 'Novato' : 'Iniciante',
+        score: baseScore,
+        multiplier
+    }
 }
