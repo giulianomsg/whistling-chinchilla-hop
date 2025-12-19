@@ -253,20 +253,22 @@ const ClientDetails: React.FC = () => {
 
     if (!userLogs) return
 
-    const maxLifts = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
+    // Track Max Lifts
+    const maxLifts: Record<string, number> = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
 
     userLogs.forEach((log: any) => {
-      const name = log.exercise?.name?.toLowerCase() || ''
+      const name = log.exercise?.name || ''
       const w = log.weight || 0
       const r = log.reps || 0
       if (w === 0) return
 
-      const oneRM = calculateOneRM(w, r)
+      const canonicalId = getCanonicalExerciseId(name)
+      if (!canonicalId) return // Strict mapping
 
-      if (name.includes('agachamento') || name.includes('squat')) maxLifts.squat = Math.max(maxLifts.squat, oneRM)
-      else if (name.includes('supino') || name.includes('bench press')) maxLifts.bench = Math.max(maxLifts.bench, oneRM)
-      else if (name.includes('levantamento terra') || name.includes('deadlift')) maxLifts.deadlift = Math.max(maxLifts.deadlift, oneRM)
-      else if (name.includes('desenvolvimento') || name.includes('overhead') || name.includes('militar')) maxLifts.overhead = Math.max(maxLifts.overhead, oneRM)
+      const oneRM = calculateOneRM(w, r)
+      if (oneRM > maxLifts[canonicalId]) {
+        maxLifts[canonicalId] = oneRM
+      }
     })
 
     // Get latest weight
@@ -275,14 +277,31 @@ const ClientDetails: React.FC = () => {
     // Ensure we handle division by zero (though utils might handle it, safeguard here)
     const wSafe = weight > 0 ? weight : 70
 
-    const stats = [
-      { subject: 'Agachamento', A: maxLifts.squat / wSafe, fullMark: 2.5, val: maxLifts.squat },
-      { subject: 'Supino', A: maxLifts.bench / wSafe, fullMark: 1.9, val: maxLifts.bench },
-      { subject: 'Lev. Terra', A: maxLifts.deadlift / wSafe, fullMark: 3.0, val: maxLifts.deadlift },
-      { subject: 'Ombros', A: maxLifts.overhead / wSafe, fullMark: 1.15, val: maxLifts.overhead },
-    ]
+    const finalStats = []
 
-    setStrengthStats(stats)
+    // Build Stats
+    for (const key of ['squat', 'bench', 'deadlift', 'overhead'] as const) {
+      const lift = maxLifts[key]
+      const label = key === 'bench' ? 'Supino' : key === 'squat' ? 'Agachamento' : key === 'deadlift' ? 'Lev. Terra' : 'Ombros'
+
+      if (lift === 0) {
+        finalStats.push({ subject: label, A: 0, fullMark: 5, val: 0 })
+        continue
+      }
+
+      // Use Strict Classification
+      const result = getClassificaton(lift, wSafe, key)
+      const scoreVal = result.score
+
+      finalStats.push({
+        subject: label,
+        A: scoreVal, // 1-5 Scale 
+        fullMark: 5,
+        val: lift
+      })
+    }
+
+    setStrengthStats(finalStats)
 
     const total = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
     const gender = clientProfile?.gender === 'female' ? 'female' : 'male'
