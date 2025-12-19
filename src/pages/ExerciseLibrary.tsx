@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
@@ -145,7 +145,6 @@ const ExerciseLibrary: React.FC = () => {
       tips: formData.tips.split('\n').filter(Boolean),
       is_public: formData.is_public,
       created_by: user.id,
-      created_by: user.id,
       base_type: formData.base_type === 'none' ? null : formData.base_type
     }
 
@@ -183,7 +182,6 @@ const ExerciseLibrary: React.FC = () => {
       video_url: ex.video_url || '', gif_url: ex.gif_url || '',
       instructions: (ex.instructions || []).join('\n'),
       tips: (ex.tips || []).join('\n'),
-      is_public: ex.is_public,
       is_public: ex.is_public,
       base_type: ex.base_type || 'none'
     })
