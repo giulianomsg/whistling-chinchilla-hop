@@ -94,7 +94,7 @@ const ExerciseLibrary: React.FC = () => {
     difficulty: 'beginner', video_url: '', gif_url: '',
     instructions: '', tips: '',
     is_public: false,
-    base_type: ''
+    base_type: 'none'
   }
   const [formData, setFormData] = useState(initialFormState)
 
@@ -145,7 +145,8 @@ const ExerciseLibrary: React.FC = () => {
       tips: formData.tips.split('\n').filter(Boolean),
       is_public: formData.is_public,
       created_by: user.id,
-      base_type: formData.base_type || null
+      created_by: user.id,
+      base_type: formData.base_type === 'none' ? null : formData.base_type
     }
 
     let error
@@ -183,7 +184,8 @@ const ExerciseLibrary: React.FC = () => {
       instructions: (ex.instructions || []).join('\n'),
       tips: (ex.tips || []).join('\n'),
       is_public: ex.is_public,
-      base_type: ex.base_type || ''
+      is_public: ex.is_public,
+      base_type: ex.base_type || 'none'
     })
     setIsEditDialogOpen(true)
   }
@@ -278,7 +280,10 @@ const ExerciseLibrary: React.FC = () => {
         ].map((d, i) => (
           <Dialog key={i} open={d.open} onOpenChange={d.change}>
             <DialogContent className="bg-card border-border text-foreground max-w-2xl h-[90vh] overflow-y-auto">
-              <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>{d.title}</DialogTitle>
+                <DialogDescription>Preencha os dados do exercício abaixo.</DialogDescription>
+              </DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
                 <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
                 <div className="grid grid-cols-2 gap-4">
@@ -294,7 +299,7 @@ const ExerciseLibrary: React.FC = () => {
                     <Select value={formData.base_type} onValueChange={v => setFormData({ ...formData, base_type: v })}>
                       <SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Nenhum (Acessório)" /></SelectTrigger>
                       <SelectContent className="bg-card border-border text-foreground">
-                        <SelectItem value="">Nenhum (Acessório)</SelectItem>
+                        <SelectItem value="none">Nenhum (Acessório)</SelectItem>
                         <SelectItem value="squat">Agachamento (Squat)</SelectItem>
                         <SelectItem value="bench">Supino (Bench Press)</SelectItem>
                         <SelectItem value="deadlift">Levantamento Terra</SelectItem>
