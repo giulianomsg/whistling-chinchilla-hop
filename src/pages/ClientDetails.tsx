@@ -824,7 +824,7 @@ const ClientDetails: React.FC = () => {
                   <CardContent>
                     <div className="flex flex-col gap-2">
                       {strengthStats.map(s => {
-                        const level = getClassificaton(s.val, clientDetails?.weight || 70, s.subject === 'Agachamento' ? 'squat' : s.subject === 'Supino' ? 'bench' : s.subject === 'Lev. Terra' ? 'deadlift' : 'overhead')
+                        const { level } = getClassificaton(s.val, clientDetails?.weight || 70, s.subject === 'Agachamento' ? 'squat' : s.subject === 'Supino' ? 'bench' : s.subject === 'Lev. Terra' ? 'deadlift' : 'overhead')
                         return (
                           <div key={s.subject} className="flex justify-between items-center text-sm border-b border-border/50 pb-2 last:border-0">
                             <span>{s.subject}</span>
