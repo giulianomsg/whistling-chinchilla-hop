@@ -30,7 +30,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
-import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel } from '@/utils/strength'
+import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel, getCanonicalExerciseId } from '@/utils/strength'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
