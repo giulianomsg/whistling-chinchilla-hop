@@ -30,6 +30,8 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
+import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel } from '@/utils/strength'
+import StrengthRadar from '@/components/analytics/StrengthRadar'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
@@ -112,8 +114,7 @@ const ClientDetails: React.FC = () => {
   const [availableWorkouts, setAvailableWorkouts] = useState<any[]>([])
   const [availableMealPlans, setAvailableMealPlans] = useState<any[]>([])
   const [scheduledWorkouts, setScheduledWorkouts] = useState<any[]>([])
-  import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel } from '@/utils/strength'
-  import StrengthRadar from '@/components/analytics/StrengthRadar'
+
 
   // ... existing imports ...
 
