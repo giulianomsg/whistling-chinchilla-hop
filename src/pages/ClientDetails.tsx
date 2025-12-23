@@ -731,7 +731,7 @@ const ClientDetails: React.FC = () => {
                     {strengthStats.map(s => (
                       <div key={s.subject} className="bg-muted p-2 rounded">
                         <div className="font-bold text-foreground">{s.subject}</div>
-                        <div>{s.val}kg (1RM)</div>
+                        <div>{s.oneRM}kg (1RM)</div>
                         <div className="text-blue-500">Nível {s.A.toFixed(1)}</div>
                       </div>
                     ))}

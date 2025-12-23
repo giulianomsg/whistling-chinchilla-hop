@@ -16,7 +16,7 @@ import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy, Trophy } from 'lucide-react'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
@@ -161,7 +161,7 @@ const ProfileSettings: React.FC = () => {
     circumferences: { shoulder: '', chest: '', arm_right: '', arm_left: '', waist: '', abdomen: '', hips: '', thigh_right: '', thigh_left: '', calf_right: '', calf_left: '' },
     notes: ''
   }
-  const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
+
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
 
   // Strength Hook
