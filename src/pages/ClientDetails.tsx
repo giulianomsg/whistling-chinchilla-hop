@@ -30,7 +30,8 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
-import { calculateOneRM, calculateDots, getClassificaton, StrengthLevel, getCanonicalExerciseId } from '@/utils/strength'
+import { useStrengthProfile } from '@/hooks/useStrengthProfile'
+import { StrengthLevel } from '@/utils/strength'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
@@ -118,10 +119,7 @@ const ClientDetails: React.FC = () => {
 
   // ... existing imports ...
 
-  // Inside ClientDetails component:
-  const [strengthStats, setStrengthStats] = useState<any[]>([])
-  const [dotsScore, setDotsScore] = useState(0)
-  const [strengthLevel, setStrengthLevel] = useState<StrengthLevel>('Iniciante')
+
 
   const [selectedAgendaDate, setSelectedAgendaDate] = useState<Date | undefined>(new Date())
   const [selectedTime, setSelectedTime] = useState('09:00')
@@ -242,77 +240,10 @@ const ClientDetails: React.FC = () => {
     return () => { supabase.removeChannel(channel) }
   }, [id, user])
 
-  // New Strength Calculation
-  const calculateStrengthProfile = async () => {
-    if (!id) return
-    // Better approach: fetch logs for the user (via session)
-    const { data: userLogs } = await supabase
-      .from('workout_execution_logs')
-      .select(`weight, reps, exercise:exercises_library(name, base_type), workout_session:workout_sessions!inner(client_id, created_at)`)
-      .eq('workout_session.client_id', id)
-
-    if (!userLogs) return
-
-    // Track Max Lifts
-    const maxLifts: Record<string, number> = { squat: 0, bench: 0, deadlift: 0, overhead: 0 }
-
-    userLogs.forEach((log: any) => {
-      const name = log.exercise?.name || ''
-      const baseType = log.exercise?.base_type || undefined
-      const w = log.weight || 0
-      const r = log.reps || 0
-      if (w === 0) return
-
-      const canonicalId = getCanonicalExerciseId(name, baseType)
-      if (!canonicalId) return // Strict mapping
-
-      const oneRM = calculateOneRM(w, r)
-      if (oneRM > maxLifts[canonicalId]) {
-        maxLifts[canonicalId] = oneRM
-      }
-    })
-
-    // Get latest weight
-    const weight = clientDetails?.weight || assessments[0]?.weight || 70 // default if missing
-
-    // Ensure we handle division by zero (though utils might handle it, safeguard here)
-    const wSafe = weight > 0 ? weight : 70
-
-    const finalStats = []
-
-    // Build Stats
-    for (const key of ['squat', 'bench', 'deadlift', 'overhead'] as const) {
-      const lift = maxLifts[key]
-      const label = key === 'bench' ? 'Supino' : key === 'squat' ? 'Agachamento' : key === 'deadlift' ? 'Lev. Terra' : 'Ombros'
-
-      if (lift === 0) {
-        finalStats.push({ subject: label, A: 0, fullMark: 5, val: 0 })
-        continue
-      }
-
-      // Use Strict Classification
-      const result = getClassificaton(lift, wSafe, key)
-      const scoreVal = result.score
-
-      finalStats.push({
-        subject: label,
-        A: scoreVal, // 1-5 Scale 
-        fullMark: 5,
-        val: lift
-      })
-    }
-
-    setStrengthStats(finalStats)
-
-    const total = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
-    const gender = clientProfile?.gender === 'female' ? 'female' : 'male'
-    const dots = calculateDots(total, wSafe, gender)
-    setDotsScore(dots)
-  }
-
-  useEffect(() => {
-    if (id && clientDetails) calculateStrengthProfile()
-  }, [id, clientDetails, assessments])
+  // --- STRENGTH PROFILE (Via Hook) ---
+  const currentWeight = assessments?.[0]?.weight || 70
+  const { stats: strengthStats, dotsScore } = useStrengthProfile(id, currentWeight)
+  const strengthLevel: StrengthLevel = strengthStats.length > 0 ? strengthStats[0].level : 'Iniciante'
 
   const handleAssignWorkout = async () => {
     try {

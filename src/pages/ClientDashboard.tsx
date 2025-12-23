@@ -21,6 +21,8 @@ import {
 import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
 import { getRankTitle, getLevelProgress } from '@/utils/gamification'
+import { useStrengthProfile } from '@/hooks/useStrengthProfile'
+import StrengthRadar from '@/components/analytics/StrengthRadar'
 
 interface ClientWorkout {
   id: string
@@ -88,6 +90,8 @@ const ClientDashboard: React.FC = () => {
   const [clientWorkout, setClientWorkout] = useState<ClientWorkout | null>(null)
   const [clientMealPlan, setClientMealPlan] = useState<ClientMealPlan | null>(null)
   const [recentSessions, setRecentSessions] = useState<WorkoutSession[]>([])
+  const [latestWeight, setLatestWeight] = useState<number>(70)
+  const { stats: strengthStats, dotsScore } = useStrengthProfile(user?.id, latestWeight)
 
   // Estado local para XP (Dados frescos do banco)
   const [xpStats, setXpStats] = useState({ current_xp: 0, level: 1 })
@@ -144,6 +148,19 @@ const ClientDashboard: React.FC = () => {
     } catch (error) { console.error(error) }
   }
 
+  const fetchLatestWeight = async () => {
+    if (!user) return
+    try {
+      const { data } = await supabase.from('biometric_data')
+        .select('weight')
+        .eq('client_id', user.id)
+        .order('date', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (data?.weight) setLatestWeight(data.weight)
+    } catch (error) { console.error(error) }
+  }
+
   const loadDashboardData = async () => {
     if (!user) return
     setPageLoading(true)
@@ -151,7 +168,10 @@ const ClientDashboard: React.FC = () => {
       fetchFreshXP(), // Carrega XP atualizado
       fetchClientWorkout(),
       fetchClientMealPlan(),
-      fetchRecentSessions()
+      fetchClientWorkout(),
+      fetchClientMealPlan(),
+      fetchRecentSessions(),
+      fetchLatestWeight()
     ])
     setPageLoading(false)
   }

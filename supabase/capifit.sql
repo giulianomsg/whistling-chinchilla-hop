@@ -2,9 +2,9 @@
 -- PostgreSQL database cluster dump
 --
 
--- Started on 2025-12-10 22:51:02
+-- Started on 2025-12-23 10:43:56
 
-\restrict D4EoDJxdv3q8zoU5DNRVoMeX9hqaBjgyq8hplKRjlyPrGn22xbmhMXTdNrJzO2N
+\restrict 9aZbhIXeDPWHp3LRzwjRYg8W75wCEyQUU5uRvcwOO1WJBdQXlmwRecQrgHRjCrb
 
 SET default_transaction_read_only = off;
 
@@ -130,7 +130,7 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 
 
 
-\unrestrict D4EoDJxdv3q8zoU5DNRVoMeX9hqaBjgyq8hplKRjlyPrGn22xbmhMXTdNrJzO2N
+\unrestrict 9aZbhIXeDPWHp3LRzwjRYg8W75wCEyQUU5uRvcwOO1WJBdQXlmwRecQrgHRjCrb
 
 --
 -- Databases
@@ -146,12 +146,12 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 -- PostgreSQL database dump
 --
 
-\restrict 6ZmT8GLCHToT1TJZOR1i6BHbSqwkxidIxzFB05DkfB0D7atPk6JL3aCd2X8t0kn
+\restrict K6ejt8kCEuTXeuf47rcLgUDBMVvURMGXzye58cKBWf1idX7zH2CgMgzFOW0qjHW
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2025-12-10 22:51:09
+-- Started on 2025-12-23 10:44:03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -165,13 +165,13 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
--- Completed on 2025-12-10 22:51:26
+-- Completed on 2025-12-23 10:44:20
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 6ZmT8GLCHToT1TJZOR1i6BHbSqwkxidIxzFB05DkfB0D7atPk6JL3aCd2X8t0kn
+\unrestrict K6ejt8kCEuTXeuf47rcLgUDBMVvURMGXzye58cKBWf1idX7zH2CgMgzFOW0qjHW
 
 --
 -- Database "postgres" dump
@@ -183,12 +183,12 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
-\restrict 6un3EaXZpMoaywUoO0xzFUifqSUuPjmT5a7m55dUtqKVl7WuQOGKj6yEbbA18el
+\restrict jUy8sLJQBqyce8VuDQWeGcP1ILTnvQmLydcaehQ26kjH7Rev0ml3HTccHtTbVZ1
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2025-12-10 22:51:26
+-- Started on 2025-12-23 10:44:20
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -291,7 +291,7 @@ CREATE EXTENSION IF NOT EXISTS pg_graphql WITH SCHEMA graphql;
 
 
 --
--- TOC entry 4809 (class 0 OID 0)
+-- TOC entry 4850 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: EXTENSION pg_graphql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -308,7 +308,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA extensions;
 
 
 --
--- TOC entry 4810 (class 0 OID 0)
+-- TOC entry 4851 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: 
 --
@@ -325,7 +325,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 
 
 --
--- TOC entry 4811 (class 0 OID 0)
+-- TOC entry 4852 (class 0 OID 0)
 -- Dependencies: 4
 -- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
@@ -342,7 +342,7 @@ CREATE EXTENSION IF NOT EXISTS supabase_vault WITH SCHEMA vault;
 
 
 --
--- TOC entry 4812 (class 0 OID 0)
+-- TOC entry 4853 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: EXTENSION supabase_vault; Type: COMMENT; Schema: -; Owner: 
 --
@@ -359,7 +359,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
 
 
 --
--- TOC entry 4813 (class 0 OID 0)
+-- TOC entry 4854 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
 --
@@ -368,7 +368,7 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
--- TOC entry 1230 (class 1247 OID 16784)
+-- TOC entry 1237 (class 1247 OID 16784)
 -- Name: aal_level; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -382,7 +382,7 @@ CREATE TYPE auth.aal_level AS ENUM (
 ALTER TYPE auth.aal_level OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1254 (class 1247 OID 16925)
+-- TOC entry 1261 (class 1247 OID 16925)
 -- Name: code_challenge_method; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -395,7 +395,7 @@ CREATE TYPE auth.code_challenge_method AS ENUM (
 ALTER TYPE auth.code_challenge_method OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1227 (class 1247 OID 16778)
+-- TOC entry 1234 (class 1247 OID 16778)
 -- Name: factor_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -408,7 +408,7 @@ CREATE TYPE auth.factor_status AS ENUM (
 ALTER TYPE auth.factor_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1224 (class 1247 OID 16773)
+-- TOC entry 1231 (class 1247 OID 16773)
 -- Name: factor_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -422,7 +422,7 @@ CREATE TYPE auth.factor_type AS ENUM (
 ALTER TYPE auth.factor_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1272 (class 1247 OID 17028)
+-- TOC entry 1279 (class 1247 OID 17028)
 -- Name: oauth_authorization_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -437,7 +437,7 @@ CREATE TYPE auth.oauth_authorization_status AS ENUM (
 ALTER TYPE auth.oauth_authorization_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1284 (class 1247 OID 17101)
+-- TOC entry 1291 (class 1247 OID 17101)
 -- Name: oauth_client_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -450,7 +450,7 @@ CREATE TYPE auth.oauth_client_type AS ENUM (
 ALTER TYPE auth.oauth_client_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1266 (class 1247 OID 17006)
+-- TOC entry 1273 (class 1247 OID 17006)
 -- Name: oauth_registration_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -463,7 +463,7 @@ CREATE TYPE auth.oauth_registration_type AS ENUM (
 ALTER TYPE auth.oauth_registration_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1275 (class 1247 OID 17038)
+-- TOC entry 1282 (class 1247 OID 17038)
 -- Name: oauth_response_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -475,7 +475,7 @@ CREATE TYPE auth.oauth_response_type AS ENUM (
 ALTER TYPE auth.oauth_response_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1260 (class 1247 OID 16967)
+-- TOC entry 1267 (class 1247 OID 16967)
 -- Name: one_time_token_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -492,7 +492,7 @@ CREATE TYPE auth.one_time_token_type AS ENUM (
 ALTER TYPE auth.one_time_token_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1317 (class 1247 OID 17312)
+-- TOC entry 1324 (class 1247 OID 17312)
 -- Name: action; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -508,7 +508,7 @@ CREATE TYPE realtime.action AS ENUM (
 ALTER TYPE realtime.action OWNER TO supabase_admin;
 
 --
--- TOC entry 1308 (class 1247 OID 17272)
+-- TOC entry 1315 (class 1247 OID 17272)
 -- Name: equality_op; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -526,7 +526,7 @@ CREATE TYPE realtime.equality_op AS ENUM (
 ALTER TYPE realtime.equality_op OWNER TO supabase_admin;
 
 --
--- TOC entry 1311 (class 1247 OID 17287)
+-- TOC entry 1318 (class 1247 OID 17287)
 -- Name: user_defined_filter; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -540,7 +540,7 @@ CREATE TYPE realtime.user_defined_filter AS (
 ALTER TYPE realtime.user_defined_filter OWNER TO supabase_admin;
 
 --
--- TOC entry 1323 (class 1247 OID 17358)
+-- TOC entry 1330 (class 1247 OID 17358)
 -- Name: wal_column; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -557,7 +557,7 @@ CREATE TYPE realtime.wal_column AS (
 ALTER TYPE realtime.wal_column OWNER TO supabase_admin;
 
 --
--- TOC entry 1320 (class 1247 OID 17325)
+-- TOC entry 1327 (class 1247 OID 17325)
 -- Name: wal_rls; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -572,7 +572,7 @@ CREATE TYPE realtime.wal_rls AS (
 ALTER TYPE realtime.wal_rls OWNER TO supabase_admin;
 
 --
--- TOC entry 1302 (class 1247 OID 17241)
+-- TOC entry 1309 (class 1247 OID 17241)
 -- Name: buckettype; Type: TYPE; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -586,7 +586,7 @@ CREATE TYPE storage.buckettype AS ENUM (
 ALTER TYPE storage.buckettype OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 473 (class 1255 OID 16540)
+-- TOC entry 476 (class 1255 OID 16540)
 -- Name: email(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -604,8 +604,8 @@ $$;
 ALTER FUNCTION auth.email() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4814 (class 0 OID 0)
--- Dependencies: 473
+-- TOC entry 4855 (class 0 OID 0)
+-- Dependencies: 476
 -- Name: FUNCTION email(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -613,7 +613,7 @@ COMMENT ON FUNCTION auth.email() IS 'Deprecated. Use auth.jwt() -> ''email'' ins
 
 
 --
--- TOC entry 481 (class 1255 OID 16755)
+-- TOC entry 484 (class 1255 OID 16755)
 -- Name: jwt(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -631,7 +631,7 @@ $$;
 ALTER FUNCTION auth.jwt() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 426 (class 1255 OID 16539)
+-- TOC entry 428 (class 1255 OID 16539)
 -- Name: role(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -649,8 +649,8 @@ $$;
 ALTER FUNCTION auth.role() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4817 (class 0 OID 0)
--- Dependencies: 426
+-- TOC entry 4858 (class 0 OID 0)
+-- Dependencies: 428
 -- Name: FUNCTION role(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -658,7 +658,7 @@ COMMENT ON FUNCTION auth.role() IS 'Deprecated. Use auth.jwt() -> ''role'' inste
 
 
 --
--- TOC entry 447 (class 1255 OID 16538)
+-- TOC entry 449 (class 1255 OID 16538)
 -- Name: uid(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -676,8 +676,8 @@ $$;
 ALTER FUNCTION auth.uid() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4819 (class 0 OID 0)
--- Dependencies: 447
+-- TOC entry 4860 (class 0 OID 0)
+-- Dependencies: 449
 -- Name: FUNCTION uid(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -685,7 +685,7 @@ COMMENT ON FUNCTION auth.uid() IS 'Deprecated. Use auth.jwt() -> ''sub'' instead
 
 
 --
--- TOC entry 513 (class 1255 OID 16597)
+-- TOC entry 517 (class 1255 OID 16597)
 -- Name: grant_pg_cron_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -725,8 +725,8 @@ $$;
 ALTER FUNCTION extensions.grant_pg_cron_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 4835 (class 0 OID 0)
--- Dependencies: 513
+-- TOC entry 4876 (class 0 OID 0)
+-- Dependencies: 517
 -- Name: FUNCTION grant_pg_cron_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -734,7 +734,7 @@ COMMENT ON FUNCTION extensions.grant_pg_cron_access() IS 'Grants access to pg_cr
 
 
 --
--- TOC entry 493 (class 1255 OID 16618)
+-- TOC entry 497 (class 1255 OID 16618)
 -- Name: grant_pg_graphql_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -795,8 +795,8 @@ $_$;
 ALTER FUNCTION extensions.grant_pg_graphql_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 4837 (class 0 OID 0)
--- Dependencies: 493
+-- TOC entry 4878 (class 0 OID 0)
+-- Dependencies: 497
 -- Name: FUNCTION grant_pg_graphql_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -804,7 +804,7 @@ COMMENT ON FUNCTION extensions.grant_pg_graphql_access() IS 'Grants access to pg
 
 
 --
--- TOC entry 462 (class 1255 OID 16599)
+-- TOC entry 465 (class 1255 OID 16599)
 -- Name: grant_pg_net_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -858,8 +858,8 @@ $$;
 ALTER FUNCTION extensions.grant_pg_net_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 4839 (class 0 OID 0)
--- Dependencies: 462
+-- TOC entry 4880 (class 0 OID 0)
+-- Dependencies: 465
 -- Name: FUNCTION grant_pg_net_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -867,7 +867,7 @@ COMMENT ON FUNCTION extensions.grant_pg_net_access() IS 'Grants access to pg_net
 
 
 --
--- TOC entry 420 (class 1255 OID 16609)
+-- TOC entry 422 (class 1255 OID 16609)
 -- Name: pgrst_ddl_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -903,7 +903,7 @@ END; $$;
 ALTER FUNCTION extensions.pgrst_ddl_watch() OWNER TO supabase_admin;
 
 --
--- TOC entry 530 (class 1255 OID 16610)
+-- TOC entry 535 (class 1255 OID 16610)
 -- Name: pgrst_drop_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -937,7 +937,7 @@ END; $$;
 ALTER FUNCTION extensions.pgrst_drop_watch() OWNER TO supabase_admin;
 
 --
--- TOC entry 433 (class 1255 OID 16620)
+-- TOC entry 435 (class 1255 OID 16620)
 -- Name: set_graphql_placeholder(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -997,8 +997,8 @@ $_$;
 ALTER FUNCTION extensions.set_graphql_placeholder() OWNER TO supabase_admin;
 
 --
--- TOC entry 4868 (class 0 OID 0)
--- Dependencies: 433
+-- TOC entry 4909 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: FUNCTION set_graphql_placeholder(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -1006,33 +1006,81 @@ COMMENT ON FUNCTION extensions.set_graphql_placeholder() IS 'Reintroduces placeh
 
 
 --
--- TOC entry 475 (class 1255 OID 16387)
+-- TOC entry 478 (class 1255 OID 16387)
 -- Name: get_auth(text); Type: FUNCTION; Schema: pgbouncer; Owner: supabase_admin
 --
 
 CREATE FUNCTION pgbouncer.get_auth(p_usename text) RETURNS TABLE(username text, password text)
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO ''
     AS $_$
-begin
-    raise debug 'PgBouncer auth request: %', p_usename;
+  BEGIN
+      RAISE DEBUG 'PgBouncer auth request: %', p_usename;
 
-    return query
-    select 
-        rolname::text, 
-        case when rolvaliduntil < now() 
-            then null 
-            else rolpassword::text 
-        end 
-    from pg_authid 
-    where rolname=$1 and rolcanlogin;
-end;
-$_$;
+      RETURN QUERY
+      SELECT
+          rolname::text,
+          CASE WHEN rolvaliduntil < now()
+              THEN null
+              ELSE rolpassword::text
+          END
+      FROM pg_authid
+      WHERE rolname=$1 and rolcanlogin;
+  END;
+  $_$;
 
 
 ALTER FUNCTION pgbouncer.get_auth(p_usename text) OWNER TO supabase_admin;
 
 --
--- TOC entry 490 (class 1255 OID 29913)
+-- TOC entry 530 (class 1255 OID 48655)
+-- Name: admin_update_user_role(uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'auth'
+    AS $$
+BEGIN
+  -- Check Admin
+  IF NOT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+  ) THEN
+    RAISE EXCEPTION 'Access denied';
+  END IF;
+
+  -- Validate: Self-demotion check
+  IF target_user_id = auth.uid() AND new_role != 'admin' THEN
+    RAISE EXCEPTION 'You cannot remove your own admin privileges.';
+  END IF;
+
+  -- Validate Role
+  IF new_role NOT IN ('client', 'professional', 'admin') THEN
+    RAISE EXCEPTION 'Invalid role';
+  END IF;
+
+  -- Update Profile
+  UPDATE public.profiles
+  SET role = new_role
+  WHERE id = target_user_id;
+
+  -- Update Auth Metadata
+  UPDATE auth.users
+  SET raw_user_meta_data = jsonb_set(
+    COALESCE(raw_user_meta_data, '{}'::jsonb),
+    '{role}',
+    to_jsonb(new_role)
+  )
+  WHERE id = target_user_id;
+END;
+$$;
+
+
+ALTER FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) OWNER TO postgres;
+
+--
+-- TOC entry 494 (class 1255 OID 29913)
 -- Name: calculate_capipoints(integer, text, integer, numeric); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1076,7 +1124,7 @@ $$;
 ALTER FUNCTION public.calculate_capipoints(duration_seconds integer, activity_type text, calories integer, distance_meters numeric) OWNER TO postgres;
 
 --
--- TOC entry 427 (class 1255 OID 29914)
+-- TOC entry 429 (class 1255 OID 29914)
 -- Name: calculate_final_xp(numeric, numeric, timestamp with time zone, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1120,7 +1168,7 @@ $$;
 ALTER FUNCTION public.calculate_final_xp(base_cp numeric, trust_score numeric, workout_date timestamp with time zone, activity_type text) OWNER TO postgres;
 
 --
--- TOC entry 533 (class 1255 OID 29940)
+-- TOC entry 538 (class 1255 OID 29940)
 -- Name: calculate_level(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1139,7 +1187,7 @@ $$;
 ALTER FUNCTION public.calculate_level(xp integer) OWNER TO postgres;
 
 --
--- TOC entry 453 (class 1255 OID 20159)
+-- TOC entry 455 (class 1255 OID 20159)
 -- Name: calculate_session_duration(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1160,7 +1208,7 @@ $$;
 ALTER FUNCTION public.calculate_session_duration() OWNER TO postgres;
 
 --
--- TOC entry 492 (class 1255 OID 45931)
+-- TOC entry 496 (class 1255 OID 45931)
 -- Name: check_professional_availability(uuid, timestamp with time zone, integer, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1192,7 +1240,30 @@ $$;
 ALTER FUNCTION public.check_professional_availability(p_professional_id uuid, p_start_time timestamp with time zone, p_duration_minutes integer, p_exclude_schedule_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 445 (class 1255 OID 17869)
+-- TOC entry 490 (class 1255 OID 52083)
+-- Name: cleanup_abandoned_sessions(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.cleanup_abandoned_sessions() RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  UPDATE public.workout_sessions
+  SET 
+    status = 'abandoned',
+    ended_at = last_activity_at,
+    duration_seconds = EXTRACT(EPOCH FROM (last_activity_at - started_at))::INTEGER
+  WHERE 
+    status IN ('started', 'paused')
+    AND last_activity_at < (NOW() - INTERVAL '60 minutes');
+END;
+$$;
+
+
+ALTER FUNCTION public.cleanup_abandoned_sessions() OWNER TO postgres;
+
+--
+-- TOC entry 447 (class 1255 OID 17869)
 -- Name: client_has_professional_access(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1213,7 +1284,7 @@ $$;
 ALTER FUNCTION public.client_has_professional_access(professional_uuid uuid) OWNER TO postgres;
 
 --
--- TOC entry 531 (class 1255 OID 22754)
+-- TOC entry 536 (class 1255 OID 22754)
 -- Name: count_total_unread_messages(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1235,7 +1306,7 @@ $$;
 ALTER FUNCTION public.count_total_unread_messages(user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 544 (class 1255 OID 22615)
+-- TOC entry 549 (class 1255 OID 22615)
 -- Name: count_unread_messages(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1257,7 +1328,7 @@ $$;
 ALTER FUNCTION public.count_unread_messages(user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 469 (class 1255 OID 19663)
+-- TOC entry 472 (class 1255 OID 19663)
 -- Name: find_client_by_email(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1297,7 +1368,44 @@ $$;
 ALTER FUNCTION public.find_client_by_email(client_email text) OWNER TO postgres;
 
 --
--- TOC entry 423 (class 1255 OID 22611)
+-- TOC entry 566 (class 1255 OID 48654)
+-- Name: get_all_users(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.get_all_users() RETURNS TABLE(id uuid, email text, full_name text, avatar_url text, role text, created_at timestamp with time zone, last_sign_in_at timestamp with time zone)
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'auth'
+    AS $$
+BEGIN
+  -- Check if the requesting user is an admin
+  -- Use explicit referencing to avoid ambiguity
+  IF NOT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+  ) THEN
+    RAISE EXCEPTION 'Access denied';
+  END IF;
+
+  RETURN QUERY
+  SELECT 
+    p.id,
+    au.email::TEXT, -- Cast to ensure type matching
+    p.full_name,
+    p.avatar_url,
+    p.role::TEXT,
+    p.created_at,
+    au.last_sign_in_at
+  FROM public.profiles p
+  JOIN auth.users au ON p.id = au.id
+  ORDER BY p.created_at DESC;
+END;
+$$;
+
+
+ALTER FUNCTION public.get_all_users() OWNER TO postgres;
+
+--
+-- TOC entry 425 (class 1255 OID 22611)
 -- Name: get_conversation(uuid, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1318,7 +1426,7 @@ $$;
 ALTER FUNCTION public.get_conversation(user_id uuid, other_user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 441 (class 1255 OID 26400)
+-- TOC entry 443 (class 1255 OID 26400)
 -- Name: get_conversation(uuid, uuid, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1343,7 +1451,57 @@ $$;
 ALTER FUNCTION public.get_conversation(user1_id uuid, user2_id uuid, limit_count integer, offset_count integer) OWNER TO postgres;
 
 --
--- TOC entry 439 (class 1255 OID 29941)
+-- TOC entry 461 (class 1255 OID 48698)
+-- Name: get_linked_clients(uuid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.get_linked_clients(prof_id uuid) RETURNS TABLE(client_id uuid)
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+BEGIN
+  -- Check if the requester is the professional themselves OR an admin
+  -- (Though being SECURITY DEFINER helps, we might want some basic check, 
+  -- but here we just want to return the list for the UI logic)
+  
+  RETURN QUERY
+  SELECT cp.client_id
+  FROM client_professionals cp
+  WHERE cp.professional_id = prof_id
+  AND cp.status = 'active';
+END;
+$$;
+
+
+ALTER FUNCTION public.get_linked_clients(prof_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 574 (class 1255 OID 48466)
+-- Name: get_professional_reputation(uuid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.get_professional_reputation(prof_id uuid) RETURNS TABLE(avg_punctuality numeric, avg_didactics numeric, avg_knowledge numeric, avg_monitoring numeric, total_reviews bigint, overall_score numeric)
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        ROUND(AVG(rating_punctuality), 1) as avg_punctuality,
+        ROUND(AVG(rating_didactics), 1) as avg_didactics,
+        ROUND(AVG(rating_knowledge), 1) as avg_knowledge,
+        ROUND(AVG(rating_monitoring), 1) as avg_monitoring,
+        COUNT(*) as total_reviews,
+        ROUND((AVG(rating_punctuality) + AVG(rating_didactics) + AVG(rating_knowledge) + AVG(rating_monitoring)) / 4.0, 1) as overall_score
+    FROM public.professional_reviews
+    WHERE professional_id = prof_id;
+END;
+$$;
+
+
+ALTER FUNCTION public.get_professional_reputation(prof_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 441 (class 1255 OID 29941)
 -- Name: get_rank_title(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1365,7 +1523,7 @@ $$;
 ALTER FUNCTION public.get_rank_title(level integer) OWNER TO postgres;
 
 --
--- TOC entry 425 (class 1255 OID 18126)
+-- TOC entry 427 (class 1255 OID 18126)
 -- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1391,7 +1549,7 @@ $$;
 ALTER FUNCTION public.handle_new_user() OWNER TO postgres;
 
 --
--- TOC entry 470 (class 1255 OID 22416)
+-- TOC entry 473 (class 1255 OID 22416)
 -- Name: handle_notifications_updated_at(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1408,7 +1566,7 @@ $$;
 ALTER FUNCTION public.handle_notifications_updated_at() OWNER TO postgres;
 
 --
--- TOC entry 525 (class 1255 OID 17853)
+-- TOC entry 529 (class 1255 OID 17853)
 -- Name: handle_updated_at(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1425,7 +1583,7 @@ $$;
 ALTER FUNCTION public.handle_updated_at() OWNER TO postgres;
 
 --
--- TOC entry 454 (class 1255 OID 17865)
+-- TOC entry 456 (class 1255 OID 17865)
 -- Name: is_admin(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1444,7 +1602,7 @@ $$;
 ALTER FUNCTION public.is_admin() OWNER TO postgres;
 
 --
--- TOC entry 434 (class 1255 OID 17867)
+-- TOC entry 436 (class 1255 OID 17867)
 -- Name: is_client(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1463,7 +1621,7 @@ $$;
 ALTER FUNCTION public.is_client() OWNER TO postgres;
 
 --
--- TOC entry 463 (class 1255 OID 17866)
+-- TOC entry 466 (class 1255 OID 17866)
 -- Name: is_professional(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1482,7 +1640,7 @@ $$;
 ALTER FUNCTION public.is_professional() OWNER TO postgres;
 
 --
--- TOC entry 450 (class 1255 OID 22482)
+-- TOC entry 452 (class 1255 OID 22482)
 -- Name: link_client_and_update_profile(uuid, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1551,8 +1709,8 @@ $$;
 ALTER FUNCTION public.link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text) OWNER TO postgres;
 
 --
--- TOC entry 4901 (class 0 OID 0)
--- Dependencies: 450
+-- TOC entry 4947 (class 0 OID 0)
+-- Dependencies: 452
 -- Name: FUNCTION link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text); Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -1562,7 +1720,7 @@ Retorna: UUID do vínculo criado.';
 
 
 --
--- TOC entry 555 (class 1255 OID 24997)
+-- TOC entry 560 (class 1255 OID 24997)
 -- Name: mark_conversation_as_read(uuid, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1590,7 +1748,7 @@ $$;
 ALTER FUNCTION public.mark_conversation_as_read(current_user_id uuid, other_user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 495 (class 1255 OID 22483)
+-- TOC entry 499 (class 1255 OID 22483)
 -- Name: professional_can_link_client(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1629,8 +1787,8 @@ $$;
 ALTER FUNCTION public.professional_can_link_client(p_client_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 4904 (class 0 OID 0)
--- Dependencies: 495
+-- TOC entry 4950 (class 0 OID 0)
+-- Dependencies: 499
 -- Name: FUNCTION professional_can_link_client(p_client_id uuid); Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -1639,7 +1797,7 @@ Retorna TRUE se pode vincular, FALSE caso contrário.';
 
 
 --
--- TOC entry 526 (class 1255 OID 17868)
+-- TOC entry 531 (class 1255 OID 17868)
 -- Name: professional_has_client_access(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1660,7 +1818,7 @@ $$;
 ALTER FUNCTION public.professional_has_client_access(client_uuid uuid) OWNER TO postgres;
 
 --
--- TOC entry 520 (class 1255 OID 29915)
+-- TOC entry 524 (class 1255 OID 29915)
 -- Name: trigger_calculate_xp(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1704,7 +1862,7 @@ $$;
 ALTER FUNCTION public.trigger_calculate_xp() OWNER TO postgres;
 
 --
--- TOC entry 517 (class 1255 OID 29942)
+-- TOC entry 521 (class 1255 OID 29942)
 -- Name: trigger_update_level(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1721,7 +1879,7 @@ $$;
 ALTER FUNCTION public.trigger_update_level() OWNER TO postgres;
 
 --
--- TOC entry 428 (class 1255 OID 17351)
+-- TOC entry 430 (class 1255 OID 17351)
 -- Name: apply_rls(jsonb, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2029,7 +2187,7 @@ $$;
 ALTER FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) OWNER TO supabase_admin;
 
 --
--- TOC entry 564 (class 1255 OID 17431)
+-- TOC entry 570 (class 1255 OID 17431)
 -- Name: broadcast_changes(text, text, text, text, text, record, record, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2061,7 +2219,7 @@ $$;
 ALTER FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text) OWNER TO supabase_admin;
 
 --
--- TOC entry 487 (class 1255 OID 17363)
+-- TOC entry 491 (class 1255 OID 17363)
 -- Name: build_prepared_statement_sql(text, regclass, realtime.wal_column[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2097,7 +2255,7 @@ CREATE FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name te
 ALTER FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) OWNER TO supabase_admin;
 
 --
--- TOC entry 442 (class 1255 OID 17309)
+-- TOC entry 444 (class 1255 OID 17309)
 -- Name: cast(text, regtype); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2116,7 +2274,7 @@ CREATE FUNCTION realtime."cast"(val text, type_ regtype) RETURNS jsonb
 ALTER FUNCTION realtime."cast"(val text, type_ regtype) OWNER TO supabase_admin;
 
 --
--- TOC entry 476 (class 1255 OID 17304)
+-- TOC entry 479 (class 1255 OID 17304)
 -- Name: check_equality_op(realtime.equality_op, regtype, text, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2158,7 +2316,7 @@ CREATE FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtyp
 ALTER FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) OWNER TO supabase_admin;
 
 --
--- TOC entry 528 (class 1255 OID 17359)
+-- TOC entry 533 (class 1255 OID 17359)
 -- Name: is_visible_through_filters(realtime.wal_column[], realtime.user_defined_filter[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2197,7 +2355,7 @@ CREATE FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[
 ALTER FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) OWNER TO supabase_admin;
 
 --
--- TOC entry 550 (class 1255 OID 17370)
+-- TOC entry 555 (class 1255 OID 17370)
 -- Name: list_changes(name, name, integer, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2266,7 +2424,7 @@ CREATE FUNCTION realtime.list_changes(publication name, slot_name name, max_chan
 ALTER FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) OWNER TO supabase_admin;
 
 --
--- TOC entry 540 (class 1255 OID 17303)
+-- TOC entry 545 (class 1255 OID 17303)
 -- Name: quote_wal2json(regclass); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2307,7 +2465,7 @@ CREATE FUNCTION realtime.quote_wal2json(entity regclass) RETURNS text
 ALTER FUNCTION realtime.quote_wal2json(entity regclass) OWNER TO supabase_admin;
 
 --
--- TOC entry 452 (class 1255 OID 17430)
+-- TOC entry 454 (class 1255 OID 17430)
 -- Name: send(jsonb, text, text, boolean); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2347,7 +2505,7 @@ $$;
 ALTER FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean) OWNER TO supabase_admin;
 
 --
--- TOC entry 498 (class 1255 OID 17301)
+-- TOC entry 502 (class 1255 OID 17301)
 -- Name: subscription_check_filters(); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2424,7 +2582,7 @@ CREATE FUNCTION realtime.subscription_check_filters() RETURNS trigger
 ALTER FUNCTION realtime.subscription_check_filters() OWNER TO supabase_admin;
 
 --
--- TOC entry 503 (class 1255 OID 17340)
+-- TOC entry 507 (class 1255 OID 17340)
 -- Name: to_regrole(text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2436,7 +2594,7 @@ CREATE FUNCTION realtime.to_regrole(role_name text) RETURNS regrole
 ALTER FUNCTION realtime.to_regrole(role_name text) OWNER TO supabase_admin;
 
 --
--- TOC entry 483 (class 1255 OID 17423)
+-- TOC entry 486 (class 1255 OID 17423)
 -- Name: topic(); Type: FUNCTION; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -2450,7 +2608,7 @@ $$;
 ALTER FUNCTION realtime.topic() OWNER TO supabase_realtime_admin;
 
 --
--- TOC entry 500 (class 1255 OID 17214)
+-- TOC entry 504 (class 1255 OID 17214)
 -- Name: add_prefixes(text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2473,7 +2631,7 @@ $$;
 ALTER FUNCTION storage.add_prefixes(_bucket_id text, _name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 516 (class 1255 OID 17140)
+-- TOC entry 520 (class 1255 OID 17140)
 -- Name: can_insert_object(text, text, uuid, jsonb); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2493,7 +2651,7 @@ $$;
 ALTER FUNCTION storage.can_insert_object(bucketid text, name text, owner uuid, metadata jsonb) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 482 (class 1255 OID 17259)
+-- TOC entry 485 (class 1255 OID 17259)
 -- Name: delete_leaf_prefixes(text[], text[]); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2561,7 +2719,7 @@ $$;
 ALTER FUNCTION storage.delete_leaf_prefixes(bucket_ids text[], names text[]) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 443 (class 1255 OID 17215)
+-- TOC entry 445 (class 1255 OID 17215)
 -- Name: delete_prefix(text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2600,7 +2758,7 @@ $$;
 ALTER FUNCTION storage.delete_prefix(_bucket_id text, _name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 479 (class 1255 OID 17218)
+-- TOC entry 482 (class 1255 OID 17218)
 -- Name: delete_prefix_hierarchy_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2624,7 +2782,7 @@ $$;
 ALTER FUNCTION storage.delete_prefix_hierarchy_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 502 (class 1255 OID 17238)
+-- TOC entry 506 (class 1255 OID 17238)
 -- Name: enforce_bucket_name_length(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2643,7 +2801,7 @@ $$;
 ALTER FUNCTION storage.enforce_bucket_name_length() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 539 (class 1255 OID 17114)
+-- TOC entry 544 (class 1255 OID 17114)
 -- Name: extension(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2664,7 +2822,7 @@ $$;
 ALTER FUNCTION storage.extension(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 484 (class 1255 OID 17113)
+-- TOC entry 487 (class 1255 OID 17113)
 -- Name: filename(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2683,7 +2841,7 @@ $$;
 ALTER FUNCTION storage.filename(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 451 (class 1255 OID 17112)
+-- TOC entry 453 (class 1255 OID 17112)
 -- Name: foldername(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2704,7 +2862,7 @@ $$;
 ALTER FUNCTION storage.foldername(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 488 (class 1255 OID 17196)
+-- TOC entry 492 (class 1255 OID 17196)
 -- Name: get_level(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2718,7 +2876,7 @@ $$;
 ALTER FUNCTION storage.get_level(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 514 (class 1255 OID 17212)
+-- TOC entry 518 (class 1255 OID 17212)
 -- Name: get_prefix(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2737,7 +2895,7 @@ $_$;
 ALTER FUNCTION storage.get_prefix(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 523 (class 1255 OID 17213)
+-- TOC entry 527 (class 1255 OID 17213)
 -- Name: get_prefixes(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2767,7 +2925,7 @@ $$;
 ALTER FUNCTION storage.get_prefixes(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 538 (class 1255 OID 17236)
+-- TOC entry 543 (class 1255 OID 17236)
 -- Name: get_size_by_bucket(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2786,7 +2944,7 @@ $$;
 ALTER FUNCTION storage.get_size_by_bucket() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 541 (class 1255 OID 17179)
+-- TOC entry 546 (class 1255 OID 17179)
 -- Name: list_multipart_uploads_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2835,7 +2993,7 @@ $_$;
 ALTER FUNCTION storage.list_multipart_uploads_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, next_key_token text, next_upload_token text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 560 (class 1255 OID 17142)
+-- TOC entry 565 (class 1255 OID 17142)
 -- Name: list_objects_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2882,7 +3040,7 @@ $_$;
 ALTER FUNCTION storage.list_objects_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, start_after text, next_token text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 489 (class 1255 OID 17258)
+-- TOC entry 493 (class 1255 OID 17258)
 -- Name: lock_top_prefixes(text[], text[]); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2909,7 +3067,7 @@ $$;
 ALTER FUNCTION storage.lock_top_prefixes(bucket_ids text[], names text[]) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 437 (class 1255 OID 17260)
+-- TOC entry 439 (class 1255 OID 17260)
 -- Name: objects_delete_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2943,7 +3101,7 @@ $$;
 ALTER FUNCTION storage.objects_delete_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 486 (class 1255 OID 17217)
+-- TOC entry 489 (class 1255 OID 17217)
 -- Name: objects_insert_prefix_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2962,7 +3120,7 @@ $$;
 ALTER FUNCTION storage.objects_insert_prefix_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 424 (class 1255 OID 17261)
+-- TOC entry 426 (class 1255 OID 17261)
 -- Name: objects_update_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3057,7 +3215,7 @@ $$;
 ALTER FUNCTION storage.objects_update_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 547 (class 1255 OID 17266)
+-- TOC entry 552 (class 1255 OID 17266)
 -- Name: objects_update_level_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3078,7 +3236,7 @@ $$;
 ALTER FUNCTION storage.objects_update_level_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 496 (class 1255 OID 17237)
+-- TOC entry 500 (class 1255 OID 17237)
 -- Name: objects_update_prefix_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3123,7 +3281,7 @@ $$;
 ALTER FUNCTION storage.objects_update_prefix_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 507 (class 1255 OID 17195)
+-- TOC entry 511 (class 1255 OID 17195)
 -- Name: operation(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3139,7 +3297,7 @@ $$;
 ALTER FUNCTION storage.operation() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 505 (class 1255 OID 17262)
+-- TOC entry 509 (class 1255 OID 17262)
 -- Name: prefixes_delete_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3173,7 +3331,7 @@ $$;
 ALTER FUNCTION storage.prefixes_delete_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 464 (class 1255 OID 17216)
+-- TOC entry 467 (class 1255 OID 17216)
 -- Name: prefixes_insert_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3190,7 +3348,7 @@ $$;
 ALTER FUNCTION storage.prefixes_insert_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 506 (class 1255 OID 17129)
+-- TOC entry 510 (class 1255 OID 17129)
 -- Name: search(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3217,7 +3375,7 @@ $$;
 ALTER FUNCTION storage.search(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 542 (class 1255 OID 17234)
+-- TOC entry 547 (class 1255 OID 17234)
 -- Name: search_legacy_v1(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3289,7 +3447,7 @@ $_$;
 ALTER FUNCTION storage.search_legacy_v1(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 465 (class 1255 OID 17233)
+-- TOC entry 468 (class 1255 OID 17233)
 -- Name: search_v1_optimised(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3360,7 +3518,7 @@ $_$;
 ALTER FUNCTION storage.search_v1_optimised(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 536 (class 1255 OID 17257)
+-- TOC entry 541 (class 1255 OID 17257)
 -- Name: search_v2(text, text, integer, integer, text, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3459,7 +3617,7 @@ $_$;
 ALTER FUNCTION storage.search_v2(prefix text, bucket_name text, limits integer, levels integer, start_after text, sort_order text, sort_column text, sort_column_after text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 512 (class 1255 OID 17130)
+-- TOC entry 516 (class 1255 OID 17130)
 -- Name: update_updated_at_column(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3496,7 +3654,7 @@ CREATE TABLE auth.audit_log_entries (
 ALTER TABLE auth.audit_log_entries OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4924 (class 0 OID 0)
+-- TOC entry 4970 (class 0 OID 0)
 -- Dependencies: 352
 -- Name: TABLE audit_log_entries; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3528,7 +3686,7 @@ CREATE TABLE auth.flow_state (
 ALTER TABLE auth.flow_state OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4926 (class 0 OID 0)
+-- TOC entry 4972 (class 0 OID 0)
 -- Dependencies: 369
 -- Name: TABLE flow_state; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3557,7 +3715,7 @@ CREATE TABLE auth.identities (
 ALTER TABLE auth.identities OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4928 (class 0 OID 0)
+-- TOC entry 4974 (class 0 OID 0)
 -- Dependencies: 360
 -- Name: TABLE identities; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3566,7 +3724,7 @@ COMMENT ON TABLE auth.identities IS 'Auth: Stores identities associated to a use
 
 
 --
--- TOC entry 4929 (class 0 OID 0)
+-- TOC entry 4975 (class 0 OID 0)
 -- Dependencies: 360
 -- Name: COLUMN identities.email; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3591,7 +3749,7 @@ CREATE TABLE auth.instances (
 ALTER TABLE auth.instances OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4931 (class 0 OID 0)
+-- TOC entry 4977 (class 0 OID 0)
 -- Dependencies: 351
 -- Name: TABLE instances; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3616,7 +3774,7 @@ CREATE TABLE auth.mfa_amr_claims (
 ALTER TABLE auth.mfa_amr_claims OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4933 (class 0 OID 0)
+-- TOC entry 4979 (class 0 OID 0)
 -- Dependencies: 364
 -- Name: TABLE mfa_amr_claims; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3643,7 +3801,7 @@ CREATE TABLE auth.mfa_challenges (
 ALTER TABLE auth.mfa_challenges OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4935 (class 0 OID 0)
+-- TOC entry 4981 (class 0 OID 0)
 -- Dependencies: 363
 -- Name: TABLE mfa_challenges; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3676,7 +3834,7 @@ CREATE TABLE auth.mfa_factors (
 ALTER TABLE auth.mfa_factors OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4937 (class 0 OID 0)
+-- TOC entry 4983 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: TABLE mfa_factors; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3685,7 +3843,7 @@ COMMENT ON TABLE auth.mfa_factors IS 'auth: stores metadata about factors';
 
 
 --
--- TOC entry 4938 (class 0 OID 0)
+-- TOC entry 4984 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: COLUMN mfa_factors.last_webauthn_challenge_data; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3728,6 +3886,30 @@ CREATE TABLE auth.oauth_authorizations (
 
 
 ALTER TABLE auth.oauth_authorizations OWNER TO supabase_auth_admin;
+
+--
+-- TOC entry 414 (class 1259 OID 49843)
+-- Name: oauth_client_states; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+--
+
+CREATE TABLE auth.oauth_client_states (
+    id uuid NOT NULL,
+    provider_type text NOT NULL,
+    code_verifier text,
+    created_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE auth.oauth_client_states OWNER TO supabase_auth_admin;
+
+--
+-- TOC entry 4987 (class 0 OID 0)
+-- Dependencies: 414
+-- Name: TABLE oauth_client_states; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+--
+
+COMMENT ON TABLE auth.oauth_client_states IS 'Stores OAuth states for third-party provider authentication flows where Supabase acts as the OAuth client.';
+
 
 --
 -- TOC entry 371 (class 1259 OID 17011)
@@ -3815,7 +3997,7 @@ CREATE TABLE auth.refresh_tokens (
 ALTER TABLE auth.refresh_tokens OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4944 (class 0 OID 0)
+-- TOC entry 4992 (class 0 OID 0)
 -- Dependencies: 350
 -- Name: TABLE refresh_tokens; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3839,7 +4021,7 @@ CREATE SEQUENCE auth.refresh_tokens_id_seq
 ALTER SEQUENCE auth.refresh_tokens_id_seq OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4946 (class 0 OID 0)
+-- TOC entry 4994 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3871,7 +4053,7 @@ CREATE TABLE auth.saml_providers (
 ALTER TABLE auth.saml_providers OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4948 (class 0 OID 0)
+-- TOC entry 4996 (class 0 OID 0)
 -- Dependencies: 367
 -- Name: TABLE saml_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3900,7 +4082,7 @@ CREATE TABLE auth.saml_relay_states (
 ALTER TABLE auth.saml_relay_states OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4950 (class 0 OID 0)
+-- TOC entry 4998 (class 0 OID 0)
 -- Dependencies: 368
 -- Name: TABLE saml_relay_states; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3921,7 +4103,7 @@ CREATE TABLE auth.schema_migrations (
 ALTER TABLE auth.schema_migrations OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4952 (class 0 OID 0)
+-- TOC entry 5000 (class 0 OID 0)
 -- Dependencies: 353
 -- Name: TABLE schema_migrations; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3957,7 +4139,7 @@ CREATE TABLE auth.sessions (
 ALTER TABLE auth.sessions OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4954 (class 0 OID 0)
+-- TOC entry 5002 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: TABLE sessions; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3966,7 +4148,7 @@ COMMENT ON TABLE auth.sessions IS 'Auth: Stores session data associated to a use
 
 
 --
--- TOC entry 4955 (class 0 OID 0)
+-- TOC entry 5003 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: COLUMN sessions.not_after; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3975,7 +4157,7 @@ COMMENT ON COLUMN auth.sessions.not_after IS 'Auth: Not after is a nullable colu
 
 
 --
--- TOC entry 4956 (class 0 OID 0)
+-- TOC entry 5004 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: COLUMN sessions.refresh_token_hmac_key; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3984,7 +4166,7 @@ COMMENT ON COLUMN auth.sessions.refresh_token_hmac_key IS 'Holds a HMAC-SHA256 k
 
 
 --
--- TOC entry 4957 (class 0 OID 0)
+-- TOC entry 5005 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: COLUMN sessions.refresh_token_counter; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4010,7 +4192,7 @@ CREATE TABLE auth.sso_domains (
 ALTER TABLE auth.sso_domains OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4959 (class 0 OID 0)
+-- TOC entry 5007 (class 0 OID 0)
 -- Dependencies: 366
 -- Name: TABLE sso_domains; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4036,7 +4218,7 @@ CREATE TABLE auth.sso_providers (
 ALTER TABLE auth.sso_providers OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4961 (class 0 OID 0)
+-- TOC entry 5009 (class 0 OID 0)
 -- Dependencies: 365
 -- Name: TABLE sso_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4045,7 +4227,7 @@ COMMENT ON TABLE auth.sso_providers IS 'Auth: Manages SSO identity provider info
 
 
 --
--- TOC entry 4962 (class 0 OID 0)
+-- TOC entry 5010 (class 0 OID 0)
 -- Dependencies: 365
 -- Name: COLUMN sso_providers.resource_id; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4101,7 +4283,7 @@ CREATE TABLE auth.users (
 ALTER TABLE auth.users OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 4964 (class 0 OID 0)
+-- TOC entry 5012 (class 0 OID 0)
 -- Dependencies: 348
 -- Name: TABLE users; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4110,7 +4292,7 @@ COMMENT ON TABLE auth.users IS 'Auth: Stores user login data within a secure sch
 
 
 --
--- TOC entry 4965 (class 0 OID 0)
+-- TOC entry 5013 (class 0 OID 0)
 -- Dependencies: 348
 -- Name: COLUMN users.is_sso_user; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4312,11 +4494,22 @@ CREATE TABLE public.exercises_library (
     is_public boolean DEFAULT false,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    base_type text,
+    CONSTRAINT check_base_type CHECK ((base_type = ANY (ARRAY['squat'::text, 'bench'::text, 'deadlift'::text, 'overhead'::text]))),
     CONSTRAINT exercises_library_difficulty_level_check CHECK ((difficulty_level = ANY (ARRAY['beginner'::text, 'intermediate'::text, 'advanced'::text])))
 );
 
 
 ALTER TABLE public.exercises_library OWNER TO postgres;
+
+--
+-- TOC entry 5025 (class 0 OID 0)
+-- Dependencies: 389
+-- Name: COLUMN exercises_library.base_type; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.exercises_library.base_type IS 'Canonical Powerlifting movement type (squat, bench, deadlift, overhead) for strength calculations';
+
 
 --
 -- TOC entry 394 (class 1259 OID 17618)
@@ -4451,6 +4644,31 @@ CREATE TABLE public.professional_notifications (
 ALTER TABLE public.professional_notifications OWNER TO postgres;
 
 --
+-- TOC entry 413 (class 1259 OID 48437)
+-- Name: professional_reviews; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.professional_reviews (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    professional_id uuid NOT NULL,
+    client_id uuid NOT NULL,
+    rating_punctuality integer,
+    rating_didactics integer,
+    rating_knowledge integer,
+    rating_monitoring integer,
+    comment text,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    CONSTRAINT professional_reviews_rating_didactics_check CHECK (((rating_didactics >= 1) AND (rating_didactics <= 5))),
+    CONSTRAINT professional_reviews_rating_knowledge_check CHECK (((rating_knowledge >= 1) AND (rating_knowledge <= 5))),
+    CONSTRAINT professional_reviews_rating_monitoring_check CHECK (((rating_monitoring >= 1) AND (rating_monitoring <= 5))),
+    CONSTRAINT professional_reviews_rating_punctuality_check CHECK (((rating_punctuality >= 1) AND (rating_punctuality <= 5)))
+);
+
+
+ALTER TABLE public.professional_reviews OWNER TO postgres;
+
+--
 -- TOC entry 385 (class 1259 OID 17451)
 -- Name: profiles; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -4538,7 +4756,7 @@ CREATE TABLE public.recipes (
 ALTER TABLE public.recipes OWNER TO postgres;
 
 --
--- TOC entry 419 (class 1259 OID 45802)
+-- TOC entry 412 (class 1259 OID 45802)
 -- Name: scheduled_workouts; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -4670,7 +4888,11 @@ CREATE TABLE public.workout_sessions (
     elevation_gain numeric(10,2),
     final_xp integer DEFAULT 0,
     activity_type text DEFAULT 'strength'::text,
-    CONSTRAINT workout_sessions_status_check CHECK ((status = ANY (ARRAY['started'::text, 'paused'::text, 'completed'::text, 'abandoned'::text])))
+    last_activity_at timestamp with time zone DEFAULT now(),
+    exercise_timers_state jsonb DEFAULT '{}'::jsonb,
+    active_timer_id uuid,
+    active_timer_started_at timestamp with time zone,
+    CONSTRAINT workout_sessions_status_check CHECK ((status = ANY (ARRAY['started'::text, 'paused'::text, 'completed'::text, 'cancelled'::text, 'abandoned'::text])))
 );
 
 
@@ -4718,11 +4940,11 @@ PARTITION BY RANGE (inserted_at);
 ALTER TABLE realtime.messages OWNER TO supabase_realtime_admin;
 
 --
--- TOC entry 412 (class 1259 OID 40104)
--- Name: messages_2025_12_07; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 415 (class 1259 OID 55483)
+-- Name: messages_2025_12_20; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_07 (
+CREATE TABLE realtime.messages_2025_12_20 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4734,14 +4956,14 @@ CREATE TABLE realtime.messages_2025_12_07 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_07 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_20 OWNER TO supabase_admin;
 
 --
--- TOC entry 413 (class 1259 OID 40116)
--- Name: messages_2025_12_08; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 416 (class 1259 OID 55495)
+-- Name: messages_2025_12_21; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_08 (
+CREATE TABLE realtime.messages_2025_12_21 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4753,14 +4975,14 @@ CREATE TABLE realtime.messages_2025_12_08 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_08 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_21 OWNER TO supabase_admin;
 
 --
--- TOC entry 414 (class 1259 OID 44540)
--- Name: messages_2025_12_09; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 417 (class 1259 OID 56612)
+-- Name: messages_2025_12_22; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_09 (
+CREATE TABLE realtime.messages_2025_12_22 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4772,14 +4994,14 @@ CREATE TABLE realtime.messages_2025_12_09 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_09 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_22 OWNER TO supabase_admin;
 
 --
--- TOC entry 415 (class 1259 OID 44552)
--- Name: messages_2025_12_10; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 418 (class 1259 OID 57748)
+-- Name: messages_2025_12_23; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_10 (
+CREATE TABLE realtime.messages_2025_12_23 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4791,14 +5013,14 @@ CREATE TABLE realtime.messages_2025_12_10 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_10 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_23 OWNER TO supabase_admin;
 
 --
--- TOC entry 416 (class 1259 OID 44564)
--- Name: messages_2025_12_11; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 419 (class 1259 OID 58863)
+-- Name: messages_2025_12_24; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_11 (
+CREATE TABLE realtime.messages_2025_12_24 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4810,14 +5032,14 @@ CREATE TABLE realtime.messages_2025_12_11 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_11 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_24 OWNER TO supabase_admin;
 
 --
--- TOC entry 417 (class 1259 OID 44576)
--- Name: messages_2025_12_12; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 420 (class 1259 OID 59978)
+-- Name: messages_2025_12_25; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_12 (
+CREATE TABLE realtime.messages_2025_12_25 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4829,14 +5051,14 @@ CREATE TABLE realtime.messages_2025_12_12 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_12 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_25 OWNER TO supabase_admin;
 
 --
--- TOC entry 418 (class 1259 OID 45691)
--- Name: messages_2025_12_13; Type: TABLE; Schema: realtime; Owner: supabase_admin
+-- TOC entry 421 (class 1259 OID 61095)
+-- Name: messages_2025_12_26; Type: TABLE; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE TABLE realtime.messages_2025_12_13 (
+CREATE TABLE realtime.messages_2025_12_26 (
     topic text NOT NULL,
     extension text NOT NULL,
     payload jsonb,
@@ -4848,7 +5070,7 @@ CREATE TABLE realtime.messages_2025_12_13 (
 );
 
 
-ALTER TABLE realtime.messages_2025_12_13 OWNER TO supabase_admin;
+ALTER TABLE realtime.messages_2025_12_26 OWNER TO supabase_admin;
 
 --
 -- TOC entry 377 (class 1259 OID 17225)
@@ -4919,7 +5141,7 @@ CREATE TABLE storage.buckets (
 ALTER TABLE storage.buckets OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 5006 (class 0 OID 0)
+-- TOC entry 5056 (class 0 OID 0)
 -- Dependencies: 354
 -- Name: COLUMN buckets.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
 --
@@ -5000,7 +5222,7 @@ CREATE TABLE storage.objects (
 ALTER TABLE storage.objects OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 5010 (class 0 OID 0)
+-- TOC entry 5060 (class 0 OID 0)
 -- Dependencies: 355
 -- Name: COLUMN objects.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
 --
@@ -5086,63 +5308,63 @@ CREATE TABLE storage.vector_indexes (
 ALTER TABLE storage.vector_indexes OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 3824 (class 0 OID 0)
--- Name: messages_2025_12_07; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- TOC entry 3837 (class 0 OID 0)
+-- Name: messages_2025_12_20; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_07 FOR VALUES FROM ('2025-12-07 00:00:00') TO ('2025-12-08 00:00:00');
-
-
---
--- TOC entry 3825 (class 0 OID 0)
--- Name: messages_2025_12_08; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_08 FOR VALUES FROM ('2025-12-08 00:00:00') TO ('2025-12-09 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_20 FOR VALUES FROM ('2025-12-20 00:00:00') TO ('2025-12-21 00:00:00');
 
 
 --
--- TOC entry 3826 (class 0 OID 0)
--- Name: messages_2025_12_09; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- TOC entry 3838 (class 0 OID 0)
+-- Name: messages_2025_12_21; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_09 FOR VALUES FROM ('2025-12-09 00:00:00') TO ('2025-12-10 00:00:00');
-
-
---
--- TOC entry 3827 (class 0 OID 0)
--- Name: messages_2025_12_10; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_10 FOR VALUES FROM ('2025-12-10 00:00:00') TO ('2025-12-11 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_21 FOR VALUES FROM ('2025-12-21 00:00:00') TO ('2025-12-22 00:00:00');
 
 
 --
--- TOC entry 3828 (class 0 OID 0)
--- Name: messages_2025_12_11; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- TOC entry 3839 (class 0 OID 0)
+-- Name: messages_2025_12_22; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_11 FOR VALUES FROM ('2025-12-11 00:00:00') TO ('2025-12-12 00:00:00');
-
-
---
--- TOC entry 3829 (class 0 OID 0)
--- Name: messages_2025_12_12; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_12 FOR VALUES FROM ('2025-12-12 00:00:00') TO ('2025-12-13 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_22 FOR VALUES FROM ('2025-12-22 00:00:00') TO ('2025-12-23 00:00:00');
 
 
 --
--- TOC entry 3830 (class 0 OID 0)
--- Name: messages_2025_12_13; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+-- TOC entry 3840 (class 0 OID 0)
+-- Name: messages_2025_12_23; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_13 FOR VALUES FROM ('2025-12-13 00:00:00') TO ('2025-12-14 00:00:00');
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_23 FOR VALUES FROM ('2025-12-23 00:00:00') TO ('2025-12-24 00:00:00');
 
 
 --
--- TOC entry 3840 (class 2604 OID 16510)
+-- TOC entry 3841 (class 0 OID 0)
+-- Name: messages_2025_12_24; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_24 FOR VALUES FROM ('2025-12-24 00:00:00') TO ('2025-12-25 00:00:00');
+
+
+--
+-- TOC entry 3842 (class 0 OID 0)
+-- Name: messages_2025_12_25; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_25 FOR VALUES FROM ('2025-12-25 00:00:00') TO ('2025-12-26 00:00:00');
+
+
+--
+-- TOC entry 3843 (class 0 OID 0)
+-- Name: messages_2025_12_26; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2025_12_26 FOR VALUES FROM ('2025-12-26 00:00:00') TO ('2025-12-27 00:00:00');
+
+
+--
+-- TOC entry 3853 (class 2604 OID 16510)
 -- Name: refresh_tokens id; Type: DEFAULT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -5150,7 +5372,7 @@ ALTER TABLE ONLY auth.refresh_tokens ALTER COLUMN id SET DEFAULT nextval('auth.r
 
 
 --
--- TOC entry 4737 (class 0 OID 16525)
+-- TOC entry 4776 (class 0 OID 16525)
 -- Dependencies: 352
 -- Data for Name: audit_log_entries; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5435,10 +5657,803 @@ INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1f95fe78-e383-439f-ba32-18759510b5f4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 01:15:39.944229+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '12f02952-8f63-4577-908a-87aa4d988fc2', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 01:15:59.255339+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dc2297a0-7a70-425b-af8a-6dd212e13ea6', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 01:15:59.256152+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '39f96e36-8aad-4ea0-8d09-8f3cda15de95', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:05:34.930398+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '75ab7296-0c80-42bf-843d-b8ce0e5170a9', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:05:34.958896+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '37355dc4-5ab5-467b-af07-c09a4e773698', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:08:34.248888+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7155dd6e-397b-491a-84fb-8773501c1680', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:08:34.251353+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dcdd2ecd-360f-4494-be38-b178a557e029', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:13:59.102148+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d868797-05bd-4c01-a960-cac4c4bf824a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:13:59.104649+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '455f8067-d170-4ba8-b4a0-4a2bd485f917', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:14:58.890018+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '93509684-7e23-4c67-b22e-8299c6687e54', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 02:14:58.904848+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a6e3bdef-3273-4faf-ba4c-75c659dae219', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:04:35.128898+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a1230027-a26e-47c7-aad5-e6c679f8d932', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:04:35.155024+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2b296a90-978c-43ca-98b4-6da46be5a7fb', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:07:34.324671+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f3f0cc3b-3aad-4017-aaa1-5cc01214d0c4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:07:34.326975+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '96664b3a-53a7-461e-ae1f-97186677e78b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:12:59.446501+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'da30dca0-5ee2-48ee-a1a7-7b99f1bc9cd3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:12:59.456998+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9472df34-f558-4470-83e7-94f8ee1622c8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:13:59.083667+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a8192912-d934-4c13-99da-e2b97481293a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 03:13:59.084738+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '80237aad-b079-4e02-9537-32963cf54bae', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:03:35.161538+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e7aa6dec-45b5-44df-ada1-a1a56a16f520', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:03:35.188208+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a2d1ad05-dbdb-4e29-9cae-f61f81cef8d7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:06:34.342333+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cec478f3-15d2-4669-8df7-1aac697ca08f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:06:34.34382+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b593fb3f-44bd-4701-a787-84fc00334bd7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:11:59.306195+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '91ac471f-2f22-4ea6-ad50-ad8e7060b187', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:11:59.308462+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fbab6642-2a42-4eab-b892-62b10d479ad6', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:12:59.116935+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fa530aa8-b124-4dc3-a1a8-e3cba3f592dc', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 04:12:59.118394+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '74d834e3-fdb7-4123-8469-a6242eac8280', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:02:35.255586+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3a017ff5-0b1c-4983-b905-1e647532e32c', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:02:35.275182+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6e86a77e-931b-475c-9674-5d9036a46329', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:05:34.362664+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cd278d80-344c-4ad0-bd08-0bad17b885ab', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:05:34.36617+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0417389-6f8a-441a-89d0-057aa825486a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:10:59.706963+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e5165119-a38a-4913-9b73-6cceca5a4306', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:10:59.714049+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8b8a9583-70a3-4945-9a3f-5ff3ec521a11', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:11:59.162827+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '53312439-675d-4db9-bea4-8fff076e3e70', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 05:11:59.163573+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2fc240a8-d090-4211-88ef-6dad452f27d9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:01:35.593386+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b343d26b-bc01-4a9a-bf25-5df8c7b8f559', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:01:35.612834+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0163d3e4-6ea9-4af4-86bb-ffccc9060509', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:04:34.352201+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c0c01a0-661e-4d79-a41a-3872d7bdf9e1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:04:34.354795+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b4b40ba-4856-4486-b9d3-41654b427cf6', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:09:59.448285+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f09d5433-df45-4a6c-bc4a-649c970b6e88', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:09:59.449767+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '28364841-8b02-45a9-a261-8e55d8bb55b1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:10:59.195473+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c6ae3552-7308-4b22-b0ca-1154ea197079', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 06:10:59.196192+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '415f83d9-31c5-4ad8-bb4a-3d85e59a00a2', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:00:35.31212+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd52bdff0-7a1b-411e-be9d-5ec4b7c5faef', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:00:35.341639+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '917ee02e-a025-447e-9116-dc6d5e7b2490', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:03:34.729363+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7f29a2b8-f18e-446f-a6f5-37889c7b351b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:03:34.753175+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5278b017-5876-4de6-b9ab-b61efd412ea8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:08:59.528907+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f2182a58-068d-4d41-85cb-f7e4e7af8844', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:08:59.530556+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd156979d-e8e9-4477-906b-81012610710b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:09:59.295474+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4f1bed02-5cb4-48d3-9afa-fa509a957015', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 07:09:59.296605+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5f4895e9-0a60-4f33-b21e-9c9a6f83339a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 08:08:00.071186+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5eb701d9-50cf-4b5d-a2c6-f2d790b89bd8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 08:08:00.095833+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '40f4accf-acb5-4ea6-ac09-3b3afae10132', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 08:08:59.372351+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '45ef501b-1117-45aa-9f3a-a4bf6f4ea06f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 08:08:59.373048+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'df8bcfdd-907e-42b0-9525-6a50e7d05a20', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 09:07:00.305444+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c9414bd-7805-4f72-b4b8-e7afaecad41e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 09:07:00.331097+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9ffbda4a-20f7-4585-bda6-5db021436bda', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 09:07:59.390318+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e5cd2d0-5ca6-4c34-bcda-6b57ce76a9a8', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 09:07:59.393052+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '172a04c0-a4a7-4aa6-965b-eb74e2a511f8', '{"action":"user_modified","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-11 10:03:41.820409+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2eac0b04-0c6e-4ab7-a4e9-172cae4fe5e5', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:05:15.700483+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7a471717-d738-45c4-956a-8bfa56387eba', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:05:15.707+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '90483bd2-a59d-4628-836a-00e6d22ef0d3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:51:26.249574+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5faad87c-e72f-4b69-8dbf-8ece23ec196d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:51:26.279043+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a5889f65-c003-4a5a-bfa5-4303dc14b188', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:51:33.015517+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4308a4bb-a1be-42d9-a370-872764ab32cc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 10:51:33.01632+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '57cb20d8-4291-4abc-ac8e-5aa14ad86a19', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 22:13:41.112442+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '91be366b-f955-43ff-9fe7-5358dfb32bfa', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-11 22:13:41.129866+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9214e1e8-8b96-4d4a-b2c7-a37d369e20ef', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-11 22:14:36.916739+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1e778072-b644-44c3-8697-ecac9a20c6c3', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-11 22:14:40.169177+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a1c293de-0a3c-405b-bda5-d4e524edfe14', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-11 23:07:33.316204+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bb1a2303-d98c-4bef-ba52-b8f6300a4393', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-11 23:07:37.075151+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7447a03a-cfa3-4f5b-b3a3-156f84b7be9e', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-11 23:07:43.963199+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '662c3192-6bda-4078-95fa-3388f0d3223c', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-11 23:11:58.462161+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '48ce266e-ff7e-4f01-bbf7-719d78cffd92', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-11 23:18:16.353362+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '00abb95f-4c4b-4f33-9d68-2c41092a96ef', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-11 23:21:48.331516+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8afbda36-e816-453e-bcf2-855b4a5e8bb2', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 00:31:59.911532+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '10924f52-b194-4fe5-b7b0-91550fc604ad', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 00:32:52.709223+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4fbab684-2639-4a62-9fb2-da39c061bd09', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 00:33:07.262037+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9783da6b-957f-4e74-b67c-9c14bfbb654e', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:12:33.956846+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '791e1692-1d50-4679-b9b0-f676c79dfcdc', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:13:27.194636+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5b492d10-7bec-4edc-b253-11040c382f9e', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:23:03.591786+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f58a7e78-ea63-4791-b2f0-9a233a425efe', '{"action":"user_modified","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"user"}', '2025-12-12 01:25:23.334117+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '22c4db15-2b1c-42de-95bf-c5772705f670', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 01:27:57.012121+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e1276e67-cd4a-4f80-a003-617d37fb8d97', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 01:31:59.65618+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb04ee1a-df8e-4517-b90e-2015079677cb', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 01:31:59.661827+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b69dfb3e-7e79-49da-bc45-445b1013c48d', '{"action":"user_confirmation_requested","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2025-12-12 01:35:21.628988+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4c9d1a44-d0bc-46bb-8460-7034fab5503a', '{"action":"user_signedup","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2025-12-12 01:36:42.628967+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e62ef26-5d32-4fef-9fd4-a95890b4f4c0', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 01:36:58.307314+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6701356e-7db2-4b71-ad69-e77360479c0c', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:45:24.448987+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '265f3172-d2ec-4b3f-8023-2d38ceb8519b', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 01:49:12.791022+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '79fede97-d73b-45c4-b0df-a7be46e43c46', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:50:50.734754+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8fe69a88-7931-4763-b02b-27984cf5a5ad', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 01:57:35.286492+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '42c500a7-235c-4396-bbfe-016215d8d9c0', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 01:57:49.800962+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4b1cb9b0-0efe-475b-b563-f24e2ad24afe', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 02:24:04.417748+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8dd86bbd-a144-473b-8f0f-cd25a155970c', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 02:24:17.805366+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'edbb67fe-029d-432c-90fe-a78a506bb18e', '{"action":"token_refreshed","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 03:23:09.881833+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e87a28d-c295-4652-acaf-32743317787d', '{"action":"token_revoked","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 03:23:09.906221+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '41e8d486-5918-4e9f-9fc6-c218d30dcb33', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:23:45.680325+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c71e86be-f29c-49dd-81ae-5fa3357b9a69', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 03:29:05.859252+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7f2d7082-41ea-4ff6-8916-d7b2730d93e6', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:29:11.979158+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5876dddc-77fe-4640-9eaf-1ddbbee78d37', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 03:29:55.238696+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '47419c81-6e07-4465-bef0-e5daa10333ec', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:30:17.216927+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '212d0f35-e30d-4a13-89ed-2f41917228eb', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:41:42.318304+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'af375154-228e-451e-b4b0-7a835331a169', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 03:45:16.734063+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '726ed697-1628-41ce-9d04-19e54aed5e4c', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:45:25.02781+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0c2eacdd-325a-431e-8033-20b007863ba7', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 03:45:36.835734+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5e84b5ad-c83a-4305-acc7-5a769371e124', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:45:51.669182+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c98db0b-55e7-4b48-94bb-fdeb0447a16e', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 03:46:26.917098+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0e4d528-3a98-4de6-9e2b-4fb2a88ef3a0', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:46:33.423219+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aec1ed72-2a80-4540-ac7d-2be54fe2fd0e', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 03:56:51.572683+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9c681fec-4df4-49bd-9cee-68f4b8b72ff1', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 04:00:54.68458+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '88f7a018-62da-4585-b644-b8064e9bd3c1', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 04:01:02.642759+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1399edf2-3ac6-4e2f-8e42-5b651840ac7d', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 04:07:13.988648+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4aa73602-dd94-4e06-9e8a-7c72d677fb2d', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 04:12:29.932122+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8c3fd139-f8f2-470b-ab56-1b6e26720953', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 04:12:35.894183+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8e839a56-59e2-4677-a435-df5872ff586f', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 04:48:08.817586+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e7ff4915-1fb0-47c5-9af7-12933d33cb7b', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 04:48:18.498955+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9a497d97-4955-4340-90f7-48c651cdf249', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 04:48:21.757632+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aba17df1-2dd6-4098-bb1d-20ab8ad37d7b', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 12:14:57.147526+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c55717e2-7ae2-4eb1-964a-968352fc3ba5', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 12:16:44.214537+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f3e18ce4-8fcc-4937-bde9-f36e01cac5fd', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 12:42:33.639053+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7d171962-f520-4bb2-b014-113696fe0c2a', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 12:42:41.09165+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0ae7a3af-b2a5-4b89-92f0-e73f54a51007', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 12:44:44.168261+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c0e68ffa-2828-46dd-8b2a-903cd1f1d555', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 14:23:43.908902+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a29c146e-0834-4367-bf33-8a11e48d95f2', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 14:23:43.929372+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'de76f3ea-99af-42fe-948d-24e881acbf1f', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 14:27:01.012941+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4d61fa01-5913-40a0-b9f4-d552113d179d', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 14:39:15.263427+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '42a21455-cb4b-4cc6-ac0d-81947b0176fc', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 14:39:51.56135+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ab92f975-9951-46dc-a098-682a89627383', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 14:40:08.955574+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4e166023-3553-4c35-9d57-b60c76da39a9', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 14:57:39.182345+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '97b8a630-822e-4286-bb55-30407fc433b1', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 15:01:55.765164+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '841ce650-35f6-4782-94a1-cc834bbdbcaa', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 15:59:21.422648+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '97464173-c213-4220-abb3-11e9b186379b', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 16:01:23.431885+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c053df13-796d-4941-b744-5146aa94f431', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 16:01:23.435308+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9b69de59-2492-4cb1-abc3-4b0ed62c1067', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 16:55:54.446079+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0adff6c6-fcd5-4de2-9b11-decd23a67cad', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 16:59:12.5541+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fe74c353-86bf-4bd4-93d0-52114818efaa', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 16:59:32.741409+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a3eca7a7-6f8c-48a9-ac94-d8a2de50ba04', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 16:59:53.676268+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bf7e53d1-c413-48ab-a921-08d6f4fe7157', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 17:00:23.21083+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '63dceba6-2848-45fb-a304-e54f7ef94777', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 17:00:23.212841+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ef990988-f60a-4e58-8487-f6f3fcc34dcb', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-12 17:23:37.996373+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0357473c-ae46-4f3e-8e8e-a69589a14ee5', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-12 17:33:54.450202+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0aa33ba4-9f90-4e28-81dc-306350713455', '{"action":"user_confirmation_requested","actor_id":"8a8f1b6c-6659-4384-b8eb-e87b06280981","actor_name":"Contato CapiFit. App","actor_username":"contato@capifit.app.br","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2025-12-12 17:34:34.181892+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c84a17bc-a3da-4889-ab27-5fe5d867cc9b', '{"action":"user_signedup","actor_id":"8a8f1b6c-6659-4384-b8eb-e87b06280981","actor_name":"Contato CapiFit. App","actor_username":"contato@capifit.app.br","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2025-12-12 17:36:12.221718+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '81ecf273-44dd-487f-90ad-2a5127642049', '{"action":"logout","actor_id":"8a8f1b6c-6659-4384-b8eb-e87b06280981","actor_name":"Contato CapiFit. App","actor_username":"contato@capifit.app.br","actor_via_sso":false,"log_type":"account"}', '2025-12-12 17:36:25.933772+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b88339ae-b9bf-47aa-a834-2c9df346ca31', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 17:59:23.417303+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ecf39f57-44a1-42ce-a475-3fe1de4bd6c0', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 17:59:23.425142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '182c7913-9ce6-44d9-8da2-3cbddcb2634a', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 18:58:23.366832+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ea76b13e-6dee-43e2-903c-7baa18ee3993', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 18:58:23.384552+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6a797775-7271-45f0-bfb8-d441219d284c', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 19:57:24.060347+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '34202928-d03b-4495-8229-d157c62676f4', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-12-12 19:57:24.071217+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1c982aae-01c1-4a4b-b844-0eaf65199494', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-13 19:00:17.098639+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9f0a0a53-6509-47d6-8aa7-914434f664a3', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-13 19:12:11.95942+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8b62f37d-9b94-430f-b37c-ac0f1e42f667', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-13 19:12:32.306295+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e3bc9ada-d58e-4745-b4d3-70df4cd24314', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-13 19:12:40.159992+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e404305c-3a1f-4019-92e3-3d624048f1a7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 20:11:03.063945+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e34ebf62-aee0-4ac0-bd08-63d5ed937913', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 20:11:03.076027+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e9ebb089-ee17-483b-9007-1b51896435b8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 20:12:02.635644+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7772a442-1915-4ada-bed3-b843087989ed', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 20:12:02.636809+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8bc7fe53-4d00-4694-82ce-406586161a76', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 21:10:03.319198+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c55602d0-cbdc-4674-8d9c-3373ac3c41ce', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 21:10:03.347655+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b6751c7-c03b-46c3-990e-f963541e7579', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 21:11:02.163767+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4f410673-d15c-4f76-a5fe-c0894eeef214', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 21:11:02.167508+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '47fd6dd6-7ed4-4f6c-bdd2-d819e6f2d72e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 22:09:03.24229+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '79360cfa-be09-40ab-b970-8739c70bbaae', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 22:09:03.266317+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1f16e967-17af-40b3-9b90-82bc646ea23d', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 22:10:02.652515+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0e61d998-0cc5-4a4c-802f-7d9b537c905f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 22:10:02.654378+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '361b1d50-bdc7-4c6a-a5d1-774e23b81679', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 23:08:03.38726+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fc2adb8c-fb96-4165-be2f-0be78637fcb7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 23:08:03.402887+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '26c45c42-dc37-4820-8557-460c16a0511a', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 23:09:02.642569+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '04410ac6-a693-4aec-8311-36fc52f85d51', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-13 23:09:02.64394+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '10c4ec86-422b-4cc8-9ab6-66c15aad0964', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 00:07:03.446149+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '33526069-a30a-4a19-ac4b-b3be3b0b46d9', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 00:07:03.473193+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '070de93c-0784-468e-b54e-9820cfb88a18', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 00:08:02.722204+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b540e21a-60b5-4dd8-a413-b96fbc42a519', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 00:08:02.72336+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3b92cfb4-d281-46b8-becb-d8287024a8d4', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 01:06:03.476221+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2b09c3b5-6f25-470c-8a52-decf54060bbc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 01:06:03.494002+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'abe78278-fc50-400c-b3f0-63b9459b1ead', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 01:07:02.82096+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ebef2650-be70-4b1b-b531-e6f0e196ae2f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 01:07:02.823204+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dc291f86-0806-4dd0-b709-7039e191ce64', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 02:05:03.497193+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2a53acd1-a4ce-46a1-9ea7-23b3d58b2d7b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 02:05:03.513481+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '235f52ca-0a68-4f08-808c-c467610da8e1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 02:06:02.855566+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0032f114-943e-4a08-91cb-3254341e7ac7', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 02:06:02.856672+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4e6b1a73-40bf-4d1d-9438-1736861b3560', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 03:04:03.594344+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9127482c-f346-432b-98bf-a72cb2dbedb7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 03:04:03.614142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '244c6429-912e-4478-b67b-eaa77512acb4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 03:05:03.314942+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '52c5ba86-609b-426b-9b97-7cf3b0e4a89c', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 03:05:03.328887+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '213b8cc2-8923-4a45-95e1-d8cdd8ff281e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 04:03:03.534755+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4fd1770c-9cd1-4d0b-a646-483118ef1eff', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 04:03:03.565167+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd1732055-4ac1-46c5-92d1-8771c1eca9c3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 04:04:02.796288+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ecc54b14-2143-4d59-b716-d2468c33ee30', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 04:04:02.810149+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd6c718b9-208a-459e-a60a-eb0133c21af3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 05:02:03.686608+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd96f716e-c553-4590-b1eb-9f6ea8a7413e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 05:02:03.714323+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ff14b7d9-52b7-4572-b580-fd3f8f00a8e9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 05:03:02.886294+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8ccdf2ac-b3ea-49e5-b64c-e29146a65e06', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 05:03:02.907553+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b9cd0726-aa1b-48b7-85d2-115e35b9528d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 06:01:03.707214+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '18beb41a-497d-4889-9e75-570ce29a5a2e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 06:01:03.732983+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dd662c0e-347f-4ed3-8a7d-38f35bfac0c3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 06:02:03.079362+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '376a64c4-3026-44a5-b6df-2cb389d21bfa', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 06:02:03.082053+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0a1d76c3-fd9f-430f-b472-bed703f1a8eb', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:00:03.780501+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd220bca7-ad76-45ce-b777-d2b7224b1c8a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:00:03.807195+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '14bcb4ed-561c-4f1f-ac69-a9a3d1006a13', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:01:03.091934+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c72a6f3b-8532-454d-9d9f-11c1bba66476', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:01:03.093315+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '50df2d25-731d-4871-b899-23c17fc9e740', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:59:03.904258+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '44c8f24f-da0d-4bbc-b626-4b5f0f56a79b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 07:59:03.930785+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aa78f7ab-b17e-49ff-b347-a46e098ea89c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:00:03.182355+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'daa01518-decf-422e-bb28-d3683cd7e667', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:00:03.187106+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2580d5c2-0ecc-4355-bb06-fdf078b457f2', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:58:04.270796+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '84223be1-a154-421b-a13f-cabd16bfc037', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:58:04.287754+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f3decff4-5ed8-4703-b028-9e6115409403', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:59:03.249009+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9af98de9-4072-48bb-bbd4-03200d6cf55f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 08:59:03.251069+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '99711189-3c65-4776-9b32-2614759d9dbf', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 09:57:03.916076+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7982f2fe-dfe2-46e2-8eae-013ad871615c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 09:57:03.936174+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7144aecb-16ec-440d-ba65-86499457aa87', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 09:58:02.913487+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3d7aa689-b857-4bf9-b609-76e998ef4dc1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 09:58:02.916003+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '47cd8f18-11ce-4e6f-a2c8-4f8f560c3452', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 10:56:04.019208+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c2e7d5a6-1fc5-4486-b8d2-e059080aa68c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 10:56:04.041078+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bbdc36a1-0e3b-4e58-95f8-01676ec5b3b7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 10:57:03.307318+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f1405278-5d57-478c-819e-26346f644a91', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 10:57:03.308451+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5713da1c-0833-45e2-b36d-04dd7fcd21c0', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 11:55:04.118881+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bacd32ff-8b72-41e1-8020-f17d37375f78', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 11:55:04.137471+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'babac824-f38f-43fe-b4c9-99341f094688', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 11:56:03.046463+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '07df2487-744a-4232-8087-baf2e2899c20', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 11:56:03.047452+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd8e7a6cc-5307-462a-ab96-8e9f14f755a7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 12:54:04.13379+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd0d64537-a059-4c06-9606-9bf498ad7e02', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 12:54:04.149134+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4bbb0f1e-d960-402d-9710-279acde0fa79', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 12:55:03.021617+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a4bbc09d-9d12-4a22-b066-a16578927912', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 12:55:03.024712+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'be68c782-62c8-47a2-a6d1-0dfeb126401e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 13:53:04.104424+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd49dcf0c-f88a-4047-be9e-9bd1aca47d3d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 13:53:04.127304+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1d0bf17c-4ea2-4be1-ad26-5f3aaed06c39', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 13:54:03.530544+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1d2f4a7f-de49-42c3-bf31-b147b54f8e49', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 13:54:03.533642+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f0add5fc-6508-4fc7-b78a-c2eb37c3a5bf', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 14:52:04.274912+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6159f92f-c534-4cc3-b667-06a61863ff1f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 14:52:04.289528+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b153f784-dbe5-443b-b2a3-38993b9b1384', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 14:53:03.565189+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '84a1d4bc-7574-492d-af9f-1820fa68e657', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 14:53:03.566788+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a7d3e286-50a0-4752-a709-33ece45614dd', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 15:51:03.56899+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '76912e76-7386-42da-862a-6bdf288f3b7b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 15:51:03.583136+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9a102cb4-3c04-4406-a3c1-ab304643ce98', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 15:52:03.28621+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8c53a406-bb1f-4eae-acf9-7a703e2a8920', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 15:52:03.286904+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c9596ff1-fc35-49f0-afb7-8ce50befc5fc', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 16:50:04.676876+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ae517605-9408-4397-a070-e2bc09e98f92', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 16:50:04.696316+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a7e45e51-6128-4a11-b886-39dd994bf1fa', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 16:50:50.783945+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f99e4ff0-b2cb-4709-b3af-7809b6c8cf30', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 16:50:50.784922+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dc4ba775-407c-4051-a944-3c6816a6fbd0', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 17:48:54.67919+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ccce1119-b8f3-4ee3-b4ea-493150760b8f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 17:48:54.697431+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4a8c965c-e472-48ec-b08b-e5138279b21d', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 17:50:03.759226+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4c29097e-a6de-41da-a649-ecf95f620ce1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 17:50:03.762385+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '07d41fda-613b-42cb-aba0-c35a810dbb3f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 18:48:04.436551+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '731ef02e-c04d-4c81-9e27-2d39dd1d2be1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 18:48:04.45449+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '271a7629-cd96-498e-bf17-3b832fcf689b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 18:49:03.792924+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5ff99a9a-bf9f-4a22-a5a1-2b7a60a47dbd', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 18:49:03.794308+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1b04c7c9-3dd2-4c6b-b710-a42e171f20a6', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 19:47:04.481908+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '30bd9480-83d2-4b61-a931-f48a81e5ba87', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 19:47:04.496507+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '45fb5c01-f27c-49ff-a3d6-cf146e3556d1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 19:48:03.912256+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0e0ef3d9-abbf-4ba8-846f-286a1f3f6b00', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 19:48:03.913321+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7af5e1e4-bde2-4588-9541-63d1ba968d2e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 20:46:04.596479+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '419d1c0d-78b9-406e-ab03-01d5637bd39c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 20:46:04.612608+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6dc05ec1-31a4-4842-a3ce-a6db041eb417', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 20:47:03.895228+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1c21c3d9-2bbb-4bcc-b4d7-8814dcae6e03', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 20:47:03.897819+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3c787ecf-00a8-4a40-965e-580ce78b0274', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 21:45:04.615653+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1af9f2dd-831d-4201-a6d4-f2828e2d924a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 21:45:04.630765+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2142670e-c8d0-4506-8e90-2dbe1391b4a4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 21:46:03.537335+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2bfb8035-e05b-4591-aac6-f9da77b3c14e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 21:46:03.539276+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9667a432-f648-4b01-af37-e7e150ca02c9', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 22:44:05.007931+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f7862618-e023-43f5-b450-f0c252946eda', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 22:44:05.029459+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ebee2215-237d-4c35-86b1-5f49265e5046', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 22:45:03.975964+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2fbf72cb-754d-43b8-a13c-fd7037009626', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 22:45:03.977179+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '857f4734-b16e-421d-b879-e4005801b21d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 23:43:04.67897+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b7be8487-f56e-4f18-8ade-83962b9885f5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 23:43:04.692024+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3016f6ab-11d5-4bb2-9af0-517f4649baa5', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 23:44:04.66912+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ce744a62-ed17-49cd-96aa-6d72b047c475', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-14 23:44:04.70257+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '23dbbc83-47aa-4486-8283-ecc137a37377', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 00:42:04.809972+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '23ad7f58-43f6-4bdd-966a-bc3e93d7ca25', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 00:42:04.833209+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2abc67c7-11a0-4313-b776-ebd498b22ed4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 00:43:04.090748+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f68a8b58-bf8b-43f4-9686-b82303ed6d83', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 00:43:04.092885+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'faee8f0a-90f3-4aec-8114-b97826bb15a5', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 01:41:04.955066+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8bfef1e2-ab7f-425a-97e8-99cf8dad7447', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 01:41:04.973136+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1ea0c2f2-4cb0-4276-ada5-7532db4618b8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 01:42:04.177824+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cc0365e1-5cdd-459d-a29e-85f16e0f5e62', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 01:42:04.179192+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8adf7026-0082-4035-aad2-6170f9e93319', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 02:40:04.96129+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e61943c1-acba-47ee-98da-47e30459b0e5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 02:40:04.988531+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e65044fc-5fea-4299-a7db-015b4dc3ce22', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 02:41:03.799477+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4b00e1ea-28bf-4e96-8692-1272cc2407cf', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-15 02:41:03.801687+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '120feb47-2ab8-41e3-8e90-a71b92f3ed0a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 00:46:04.371254+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '44107f88-1fa3-4518-8922-d6ca63e98bcc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 00:46:04.399323+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '25210684-99a9-4d5f-9851-f6e1f6ea6dd4', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 00:46:04.37121+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '49fab268-1e7f-42c0-b37d-70463c84f2e1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 00:46:04.399223+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a4a18e23-2be1-41f4-b4dd-163049875a1d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 01:45:04.903761+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0782bd5-200f-43be-8703-f6938e71de96', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 01:45:04.903755+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '04eb11f7-dc8f-443b-9f28-e42deec84e33', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 01:45:04.92887+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd76de2a8-49a0-446e-a021-0c78d811f51d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 01:45:04.928713+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8079771d-1b46-4863-b687-2af86ccd29b3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 02:44:04.848227+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '682a74f8-2d8a-4ef9-930a-eaa477f5c7cb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 02:44:04.848228+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '927806e0-39fd-47e4-a8af-30bab96aea01', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 02:44:04.862209+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '17a297a7-ea16-4456-aedd-a3298b47a6b2', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 02:44:04.862133+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '71898127-a5f2-4852-8d0c-608c8c930fac', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 03:43:04.864506+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9b612e34-a78d-4afa-a2e0-89f490fb623e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 03:43:04.86433+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5ecf8833-4b30-40de-a840-556c06fe0580', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 03:43:04.881211+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '07fd5e17-516a-460d-acde-c3a96d246fb7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 03:43:04.88135+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '66ffd2f6-8841-4231-8a8f-f0d8a388df9f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 04:42:04.594845+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dc7a1e5a-cecb-452b-b2b2-529ad750484b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 04:42:04.630476+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7fb9b1d5-922f-46eb-8ff7-8b58627228d9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 04:42:04.632823+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5825dc5a-616f-4ddd-a491-2f4e1a76e212', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-16 04:42:04.634557+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c87e6a1a-4074-44b3-ad4c-32fd45fff405', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 00:42:52.626234+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cafd874c-4915-44a2-83a5-1f44c1054ef3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 00:42:52.655361+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3562fd0d-1974-4e44-92b1-efd3aecf6e6a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 01:42:20.598092+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5c199f14-710d-45cb-9d3b-6d0390adfaaf', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 01:42:20.609261+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '68b18522-9858-44db-aadc-46e6528a8816', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 02:41:20.228175+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ea4e5908-4008-46d7-994a-3348b6d1a8ff', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 02:41:20.254092+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '06394a9b-13c3-4389-9c7f-ece4873e4c40', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 03:40:26.522807+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '531c9742-2c53-4553-bb9d-5a34b3ee380c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 03:40:26.54969+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e6cbf57-8a36-4baa-9492-7b94cecc0c4e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 04:39:20.723039+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b7ba8335-31a3-4499-8321-f3bbe0968f48', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 04:39:20.735426+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '574e5932-0be4-48b4-8af6-b276683b6ef8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 05:38:20.853023+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bca3fcb1-c599-49e2-9c9a-bc87b7ffea23', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 05:38:20.887561+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0f72894b-4888-49d9-9d49-ac38da9f69e8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 06:37:20.945348+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8b8b6a24-ded4-412e-8320-9461c68e709b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 06:37:20.956218+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '73f1ed71-2c4f-49dd-b3c5-2f56e8d6d2a8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 07:36:20.986037+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '937d033f-2092-46bb-8959-019c7f663381', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 07:36:21.010965+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5399496e-4450-42c8-b156-976d2c2a7b7b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 08:35:21.086049+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '62368305-effe-4df1-9349-14e8746b3121', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 08:35:21.105591+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3b24da7f-830b-488b-bf86-ace510ca8112', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 09:34:21.037514+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '91b4bfe0-ad1f-48b4-91fd-d88d5f8f4925', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 09:34:21.055902+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b2187e37-da51-489b-bca8-2394e1b3525f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 10:33:21.141379+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '40243a4a-43a6-4915-84c3-d131d274205b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 10:33:21.17217+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bd29eacf-7887-49d0-aec7-7780adbb398c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 11:32:21.123426+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'be9a6e1b-dcf0-4860-b0b5-ed78d75874e7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 11:32:21.141387+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0801d3bf-d11b-4aa5-a79f-66334345de60', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 12:31:21.239033+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '908d4334-4360-44c3-bf3c-2e159545be88', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 12:31:21.255106+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fc3fddb7-f489-481e-9bbe-6e2747fa61e2', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 13:30:21.313537+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a73cc9ae-2bff-4231-b0ef-27738efbbdd4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 13:30:21.332993+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'afd8e9e6-d379-42fd-a148-75d1c28a3698', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 14:29:21.352561+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '43421403-abb2-4e37-8176-a37def79079e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 14:29:21.365416+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb485e02-5285-41ff-b1e4-10e4a3e8ee15', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 15:28:21.465181+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c3ba5f64-3ea2-4453-95d6-8530df4d9649', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 15:28:21.478528+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cd741ffc-69de-472d-aca2-99eee2d77d2e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 16:27:21.443468+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7828a83f-c8f2-4b40-a0aa-c9f7d15f90e3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 16:27:21.464729+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a0e72a47-897f-4979-9d80-c4da6a99e932', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 17:26:21.378884+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7b01f8ea-e03c-4882-8876-8f914846312d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 17:26:21.396617+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3d26e4b5-7dca-48f0-bfb7-8fbeeea7de31', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 18:25:21.495833+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b83d0bc4-e965-42ce-8b55-a135d11d7948', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 18:25:21.520736+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '129f9935-39cf-4e70-b5a6-fd66ca7b6fae', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 19:24:21.50362+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'de3653f7-756d-476a-8f82-afbd9a559462', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 19:24:21.516985+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6ad4eb91-efbb-4740-bc38-2b149e1ec3d8', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 20:23:21.612214+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '094783a5-d006-4818-afc0-ee4a86f0714d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 20:23:21.630275+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '23ba3b29-aee4-49fb-9db2-18357e1ab807', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 21:22:20.848987+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1a73ce2b-0121-43fe-8576-2340d339f686', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 21:22:20.858209+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5e5ea0ad-bbb1-4675-9208-77990d91f937', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 22:21:21.725157+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3460a49e-d173-4cd4-b312-d4adc4508aa8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 22:21:21.753007+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba64087b-3435-4062-97ab-a25e80f05aba', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 23:20:21.697596+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fb15f2cb-2da5-4ccf-8048-d61ddf63b75e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-18 23:20:21.7134+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b6519206-3028-484d-b0f6-bf386b6655f6', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 00:19:07.31093+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5f256143-07ab-4836-a5ff-68fc2ed7f354', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 00:19:07.321848+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4ac5862c-0ee5-40d8-b2dd-09b164a3a80f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 01:18:21.891044+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c006a885-0669-4b97-8039-a10136cd3c3c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 01:18:21.916376+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4cd3ba83-bad1-41e2-98e5-3bd6943c8604', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 02:17:21.947128+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'decbdbed-d9bd-4393-ab39-63454475ea15', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 02:17:21.971747+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2f7c91f8-03ad-4565-a72d-65d8f260513b', '{"action":"logout","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-19 03:11:17.17914+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '50f2797b-ee0f-4e79-8d38-d90966e4c442', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 03:11:33.14932+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6958296e-bdc0-47f6-abc9-70b664a359bd', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 03:11:33.150107+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '26398a29-0885-4184-b26c-ec0c963fa7e2', '{"action":"logout","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-19 03:11:38.944831+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7e004da7-2bdb-4e64-9161-ca14d21ec255', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-19 03:11:46.408991+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5a1f8365-81bd-4123-8e7e-f724baefa914', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Panzer","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2025-12-19 03:12:54.179019+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ff3450ca-d44e-473b-9550-08f1d3484b2d', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-19 03:15:06.434255+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a8188bb0-f8f0-4959-9f56-4c9f4c15e812', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2025-12-19 03:15:17.564959+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '35b173cf-6fd2-4d6f-bbf6-fe07c56dc563', '{"action":"login","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-19 03:15:20.941165+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dc606d87-113d-48c6-b591-bb6f2c52477f', '{"action":"login","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-12-19 03:42:49.833602+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5ee975f7-9f3c-4dcb-b259-e8a44fa645eb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 04:14:21.913618+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c775f47-86fc-4aea-b9db-59403ed361f4', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 04:14:21.937051+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b01496a9-ef94-4f92-a07b-4a30ade44840', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 04:41:07.430454+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b5e3d2a2-501c-4fd6-9a92-7defe14f1f92', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 04:41:07.449933+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d09b2a1-c049-470a-ba43-02ead8b780c9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 05:13:21.767894+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0ab23d7b-7096-48a9-b6b5-1377ec08b15b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 05:13:21.789283+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd5145fb7-d12c-49dd-a419-8e220159ce47', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 05:40:21.900388+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1cc994c8-bc24-496d-85d5-14b0501a0bc3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 05:40:21.928359+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2ee93aff-a2a5-4eac-9bc8-946c5da2e3a3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 06:12:22.03364+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e267baaf-9305-44c2-a782-762256094741', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 06:12:22.04589+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e711e960-039a-434b-b905-ea614e17c3ec', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 06:39:22.213576+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd318f371-ec61-428c-a00d-e5596ca3999d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 06:39:22.231832+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '95c1dfc9-ad24-491b-8090-fa2002c7ffce', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 07:11:22.261483+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a7cc0aba-ed34-4c21-b1ff-00b6eaa8b5a5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 07:11:22.267763+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'da22759d-0861-4229-8b77-f086cea70c3c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 07:38:22.278467+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c68430f-9cc4-42d4-958c-d39185a1ab44', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 07:38:22.306919+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1cd3f43e-a038-479a-89c1-d2bbf81166d2', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 08:10:22.114305+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4a6e8d9b-ec5c-4303-bb75-1103e4e7c386', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 08:10:22.133044+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7a90f5e8-c3d8-439c-9360-d4c637f8b453', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 08:37:22.090381+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c84b87a2-d015-44f6-89f5-e3ce106d6a0a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 08:37:22.105989+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4c89492e-7b7e-43d2-9df9-c780cc96607c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 09:09:22.05913+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f025d2a6-49e5-425f-9f35-8abb5b326d80', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 09:09:22.074724+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '30bb9b6e-8a5a-4c0a-bdc9-8c084566a86d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 09:36:22.064722+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '48b25150-e415-4d69-89c0-58eddd6eeb6b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 09:36:22.082774+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '86053fb1-2740-4603-b386-898b41bfd108', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 10:08:22.05941+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '28126e1b-8779-45b2-9b41-1d7ba0c2f58b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 10:08:22.082068+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd0ce5c7c-dd5c-45d5-b5c1-1972a5cbb133', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 10:35:22.295741+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '99ac2a06-f103-4a03-9c42-a3892e62bf6f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 10:35:22.315614+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f30a18f3-43cc-4a01-a6a5-6e0ac2bd0f7b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 11:07:22.205774+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c6c0437e-c64a-4042-9725-d71ccd87bd65', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 11:07:22.223235+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0920ed06-baa3-45f4-a068-3fa9a177a460', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 11:33:40.770558+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '134f94c5-4cfb-4d17-a6cd-8210752f2a38', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 11:33:40.782705+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd164e850-bb01-4f0a-87d1-086f4ee72cc3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 12:06:22.467594+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'be0b549b-6674-407b-bda6-08b95a85696f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 12:06:22.488294+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '21f175e6-60ef-4337-99d5-b6a7f2c0479c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 12:32:36.130124+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cfc87c8f-7024-4ec3-a58d-b4c75ba034e8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 12:32:36.145486+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '90579c39-2944-448b-86f5-3561cf4d20a8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 13:05:22.339048+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a84b97e6-4ca6-44ac-8b3b-ed116cf72dad', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 13:05:22.359339+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8aa7a2a8-8cc4-450e-b8f4-bd6813c3a6af', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 13:31:08.316683+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '889d6fdc-2ef7-4ae9-96cf-743b821f68a9', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 13:31:08.333297+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '18031aee-d28f-4790-9edb-2d06f5405a9b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 14:04:22.441908+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '150d3077-d5ab-4a10-b246-0fbc423a1319', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 14:04:22.461253+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '055df801-b6cb-4232-921c-a1d2f535f1b3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 15:03:22.482448+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7a9c4754-8773-4365-a7d5-f332a3f83881', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 15:03:22.497324+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e6342d4b-74d3-4b2d-aaf4-d6597831c145', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 16:02:22.588366+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3280a1dc-1c00-47ce-8050-e05983df21c0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 16:02:22.603672+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0442e16a-63a2-4cc5-953a-53d5eda68cca', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 16:20:28.122322+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a358a7c7-b7ae-4315-b5a9-85df855e52ba', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 16:20:28.137594+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e866c57c-cec1-4aed-8427-c6a5bc313653', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 17:01:22.46433+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ddfd8dfc-1e83-4f0e-9148-9b1df86a1e19', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 17:01:22.48319+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fdff544a-22df-4705-a930-47e29ab012f3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 17:19:22.537005+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1fea8ea8-ca8f-4e12-9768-930b01d843cd', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 17:19:22.550128+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '27e15419-40a2-41ba-be94-42d2e5066c72', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:00:22.75077+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f586c620-b768-4e7b-85f2-2eea059ca4b4', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:00:22.767888+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '63b83fe9-2ba0-4dd6-aaac-cd1e7c18211b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:17:48.446751+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c7819758-919e-45b4-a197-b5706ea9d301', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:17:48.463427+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fb8c3307-2d22-4a00-9492-de1de7476e64', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:59:22.650989+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '251ecb82-52c3-487f-8594-536890c94abd', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 18:59:22.666623+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3581204a-aa93-4afe-9e14-b5b089a50cb1', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 19:16:23.165419+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3f6de1eb-5c75-4ffd-9776-964273334e2c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 19:16:23.181159+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8e2313c0-3919-4c5f-860a-8e8acbde12fa', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 19:58:22.86942+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9875bacd-a1bf-4db5-9c4f-2a8318d50e98', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 19:58:22.883645+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bcd56e5f-5813-4f9f-8f74-15ddc7d78bd2', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 20:15:22.667935+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c7a9b397-2e56-42f1-ad88-2ae491187071', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 20:15:22.681922+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8868e5ad-1004-4c24-9dbb-aa8e24c92a83', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 20:57:22.864698+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '20122fd2-e62d-414a-af45-37b9eab1c466', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 20:57:22.884842+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '304ff8e5-b613-465c-be20-fd36366fe01b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 21:14:22.611553+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b8824bae-2424-4b9d-9662-22cc8a7b60fa', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 21:14:22.622609+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '390e0d0b-e33b-4e7b-a069-dcdc731a7126', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 21:56:22.964173+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a729718a-825f-46fe-8b79-f726c9707067', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 21:56:22.979561+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'aa006ba2-3805-40a9-b420-a629011da5d4', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 22:13:22.719073+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c49db37d-c1d9-4bec-adb7-c98f2e169def', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 22:13:22.734153+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a53bbe3f-126d-44de-9edd-e95490ad7706', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 22:55:22.803867+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3f303586-2b52-4e49-b774-682050e33189', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 22:55:22.816071+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f7ff9700-8364-4325-b735-a53634dbc09f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 23:12:22.862064+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5ee1e2ff-b2b5-4184-ab6c-e4188ba48485', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 23:12:22.876445+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '660978a5-1ff5-4aaf-a09f-c21fea82377d', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 23:54:22.988771+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b1621b63-2d3d-4b52-a330-be99c90b0bc5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-19 23:54:23.001466+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ec29394e-4aa1-4d05-89fd-3b0e18a0f1ca', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 00:11:22.748924+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2302d670-c3d3-4b24-8af6-a9559ede30b8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 00:11:22.762366+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8ed67849-4fe2-4773-9c60-8ec32c5f308e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 00:53:23.031476+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '68e47533-52ac-489b-bc25-277e530c2446', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 00:53:23.052505+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '542c2559-ce96-4885-96d5-c74e799cded7', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 01:10:22.914973+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8f585243-8b2d-4981-87a8-365f17ca2723', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 01:10:22.936969+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd1a0f9d0-81dc-43f9-af26-2a2c4ab60e50', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 01:52:23.155884+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '95a546f1-032e-4069-8df5-5a3ef231d43d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 01:52:23.174691+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a0be8f81-0b26-467c-adc1-0bee1bf7d216', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 02:09:23.011011+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '735d18bd-3bf4-42a6-87f8-4794a3ef830b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 02:09:23.023475+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '966f0f25-5e5b-4d84-b2e0-82407ed23f22', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 02:51:23.213719+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '75537b53-e931-4b51-9cbf-3a25ad6f43d5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 02:51:23.236948+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3bc76ca3-df92-4c02-b3d2-b124a173f7fe', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 03:08:23.026857+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '576826d0-2126-41ab-aa1e-55e80e60d37a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 03:08:23.042794+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3231a8d5-539f-49b3-b033-c4a673feadb9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 03:50:23.242848+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd78e72f5-cc2d-4950-bbeb-9699b312fa36', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 03:50:23.262648+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '65274f92-e97a-4225-882b-96c7d6922923', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 04:07:23.130274+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1154ca34-e457-46af-8223-8e5e64216b42', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 04:07:23.144234+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b59f7298-4920-4524-9200-f9c11a3c54a1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 04:49:23.221669+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3d6f6885-dee4-47e8-bbc1-f964ec8e7211', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 04:49:23.238703+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a58a973a-7cbc-46aa-a0d9-07637e0dfcbc', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 05:06:23.062113+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5111b930-cfc3-4479-bc36-1974935bdedd', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 05:06:23.08262+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0e8d8c04-c37a-40e7-a76d-ee0f348c55c1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 05:48:23.348158+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '374b420d-d4d2-4f4e-899f-76851fa572e9', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 05:48:23.368834+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '199c08e2-36af-4640-8e75-78004ff8d23c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 06:05:23.235374+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd387e635-c1f3-424c-b14d-08b4dc21e80d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 06:05:23.24868+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0e6e09b3-c700-4e42-a49b-9cf9cbca54e6', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 06:47:23.671552+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'db84c438-462a-4074-ad9b-c80e0bdf1f20', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 06:47:23.696113+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e54b0732-a373-4ad4-94f8-f348966e7bf6', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 07:04:23.162729+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '24498bdc-be76-450d-a2ab-cb3bdac82622', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 07:04:23.178826+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f4869d61-e34a-4f2c-9be0-f6a595574992', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 07:46:23.672461+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2b439fb1-aaeb-4d54-af20-b28c5fb2494b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 07:46:23.694057+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '44d8ed31-5ba5-48a6-b3ba-3749d1337b6c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 08:03:23.287035+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9efbea94-9298-48e6-a98c-19e5a5dc9d8b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 08:03:23.301026+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '713f6e44-c4dd-47ed-b1f6-7e51783235f3', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 08:45:23.520428+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '66da353c-3a78-46d5-893d-276c1d781989', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 08:45:23.542625+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c0f862c2-4199-43d5-afd6-803539629895', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 09:02:23.330597+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0b00f459-5827-4198-8dee-cb38b5d6acb4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 09:02:23.344161+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb1e3554-429d-4984-9bba-872545a06c4f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 09:44:23.732081+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9c442a44-b470-40ba-9fd7-1e0006b38c04', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 09:44:23.751378+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd217c784-acf8-4f3f-9e4b-4e8accb7714b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 10:01:23.472234+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '553bf0b5-28c4-4479-8619-3b438c9b8373', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 10:01:23.492275+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '896aed6e-b0d7-4489-8860-0a5dab02ceaa', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 10:43:23.574656+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9841d4be-cd85-4c1d-9fa7-2cfa8c4e0665', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 10:43:23.595887+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '87731c52-6de7-41e9-8df7-b7b30abd846b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:00:23.308103+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5414c5bd-e635-4695-bf99-1b0614b088c8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:00:23.323645+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '09e64f4e-cb4e-47cf-a6c7-f11f771af9a6', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:42:23.705639+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '03a5e5cd-ad11-4589-88a8-92b7bc2fe6e4', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:42:23.721074+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb3d5120-766b-4471-96fb-e18613af6c77', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:59:23.523129+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ff9ba6d9-c77f-438b-82fa-c1152898a0cc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 11:59:23.53174+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '39878380-8f1c-4f3e-8377-af259f24c0a8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 12:41:23.660609+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ac8a76e3-9005-443e-b689-5b528910b9b0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 12:41:23.680715+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '689d18b7-ec9c-4bd2-b805-5b29f96671d0', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 12:58:23.542004+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a61b0a96-9d87-4f37-8ba1-5c5d46237f86', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 12:58:23.565452+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f1ebe583-6d08-46f2-a838-9d5a88bc70cb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 13:40:23.562187+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f57cfe91-8ea0-4cc3-b1d3-2290b12a9394', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 13:40:23.572948+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5edee6b7-d62b-4e45-b057-af536bc01f1c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 13:57:23.536632+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'afb4a8ff-6570-4931-abb9-a663f88a6231', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 13:57:23.549418+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7788b856-c0a7-441e-94eb-65d8714cf32c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 14:39:23.793367+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '466f5c8c-c3d9-4774-a60f-b0308ca714f8', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 14:39:23.815881+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '004db968-9b27-4665-8974-bf7f4ee0c64b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 14:56:23.557706+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '98d98c6c-9b12-42e7-958a-18c34ad88e3d', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 14:56:23.569078+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7ec87b8f-e5eb-4bf8-a640-f29038208fd0', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 15:39:11.996654+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd5aa783a-6d0a-4cdc-aba2-5d534cb0ad11', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 15:39:12.008509+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2270b9a5-f597-4102-84f2-54af8057fdd9', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 15:55:23.756345+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ec77b461-429f-468d-aaa0-21666539ffe9', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 15:55:23.775107+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a03501f7-d8de-4acc-b1c0-c3bbac0d7b3d', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 16:38:23.885083+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2587fc94-152b-4803-a09d-6e8418227f0f', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 16:38:23.904867+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '600068e9-3a2c-48fc-b411-70b4b34dd071', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 16:54:23.837524+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6e04e61c-9c0e-4546-bd6f-8f1c1a2226ec', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 16:54:23.855308+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2d2ce0bc-0c3f-4688-8aae-22bc53e8ae3a', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 17:37:23.852987+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c473985e-44f6-41ab-bca5-cb732482a490', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 17:37:23.864663+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7f3c496d-131e-4777-b5f6-c01f9344ca53', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 17:53:23.851016+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '01ba33f9-c96e-4fa2-b7d7-35be1e68f7de', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 17:53:23.868696+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '79321ad0-dd1e-43fa-98a7-b6a0db0ec07b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 18:36:02.432926+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '54591433-758a-499e-b86f-acc0275ef8eb', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 18:36:02.448349+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b8ba35b5-1c32-44fc-9f4e-1b32030c6a0a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 18:52:11.76444+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6f2b4136-90cb-4e74-ab99-e5ad7884429e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 18:52:11.781106+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '54f667c0-96a4-4727-8895-b168bf02c4a7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 19:35:24.104871+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '15cfc6e3-9624-49ac-8013-fedf6cde0234', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 19:35:24.125462+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b16dc80d-7e82-47e8-b299-1a9da9c071c3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 19:50:34.147027+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9f91ae82-08ef-47cb-8fb0-05f50b31ca79', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 19:50:34.162526+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba4928c8-8b4b-4e7d-a56e-33c093e3e581', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 20:34:23.975934+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd2a31c14-4dcd-456a-ae9d-1dbaab25227e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 20:34:23.986203+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6185ee1a-bbe6-4297-ac6b-b577cea8796a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 20:49:23.461008+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3cc6dd79-32bc-40b5-b23b-c8f8595f06f6', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 20:49:23.478402+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd159a17d-e9b5-4a51-8cbb-e9a9147f89cf', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 21:33:24.194464+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '05b18e3d-b274-42bd-a63c-dd3c3357fb1c', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 21:33:24.213197+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fcc8e6ee-8f4a-4377-8dfd-33ca45414493', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 21:48:23.874015+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6800da28-1611-409f-b264-41be89ca7e2a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 21:48:23.889688+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cc873c9d-a5d9-4f8c-b7c8-4c5d11f588aa', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 22:32:24.11394+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '040bf67a-d383-4b41-ab27-1104c687a247', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 22:32:24.135382+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cec58842-f4d3-470a-85a4-6302e23bb574', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 22:47:24.519279+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c0b9ede5-6af2-435f-ad97-021c06ad2d67', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 22:47:24.540442+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2045280d-a237-43d3-a41f-77fc2a459e0f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 23:31:24.55854+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '80752424-703e-40ac-acc5-ff04c05f6819', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 23:31:24.577495+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a19178cf-74f0-4cfe-9636-99a24718249d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 23:46:24.084323+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8c3256c9-0703-4305-a0a4-f1ef8407ba7b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-20 23:46:24.096062+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb24f090-e1f2-4f83-9a4e-72bd71d09ad7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 00:30:24.364728+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b253a46-d689-4a1c-903f-ac997728c992', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 00:30:24.377336+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fd0b2ae3-da07-489f-b69e-f8812898d412', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 00:45:23.952455+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '955484bf-35d7-4660-b909-8121642ac685', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 00:45:23.961684+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c13e293-bec6-44eb-9a3d-e87e72b82155', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 01:29:24.351221+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9bbc3dd0-8869-4814-aa3f-961a8f1ef770', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 01:29:24.368617+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba6fda2e-1944-402a-a251-0948cdf9eaf9', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 01:44:24.066741+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4e272968-98c4-4ee2-bcc8-74e068c91e77', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 01:44:24.081541+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '303846b6-41a2-4ee3-98ec-7d8689868344', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 02:28:24.424604+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1b98003b-e99c-4cf5-b045-9fe4e1549a32', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 02:28:24.446224+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0fc8a5c-6f6b-4e48-bc25-b181c4307f1e', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 02:43:23.856088+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2228dde8-e3e6-43ab-8dc8-0d7fe7a31706', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 02:43:23.8681+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e63d9b2d-98d0-45f8-a1de-e93cd4d19cb5', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 03:27:24.630133+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1fdef269-7b1b-44d0-949e-c1f1c0096303', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 03:27:24.647579+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '00f6b6f0-1e60-4279-8628-10d302c13562', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 03:42:24.348376+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8ca53445-d8e9-4f80-a362-d19d758eb1eb', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 03:42:24.359699+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8efeab1d-5c73-4a3f-8357-a6bad09cb4bc', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 04:26:24.539703+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ac3baa15-2048-4091-9621-36bff294100b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 04:26:24.554662+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7a151a8b-5ce4-4e64-9bd3-32d8b7e61bd1', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 04:41:24.030657+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f5aae28c-cf8e-4f52-aada-bce9276b351a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 04:41:24.043403+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '36c964c3-a288-4041-9541-43a8efab262f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 05:25:24.653755+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ed464596-16f7-4399-9da8-df0dba294e4e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 05:25:24.674908+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f7878aa4-6d58-465d-b8b5-5f75f8c9180d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 05:40:24.005332+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '15b0ca9a-c2e0-432b-86b9-26a4c78e77d0', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 05:40:24.011297+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '01e11759-2889-473b-b8be-9f3ea6904b45', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 06:24:24.598142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0040d289-49f6-4816-86ec-7f0a0792b456', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 06:24:24.625442+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '04d3e655-3542-43de-bbbc-abc1d71f1143', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 06:39:24.216781+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '14d2b469-192a-4d4b-a921-3f08aad436f8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 06:39:24.241518+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd877a44a-1df4-4dd3-bc1c-8c31e2e798eb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 07:23:24.738628+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3b66374d-0881-4a7d-b7b0-1a2bc9d15b16', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 07:23:24.764506+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3266b9a4-32b6-4483-a8e5-e56c1228c5e6', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 07:38:24.027092+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a415e4ed-bc81-4718-b2ab-ae2dc4fb04e4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 07:38:24.038736+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9b665718-fa9d-44be-bdb5-13b434c0385e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 08:22:24.70916+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cfd0a48b-52ed-4ed6-95c1-093b856b925d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 08:22:24.732107+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ce5b5d58-7abb-44eb-954f-32fda9ecfc60', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 08:37:24.469313+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5f0660c2-f543-4cd1-849d-710770749504', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 08:37:24.495779+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '19442c91-5491-42f8-8333-8774a96dafb1', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 09:21:24.786199+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0bb88540-a28f-4eb5-b7ce-39e6f87771f1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 09:21:24.797971+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '425d0e1d-a8f6-4d87-abf9-3db842137d06', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 09:36:24.177653+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ccb42737-f4be-4f59-b055-75b4f2687de6', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 09:36:24.193002+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'db886e9c-851e-4fa7-b757-fb4d459dd8d9', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 10:20:24.818119+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '293dba0d-7524-4287-bd01-384dc0fb405e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 10:20:24.830217+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b4803e2c-71bf-433d-bb98-100c64bfb001', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 10:35:24.550834+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f070c85b-2765-4f69-b414-05d9911612db', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 10:35:24.578475+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a9a51127-1570-47be-92b0-c21143983200', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 11:19:24.91477+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4b7b822a-db8d-4729-9a8a-1423d3197cc3', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 11:19:24.933518+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c2c6f931-208e-4380-8242-27356b57adaa', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 11:34:24.367366+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8260bf67-c77f-4c20-bb4e-418030d313c1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 11:34:24.383565+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '09d86374-0763-44d3-868d-99c5c2756051', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 12:18:24.962442+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8a123577-d9c0-4309-b4ee-181353e850f7', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 12:18:24.982536+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '63975dd7-78e7-4e91-b522-c2a7a09734e1', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 12:33:24.342302+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd4aaea66-bf61-4681-be3d-3f1c1506175c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 12:33:24.353083+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '772f2779-5e5a-42f7-80c1-4c4139436a62', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 13:17:25.165222+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fd25593b-0e44-446f-a209-c48f334543b3', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 13:17:25.181476+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7c804043-6d4d-48a0-a471-03aa8e14995a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 13:32:24.769933+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4c021362-306e-402a-8b64-57dffebf8d36', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 13:32:24.77869+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9caa133f-0fb6-437a-8c16-4461842dc882', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 14:16:25.025952+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dbf4d601-df4d-4172-bc55-88c2e61fa619', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 14:16:25.055646+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'db8a154d-10b7-4e1f-90ec-c52ab933ba35', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 14:31:24.350416+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0d869255-7455-4e94-8016-96d252ef2137', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 14:31:24.362018+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '07a413a3-59ab-4b36-8be5-19b959dbff4c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 15:15:25.376708+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '60305881-9d97-453a-9d85-53032ea23d1b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 15:15:25.395364+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '23deb005-d0b1-42e0-857a-efda72e08153', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 15:30:24.986896+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '995e90fd-8321-477d-a41e-0b33aea33a9c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 15:30:25.006401+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0a9c33d9-d43a-4ef2-9552-d57937458566', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 16:14:25.12478+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9411fa26-1552-45ad-ae70-e68e6d02726a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 16:14:25.141484+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7f4a5977-8406-4fa9-89e9-2b3c819f2201', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 16:29:24.8684+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a0b13e27-a029-499a-90c0-67b73dc6c736', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 16:29:24.875671+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f584a333-2b06-423e-8ffc-f505b8dd8b09', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 17:13:25.111162+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1049a5ec-ee44-4823-b06f-56b8231e9f25', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 17:13:25.139671+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '11fff14e-0aad-4a6c-9412-e095629cda85', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 17:28:24.426092+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6f3b430e-cd80-4962-a2be-ee85abfcd178', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 17:28:24.438777+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e4fc2aa8-50a5-4905-af9b-430178084e10', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 18:12:25.289459+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c46e0faf-c500-4e63-9fc7-1e4ab54787f7', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 18:12:25.306076+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6d73883c-9283-4764-bb5a-2463097ab800', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 18:27:25.18288+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '832516b4-f218-46ea-a2f9-07f8fe677c60', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 18:27:25.199842+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5e550c0e-d086-4b1d-ade5-2fbfd14f8adc', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 19:11:25.257032+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '680c357f-3538-4892-9b50-26e05e33abd6', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 19:11:25.276167+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1ae07f1c-5548-4cfd-b3c3-cb7e713f9cf5', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 19:26:25.172812+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'beffe581-7481-4a48-aad9-b6ee15c926c1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 19:26:25.189418+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '35a59daa-723a-4d05-8ca6-29ea1e8a60a8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 20:10:25.377934+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5f432de1-1dad-4c23-bb8d-c5dc749e3450', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 20:10:25.388738+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '107a778d-d71f-432f-adb0-39bc7155d3fa', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 20:25:24.754641+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3209e7a7-90e1-44de-9324-15f48dbcfe6a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 20:25:24.771031+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '87af3279-ca05-4839-b2bb-1bfbb295300e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 21:09:25.42237+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fb848910-7f07-48d1-bb2e-31f60469f5c8', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 21:09:25.438976+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9ef6b2be-59e7-41f2-95a7-338a65699be3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 21:24:25.446331+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba84d5af-a3ad-4993-9e78-1de9f08f8c13', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 21:24:25.463756+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b6158c62-1b37-4248-8c6e-2bced98807fd', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 22:08:25.319893+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '68437da2-e6ab-404f-a19e-ac898b72e442', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 22:08:25.336013+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd06cd329-8b95-4827-9ad2-9a2ec4b6fe02', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 22:23:25.459358+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '129c7056-0fb8-468a-8487-1e57c14d8ca8', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 22:23:25.474669+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dfb4151b-1482-4fe3-9830-22033c4f2461', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 23:07:25.570478+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '37a5bc64-6823-48d2-8456-50ec566bdcff', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 23:07:25.588614+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '033b50ff-1251-4c10-b0d4-b0b848163a03', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 23:22:24.764399+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a43fb47c-a59b-44af-9ee8-dd4ed2fef657', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-21 23:22:24.779367+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '22776172-642e-4f54-bc6e-67d9883ef76e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 00:06:25.516991+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cc9e6fcb-4ebe-490f-a5b2-e4dc63d15fb6', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 00:06:25.529045+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'da4b2cc3-8590-4e7d-bf92-fa07943506fc', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 00:21:24.894191+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dad02509-73d2-4d15-9d16-027ce145bb1f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 00:21:24.904668+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1b9acf0b-6eb9-4424-bdf3-5c4343a71237', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 01:05:25.71516+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8a88c49a-d807-45e6-a59f-a9ffd7467f50', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 01:05:25.738211+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '89374d91-e1f2-4334-8633-262f32d96a9b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 01:20:25.408567+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6f80756a-f062-41b1-b23d-d02443d0deeb', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 01:20:25.423873+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8fb61156-0276-40f4-9307-e1c671cbf0ca', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 02:04:25.738215+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e9428e60-4e3f-46ef-9c28-98cf81528b9a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 02:04:25.755564+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4dd923fa-57a3-4e87-be5b-52fef91566ad', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 02:19:24.993502+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'adccbe70-a488-4f18-9812-699a381093b6', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 02:19:25.010548+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7d699af3-ac4a-452e-b14e-b9df1faa8090', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 03:03:25.771921+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c60a06e7-1d4c-40f3-b77e-e47ae393dad5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 03:03:25.796122+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '15063c5a-ea1d-4658-95ea-528d9024e021', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 03:18:25.201962+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5b6ca8f5-037c-4345-b7e7-18b9991bc008', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 03:18:25.219448+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '51a11b4b-5c05-4efa-8a59-7963a3d75cdd', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 04:02:25.806863+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd9b03ac3-776e-4a90-8bcb-07efb7560575', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 04:02:25.827817+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8d6a7bd6-114e-4869-bb1c-a78a8b991e07', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 04:17:25.172637+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5870c05f-a194-42b7-b38d-57c2b8fe2e85', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 04:17:25.180784+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd3e82cb5-349a-4e2e-9e65-2f402dda6119', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 05:01:25.858457+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e960e33-badc-4dcf-9b0b-a4baefa65674', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 05:01:25.878301+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '46423853-3ce3-4cb1-95b8-4ac48717e441', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 05:16:25.200268+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '141f56c2-579e-4a59-8001-1f9e57536500', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 05:16:25.217448+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c9364973-adf8-4a2c-8fdc-818d992bac2e', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:00:25.864108+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '90d96edc-1583-411f-bf64-904447050b3a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:00:25.881812+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '880157fa-92e9-494c-a696-0ee8d04773b5', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:15:25.313533+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b6ffd822-4fed-419b-b1e9-88920a1dc9d4', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:15:25.330345+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '021fba0b-4898-4306-ba43-02d99e065e77', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:59:25.919386+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0c21bd43-4e34-4b0b-97ec-88593c244ab2', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 06:59:25.935362+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4fc681ff-6da2-47da-bba7-1bb133ea76c3', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 07:14:25.451184+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0a3e8dec-bf96-457d-913b-4ce732ecccbe', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 07:14:25.478271+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c2099ce-c2ee-4933-85a7-7c44a2c823ec', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 07:58:25.912628+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd65b0997-5d05-49f4-9d86-70bbc8f4b6c6', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 07:58:25.932018+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '87774ba8-c504-4249-8517-4a39fd4bdf55', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 08:13:25.507408+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1e168486-dc53-4302-b00b-46b996f99c45', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 08:13:25.527157+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f41ae20a-9766-4b2f-b3cb-f02046998869', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 08:57:26.000411+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c2a7ae9-b85d-4989-92c3-1e86bc812383', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 08:57:26.022331+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ebdca11b-f8c8-4c5c-aaca-6449625e6663', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 09:12:25.560048+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b36a363-e6ec-42cc-8056-844b5f434adf', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 09:12:25.574699+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1c0d939b-4afe-428c-9f06-a367e4cb2a2c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 09:56:25.988042+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4eb853ea-d911-4f38-9f18-798dc0c8dd36', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 09:56:26.008908+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f515d661-dd94-43e5-b5d5-23f90b3c4208', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 10:11:25.5192+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5ffdda6d-fd20-4100-8e91-e68ed6b16f77', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 10:11:25.536941+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eafbcc7e-dda1-4fb5-ab52-bdde5991e6ba', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 10:55:26.37703+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '83725b90-d5b5-42bf-9862-28ddede59f4d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 10:55:26.400827+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ecfd2e23-d0ed-4b6f-b070-969ab307f150', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 11:10:26.031517+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '068e8314-3d9c-4ef3-8c5b-d7fb4cb1b541', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 11:10:26.043233+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '647285ca-6639-451f-8319-9aee4ba1529b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 11:54:26.14353+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fdfb0886-3a83-4768-86f0-5ec419f7e4c5', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 11:54:26.164402+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3de8b7c5-848a-4581-a852-9aaf5877b57f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 12:09:26.001849+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '323a21a5-01e1-49ea-9233-fbb8d18960c3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 12:09:26.016684+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e9cabcab-bd65-4eab-8299-c95c57423f5f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 12:53:26.18329+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9cc8dfb6-055a-4a38-8252-43793bfbe06b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 12:53:26.203897+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1c312166-fae1-4856-a5ea-8711d5c24e71', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 13:08:26.017492+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '261e5e8e-4906-4321-9383-4fcf87177fd1', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 13:08:26.037713+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1fc827a3-898a-4c39-aa81-d674c9ba346c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 13:52:26.264937+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '45c96303-854c-44dc-9b4b-5842a8e671f0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 13:52:26.286233+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5c63a873-70b6-48d5-a1c1-01cf028fb07f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 14:07:25.749444+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b3eadf63-41d2-40bc-96f3-713df7c64ac5', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 14:07:25.765394+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f4571021-0deb-48ed-974f-5a3302f1641b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 14:51:26.247214+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bac6a3c5-469b-4067-a9db-517ee0fcbe19', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 14:51:26.2651+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3b820695-a64f-433e-acd5-8767ef7cb87c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 15:06:25.719407+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '37967871-4975-41a7-8513-c921550d0dea', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 15:06:25.73164+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2b8b30df-07e5-4de1-a16f-047cb36a2f84', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 15:50:26.358428+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b13455cb-2e10-45e0-bcdb-c7d9de7fd24a', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 15:50:26.373052+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b01cafdf-2788-497d-a945-fd79f8818f28', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 16:05:25.767897+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6c0b8610-e3be-4e8c-8775-f666854ec651', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 16:05:25.777914+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4e880875-0e41-47c6-bf3e-6305cd46e87f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 16:49:26.473516+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd1219e2c-8653-4150-97c2-fed684b349db', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 16:49:26.490165+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a47e2bf7-3bea-4135-8dc8-955ccbb2fb64', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 17:04:25.831504+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c9c38ed8-8d07-4c15-bce3-cc7205c6f60c', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 17:04:25.850647+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bcd6d245-f854-4718-a87a-110acd26108f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 17:48:26.509092+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6f164435-adfb-46dd-9cdb-9379e3ab8e27', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 17:48:26.53385+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e447f07-0cf0-469a-9e89-781425c2578f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 18:03:25.927048+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a21248eb-76cf-43f0-9fe6-12c2c06ef723', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 18:03:25.941566+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c777fb50-d2ee-4654-ac8a-b3a345322b61', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 18:47:26.803927+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a3ae4996-54f6-45c3-aca0-d60171fdc8d7', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 18:47:26.831409+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f714ea2c-6114-4853-8328-8ff4f9c7ac7c', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 19:02:26.007316+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'eb0467f0-14c5-4229-8078-6432d52208af', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 19:02:26.0298+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'c8a5fb41-7adc-4f5a-9e4e-730c76a478d5', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 19:46:26.59222+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7b5a8939-f049-4d30-9554-b261e3ab0a3d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 19:46:26.604966+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8017520c-0a14-4c9d-b9b6-f07cec4cf700', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 20:01:26.379738+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '51a99992-c16c-4a3d-9338-8a11959bf79e', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 20:01:26.387681+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b98655c-d730-4e56-96f9-62d7d69cdd84', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 20:45:26.645729+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '67001ea5-5c7d-4b8a-b6cd-7821cec4268d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 20:45:26.660269+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd368be71-2091-4d4b-957e-6770c6167613', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:00:26.411922+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7ed09977-1373-4dd5-b980-b976b6646f99', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:00:26.423937+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd772fec9-4fe5-450d-8073-e71618fb6d3d', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:44:26.69717+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1072d9fd-f043-4607-8633-b35725701614', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:44:26.714234+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1a49d1ab-4be5-45f5-bcd2-ea192bfe5a54', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:59:26.137575+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2475165f-8797-4318-bda9-7a8449e39d83', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 21:59:26.151536+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b7e71ad1-3046-4e50-b1d3-d4a3a900c53c', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 22:43:26.807356+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9910f98a-3102-4eb9-95a1-c151af66042d', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 22:43:26.83231+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f8491695-c4a7-4311-8d95-3a68d7f2ea7b', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 22:58:26.239485+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8f2b289e-4fae-4fd4-a1c3-961bd650cb66', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 22:58:26.258392+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '59945938-b515-492f-b611-eb0ec3954bf8', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 23:42:26.761923+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '194b1200-603d-4fa8-8d9f-e8cd0d481726', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 23:42:26.775525+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a5e74ff3-2419-4638-b07c-b80e366a018f', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 23:57:27.008339+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'ba335e74-0d5b-44b5-bdcb-2ffb2a688dcd', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-22 23:57:27.024192+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '4b688c9f-d953-40ac-aa14-fbd169c4ad6a', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 00:41:26.861844+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d7f19b1-147b-4829-8dd4-bd2886caf7c0', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 00:41:26.880427+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '64c19faa-418a-4f33-8ac1-db8488a55c60', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 00:56:26.289598+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e25bdb7d-59a1-41ae-a9b7-91e423f334f7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 00:56:26.310021+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '036c4dc6-329d-4690-a81f-c76d6f08d2c7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 01:40:26.900383+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b0ce83e2-4141-48c5-8d8a-4d17f689aa71', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 01:40:26.916909+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bbc8a592-bdb4-4953-ae9e-b318d2fc453a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 01:55:26.71412+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'dd00496f-d792-44e8-9d84-83fba00ff75f', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 01:55:26.733313+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cea78140-416b-45ec-a639-155d8f6673dc', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 02:39:26.980151+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'abfc7dd8-77ab-4ed5-a2a0-928bbb36ae48', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 02:39:27.0025+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '11d902bb-99ed-4eaf-9c5a-e3deb1706914', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 02:54:26.422627+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e6cd6e8b-acdb-4659-9db4-1f832851d8fe', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 02:54:26.440254+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '92e73f72-4fee-4e9b-9f70-0b5a51f06243', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 03:38:26.92155+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '42e88ca9-07ba-4f60-b447-1ce6c9e5be7b', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 03:38:26.933939+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '84e31bd1-5fb2-44c2-bd1c-5ad1874c25ab', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 03:53:26.457341+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1db9c055-9fb5-471e-acc7-992d19fef766', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 03:53:26.470562+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '74172a2d-e676-4087-ad8d-6cd036415ffd', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 04:37:27.065213+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '08e96449-b9ae-4a78-8267-0239007669fb', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 04:37:27.09367+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '19d0ecc6-d7fc-4d8f-ae44-88cccd2851ba', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 04:52:26.432705+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a82aefaf-94e6-46d8-a937-9c4ac782796b', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 04:52:26.444804+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '50dcf1cd-4b73-4042-95ad-97e8f18b2c3f', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 05:36:27.062735+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fe65ebef-5bfd-449b-bc9c-a1b094457096', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 05:36:27.081798+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2e0630c1-00e0-4cc1-b2e4-058d76726c70', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 05:51:26.560551+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '912d8ba2-7292-4bf1-ba78-c1959db45186', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 05:51:26.577595+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bf41de61-1ae3-4e80-a1a6-627407a18efb', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 06:35:27.193715+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '558e5644-f4de-45e2-aa98-6cbf6a5df406', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 06:35:27.212142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'fb80545f-f99b-4a68-819c-8d70260105ee', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 06:50:26.502159+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '199e8c67-8b93-44e6-8710-692c3ba02038', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 06:50:26.519937+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '561e69bf-a9e7-4686-a4fa-139969270a13', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 07:34:27.281158+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2d55e753-de87-4d42-a809-e97d7a7ba0db', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 07:34:27.30421+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'cece7c98-f980-401d-a052-b225f7c1e4a9', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 07:49:26.708057+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2068b390-6774-48b5-913e-28a41d837129', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 07:49:26.723189+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '34230b52-ff0b-44de-9586-c426520bacf6', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 08:33:27.279558+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '47ff26c1-a5e1-4f83-b9f9-caa37d90a907', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 08:33:27.304073+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6484a426-4491-4cc2-93f6-f4378c09e518', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 08:48:26.588817+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'beb72150-1e68-49b0-8e6d-3df27a9ff3e7', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 08:48:26.601702+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f6022282-85b0-43e6-b53b-71845752c5c7', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 09:32:27.618611+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'e5844ac9-33d6-4ceb-9d11-88e8ef41ed75', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 09:32:27.648286+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7de53c83-4dfe-4dea-99dc-66edc0000db9', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 09:47:26.652342+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '525ca642-9021-4f96-afdc-494689b49cb3', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 09:47:26.665627+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bdb119c0-f653-4277-8e4f-f2c865f08834', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 10:31:27.343907+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bc973e97-4a18-4c0e-8742-bcf45325a1b1', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 10:31:27.363307+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'de76c87d-70b0-488d-87ab-28cc5a5ffe3a', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 10:46:27.347678+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '0cbcc49d-f4a7-4c29-a225-97024a693939', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 10:46:27.367794+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6da9578c-c930-4b13-825a-e269b307a84b', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 11:30:27.670352+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1853fbef-0a6c-4b6c-ba16-099e343e03b4', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 11:30:27.698686+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '77d6c42c-4eb5-444c-9383-e9f72770cc1d', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 11:45:26.944168+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1127bb29-4a65-4172-995c-e9254a76bebc', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 11:45:26.962261+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '13fed967-8360-483c-8e4d-1f9701aa5741', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 12:29:27.403701+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9cafb529-14f4-4c02-8f5f-08f28fd75bf8', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 12:29:27.4205+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '00d89d58-c04f-4325-8164-eaf9a5851523', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 12:44:26.818185+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2a0243c1-12b3-4e15-bcce-d79dffed2d20', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 12:44:26.838314+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '33981016-ddbf-493a-911c-cbb81b50c351', '{"action":"token_refreshed","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 13:28:27.328148+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'bfbee408-d3ad-4200-bef2-fcdd103f6d4e', '{"action":"token_revoked","actor_id":"bf547c35-e240-45db-bdb1-5a1fc4bc8081","actor_name":"Vinicius Santos Garcia","actor_username":"cliente1@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 13:28:27.346774+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a98bd47c-2a0c-4f54-ba89-45b9b6d26617', '{"action":"token_refreshed","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 13:43:22.886814+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5d79f456-e985-444e-89a8-cef9f5430e6a', '{"action":"token_revoked","actor_id":"f2bb6acc-835a-414c-8856-836415b23896","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"profissional@capifit.com","actor_via_sso":false,"log_type":"token"}', '2025-12-23 13:43:22.90658+00', '');
 
 
 --
--- TOC entry 4751 (class 0 OID 16929)
+-- TOC entry 4790 (class 0 OID 16929)
 -- Dependencies: 369
 -- Data for Name: flow_state; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5446,7 +6461,7 @@ INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000
 
 
 --
--- TOC entry 4742 (class 0 OID 16727)
+-- TOC entry 4781 (class 0 OID 16727)
 -- Dependencies: 360
 -- Data for Name: identities; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5455,10 +6470,12 @@ INSERT INTO auth.identities VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'f2b
 INSERT INTO auth.identities VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', '{"sub": "c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4", "email": "admin@capifit.com", "email_verified": false, "phone_verified": false}', 'email', '2025-11-16 22:10:09.627966+00', '2025-11-16 22:10:09.628014+00', '2025-11-16 22:10:09.628014+00', DEFAULT, '8350b6c2-fdb1-4d00-b40d-82a7a2b136ec');
 INSERT INTO auth.identities VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', '7171a1a8-524b-4cee-9040-886c74afe93f', '{"sub": "7171a1a8-524b-4cee-9040-886c74afe93f", "email": "cliente@capifit.com", "email_verified": false, "phone_verified": false}', 'email', '2025-11-26 19:46:42.702055+00', '2025-11-26 19:46:42.702118+00', '2025-11-26 19:46:42.702118+00', DEFAULT, '170c593d-e246-41a9-94a9-55a03695be80');
 INSERT INTO auth.identities VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '{"sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "email": "cliente1@capifit.com", "email_verified": false, "phone_verified": false}', 'email', '2025-11-26 20:31:24.794343+00', '2025-11-26 20:31:24.794402+00', '2025-11-26 20:31:24.794402+00', DEFAULT, '0ae678b6-2e44-4ae5-b55b-98a1b648dff8');
+INSERT INTO auth.identities VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', '8ca7cccb-0707-4d95-8f97-25488223b8fd', '{"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "client", "email": "betosouza615@gmail.com", "full_name": "Gilberto Panzer", "email_verified": true, "phone_verified": false}', 'email', '2025-12-12 01:35:21.6216+00', '2025-12-12 01:35:21.621654+00', '2025-12-12 01:35:21.621654+00', DEFAULT, 'b8cdca59-58a1-4763-adb2-53e1fe505111');
+INSERT INTO auth.identities VALUES ('8a8f1b6c-6659-4384-b8eb-e87b06280981', '8a8f1b6c-6659-4384-b8eb-e87b06280981', '{"sub": "8a8f1b6c-6659-4384-b8eb-e87b06280981", "role": "professional", "email": "contato@capifit.app.br", "full_name": "Contato CapiFit. App", "email_verified": true, "phone_verified": false}', 'email', '2025-12-12 17:34:34.173605+00', '2025-12-12 17:34:34.173664+00', '2025-12-12 17:34:34.173664+00', DEFAULT, 'ce986d98-1ff4-4695-a521-dd86047ebffd');
 
 
 --
--- TOC entry 4736 (class 0 OID 16518)
+-- TOC entry 4775 (class 0 OID 16518)
 -- Dependencies: 351
 -- Data for Name: instances; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5466,22 +6483,17 @@ INSERT INTO auth.identities VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'bf5
 
 
 --
--- TOC entry 4746 (class 0 OID 16816)
+-- TOC entry 4785 (class 0 OID 16816)
 -- Dependencies: 364
 -- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.mfa_amr_claims VALUES ('a937373b-4d24-402d-bc65-557909dd665f', '2025-11-29 15:14:44.011427+00', '2025-11-29 15:14:44.011427+00', 'password', 'b8179c03-e8af-45c0-98ef-4b92908e37bf');
-INSERT INTO auth.mfa_amr_claims VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', '2025-11-30 00:01:12.863596+00', '2025-11-30 00:01:12.863596+00', 'password', 'a429053e-b634-41c4-8c95-fdef5c3c3679');
-INSERT INTO auth.mfa_amr_claims VALUES ('bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb', '2025-12-03 01:02:23.766555+00', '2025-12-03 01:02:23.766555+00', 'password', '4be51d35-55d7-4c79-9495-414543c43ac6');
-INSERT INTO auth.mfa_amr_claims VALUES ('27a49fd3-d747-49d1-9d11-75455d3ac701', '2025-12-03 01:23:36.223346+00', '2025-12-03 01:23:36.223346+00', 'password', 'daec54b3-9d95-41fa-b548-8e20e140b261');
-INSERT INTO auth.mfa_amr_claims VALUES ('2d81d935-94bc-4c43-b1a2-be119aa52648', '2025-12-10 02:30:56.390051+00', '2025-12-10 02:30:56.390051+00', 'password', '07e5f29b-9632-4616-b2cd-13f6ff24ed3c');
-INSERT INTO auth.mfa_amr_claims VALUES ('3a878c7d-5fe7-4afa-88ec-9a31aa75949c', '2025-12-10 20:11:36.384564+00', '2025-12-10 20:11:36.384564+00', 'password', '900bcf82-e56c-47c7-ade5-a597c48ab8c1');
-INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', '2025-12-10 20:14:51.787215+00', '2025-12-10 20:14:51.787215+00', 'password', '996e2790-43b7-46fe-8f46-75b485b36f3c');
+INSERT INTO auth.mfa_amr_claims VALUES ('8b85f1e0-32da-4804-9fc8-8c0b23e0fe62', '2025-12-19 03:15:20.945256+00', '2025-12-19 03:15:20.945256+00', 'password', '5cd03e07-f773-4e24-b969-82e432b8f2c5');
+INSERT INTO auth.mfa_amr_claims VALUES ('fa291d17-2a89-4314-a18c-53cf6ee1b3b2', '2025-12-19 03:42:49.929737+00', '2025-12-19 03:42:49.929737+00', 'password', 'e9062d4d-c12b-4b2f-86a6-e46edcfe383e');
 
 
 --
--- TOC entry 4745 (class 0 OID 16804)
+-- TOC entry 4784 (class 0 OID 16804)
 -- Dependencies: 363
 -- Data for Name: mfa_challenges; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5489,7 +6501,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4744 (class 0 OID 16791)
+-- TOC entry 4783 (class 0 OID 16791)
 -- Dependencies: 362
 -- Data for Name: mfa_factors; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5497,7 +6509,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4754 (class 0 OID 17041)
+-- TOC entry 4793 (class 0 OID 17041)
 -- Dependencies: 372
 -- Data for Name: oauth_authorizations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5505,7 +6517,15 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4753 (class 0 OID 17011)
+-- TOC entry 4831 (class 0 OID 49843)
+-- Dependencies: 414
+-- Data for Name: oauth_client_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- TOC entry 4792 (class 0 OID 17011)
 -- Dependencies: 371
 -- Data for Name: oauth_clients; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5513,7 +6533,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4755 (class 0 OID 17074)
+-- TOC entry 4794 (class 0 OID 17074)
 -- Dependencies: 373
 -- Data for Name: oauth_consents; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5521,7 +6541,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4752 (class 0 OID 16979)
+-- TOC entry 4791 (class 0 OID 16979)
 -- Dependencies: 370
 -- Data for Name: one_time_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5529,87 +6549,231 @@ INSERT INTO auth.mfa_amr_claims VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 
 
 
 --
--- TOC entry 4735 (class 0 OID 16507)
+-- TOC entry 4774 (class 0 OID 16507)
 -- Dependencies: 350
 -- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 674, 'w3o6pj6u5nv7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 17:12:00.873188+00', '2025-12-04 18:11:19.741256+00', 'biypdvm5ydpc', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 660, 'p546yz5uyfl7', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-29 15:14:43.997318+00', '2025-11-29 22:45:58.374744+00', NULL, 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 663, 'dpkgcz4mvaia', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 01:02:23.713424+00', '2025-12-03 02:01:18.491126+00', NULL, 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 675, 'm3goeff3ip7j', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 18:11:19.754968+00', '2025-12-04 19:10:19.878211+00', 'w3o6pj6u5nv7', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 666, '3bl33l7xf33v', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 02:22:18.502278+00', '2025-12-03 03:21:17.63943+00', 'sdlpj3ivsahc', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 678, 'opvjeydk6lhp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-05 01:57:37.327708+00', '2025-12-08 15:34:50.312576+00', 'zwkm7o4mxkac', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 682, 'n267lkg5rv4x', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 16:50:54.020911+00', '2025-12-08 18:35:33.173752+00', 'e2jsmdbzwbcx', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 685, 'jvr5iveelti7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 18:35:33.187061+00', '2025-12-08 19:34:22.211004+00', 'nml2utdroykp', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 691, 'texingsc6v5e', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 23:43:35.018706+00', '2025-12-10 00:20:34.210129+00', 'te7ebfelkerw', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 669, 'y5jpkutcnrij', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 16:17:45.197769+00', '2025-12-10 01:03:22.807864+00', 's4hqnlmuncxb', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 694, 'lh2shh54cu3f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 01:03:22.8208+00', '2025-12-10 02:29:08.811245+00', 'y5jpkutcnrij', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 697, 'kqdjoslwcdft', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 02:17:52.270398+00', '2025-12-10 03:16:45.315642+00', 'fyq7vocqageg', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 701, 'rrkcuj3rlpmy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 03:16:45.32868+00', '2025-12-10 04:15:33.507303+00', 'kqdjoslwcdft', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 705, '643j6gef3njk', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 04:15:33.517896+00', '2025-12-10 05:14:45.863256+00', 'rrkcuj3rlpmy', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 708, 'fcb5u7pykm4c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 05:18:56.975308+00', '2025-12-10 06:29:50.117071+00', '5hffinjuvjbt', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 711, 'b2g6rg7ddykw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 07:29:45.651763+00', '2025-12-10 15:54:53.233621+00', 'ycadekjw36w7', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 712, 'k35svyko6ddi', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 07:29:45.651759+00', '2025-12-10 16:14:12.628481+00', '6unbb24hkjzn', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 718, 'c4vraihmm3fy', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 21:10:35.347977+00', '2025-12-10 22:09:35.246783+00', 'hpungitguc66', '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 721, 'gqwqdh6l7erw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 22:12:34.33171+00', '2025-12-10 23:11:34.329863+00', 'kqgv5kjesreh', 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 715, 'kek47tgsny72', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 16:14:12.635828+00', '2025-12-11 00:17:17.506369+00', 'k35svyko6ddi', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 724, '4v4lzihx63eh', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-11 00:07:35.130317+00', '2025-12-11 01:06:34.967909+00', 'dkcwbqh2ftu7', '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 727, 'abib45nlq5rx', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-11 00:17:17.538281+00', '2025-12-11 01:15:39.946198+00', 'hlpgksmeqqto', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 730, 'fifxxvyeqjz2', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-11 01:15:39.953401+00', '2025-12-11 01:15:39.953401+00', 'abib45nlq5rx', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 731, 'q7fa3q6j3jgl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-11 01:15:59.257095+00', '2025-12-11 01:15:59.257095+00', 'y6f6k2jmhkjp', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 676, 'rpuyae7insqz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 19:10:19.89329+00', '2025-12-05 01:02:59.908898+00', 'm3goeff3ip7j', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 664, 'sdlpj3ivsahc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 01:23:36.182627+00', '2025-12-03 02:22:18.485981+00', NULL, '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 661, 's4hqnlmuncxb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-11-29 22:45:58.397415+00', '2025-12-03 16:17:45.175864+00', 'p546yz5uyfl7', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 667, 'm2smd4rmltd5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 03:00:03.656727+00', '2025-12-04 14:45:17.999861+00', 'hcfvniaro4e6', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 679, 'dks673jyzke2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-05 02:01:19.583539+00', '2025-12-08 15:34:49.680759+00', '5go2whuqkwrm', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 683, 'nml2utdroykp', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 16:50:54.020908+00', '2025-12-08 18:35:33.173751+00', 'vvioyrttpqwf', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 670, '6sengj5fnsgj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-04 14:45:18.018907+00', '2025-12-04 15:44:20.013259+00', 'hhuy47xpd6uh', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 671, 'ds4wrojrqycz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 14:45:18.019633+00', '2025-12-04 15:44:20.013983+00', 'm2smd4rmltd5', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 687, '32rwu5iy4kzk', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 19:34:22.211398+00', '2025-12-08 20:32:39.913607+00', 'jvr5iveelti7', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 686, 'dztzksemwyo2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 19:34:04.371346+00', '2025-12-08 20:33:01.831843+00', 's2j5wi3y44rr', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 690, 'uvkzjzwrk43h', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 23:43:35.018001+00', '2025-12-10 00:20:46.551829+00', '667weffb3p3e', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 695, 'fyq7vocqageg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 01:19:27.547552+00', '2025-12-10 02:17:52.257758+00', 'o74a27cyo6uq', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 698, 'txhrfnxsgris', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 02:22:45.111114+00', '2025-12-10 03:21:38.162566+00', 'qlmr4gv6pgvb', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 702, '74i2aqpwzux2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 03:21:38.175526+00', '2025-12-10 04:20:16.234316+00', 'txhrfnxsgris', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 706, '5hffinjuvjbt', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 04:20:16.236288+00', '2025-12-10 05:18:56.971205+00', '74i2aqpwzux2', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 710, '6unbb24hkjzn', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 06:29:50.141332+00', '2025-12-10 07:29:45.636932+00', 'fcb5u7pykm4c', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 713, 'r6y63ssbt6oz', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-10 11:47:59.168807+00', '2025-12-10 11:47:59.168807+00', '5rrx3hbhec36', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 716, 'hpungitguc66', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 20:11:36.340667+00', '2025-12-10 21:10:35.330013+00', NULL, '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 719, 'kqgv5kjesreh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 21:13:34.676296+00', '2025-12-10 22:12:34.330863+00', 'mwnfwfb7vav2', 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 722, 'dkcwbqh2ftu7', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 23:08:35.533081+00', '2025-12-11 00:07:35.114399+00', 'dev7xjpxuvn2', '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 728, 'jgsjoiyhia7e', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-11 01:06:34.982736+00', '2025-12-11 01:06:34.982736+00', '4v4lzihx63eh', '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 725, 'l3tydvisryh3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-11 00:10:35.174822+00', '2025-12-11 01:09:34.387637+00', 'egyublxhq5nt', 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 662, 'tab3m6wxzt3y', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-11-30 00:01:12.843894+00', '2025-11-30 00:01:12.843894+00', NULL, '3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 672, 'zwkm7o4mxkac', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-04 15:44:20.025189+00', '2025-12-05 01:57:37.323071+00', '6sengj5fnsgj', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 677, '5go2whuqkwrm', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-05 01:02:59.926223+00', '2025-12-05 02:01:19.580008+00', 'rpuyae7insqz', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 665, 'hcfvniaro4e6', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-03 02:01:18.503186+00', '2025-12-03 03:00:03.641167+00', 'dpkgcz4mvaia', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 681, 'e2jsmdbzwbcx', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 15:34:50.312942+00', '2025-12-08 16:50:54.010163+00', 'opvjeydk6lhp', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 680, 'vvioyrttpqwf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 15:34:49.697911+00', '2025-12-08 16:50:54.012943+00', 'dks673jyzke2', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 684, 's2j5wi3y44rr', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 18:35:33.187079+00', '2025-12-08 19:34:04.365699+00', 'n267lkg5rv4x', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 668, 'hhuy47xpd6uh', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-03 03:21:17.659409+00', '2025-12-04 14:45:17.999884+00', '3bl33l7xf33v', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 689, 'te7ebfelkerw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-08 20:33:01.832259+00', '2025-12-08 23:43:35.004181+00', 'dztzksemwyo2', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 673, 'biypdvm5ydpc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-04 15:44:20.025865+00', '2025-12-04 17:12:00.853515+00', 'ds4wrojrqycz', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 688, '667weffb3p3e', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-08 20:32:39.924043+00', '2025-12-08 23:43:35.004193+00', '32rwu5iy4kzk', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 693, 'o74a27cyo6uq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 00:20:46.557759+00', '2025-12-10 01:19:27.543185+00', 'uvkzjzwrk43h', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 692, 'epcjrdaik6yj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 00:20:34.234959+00', '2025-12-10 01:24:07.428639+00', 'texingsc6v5e', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 696, 'qlmr4gv6pgvb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 01:24:07.437833+00', '2025-12-10 02:22:45.099377+00', 'epcjrdaik6yj', '27a49fd3-d747-49d1-9d11-75455d3ac701');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 700, 'me3in7hzjko4', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 02:30:56.387409+00', '2025-12-10 03:29:29.382307+00', NULL, '2d81d935-94bc-4c43-b1a2-be119aa52648');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 703, 'kuv7ajzkkkb7', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-10 03:29:29.383688+00', '2025-12-10 03:29:29.383688+00', 'me3in7hzjko4', '2d81d935-94bc-4c43-b1a2-be119aa52648');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 699, 'o4mlpxtqxqu2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 02:29:08.814538+00', '2025-12-10 03:29:37.749754+00', 'lh2shh54cu3f', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 707, 'nfdztudebtsa', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 05:14:45.87973+00', '2025-12-10 06:29:50.122806+00', '643j6gef3njk', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 709, 'ycadekjw36w7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 06:29:50.141325+00', '2025-12-10 07:29:45.637412+00', 'nfdztudebtsa', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 704, '5rrx3hbhec36', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 03:29:37.750099+00', '2025-12-10 11:47:59.144379+00', 'o4mlpxtqxqu2', 'a937373b-4d24-402d-bc65-557909dd665f');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 717, 'mwnfwfb7vav2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 20:14:51.781769+00', '2025-12-10 21:13:34.671533+00', NULL, 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 720, 'dev7xjpxuvn2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-10 22:09:35.260995+00', '2025-12-10 23:08:35.516024+00', 'c4vraihmm3fy', '3a878c7d-5fe7-4afa-88ec-9a31aa75949c');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 723, 'egyublxhq5nt', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 23:11:34.332784+00', '2025-12-11 00:10:35.158847+00', 'gqwqdh6l7erw', 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 714, 'hlpgksmeqqto', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-10 15:54:53.256925+00', '2025-12-11 00:17:17.537547+00', 'b2g6rg7ddykw', 'bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 729, 'h7x65orzjinr', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-11 01:09:34.389614+00', '2025-12-11 01:09:34.389614+00', 'l3tydvisryh3', 'b142dfa9-e0e1-423d-b5d0-e86da8eebd98');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 726, 'y6f6k2jmhkjp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-11 00:17:17.508559+00', '2025-12-11 01:15:59.256731+00', 'kek47tgsny72', '27a49fd3-d747-49d1-9d11-75455d3ac701');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 973, 's2hv4xes2nvz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 07:04:23.193167+00', '2025-12-20 08:03:23.302604+00', 'txrljtw2zurb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 919, 'n6ita772rqrc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 03:42:49.887208+00', '2025-12-19 04:41:07.451465+00', NULL, 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 974, 'iyiqmboyz44v', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 07:46:23.71009+00', '2025-12-20 08:45:23.549171+00', '6taj47siyoyv', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 921, 'p5bnkvoltqrv', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 04:41:07.465922+00', '2025-12-19 05:40:21.930896+00', 'n6ita772rqrc', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 923, '6lgbrc65ruu4', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 05:40:21.94921+00', '2025-12-19 06:39:22.23514+00', 'p5bnkvoltqrv', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 976, 'z4dphgpfcmbw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 08:45:23.562493+00', '2025-12-20 09:44:23.754715+00', 'iyiqmboyz44v', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 925, 'utvluv3gxgbz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 06:39:22.248672+00', '2025-12-19 07:38:22.308919+00', '6lgbrc65ruu4', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 927, '4f7vjtw6ex73', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 07:38:22.328565+00', '2025-12-19 08:37:22.106836+00', 'utvluv3gxgbz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 978, 'b6uicrfi5qpj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 09:44:23.769527+00', '2025-12-20 10:43:23.596727+00', 'z4dphgpfcmbw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 929, 'ctl66xapmmm6', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 08:37:22.118865+00', '2025-12-19 09:36:22.085336+00', '4f7vjtw6ex73', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 931, 'k7wcle2zbvds', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 09:36:22.098582+00', '2025-12-19 10:35:22.317074+00', 'ctl66xapmmm6', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 980, '6kjceudankj5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 10:43:23.609588+00', '2025-12-20 11:42:23.721802+00', 'b6uicrfi5qpj', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 933, 'lqofurhqimwh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 10:35:22.328494+00', '2025-12-19 11:33:40.783402+00', 'k7wcle2zbvds', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 935, 'lyvukznbwero', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 11:33:40.790695+00', '2025-12-19 12:32:36.147686+00', 'lqofurhqimwh', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 982, 'c2ytoszzpunc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 11:42:23.735554+00', '2025-12-20 12:41:23.683324+00', '6kjceudankj5', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 937, 'kjipgovuux54', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 12:32:36.158678+00', '2025-12-19 13:31:08.334651+00', 'lyvukznbwero', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 984, 'enm43iz4c2dd', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 12:41:23.698416+00', '2025-12-20 13:40:23.573858+00', 'c2ytoszzpunc', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 941, 'lg3wazhy456x', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 15:03:22.513636+00', '2025-12-19 16:02:22.605839+00', 'dp2x2ab2tzzq', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 939, 'f7nwwyhi3nno', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 13:31:08.348485+00', '2025-12-19 16:20:28.141609+00', 'kjipgovuux54', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 943, '2suyj7gga7zw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 16:20:28.162637+00', '2025-12-19 17:19:22.551598+00', 'f7nwwyhi3nno', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 986, 'foq32zxgxt7w', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 13:40:23.585888+00', '2025-12-20 14:39:23.817944+00', 'enm43iz4c2dd', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 945, 'ajlzst2w33q3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 17:19:22.56163+00', '2025-12-19 18:17:48.466016+00', '2suyj7gga7zw', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 947, 'd3wyieordab3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 18:17:48.484356+00', '2025-12-19 19:16:23.183615+00', 'ajlzst2w33q3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 988, 'zdesop2kv37q', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 14:39:23.833596+00', '2025-12-20 15:39:12.013945+00', 'foq32zxgxt7w', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 949, 'adveg6baj3wz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 19:16:23.191354+00', '2025-12-19 20:15:22.685824+00', 'd3wyieordab3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 951, 'brknsnnhayws', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 20:15:22.698368+00', '2025-12-19 21:14:22.62405+00', 'adveg6baj3wz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 990, 'mh7ujlestydw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 15:39:12.024661+00', '2025-12-20 16:38:23.906595+00', 'zdesop2kv37q', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 953, 'qu4k7tuwuily', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 21:14:22.630935+00', '2025-12-19 22:13:22.73488+00', 'brknsnnhayws', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 955, 'v6dbzgq7iqfp', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 22:13:22.748476+00', '2025-12-19 23:12:22.878499+00', 'qu4k7tuwuily', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 992, 'pasrfkvv3efi', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 16:38:23.915772+00', '2025-12-20 17:37:23.86755+00', 'mh7ujlestydw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 957, '6eevlq4pf4yd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-19 23:12:22.890015+00', '2025-12-20 00:11:22.766445+00', 'v6dbzgq7iqfp', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 959, 'uucmecijsveb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 00:11:22.772618+00', '2025-12-20 01:10:22.938422+00', '6eevlq4pf4yd', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 994, 'gdj67nhphrsu', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 17:37:23.875009+00', '2025-12-20 18:36:02.450509+00', 'pasrfkvv3efi', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 961, 'nn3ii7gswaks', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 01:10:22.94647+00', '2025-12-20 02:09:23.026741+00', 'uucmecijsveb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 963, '6l26dri3fnez', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 02:09:23.043653+00', '2025-12-20 03:08:23.043593+00', 'nn3ii7gswaks', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 996, 'zybs5pv5c2dg', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 18:36:02.463936+00', '2025-12-20 19:35:24.128225+00', 'gdj67nhphrsu', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 965, 'xf62yhi6tpiy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 03:08:23.055641+00', '2025-12-20 04:07:23.145729+00', '6l26dri3fnez', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 967, 'geoz5r4c6vzw', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 04:07:23.154517+00', '2025-12-20 05:06:23.084273+00', 'xf62yhi6tpiy', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 998, 'bxxiwida37hk', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 19:35:24.146143+00', '2025-12-20 20:34:23.986947+00', 'zybs5pv5c2dg', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 969, 'ef2dn56w7un3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 05:06:23.101304+00', '2025-12-20 06:05:23.251471+00', 'geoz5r4c6vzw', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 971, 'txrljtw2zurb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 06:05:23.264842+00', '2025-12-20 07:04:23.181584+00', 'ef2dn56w7un3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1000, 'hkgc36cwijos', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 20:34:23.99632+00', '2025-12-20 21:33:24.21597+00', 'bxxiwida37hk', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1002, 'x3qln2lnpcdt', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 21:33:24.229125+00', '2025-12-20 22:32:24.145164+00', 'hkgc36cwijos', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1004, '2puw5ndc6zaz', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 22:32:24.155699+00', '2025-12-20 23:31:24.580185+00', 'x3qln2lnpcdt', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1006, 'tc7ouj6m26pb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 23:31:24.597599+00', '2025-12-21 00:30:24.378774+00', '2puw5ndc6zaz', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1008, 'tfvzhpmlpumq', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 00:30:24.396169+00', '2025-12-21 01:29:24.372306+00', 'tc7ouj6m26pb', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1010, 'e5m75yfx7bqc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 01:29:24.386877+00', '2025-12-21 02:28:24.447033+00', 'tfvzhpmlpumq', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1012, '7v23b7v6bonp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 02:28:24.460665+00', '2025-12-21 03:27:24.65018+00', 'e5m75yfx7bqc', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1014, 'raeaoilx5b5z', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 03:27:24.665836+00', '2025-12-21 04:26:24.561288+00', '7v23b7v6bonp', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1016, 'mkv4ns62xgbo', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 04:26:24.576841+00', '2025-12-21 05:25:24.685363+00', 'raeaoilx5b5z', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 972, '6taj47siyoyv', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 06:47:23.712031+00', '2025-12-20 07:46:23.697358+00', 'rvzdaxijjant', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 918, '25z3dubvelv2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 03:15:20.943948+00', '2025-12-19 04:14:21.943806+00', NULL, '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 975, 'hdflnhql35mg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 08:03:23.312813+00', '2025-12-20 09:02:23.349461+00', 's2hv4xes2nvz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 920, 'kbdn4odal5sz', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 04:14:21.955547+00', '2025-12-19 05:13:21.792267+00', '25z3dubvelv2', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 922, '36eglt3q6ulu', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 05:13:21.811784+00', '2025-12-19 06:12:22.047977+00', 'kbdn4odal5sz', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 977, '2f6uddhk7tsh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 09:02:23.361171+00', '2025-12-20 10:01:23.49521+00', 'hdflnhql35mg', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 924, '3iqb37ir3i2a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 06:12:22.058849+00', '2025-12-19 07:11:22.26904+00', '36eglt3q6ulu', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 926, 'lhejjb5ro3gj', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 07:11:22.277453+00', '2025-12-19 08:10:22.135153+00', '3iqb37ir3i2a', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 979, 'uq2poujaie45', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 10:01:23.51975+00', '2025-12-20 11:00:23.326225+00', '2f6uddhk7tsh', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 928, 'lk4elugktdqg', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 08:10:22.149148+00', '2025-12-19 09:09:22.076663+00', 'lhejjb5ro3gj', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 930, 'pwjctgtg7uid', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 09:09:22.085917+00', '2025-12-19 10:08:22.084143+00', 'lk4elugktdqg', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 981, 'u4yqrslgvxav', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 11:00:23.33432+00', '2025-12-20 11:59:23.53326+00', 'uq2poujaie45', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 932, 'qtdwoqglbnj7', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 10:08:22.095564+00', '2025-12-19 11:07:22.231074+00', 'pwjctgtg7uid', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 934, 'dbf7ziv6hbwi', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 11:07:22.242073+00', '2025-12-19 12:06:22.491898+00', 'qtdwoqglbnj7', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 983, 'mfids4fwi64l', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 11:59:23.541953+00', '2025-12-20 12:58:23.568085+00', 'u4yqrslgvxav', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 936, 'awr66etyorec', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 12:06:22.504115+00', '2025-12-19 13:05:22.36285+00', 'dbf7ziv6hbwi', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 985, 'ykiwaec5hl2e', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 12:58:23.582108+00', '2025-12-20 13:57:23.551602+00', 'mfids4fwi64l', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 938, 'ftbvwps6f7wx', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 13:05:22.381456+00', '2025-12-19 14:04:22.462059+00', 'awr66etyorec', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 940, 'dp2x2ab2tzzq', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 14:04:22.472096+00', '2025-12-19 15:03:22.501231+00', 'ftbvwps6f7wx', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 987, '6c4dyvn4evrq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 13:57:23.565662+00', '2025-12-20 14:56:23.571741+00', 'ykiwaec5hl2e', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 942, '6serdpqb6ubo', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 16:02:22.621707+00', '2025-12-19 17:01:22.487104+00', 'lg3wazhy456x', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 944, 'w3ni2w3dhks4', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 17:01:22.504224+00', '2025-12-19 18:00:22.769937+00', '6serdpqb6ubo', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 989, 'lhwo3ptuxv2p', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 14:56:23.581751+00', '2025-12-20 15:55:23.779678+00', '6c4dyvn4evrq', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 946, 'awsauk76ah7z', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 18:00:22.78579+00', '2025-12-19 18:59:22.674782+00', 'w3ni2w3dhks4', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 948, 'yfftnvhhvw7p', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 18:59:22.692085+00', '2025-12-19 19:58:22.884989+00', 'awsauk76ah7z', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 991, 'y6ozhhnvdvgc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 15:55:23.791861+00', '2025-12-20 16:54:23.856088+00', 'lhwo3ptuxv2p', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 950, '4i25qs2iyerp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 19:58:22.898341+00', '2025-12-19 20:57:22.886845+00', 'yfftnvhhvw7p', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 952, 'apbw3eleak4a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 20:57:22.89698+00', '2025-12-19 21:56:22.982289+00', '4i25qs2iyerp', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 993, '5fuiujzd5ita', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 16:54:23.866082+00', '2025-12-20 17:53:23.870191+00', 'y6ozhhnvdvgc', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 954, 'bobptjmmi5kk', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 21:56:22.994345+00', '2025-12-19 22:55:22.820543+00', 'apbw3eleak4a', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 956, 'finsqyy3k645', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 22:55:22.829939+00', '2025-12-19 23:54:23.004299+00', 'bobptjmmi5kk', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 995, 'anpcewz7jcol', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 17:53:23.87895+00', '2025-12-20 18:52:11.782607+00', '5fuiujzd5ita', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 958, '5nzw5smt3v6r', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-19 23:54:23.017877+00', '2025-12-20 00:53:23.055747+00', 'finsqyy3k645', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 960, 'xsosxeennrct', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 00:53:23.068876+00', '2025-12-20 01:52:23.186138+00', '5nzw5smt3v6r', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 997, '42t4as7a6cx5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 18:52:11.793337+00', '2025-12-20 19:50:34.165368+00', 'anpcewz7jcol', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 962, 'd62jsa57fiew', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 01:52:23.201261+00', '2025-12-20 02:51:23.237749+00', 'xsosxeennrct', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 964, 'dphrlb53ljoh', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 02:51:23.248327+00', '2025-12-20 03:50:23.267611+00', 'd62jsa57fiew', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 999, 'rvk6lmuqw4gd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 19:50:34.173662+00', '2025-12-20 20:49:23.479159+00', '42t4as7a6cx5', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 966, 'gqoxwirrswyw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 03:50:23.279177+00', '2025-12-20 04:49:23.241064+00', 'dphrlb53ljoh', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 968, 'v2ypnpdnrmnl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 04:49:23.253744+00', '2025-12-20 05:48:23.369669+00', 'gqoxwirrswyw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1001, 'uu6ozvvst67g', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 20:49:23.489506+00', '2025-12-20 21:48:23.892332+00', 'rvk6lmuqw4gd', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 970, 'rvzdaxijjant', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-20 05:48:23.386055+00', '2025-12-20 06:47:23.69827+00', 'v2ypnpdnrmnl', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1003, '26rxcj7r24bs', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 21:48:23.902532+00', '2025-12-20 22:47:24.542324+00', 'uu6ozvvst67g', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1005, 'fbtez4djzncz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 22:47:24.558393+00', '2025-12-20 23:46:24.099918+00', '26rxcj7r24bs', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1007, 'id3vz42b2ebs', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-20 23:46:24.108943+00', '2025-12-21 00:45:23.964334+00', 'fbtez4djzncz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1009, '25rkd3oxliv5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 00:45:23.973446+00', '2025-12-21 01:44:24.082482+00', 'id3vz42b2ebs', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1011, 'cdzcjouut5jc', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 01:44:24.085997+00', '2025-12-21 02:43:23.871297+00', '25rkd3oxliv5', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1013, 'xsjh2vb2qext', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 02:43:23.881884+00', '2025-12-21 03:42:24.362274+00', 'cdzcjouut5jc', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1015, 'samcur5b4ass', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 03:42:24.37443+00', '2025-12-21 04:41:24.044823+00', 'xsjh2vb2qext', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1017, 'b572ap5sk6ig', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 04:41:24.057067+00', '2025-12-21 05:40:24.012683+00', 'samcur5b4ass', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1046, 'lke7qbqysqhl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 19:11:25.297946+00', '2025-12-21 20:10:25.390171+00', 'fmqxigt5tn36', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1047, 'tkhc6sm33ggu', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 19:26:25.201169+00', '2025-12-21 20:25:24.771871+00', 'b4fssmddatiy', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1018, 'z4h5mzhddck5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 05:25:24.700327+00', '2025-12-21 06:24:24.626282+00', 'mkv4ns62xgbo', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1048, 'qbdw7g4gulr2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 20:10:25.400681+00', '2025-12-21 21:09:25.441066+00', 'lke7qbqysqhl', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1019, 'lklv5xdf6q6a', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 05:40:24.020585+00', '2025-12-21 06:39:24.24249+00', 'b572ap5sk6ig', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1020, '2k5eu4rztikr', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 06:24:24.641046+00', '2025-12-21 07:23:24.76802+00', 'z4h5mzhddck5', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1049, 'ytcs7r4t7lup', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 20:25:24.784138+00', '2025-12-21 21:24:25.466584+00', 'tkhc6sm33ggu', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1021, 'i3l3ucnty7bg', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 06:39:24.262743+00', '2025-12-21 07:38:24.04162+00', 'lklv5xdf6q6a', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1022, 't3axcm64szc6', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 07:23:24.783262+00', '2025-12-21 08:22:24.734698+00', '2k5eu4rztikr', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1050, 'phxelz5nlyem', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 21:09:25.460767+00', '2025-12-21 22:08:25.339812+00', 'qbdw7g4gulr2', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1023, 'etmy7as5pxov', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 07:38:24.052217+00', '2025-12-21 08:37:24.497914+00', 'i3l3ucnty7bg', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1024, 'ii3g3uec24xb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 08:22:24.748092+00', '2025-12-21 09:21:24.798692+00', 't3axcm64szc6', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1051, 'xiraftn2vwfb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 21:24:25.479317+00', '2025-12-21 22:23:25.478598+00', 'ytcs7r4t7lup', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1025, 'vfyxg7humitx', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 08:37:24.518127+00', '2025-12-21 09:36:24.194864+00', 'etmy7as5pxov', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1026, 'uccyw7kghtwn', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 09:21:24.809375+00', '2025-12-21 10:20:24.832845+00', 'ii3g3uec24xb', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1052, 'cdphh34xmqql', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 22:08:25.351824+00', '2025-12-21 23:07:25.591468+00', 'phxelz5nlyem', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1027, 'b7mwm65ki5ou', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 09:36:24.204698+00', '2025-12-21 10:35:24.58057+00', 'vfyxg7humitx', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1028, 'w5mxi222qinw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 10:20:24.844604+00', '2025-12-21 11:19:24.936083+00', 'uccyw7kghtwn', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1053, '4mzzks7ghikj', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 22:23:25.490563+00', '2025-12-21 23:22:24.780796+00', 'xiraftn2vwfb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1029, 'tjsiyt5vwubh', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 10:35:24.597607+00', '2025-12-21 11:34:24.384982+00', 'b7mwm65ki5ou', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1030, 'ogkusm24dbcv', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 11:19:24.951606+00', '2025-12-21 12:18:24.98992+00', 'w5mxi222qinw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1054, 'g2eplz6pulrq', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 23:07:25.602335+00', '2025-12-22 00:06:25.53116+00', 'cdphh34xmqql', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1031, 'ecwwmxydli3n', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 11:34:24.398327+00', '2025-12-21 12:33:24.356675+00', 'tjsiyt5vwubh', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1032, 'dpqhtx2llk2f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 12:18:25.000185+00', '2025-12-21 13:17:25.183647+00', 'ogkusm24dbcv', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1055, 'l3abv3ybpja3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 23:22:24.788266+00', '2025-12-22 00:21:24.90558+00', '4mzzks7ghikj', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1033, 'ajcugo7oex3b', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 12:33:24.367767+00', '2025-12-21 13:32:24.780819+00', 'ecwwmxydli3n', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1034, 'w3tui7ma2xpw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 13:17:25.194567+00', '2025-12-21 14:16:25.058134+00', 'dpqhtx2llk2f', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1056, '3ldzlmj5hllf', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 00:06:25.541854+00', '2025-12-22 01:05:25.74254+00', 'g2eplz6pulrq', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1035, 'cgaq22tlmrl3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 13:32:24.789133+00', '2025-12-21 14:31:24.364761+00', 'ajcugo7oex3b', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1036, 'eu6jrqa5tl3i', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 14:16:25.070863+00', '2025-12-21 15:15:25.397519+00', 'w3tui7ma2xpw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1057, 'rf7xdwuqp35u', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 00:21:24.915268+00', '2025-12-22 01:20:25.426197+00', 'l3abv3ybpja3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1037, 'duwqgeaeqpk6', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 14:31:24.376547+00', '2025-12-21 15:30:25.009848+00', 'cgaq22tlmrl3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1038, 'hhtvhue3npkl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 15:15:25.409742+00', '2025-12-21 16:14:25.142903+00', 'eu6jrqa5tl3i', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1058, 'zsbod5jfjti7', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 01:05:25.755369+00', '2025-12-22 02:04:25.764818+00', '3ldzlmj5hllf', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1039, 'mubkj7tokzwd', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 15:30:25.01883+00', '2025-12-21 16:29:24.877205+00', 'duwqgeaeqpk6', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1040, 'clqclqqtnf24', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 16:14:25.153283+00', '2025-12-21 17:13:25.142849+00', 'hhtvhue3npkl', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1059, 'bswtjzllzoh2', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 01:20:25.434194+00', '2025-12-22 02:19:25.012031+00', 'rf7xdwuqp35u', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1041, '72wagvzqpsox', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 16:29:24.88249+00', '2025-12-21 17:28:24.440887+00', 'mubkj7tokzwd', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1042, 'k2udqoiekgdi', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 17:13:25.159905+00', '2025-12-21 18:12:25.309352+00', 'clqclqqtnf24', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1060, '4fsw3bqeckxr', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 02:04:25.778175+00', '2025-12-22 03:03:25.796944+00', 'zsbod5jfjti7', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1043, 'dbyvz6tfabvu', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 17:28:24.451685+00', '2025-12-21 18:27:25.203167+00', '72wagvzqpsox', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1044, 'fmqxigt5tn36', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-21 18:12:25.323401+00', '2025-12-21 19:11:25.283338+00', 'k2udqoiekgdi', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1045, 'b4fssmddatiy', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-21 18:27:25.214417+00', '2025-12-21 19:26:25.191383+00', 'dbyvz6tfabvu', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1061, '7jn4em4dyne7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 02:19:25.023122+00', '2025-12-22 03:18:25.221648+00', 'bswtjzllzoh2', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1062, 'pymqmtpwdhfv', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 03:03:25.809451+00', '2025-12-22 04:02:25.831132+00', '4fsw3bqeckxr', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1063, 'x43qswgmmmee', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 03:18:25.238162+00', '2025-12-22 04:17:25.182165+00', '7jn4em4dyne7', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1064, 'ejh2ll45fqly', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 04:02:25.846008+00', '2025-12-22 05:01:25.882335+00', 'pymqmtpwdhfv', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1065, 'zsphg62d5zww', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 04:17:25.194808+00', '2025-12-22 05:16:25.218778+00', 'x43qswgmmmee', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1066, 'lcejg4ulasnd', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 05:01:25.897305+00', '2025-12-22 06:00:25.883359+00', 'ejh2ll45fqly', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1067, 'vgs25axzwq5b', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 05:16:25.22875+00', '2025-12-22 06:15:25.333703+00', 'zsphg62d5zww', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1068, '3dtpm2kbwvcl', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 06:00:25.894609+00', '2025-12-22 06:59:25.936143+00', 'lcejg4ulasnd', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1069, '2uetnfkv7rt3', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 06:15:25.344846+00', '2025-12-22 07:14:25.480715+00', 'vgs25axzwq5b', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1070, 'xh4hhtiddgqy', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 06:59:25.950671+00', '2025-12-22 07:58:25.934143+00', '3dtpm2kbwvcl', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1071, 'hse3em3ql375', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 07:14:25.498375+00', '2025-12-22 08:13:25.529224+00', '2uetnfkv7rt3', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1072, 'yyrtncitv5ar', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 07:58:25.946697+00', '2025-12-22 08:57:26.030932+00', 'xh4hhtiddgqy', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1073, '7o2jcfuj2r3o', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 08:13:25.538+00', '2025-12-22 09:12:25.576699+00', 'hse3em3ql375', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1074, '53b5fq5w5zrp', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 08:57:26.051311+00', '2025-12-22 09:56:26.010479+00', 'yyrtncitv5ar', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1075, 'uhtk7ss3p24b', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 09:12:25.591525+00', '2025-12-22 10:11:25.538647+00', '7o2jcfuj2r3o', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1076, 'ppm7zjdj2xe2', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 09:56:26.027735+00', '2025-12-22 10:55:26.404387+00', '53b5fq5w5zrp', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1077, 'av4e7yq5ulwb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 10:11:25.551568+00', '2025-12-22 11:10:26.045509+00', 'uhtk7ss3p24b', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1078, 'ue2lovjts4ge', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 10:55:26.425498+00', '2025-12-22 11:54:26.16649+00', 'ppm7zjdj2xe2', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1079, 'mjufty5ens7a', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 11:10:26.057897+00', '2025-12-22 12:09:26.019925+00', 'av4e7yq5ulwb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1080, '3wjvrxh7hz6t', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 11:54:26.179833+00', '2025-12-22 12:53:26.206509+00', 'ue2lovjts4ge', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1081, 'kbqitexbaydk', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 12:09:26.031535+00', '2025-12-22 13:08:26.038525+00', 'mjufty5ens7a', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1082, '4rzfx3sklzqx', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 12:53:26.217576+00', '2025-12-22 13:52:26.288308+00', '3wjvrxh7hz6t', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1083, '5pouvvlvzqum', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 13:08:26.054764+00', '2025-12-22 14:07:25.767557+00', 'kbqitexbaydk', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1084, 'azry2wb5snq5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 13:52:26.306851+00', '2025-12-22 14:51:26.26718+00', '4rzfx3sklzqx', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1085, 'ues4n545iosp', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 14:07:25.784348+00', '2025-12-22 15:06:25.735087+00', '5pouvvlvzqum', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1086, 'hx6uap73vys6', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 14:51:26.282903+00', '2025-12-22 15:50:26.386001+00', 'azry2wb5snq5', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1087, 'kycihq4646ty', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 15:06:25.745536+00', '2025-12-22 16:05:25.780917+00', 'ues4n545iosp', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1088, 'bitvg2c45g26', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 15:50:26.397397+00', '2025-12-22 16:49:26.491667+00', 'hx6uap73vys6', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1089, 'tefyalifgvgz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 16:05:25.793853+00', '2025-12-22 17:04:25.852702+00', 'kycihq4646ty', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1090, 'rwyg53n7jwgw', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 16:49:26.509996+00', '2025-12-22 17:48:26.536563+00', 'bitvg2c45g26', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1091, 'ffu4dn33tmfv', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 17:04:25.86328+00', '2025-12-22 18:03:25.942938+00', 'tefyalifgvgz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1092, 'nyi3uer2sy77', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 17:48:26.554476+00', '2025-12-22 18:47:26.83414+00', 'rwyg53n7jwgw', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1093, 'drlga3vchmhb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 18:03:25.951785+00', '2025-12-22 19:02:26.03132+00', 'ffu4dn33tmfv', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1094, '2z7htuivnxiq', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 18:47:26.84961+00', '2025-12-22 19:46:26.60878+00', 'nyi3uer2sy77', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1095, 'rirbobplop65', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 19:02:26.042023+00', '2025-12-22 20:01:26.389657+00', 'drlga3vchmhb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1096, 'jzxqf22dntmd', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 19:46:26.624847+00', '2025-12-22 20:45:26.661024+00', '2z7htuivnxiq', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1097, 'tab4rlokziqr', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 20:01:26.397837+00', '2025-12-22 21:00:26.42647+00', 'rirbobplop65', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1098, 'd4vk6vjdi3al', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 20:45:26.671705+00', '2025-12-22 21:44:26.720567+00', 'jzxqf22dntmd', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1099, '2hsmrz3gg453', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 21:00:26.439404+00', '2025-12-22 21:59:26.152464+00', 'tab4rlokziqr', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1100, 'zggimvd57ik3', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 21:44:26.736922+00', '2025-12-22 22:43:26.842381+00', 'd4vk6vjdi3al', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1101, 'xpeuog3q67k5', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 21:59:26.160311+00', '2025-12-22 22:58:26.259844+00', '2hsmrz3gg453', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1102, 'g6owzjvuchu5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 22:43:26.857929+00', '2025-12-22 23:42:26.77712+00', 'zggimvd57ik3', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1103, 'oain4ckq2xo7', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 22:58:26.277004+00', '2025-12-22 23:57:27.0269+00', 'xpeuog3q67k5', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1104, 'eshhan3flzkg', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-22 23:42:26.794276+00', '2025-12-23 00:41:26.881766+00', 'g6owzjvuchu5', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1105, '5ndjdvmyhdrz', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-22 23:57:27.041034+00', '2025-12-23 00:56:26.312094+00', 'oain4ckq2xo7', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1106, 'qrj7h3jezmpo', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 00:41:26.895528+00', '2025-12-23 01:40:26.918847+00', 'eshhan3flzkg', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1107, 'dy4j3mloajis', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 00:56:26.326932+00', '2025-12-23 01:55:26.734075+00', '5ndjdvmyhdrz', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1108, 's7zvya2ks5pt', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 01:40:26.933287+00', '2025-12-23 02:39:27.003402+00', 'qrj7h3jezmpo', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1109, '6b642i4h2udb', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 01:55:26.751637+00', '2025-12-23 02:54:26.44234+00', 'dy4j3mloajis', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1110, 'bajp7u4r45tc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 02:39:27.02099+00', '2025-12-23 03:38:26.936597+00', 's7zvya2ks5pt', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1111, 'fwrpq4yuus5g', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 02:54:26.463077+00', '2025-12-23 03:53:26.472715+00', '6b642i4h2udb', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1112, '5ipnp6b7dozo', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 03:38:26.951947+00', '2025-12-23 04:37:27.096547+00', 'bajp7u4r45tc', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1113, 'p552xfihbovq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 03:53:26.483277+00', '2025-12-23 04:52:26.446264+00', 'fwrpq4yuus5g', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1114, 'shj5vifyvoll', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 04:37:27.115752+00', '2025-12-23 05:36:27.09098+00', '5ipnp6b7dozo', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1115, 'ztmifasuywlv', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 04:52:26.453868+00', '2025-12-23 05:51:26.58032+00', 'p552xfihbovq', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1116, 'xglsrd2wsqty', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 05:36:27.107114+00', '2025-12-23 06:35:27.215012+00', 'shj5vifyvoll', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1117, 'o2adaic5dixq', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 05:51:26.589458+00', '2025-12-23 06:50:26.523418+00', 'ztmifasuywlv', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1118, '6nto5lkckzif', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 06:35:27.231706+00', '2025-12-23 07:34:27.306852+00', 'xglsrd2wsqty', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1119, 'cspeq6v5ltne', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 06:50:26.53489+00', '2025-12-23 07:49:26.72527+00', 'o2adaic5dixq', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1120, 'bf2r3lryewny', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 07:34:27.325738+00', '2025-12-23 08:33:27.305514+00', '6nto5lkckzif', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1121, 'scehjc7fud44', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 07:49:26.734339+00', '2025-12-23 08:48:26.603675+00', 'cspeq6v5ltne', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1122, 'aysg5wviac6a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 08:33:27.322521+00', '2025-12-23 09:32:27.649828+00', 'bf2r3lryewny', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1123, 'o2qtwczw5mx4', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 08:48:26.613192+00', '2025-12-23 09:47:26.668541+00', 'scehjc7fud44', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1124, 'bh2u64gmi2tu', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 09:32:27.664948+00', '2025-12-23 10:31:27.364589+00', 'aysg5wviac6a', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1125, 'iip47nxhzrzf', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 09:47:26.681806+00', '2025-12-23 10:46:27.371736+00', 'o2qtwczw5mx4', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1126, '72tvcqfstfry', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 10:31:27.374172+00', '2025-12-23 11:30:27.70079+00', 'bh2u64gmi2tu', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1127, 'wtpqxhygih3p', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 10:46:27.39032+00', '2025-12-23 11:45:26.964341+00', 'iip47nxhzrzf', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1128, 'jtubzkbyerv5', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 11:30:27.71226+00', '2025-12-23 12:29:27.431257+00', '72tvcqfstfry', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1129, '2ckqdsbcushi', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 11:45:26.976612+00', '2025-12-23 12:44:26.839038+00', 'wtpqxhygih3p', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1130, 'bjrqju2iyayo', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', true, '2025-12-23 12:29:27.441728+00', '2025-12-23 13:28:27.348999+00', 'jtubzkbyerv5', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1132, 'atkwapyywi3n', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', false, '2025-12-23 13:28:27.359269+00', '2025-12-23 13:28:27.359269+00', 'bjrqju2iyayo', '8b85f1e0-32da-4804-9fc8-8c0b23e0fe62');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1131, 'v47pk5brmy74', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-12-23 12:44:26.852004+00', '2025-12-23 13:43:22.90952+00', '2ckqdsbcushi', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1133, 'atjepbfn6ek7', 'f2bb6acc-835a-414c-8856-836415b23896', false, '2025-12-23 13:43:22.929398+00', '2025-12-23 13:43:22.929398+00', 'v47pk5brmy74', 'fa291d17-2a89-4314-a18c-53cf6ee1b3b2');
 
 
 --
--- TOC entry 4749 (class 0 OID 16858)
+-- TOC entry 4788 (class 0 OID 16858)
 -- Dependencies: 367
 -- Data for Name: saml_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5617,7 +6781,7 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 
 
 --
--- TOC entry 4750 (class 0 OID 16876)
+-- TOC entry 4789 (class 0 OID 16876)
 -- Dependencies: 368
 -- Data for Name: saml_relay_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5625,7 +6789,7 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 
 
 --
--- TOC entry 4738 (class 0 OID 16533)
+-- TOC entry 4777 (class 0 OID 16533)
 -- Dependencies: 353
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5701,25 +6865,21 @@ INSERT INTO auth.schema_migrations VALUES ('20250925093508');
 INSERT INTO auth.schema_migrations VALUES ('20251007112900');
 INSERT INTO auth.schema_migrations VALUES ('20251104100000');
 INSERT INTO auth.schema_migrations VALUES ('20251111201300');
+INSERT INTO auth.schema_migrations VALUES ('20251201000000');
 
 
 --
--- TOC entry 4743 (class 0 OID 16757)
+-- TOC entry 4782 (class 0 OID 16757)
 -- Dependencies: 361
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.sessions VALUES ('2d81d935-94bc-4c43-b1a2-be119aa52648', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-10 02:30:56.375994+00', '2025-12-10 03:29:29.387703+00', NULL, 'aal1', NULL, '2025-12-10 03:29:29.387586', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('a937373b-4d24-402d-bc65-557909dd665f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-11-29 15:14:43.988589+00', '2025-12-10 11:47:59.201026+00', NULL, 'aal1', NULL, '2025-12-10 11:47:59.1992', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36', '186.225.138.87', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('3a878c7d-5fe7-4afa-88ec-9a31aa75949c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-12-10 20:11:36.301098+00', '2025-12-11 01:06:35.002441+00', NULL, 'aal1', NULL, '2025-12-11 01:06:35.001382', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '186.225.138.87', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('b142dfa9-e0e1-423d-b5d0-e86da8eebd98', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-10 20:14:51.779595+00', '2025-12-11 01:09:34.394928+00', NULL, 'aal1', NULL, '2025-12-11 01:09:34.394818', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '186.225.138.87', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-03 01:02:23.670108+00', '2025-12-11 01:15:39.967795+00', NULL, 'aal1', NULL, '2025-12-11 01:15:39.967074', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('27a49fd3-d747-49d1-9d11-75455d3ac701', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-12-03 01:23:36.154783+00', '2025-12-11 01:15:59.259328+00', NULL, 'aal1', NULL, '2025-12-11 01:15:59.259211', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.208.209', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-30 00:01:12.827769+00', '2025-11-30 00:01:12.827769+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '189.18.117.238', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('8b85f1e0-32da-4804-9fc8-8c0b23e0fe62', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '2025-12-19 03:15:20.943169+00', '2025-12-23 13:28:27.375551+00', NULL, 'aal1', NULL, '2025-12-23 13:28:27.374874', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '189.18.117.229', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('fa291d17-2a89-4314-a18c-53cf6ee1b3b2', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-19 03:42:49.859577+00', '2025-12-23 13:43:22.952153+00', NULL, 'aal1', NULL, '2025-12-23 13:43:22.95203', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '189.18.117.229', NULL, NULL, NULL, NULL, NULL);
 
 
 --
--- TOC entry 4748 (class 0 OID 16843)
+-- TOC entry 4787 (class 0 OID 16843)
 -- Dependencies: 366
 -- Data for Name: sso_domains; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5727,7 +6887,7 @@ INSERT INTO auth.sessions VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', 'f2bb6
 
 
 --
--- TOC entry 4747 (class 0 OID 16834)
+-- TOC entry 4786 (class 0 OID 16834)
 -- Dependencies: 365
 -- Data for Name: sso_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -5735,19 +6895,21 @@ INSERT INTO auth.sessions VALUES ('3b6f2c2f-ff4d-41fa-909b-dfcb2dc175e0', 'f2bb6
 
 
 --
--- TOC entry 4733 (class 0 OID 16495)
+-- TOC entry 4772 (class 0 OID 16495)
 -- Dependencies: 348
 -- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'authenticated', 'authenticated', 'admin@capifit.com', '$2a$10$MZ6JN.1Cid87Ze/ntbc/cubpoNEYiaC77VBvw8etFf0ecZqQkdq2a', '2025-11-16 22:10:09.629885+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-16 23:47:16.875772+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-16 22:10:09.626622+00', '2025-11-16 23:47:16.880781+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'f2bb6acc-835a-414c-8856-836415b23896', 'authenticated', 'authenticated', 'profissional@capifit.com', '$2a$10$dk.qa.nLD7wm3wkqohwtMeYT1Qt1jW.ublImwK5/gVPVc4lFw3MJ2', '2025-11-16 22:09:35.759426+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-10 20:14:51.779494+00', '{"provider": "email", "providers": ["email"]}', '{"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}', NULL, '2025-11-16 22:09:35.744308+00', '2025-12-11 01:15:39.963489+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'authenticated', 'authenticated', 'cliente1@capifit.com', '$2a$10$RSBXDZVWHGGH.3hUsUjMde1XkU3ufrE2Gpp2EFvd8yMjN4TKNe8DS', '2025-11-26 20:31:24.801059+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-10 20:11:36.298721+00', '{"provider": "email", "providers": ["email"]}', '{"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}', NULL, '2025-11-26 20:31:24.783033+00', '2025-12-11 01:15:59.258152+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'authenticated', 'authenticated', 'admin@capifit.com', '$2a$10$MZ6JN.1Cid87Ze/ntbc/cubpoNEYiaC77VBvw8etFf0ecZqQkdq2a', '2025-11-16 22:10:09.629885+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-19 03:15:06.436627+00', '{"provider": "email", "providers": ["email"]}', '{"role": "admin", "email_verified": true}', NULL, '2025-11-16 22:10:09.626622+00', '2025-12-19 03:15:06.43984+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '8a8f1b6c-6659-4384-b8eb-e87b06280981', 'authenticated', 'authenticated', 'contato@capifit.app.br', '$2a$10$g9o8MTp1TTpRywxntCPdSO6WvD9hPyUf/j.ZWx1JFdNBQLPb.356C', '2025-12-12 17:36:12.226946+00', NULL, '', '2025-12-12 17:34:34.184305+00', '', NULL, '', '', NULL, '2025-12-12 17:36:12.234753+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "8a8f1b6c-6659-4384-b8eb-e87b06280981", "role": "professional", "email": "contato@capifit.app.br", "full_name": "Contato CapiFit. App", "email_verified": true, "phone_verified": false}', NULL, '2025-12-12 17:34:34.139693+00', '2025-12-12 17:36:12.251207+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'f2bb6acc-835a-414c-8856-836415b23896', 'authenticated', 'authenticated', 'profissional@capifit.com', '$2a$10$dk.qa.nLD7wm3wkqohwtMeYT1Qt1jW.ublImwK5/gVPVc4lFw3MJ2', '2025-11-16 22:09:35.759426+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-19 03:42:49.859431+00', '{"provider": "email", "providers": ["email"]}', '{"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}', NULL, '2025-11-16 22:09:35.744308+00', '2025-12-23 13:43:22.943859+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'authenticated', 'authenticated', 'cliente1@capifit.com', '$2a$10$RSBXDZVWHGGH.3hUsUjMde1XkU3ufrE2Gpp2EFvd8yMjN4TKNe8DS', '2025-11-26 20:31:24.801059+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-19 03:15:20.94306+00', '{"provider": "email", "providers": ["email"]}', '{"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}', NULL, '2025-11-26 20:31:24.783033+00', '2025-12-23 13:28:27.365987+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'authenticated', 'authenticated', 'betosouza615@gmail.com', '$2a$10$kpZytMllwKsjJd.wC8c4IemCEcfNzLjeN1S4y2nDFlI3xK/UeIQd.', '2025-12-12 01:36:42.631329+00', NULL, '', '2025-12-12 01:35:21.642658+00', '', NULL, '', '', NULL, '2025-12-19 03:11:46.411617+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "admin", "email": "betosouza615@gmail.com", "full_name": "Gilberto Panzer", "email_verified": true, "phone_verified": false}', NULL, '2025-12-12 01:35:21.557995+00', '2025-12-19 03:11:46.423455+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '7171a1a8-524b-4cee-9040-886c74afe93f', 'authenticated', 'authenticated', 'cliente@capifit.com', '$2a$10$jE025Etdhl6forKhm4vtKOjVSH7WmlQ2MSAF1M196DXtkcVspFxI.', '2025-11-26 19:46:42.713604+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-26 19:46:42.693884+00', '2025-11-26 19:46:42.715755+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
--- TOC entry 4788 (class 0 OID 29858)
+-- TOC entry 4827 (class 0 OID 29858)
 -- Dependencies: 410
 -- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5759,7 +6921,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4781 (class 0 OID 17790)
+-- TOC entry 4820 (class 0 OID 17790)
 -- Dependencies: 403
 -- Data for Name: appointments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5767,7 +6929,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4780 (class 0 OID 17774)
+-- TOC entry 4819 (class 0 OID 17774)
 -- Dependencies: 402
 -- Data for Name: biometric_data; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5775,7 +6937,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4782 (class 0 OID 17813)
+-- TOC entry 4821 (class 0 OID 17813)
 -- Dependencies: 404
 -- Data for Name: chat_messages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5835,28 +6997,36 @@ INSERT INTO public.chat_messages VALUES ('c8101998-3517-41f8-ac07-68ba306a75c0',
 INSERT INTO public.chat_messages VALUES ('40334026-e984-4821-8b3d-624eb8c48ef1', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'asdfasdf', 'text', NULL, true, '2025-11-28 17:39:01.923039+00', '2025-11-28 17:39:09.275838+00', '2025-11-28 17:39:01.923039+00', '2025-11-28 17:39:09.275838+00');
 INSERT INTO public.chat_messages VALUES ('32f51beb-e45b-4151-939c-b85db9538f24', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'Gráfico layout de fluxo de trabalho de empresa (1).pdf', 'file', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/chat-attachments/bf547c35-e240-45db-bdb1-5a1fc4bc8081/1687ac47-9efb-4345-9967-100988688f86.pdf', true, '2025-11-28 17:39:38.657823+00', '2025-11-28 17:39:43.062172+00', '2025-11-28 17:39:38.657823+00', '2025-11-28 17:39:43.062172+00');
 INSERT INTO public.chat_messages VALUES ('6c8f62a1-065c-49e7-baf6-c83554283c2c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '📅 Solicitei um novo agendamento para 12/12 às 09:00. Aguardando aprovação.', 'text', NULL, true, '2025-12-11 01:20:52.059622+00', '2025-12-11 01:21:14.006543+00', '2025-12-11 01:20:52.059622+00', '2025-12-11 01:21:14.006543+00');
+INSERT INTO public.chat_messages VALUES ('079421d0-8808-41f5-af5f-bf8676317113', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '✅ Seu treino agendado para 12/12 às 09:00 foi confirmado!', 'text', NULL, true, '2025-12-11 02:08:42.905509+00', '2025-12-11 02:09:24.28909+00', '2025-12-11 02:08:42.905509+00', '2025-12-11 02:09:24.28909+00');
+INSERT INTO public.chat_messages VALUES ('5c540624-a9e5-40ba-be80-cb354e0b6b32', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '📋 Sua ficha de anamnese foi atualizada pelo profissional.', 'text', NULL, true, '2025-12-11 03:27:11.163663+00', '2025-12-11 03:27:20.203859+00', '2025-12-11 03:27:11.163663+00', '2025-12-11 03:27:20.203859+00');
+INSERT INTO public.chat_messages VALUES ('65226e58-dcc1-4b08-954a-08a06140f895', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '📋 Sua ficha de anamnese foi atualizada pelo profissional.', 'text', NULL, true, '2025-12-11 03:27:28.367964+00', '2025-12-11 03:28:02.575495+00', '2025-12-11 03:27:28.367964+00', '2025-12-11 03:28:02.575495+00');
+INSERT INTO public.chat_messages VALUES ('84d95518-7c33-4a23-afea-9417415891c4', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '💪 Um novo treino "Treino de Hipertrofia - 4 semanas" foi atribuído a você!', 'text', NULL, true, '2025-12-11 03:27:41.985574+00', '2025-12-11 03:28:02.575495+00', '2025-12-11 03:27:41.985574+00', '2025-12-11 03:28:02.575495+00');
+INSERT INTO public.chat_messages VALUES ('0e4ac90c-c119-4b97-9f70-0da9655f1ff9', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '🥗 Uma nova dieta "Plano de Emagrecimento e ganho de massa muscular" foi atribuída a você!', 'text', NULL, true, '2025-12-11 03:27:56.328049+00', '2025-12-11 03:28:02.575495+00', '2025-12-11 03:27:56.328049+00', '2025-12-11 03:28:02.575495+00');
+INSERT INTO public.chat_messages VALUES ('a155f6aa-3af0-4326-8622-a2cb19c95d5c', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'f2bb6acc-835a-414c-8856-836415b23896', 'Opa', 'text', NULL, true, '2025-12-12 12:17:11.939438+00', '2025-12-12 12:17:16.383752+00', '2025-12-12 12:17:11.939438+00', '2025-12-12 12:17:16.383752+00');
+INSERT INTO public.chat_messages VALUES ('ca830484-1375-4f47-97b5-c5c7214953e2', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'f2bb6acc-835a-414c-8856-836415b23896', 'teste', 'text', NULL, true, '2025-12-12 12:17:23.633275+00', '2025-12-12 12:17:26.814045+00', '2025-12-12 12:17:23.633275+00', '2025-12-12 12:17:26.814045+00');
+INSERT INTO public.chat_messages VALUES ('a9836a72-a790-4444-993f-64925951190a', 'f2bb6acc-835a-414c-8856-836415b23896', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'teste', 'text', NULL, true, '2025-12-12 12:17:27.950686+00', '2025-12-12 12:17:45.730523+00', '2025-12-12 12:17:27.950686+00', '2025-12-12 12:17:45.730523+00');
 
 
 --
--- TOC entry 4765 (class 0 OID 17482)
+-- TOC entry 4804 (class 0 OID 17482)
 -- Dependencies: 387
 -- Data for Name: client_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client_details VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', '', '{"smoker": false, "alcohol": "never", "injuries": "", "symptoms": ["Fraqueza", "Dores Articulares"], "allergies": "", "surgeries": "", "occupation": "Auxiliar Administrativo", "work_hours": "", "medications": "", "sleep_hours": "4", "supplements": "", "diet_history": "", "stress_level": "", "water_intake": "2", "sleep_quality": "average", "activity_level": "sedentary", "family_history": "", "food_aversions": "", "last_exam_date": "", "work_activities": ["Sentar na cadeira"], "diagnosed_conditions": ["Anemia"], "physical_restrictions": ""}', NULL, '', '2025-11-26 20:34:28.304168+00', '2025-12-10 02:03:42.655472+00', '(17) 98803-1873', '@raizen_off');
+INSERT INTO public.client_details VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', '', '{"smoker": false, "alcohol": "never", "injuries": "", "symptoms": ["Fraqueza", "Dores Articulares"], "allergies": "", "surgeries": "", "occupation": "Auxiliar Administrativo", "work_hours": "", "medications": "", "sleep_hours": "4", "supplements": "", "diet_history": "", "stress_level": "", "water_intake": "2", "sleep_quality": "average", "activity_level": "sedentary", "family_history": "", "food_aversions": "", "last_exam_date": "", "work_activities": ["Sentar na cadeira"], "diagnosed_conditions": ["Anemia"], "physical_restrictions": ""}', NULL, '', '2025-11-26 20:34:28.304168+00', '2025-12-12 01:25:23.614035+00', '(17) 98803-1873', '@raizen_off');
 
 
 --
--- TOC entry 4777 (class 0 OID 17708)
+-- TOC entry 4816 (class 0 OID 17708)
 -- Dependencies: 399
 -- Data for Name: client_meal_plans; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client_meal_plans VALUES ('3b816525-e335-4f8f-827b-ba6902e1b23c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'abc28005-3841-4e16-a20d-77496f245e47', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-26', NULL, 'active', NULL, '2025-11-26 20:35:16.909971+00', '2025-11-26 20:35:16.909971+00');
+INSERT INTO public.client_meal_plans VALUES ('7c942acc-c8a7-496a-b450-243b254229db', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'abc28005-3841-4e16-a20d-77496f245e47', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-11', NULL, 'active', NULL, '2025-12-11 03:27:56.094026+00', '2025-12-11 03:27:56.094026+00');
 
 
 --
--- TOC entry 4766 (class 0 OID 17496)
+-- TOC entry 4805 (class 0 OID 17496)
 -- Dependencies: 388
 -- Data for Name: client_professionals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5865,26 +7035,26 @@ INSERT INTO public.client_professionals VALUES ('c1f5351e-9f2d-4330-86fe-d58a92e
 
 
 --
--- TOC entry 4770 (class 0 OID 17571)
+-- TOC entry 4809 (class 0 OID 17571)
 -- Dependencies: 392
 -- Data for Name: client_workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client_workouts VALUES ('4bec07c2-2fa3-4aaf-b34f-609a4ea41276', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '03e89f3e-8752-4333-996b-a00717743216', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-11-26', NULL, 'active', NULL, '2025-11-26 20:34:56.836914+00', '2025-11-26 20:34:56.836914+00');
+INSERT INTO public.client_workouts VALUES ('e73be18a-f3cc-4864-b6ac-782c81e82803', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '03e89f3e-8752-4333-996b-a00717743216', 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-11', NULL, 'active', NULL, '2025-12-11 03:27:41.749701+00', '2025-12-11 03:27:41.749701+00');
 
 
 --
--- TOC entry 4767 (class 0 OID 17519)
+-- TOC entry 4806 (class 0 OID 17519)
 -- Dependencies: 389
 -- Data for Name: exercises_library; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.exercises_library VALUES ('b3a7592c-33bb-4255-b167-225fe69aceb5', 'Supino Inclinado', 'Concentrado com 2 segundos de contração.', '{"Peito superior e Ombros"}', '{Halteres}', 'intermediate', 'https://www.youtube.com/watch?v=qpGlwaXwrHE', 'https://capifit.app.br/gifs_exercicios/supino-inclinado-com-barra.gif', '{"teste 1","teste 2","teste 3"}', '{"Teste 4","Teste 5","Teste 6"}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:25:34.674338+00', '2025-12-09 00:38:31.426885+00');
-INSERT INTO public.exercises_library VALUES ('b42e4102-659a-4aea-89e6-a8f0914e85a9', 'Supino Reto', 'Concentrado com 2 segundos de contração.', '{"Peito e Ombros"}', '{Halteres}', 'beginner', '', 'https://capifit.app.br/gifs_exercicios/supino-reto-com-barra.gif', '{}', '{}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:17:43.822207+00', '2025-12-08 20:17:56.573693+00');
+INSERT INTO public.exercises_library VALUES ('b3a7592c-33bb-4255-b167-225fe69aceb5', 'Supino Inclinado', 'Concentrado com 2 segundos de contração.', '{"Peito superior e Ombros"}', '{Halteres}', 'intermediate', 'https://www.youtube.com/watch?v=qpGlwaXwrHE', 'https://capifit.app.br/gifs_exercicios/supino-inclinado-com-barra.gif', '{"teste 1","teste 2","teste 3"}', '{"Teste 4","Teste 5","Teste 6"}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:25:34.674338+00', '2025-12-19 16:40:26.737196+00', 'bench');
+INSERT INTO public.exercises_library VALUES ('b42e4102-659a-4aea-89e6-a8f0914e85a9', 'Supino Reto', 'Concentrado com 2 segundos de contração.', '{"Peito e Ombros"}', '{Halteres}', 'beginner', '', 'https://capifit.app.br/gifs_exercicios/supino-reto-com-barra.gif', '{}', '{}', 'f2bb6acc-835a-414c-8856-836415b23896', true, '2025-11-16 23:17:43.822207+00', '2025-12-19 16:40:36.825293+00', 'bench');
 
 
 --
--- TOC entry 4772 (class 0 OID 17618)
+-- TOC entry 4811 (class 0 OID 17618)
 -- Dependencies: 394
 -- Data for Name: foods_library; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5893,7 +7063,7 @@ INSERT INTO public.foods_library VALUES ('b35d98b3-82e5-4d9e-9d40-367e10437118',
 
 
 --
--- TOC entry 4778 (class 0 OID 17735)
+-- TOC entry 4817 (class 0 OID 17735)
 -- Dependencies: 400
 -- Data for Name: meal_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5901,7 +7071,7 @@ INSERT INTO public.foods_library VALUES ('b35d98b3-82e5-4d9e-9d40-367e10437118',
 
 
 --
--- TOC entry 4776 (class 0 OID 17684)
+-- TOC entry 4815 (class 0 OID 17684)
 -- Dependencies: 398
 -- Data for Name: meal_plan_items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5910,7 +7080,7 @@ INSERT INTO public.meal_plan_items VALUES ('47faad1e-c94f-465a-9447-5a9af166f5de
 
 
 --
--- TOC entry 4775 (class 0 OID 17668)
+-- TOC entry 4814 (class 0 OID 17668)
 -- Dependencies: 397
 -- Data for Name: meal_plans; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5919,16 +7089,16 @@ INSERT INTO public.meal_plans VALUES ('abc28005-3841-4e16-a20d-77496f245e47', 'P
 
 
 --
--- TOC entry 4764 (class 0 OID 17466)
+-- TOC entry 4803 (class 0 OID 17466)
 -- Dependencies: 386
 -- Data for Name: professional_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'personal_trainer', 'teste', '{"raw_text": "teste"}', 100.00, NULL, true, '2025-11-22 19:09:25.500172+00', '2025-12-10 02:38:44.165036+00', NULL, NULL);
+INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'personal_trainer', 'teste', '{"raw_text": "teste"}', 100.00, NULL, true, '2025-11-22 19:09:25.500172+00', '2025-12-11 10:03:42.150191+00', '(17) 98803-1873', '@giulianomor');
 
 
 --
--- TOC entry 4784 (class 0 OID 22388)
+-- TOC entry 4823 (class 0 OID 22388)
 -- Dependencies: 406
 -- Data for Name: professional_notifications; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5936,19 +7106,30 @@ INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b
 
 
 --
--- TOC entry 4763 (class 0 OID 17451)
+-- TOC entry 4830 (class 0 OID 48437)
+-- Dependencies: 413
+-- Data for Name: professional_reviews; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.professional_reviews VALUES ('1add4194-7de3-4074-b8fe-371bcd539eff', 'f2bb6acc-835a-414c-8856-836415b23896', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 4, 5, 5, 4, '', '2025-12-12 02:14:55.410726+00', '2025-12-12 02:14:55.410726+00');
+
+
+--
+-- TOC entry 4802 (class 0 OID 17451)
 -- Dependencies: 385
 -- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.profiles VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'cliente1@capifit.com', 'Vinicius Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462', '(17) 3236-6250', 'client', '2025-11-26 20:31:24.782035+00', '2025-12-10 02:03:42.028429+00', 689, 2, '2006-12-15', '287.025.358-31', 'Giuliano Moretti Santos Garcia', 'Amanda Garcia', NULL);
-INSERT INTO public.profiles VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'admin@capifit.com', 'Administrador', NULL, NULL, 'admin', '2025-11-16 22:10:09.626227+00', '2025-11-17 07:16:33.067738+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO public.profiles VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'profissional@capifit.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', '(17) 98803-1873', 'professional', '2025-11-16 22:09:35.743201+00', '2025-12-10 02:38:43.656453+00', 0, 1, '1979-08-04', '287.025.358-31', 'José Garcia dos Santos', 'Maria Ivone Santos Garcia', NULL);
+INSERT INTO public.profiles VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'cliente1@capifit.com', 'Vinicius Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462', '(17) 3236-6250', 'client', '2025-11-26 20:31:24.782035+00', '2025-12-21 16:53:29.12261+00', 2785, 5, '2006-12-15', '287.025.358-31', 'Giuliano Moretti Santos Garcia', 'Amanda Garcia', NULL);
+INSERT INTO public.profiles VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'profissional@capifit.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', '(17) 98803-1873', 'professional', '2025-11-16 22:09:35.743201+00', '2025-12-11 10:03:41.233863+00', 0, 1, '1979-08-04', '287.025.358-31', 'José Garcia dos Santos', 'Maria Ivone Santos Garcia', NULL);
+INSERT INTO public.profiles VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'admin@capifit.com', 'Administrador', NULL, NULL, 'admin', '2025-11-16 22:10:09.626227+00', '2025-12-12 03:34:57.181409+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', 'betosouza615@gmail.com', NULL, NULL, NULL, 'admin', '2025-12-12 01:35:21.55761+00', '2025-12-12 03:52:29.801842+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('8a8f1b6c-6659-4384-b8eb-e87b06280981', 'contato@capifit.app.br', NULL, NULL, NULL, 'client', '2025-12-12 17:34:34.139357+00', '2025-12-12 17:34:34.139357+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cliente@capifit.com', NULL, NULL, NULL, 'client', '2025-11-26 19:46:42.693554+00', '2025-11-26 19:46:42.693554+00', 0, 1, NULL, NULL, NULL, NULL, NULL);
 
 
 --
--- TOC entry 4779 (class 0 OID 17760)
+-- TOC entry 4818 (class 0 OID 17760)
 -- Dependencies: 401
 -- Data for Name: progress_photos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5957,7 +7138,7 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4774 (class 0 OID 17650)
+-- TOC entry 4813 (class 0 OID 17650)
 -- Dependencies: 396
 -- Data for Name: recipe_ingredients; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5965,7 +7146,7 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4773 (class 0 OID 17634)
+-- TOC entry 4812 (class 0 OID 17634)
 -- Dependencies: 395
 -- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5973,16 +7154,16 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4797 (class 0 OID 45802)
--- Dependencies: 419
+-- TOC entry 4829 (class 0 OID 45802)
+-- Dependencies: 412
 -- Data for Name: scheduled_workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5e1b', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '03e89f3e-8752-4333-996b-a00717743216', '2025-12-12 12:00:00+00', 'pending_approval', NULL, '2025-12-11 01:20:51.773805+00', '2025-12-11 01:20:51.773805+00', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', NULL, 'f2bb6acc-835a-414c-8856-836415b23896', 60, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5e1b', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', '03e89f3e-8752-4333-996b-a00717743216', '2025-12-12 12:00:00+00', 'confirmed', NULL, '2025-12-11 01:20:51.773805+00', '2025-12-11 02:08:42.634185+00', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', NULL, 'f2bb6acc-835a-414c-8856-836415b23896', 60, NULL, 'f2bb6acc-835a-414c-8856-836415b23896', '2025-12-11 02:08:34.966+00', NULL, NULL);
 
 
 --
--- TOC entry 4789 (class 0 OID 29871)
+-- TOC entry 4828 (class 0 OID 29871)
 -- Dependencies: 411
 -- Data for Name: user_achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5990,27 +7171,27 @@ INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5
 
 
 --
--- TOC entry 4787 (class 0 OID 28702)
+-- TOC entry 4826 (class 0 OID 28702)
 -- Dependencies: 409
 -- Data for Name: workout_execution_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.workout_execution_logs VALUES ('1081fb2a-2d58-4860-b5d1-43d3465a89f2', '0690fdab-eeba-40be-bf90-ad00aab3efeb', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-26 20:36:15.104+00');
-INSERT INTO public.workout_execution_logs VALUES ('ac37a499-a210-4a43-84f4-bec2943f7c63', '0690fdab-eeba-40be-bf90-ad00aab3efeb', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-26 20:36:21.121+00');
-INSERT INTO public.workout_execution_logs VALUES ('a0dd6a9b-ddfa-43ec-8268-2e6e324b56b8', '7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-27 01:13:24.556+00');
-INSERT INTO public.workout_execution_logs VALUES ('a3a72348-793a-4576-a388-70d9c3661162', '7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-27 01:13:31.564+00');
-INSERT INTO public.workout_execution_logs VALUES ('db9d7926-e614-4377-9134-303ef5a4c284', 'a6c52971-2566-48a0-a8c4-fb783d6ead46', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-28 17:36:43.386+00');
-INSERT INTO public.workout_execution_logs VALUES ('1ab63072-23b7-4730-9278-c54ba00dec99', 'a6c52971-2566-48a0-a8c4-fb783d6ead46', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-28 17:36:53.427+00');
-INSERT INTO public.workout_execution_logs VALUES ('0f4e4c64-58b8-4c42-8ea1-2048faaa412b', '5252f64e-648f-4629-ad0e-a680c7421cbd', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-11-29 15:15:17.661+00');
-INSERT INTO public.workout_execution_logs VALUES ('e46ca0e8-bb2b-475e-a249-6ed4c0599122', '5252f64e-648f-4629-ad0e-a680c7421cbd', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-11-29 15:15:24.683+00');
-INSERT INTO public.workout_execution_logs VALUES ('d0d7336e-2e30-4f8d-8398-74c52dfe1f21', '3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-12-03 01:24:28.111+00');
-INSERT INTO public.workout_execution_logs VALUES ('ec9635ee-cc5e-42f5-bfaa-93c136a92f21', '3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-12-03 01:24:33.111+00');
-INSERT INTO public.workout_execution_logs VALUES ('21dd65b5-9311-4037-b6f3-b3ce2a0cdf7b', 'e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 20, 10, '', '2025-12-03 03:05:57.058+00');
-INSERT INTO public.workout_execution_logs VALUES ('0315550b-3c6e-4688-aeb3-594b6b5c6b08', 'e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 20, 10, '', '2025-12-03 03:06:19.522+00');
+INSERT INTO public.workout_execution_logs VALUES ('18a7d9bf-9b81-40bf-a1c6-71838ac6ee0e', 'e87493d3-350b-49dd-9ba1-b8dae831dc2d', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 10, 10, '', '2025-12-12 01:00:03.748+00');
+INSERT INTO public.workout_execution_logs VALUES ('6e207dc1-a4f2-41b3-8dad-d8767de2825b', 'e87493d3-350b-49dd-9ba1-b8dae831dc2d', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 10, 10, '', '2025-12-12 01:00:12.532+00');
+INSERT INTO public.workout_execution_logs VALUES ('6da04a2a-26f1-4ac3-ac07-3fa3e0f89f30', '367a0472-afbc-4639-a996-febecd1086ff', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 40, 10, '', '2025-12-14 15:22:32.613+00');
+INSERT INTO public.workout_execution_logs VALUES ('016c90dd-0494-4a9d-ab5b-df7346beeaf8', '367a0472-afbc-4639-a996-febecd1086ff', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 60, 10, '', '2025-12-14 16:43:59.884+00');
+INSERT INTO public.workout_execution_logs VALUES ('27b85cd8-bc06-460e-8409-0b16f01e9dc4', 'c390e3ac-0ca5-49ad-a828-33e570c184ca', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 10, 10, '', '2025-12-14 17:03:46.288+00');
+INSERT INTO public.workout_execution_logs VALUES ('02fa0a01-133f-44d5-9161-9842a8b370dc', 'c390e3ac-0ca5-49ad-a828-33e570c184ca', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 10, 10, '', '2025-12-14 17:04:01.2+00');
+INSERT INTO public.workout_execution_logs VALUES ('a7a3f82b-f319-4802-8d01-558f253cfb30', 'f5ed1b2d-ec09-4dbb-b828-ce547562201f', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 60, 10, '', '2025-12-14 17:08:16.086+00');
+INSERT INTO public.workout_execution_logs VALUES ('3111093f-5b43-41b8-9272-f2b1bed9545e', 'f5ed1b2d-ec09-4dbb-b828-ce547562201f', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 60, 10, '', '2025-12-14 17:08:22.103+00');
+INSERT INTO public.workout_execution_logs VALUES ('e0033a7d-953b-409e-a871-e312529ca71a', 'd0531c86-8de5-407c-8126-9f2bade23948', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 10, 10, '', '2025-12-14 17:41:38.432+00');
+INSERT INTO public.workout_execution_logs VALUES ('357797a9-5901-452e-b5b4-dc2825c478ba', 'd0531c86-8de5-407c-8126-9f2bade23948', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 60, 10, '', '2025-12-14 17:45:36.631+00');
+INSERT INTO public.workout_execution_logs VALUES ('2f73a458-610a-4cf4-a819-3ad9d09c712e', 'c1492d07-94ee-413e-832f-897785dabdf4', 'b3a7592c-33bb-4255-b167-225fe69aceb5', 'f06daea9-e0be-480d-aa9c-2cf79c3c30c6', 60, 8, '', '2025-12-19 04:21:38.918+00');
+INSERT INTO public.workout_execution_logs VALUES ('5cd35725-b56c-490a-b190-5a450780582d', 'c1492d07-94ee-413e-832f-897785dabdf4', 'b42e4102-659a-4aea-89e6-a8f0914e85a9', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', 60, 10, '', '2025-12-19 04:24:27.261+00');
 
 
 --
--- TOC entry 4769 (class 0 OID 17553)
+-- TOC entry 4808 (class 0 OID 17553)
 -- Dependencies: 391
 -- Data for Name: workout_exercises; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -6020,7 +7201,7 @@ INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c15
 
 
 --
--- TOC entry 4771 (class 0 OID 17598)
+-- TOC entry 4810 (class 0 OID 17598)
 -- Dependencies: 393
 -- Data for Name: workout_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -6028,25 +7209,24 @@ INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c15
 
 
 --
--- TOC entry 4783 (class 0 OID 20118)
+-- TOC entry 4822 (class 0 OID 20118)
 -- Dependencies: 405
 -- Data for Name: workout_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.workout_sessions VALUES ('0690fdab-eeba-40be-bf90-ad00aab3efeb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-26 20:36:06.989907+00', '2025-11-26 20:37:10.726+00', 64, 'completed', '2025-11-26 20:36:06.989907+00', '2025-11-26 20:37:11.520881+00', 'manual', NULL, 0.50, 1.28, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('7126abe6-23ed-4adb-837f-c36d9e5d73bb', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-27 01:12:25.222898+00', '2025-11-27 01:13:47.404+00', 82, 'completed', '2025-11-27 01:12:25.222898+00', '2025-11-27 01:12:55.450276+00', 'manual', NULL, 0.50, 1.64, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('a6c52971-2566-48a0-a8c4-fb783d6ead46', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-28 17:36:21.308294+00', '2025-11-28 17:36:58.276+00', 37, 'completed', '2025-11-28 17:36:21.308294+00', '2025-11-28 17:36:58.62409+00', 'manual', NULL, 0.50, 0.74, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('5252f64e-648f-4629-ad0e-a680c7421cbd', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-11-29 15:15:02.774458+00', '2025-11-29 15:15:47.08+00', 44, 'completed', '2025-11-29 15:15:02.774458+00', '2025-11-29 15:15:47.330458+00', 'manual', NULL, 0.50, 0.88, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('3f57a30f-6fbb-41a8-a2ae-3944dcbe2da9', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 01:23:53.740152+00', '2025-12-03 01:24:38.615+00', 45, 'completed', '2025-12-03 01:23:53.740152+00', '2025-12-03 01:24:40.747676+00', 'manual', NULL, 0.50, 0.90, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('80999f19-6ad8-4312-b741-a7b52ca31392', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 01:40:47.159794+00', '2025-12-03 01:40:54.748+00', 8, 'completed', '2025-12-03 01:40:47.159794+00', '2025-12-03 01:40:56.867846+00', 'manual', NULL, 0.50, 0.16, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('1e9aa093-8a9a-4cd0-9a63-0d17baf8ae3a', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 02:55:15.474874+00', '2025-12-03 02:55:41.956+00', 26, 'completed', '2025-12-03 02:55:15.474874+00', '2025-12-03 02:55:44.146145+00', 'manual', NULL, 0.50, 0.52, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('e05afc9b-fa1a-4d76-adaa-fd2783d2fe74', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 03:05:20.670206+00', '2025-12-03 03:06:26.586+00', 66, 'completed', '2025-12-03 03:05:20.670206+00', '2025-12-03 03:06:28.798868+00', 'manual', NULL, 0.50, 1.32, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('ebb30fcd-34a5-4384-ba0a-67e9e055712c', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-03 03:16:47.53459+00', '2025-12-03 03:17:09.928+00', 22, 'completed', '2025-12-03 03:16:47.53459+00', '2025-12-03 03:17:12.146262+00', 'manual', NULL, 0.50, 0.44, NULL, NULL, NULL, NULL, 0, 'strength');
-INSERT INTO public.workout_sessions VALUES ('c1f4b539-aa94-45a2-be7c-cbe09cfdc12d', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', '4bec07c2-2fa3-4aaf-b34f-609a4ea41276', '2025-12-08 20:08:56.842391+00', '2025-12-08 20:20:12.262+00', 675, 'completed', '2025-12-08 20:08:56.842391+00', '2025-12-08 20:20:18.961916+00', 'manual', NULL, 0.50, 13.50, NULL, NULL, NULL, NULL, 6, 'strength');
+INSERT INTO public.workout_sessions VALUES ('f5ed1b2d-ec09-4dbb-b828-ce547562201f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-14 17:07:59.831791+00', '2025-12-14 17:21:18.068+00', 798, 'completed', '2025-12-14 17:07:59.831791+00', '2025-12-14 17:21:31.11103+00', 'manual', NULL, 0.50, 15.96, NULL, NULL, NULL, NULL, 8, 'strength', '2025-12-14 17:08:22.611+00', '{}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('7f2a849e-25ca-4760-8ce0-60d18663ea1f', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-19 16:41:26.889753+00', '2025-12-21 16:53:10.015+00', 173503, 'completed', '2025-12-19 16:41:26.889753+00', '2025-12-21 16:53:29.12261+00', 'manual', NULL, 0.50, 3470.06, NULL, NULL, NULL, NULL, 500, 'strength', '2025-12-21 16:53:10.015+00', '{"f06daea9-e0be-480d-aa9c-2cf79c3c30c6": 173495}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('367a0472-afbc-4639-a996-febecd1086ff', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-14 15:21:10.821375+00', '2025-12-14 16:51:17.227+00', 5406, 'completed', '2025-12-14 15:21:10.821375+00', '2025-12-14 16:51:29.327482+00', 'manual', NULL, 0.50, 108.12, NULL, NULL, NULL, NULL, 59, 'strength', '2025-12-14 16:44:00.828+00', '{"9d9d40fd-8b25-46d6-8d5a-4cd0937c1517": 255, "f06daea9-e0be-480d-aa9c-2cf79c3c30c6": 505}', '9d9d40fd-8b25-46d6-8d5a-4cd0937c1517', '2025-12-14 16:42:45.212+00');
+INSERT INTO public.workout_sessions VALUES ('d0531c86-8de5-407c-8126-9f2bade23948', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-14 17:28:11.919+00', '2025-12-15 02:47:06.062+00', 33534, 'completed', '2025-12-14 17:27:41.690847+00', '2025-12-15 02:47:18.734399+00', 'manual', NULL, 0.50, 670.68, NULL, NULL, NULL, NULL, 335, 'strength', '2025-12-14 17:46:18.919+00', '{"9d9d40fd-8b25-46d6-8d5a-4cd0937c1517": 200, "f06daea9-e0be-480d-aa9c-2cf79c3c30c6": 133}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('f0054f9e-6fe8-4329-97d0-51067ac6ca81', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-15 02:47:46.605408+00', '2025-12-15 02:47:55.613+00', 9, 'completed', '2025-12-15 02:47:46.605408+00', '2025-12-15 02:48:08.301735+00', 'manual', NULL, 0.50, 0.18, NULL, NULL, NULL, NULL, 0, 'strength', '2025-12-15 02:47:55.613+00', '{}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('e87493d3-350b-49dd-9ba1-b8dae831dc2d', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-12 00:33:15.505779+00', '2025-12-12 01:00:14.436+00', 1619, 'completed', '2025-12-12 00:33:15.505779+00', '2025-12-12 01:00:22.911306+00', 'manual', NULL, 0.50, 32.38, NULL, NULL, NULL, NULL, 16, 'strength', '2025-12-14 15:57:27.196971+00', '{}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('bbbacaf0-621f-4563-84ea-591b2c7821bc', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-12 01:00:39.944296+00', '2025-12-13 19:12:42.779+00', 151923, 'completed', '2025-12-12 01:00:39.944296+00', '2025-12-13 19:12:53.730282+00', 'manual', NULL, 0.50, 3038.46, NULL, NULL, NULL, NULL, 500, 'strength', '2025-12-14 15:57:27.196971+00', '{}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('c390e3ac-0ca5-49ad-a828-33e570c184ca', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-14 16:51:46.905751+00', '2025-12-14 17:04:03.744+00', 737, 'completed', '2025-12-14 16:51:46.905751+00', '2025-12-14 17:04:15.855687+00', 'manual', NULL, 0.50, 14.74, NULL, NULL, NULL, NULL, 8, 'strength', '2025-12-14 17:04:01.693+00', '{"9d9d40fd-8b25-46d6-8d5a-4cd0937c1517": 189, "f06daea9-e0be-480d-aa9c-2cf79c3c30c6": 435}', NULL, NULL);
+INSERT INTO public.workout_sessions VALUES ('c1492d07-94ee-413e-832f-897785dabdf4', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', '03e89f3e-8752-4333-996b-a00717743216', 'e73be18a-f3cc-4864-b6ac-782c81e82803', '2025-12-19 04:19:54.195703+00', '2025-12-19 04:24:31.372+00', 277, 'completed', '2025-12-19 04:19:54.195703+00', '2025-12-19 04:24:47.094366+00', 'manual', NULL, 0.50, 5.54, NULL, NULL, NULL, NULL, 2, 'strength', '2025-12-19 04:24:27.873+00', '{"9d9d40fd-8b25-46d6-8d5a-4cd0937c1517": 152, "f06daea9-e0be-480d-aa9c-2cf79c3c30c6": 96}', NULL, NULL);
 
 
 --
--- TOC entry 4768 (class 0 OID 17536)
+-- TOC entry 4807 (class 0 OID 17536)
 -- Dependencies: 390
 -- Data for Name: workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -6055,63 +7235,63 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4790 (class 0 OID 40104)
--- Dependencies: 412
--- Data for Name: messages_2025_12_07; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4791 (class 0 OID 40116)
--- Dependencies: 413
--- Data for Name: messages_2025_12_08; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4792 (class 0 OID 44540)
--- Dependencies: 414
--- Data for Name: messages_2025_12_09; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
---
-
-
-
---
--- TOC entry 4793 (class 0 OID 44552)
+-- TOC entry 4832 (class 0 OID 55483)
 -- Dependencies: 415
--- Data for Name: messages_2025_12_10; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_20; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4794 (class 0 OID 44564)
+-- TOC entry 4833 (class 0 OID 55495)
 -- Dependencies: 416
--- Data for Name: messages_2025_12_11; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_21; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4795 (class 0 OID 44576)
+-- TOC entry 4834 (class 0 OID 56612)
 -- Dependencies: 417
--- Data for Name: messages_2025_12_12; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_22; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4796 (class 0 OID 45691)
+-- TOC entry 4835 (class 0 OID 57748)
 -- Dependencies: 418
--- Data for Name: messages_2025_12_13; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+-- Data for Name: messages_2025_12_23; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
 
 
 --
--- TOC entry 4759 (class 0 OID 17225)
+-- TOC entry 4836 (class 0 OID 58863)
+-- Dependencies: 419
+-- Data for Name: messages_2025_12_24; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4837 (class 0 OID 59978)
+-- Dependencies: 420
+-- Data for Name: messages_2025_12_25; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4838 (class 0 OID 61095)
+-- Dependencies: 421
+-- Data for Name: messages_2025_12_26; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
+--
+
+
+
+--
+-- TOC entry 4798 (class 0 OID 17225)
 -- Dependencies: 377
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -6184,19 +7364,17 @@ INSERT INTO realtime.schema_migrations VALUES (20251103001201, '2025-11-16 15:24
 
 
 --
--- TOC entry 4762 (class 0 OID 17289)
+-- TOC entry 4801 (class 0 OID 17289)
 -- Dependencies: 381
 -- Data for Name: subscription; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1897, '8f4cfb02-d626-11f0-91d3-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1765397496}], "aud": "authenticated", "exp": 1765418794, "iat": 1765415194, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "3a878c7d-5fe7-4afa-88ec-9a31aa75949c", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-12-11 01:06:38.220424');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1930, '4187d8cc-d632-11f0-88cd-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764725016}], "aud": "authenticated", "exp": 1765419359, "iat": 1765415759, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "27a49fd3-d747-49d1-9d11-75455d3ac701", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-12-11 01:39:38.496416');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1894, 'b903dc9e-d622-11f0-868f-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1765397691}], "aud": "authenticated", "exp": 1765418974, "iat": 1765415374, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "f2bb6acc-835a-414c-8856-836415b23896", "role": "authenticated", "email": "profissional@capifit.com", "phone": "", "session_id": "b142dfa9-e0e1-423d-b5d0-e86da8eebd98", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}}', DEFAULT, '2025-12-11 01:09:36.72064');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (1929, '4187ccb0-d632-11f0-bb7e-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1764723743}], "aud": "authenticated", "exp": 1765419339, "iat": 1765415739, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "f2bb6acc-835a-414c-8856-836415b23896", "role": "authenticated", "email": "profissional@capifit.com", "phone": "", "session_id": "bdb0a4b1-8beb-4c25-9c85-0cd83a9965eb", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}}', DEFAULT, '2025-12-11 01:39:38.496286');
+INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (2796, 'ecda9698-dff5-11f0-b64c-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1766114120}], "aud": "authenticated", "exp": 1766500107, "iat": 1766496507, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "bf547c35-e240-45db-bdb1-5a1fc4bc8081", "role": "authenticated", "email": "cliente1@capifit.com", "phone": "", "session_id": "8b85f1e0-32da-4804-9fc8-8c0b23e0fe62", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}}', DEFAULT, '2025-12-23 13:28:30.216281');
+INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (2775, '0019d2f4-dfac-11f0-a07f-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1766115769}], "aud": "authenticated", "exp": 1766501002, "iat": 1766497402, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "f2bb6acc-835a-414c-8856-836415b23896", "role": "authenticated", "email": "profissional@capifit.com", "phone": "", "session_id": "fa291d17-2a89-4314-a18c-53cf6ee1b3b2", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}}', DEFAULT, '2025-12-23 13:43:25.924662');
 
 
 --
--- TOC entry 4739 (class 0 OID 16546)
+-- TOC entry 4778 (class 0 OID 16546)
 -- Dependencies: 354
 -- Data for Name: buckets; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6207,7 +7385,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4760 (class 0 OID 17246)
+-- TOC entry 4799 (class 0 OID 17246)
 -- Dependencies: 378
 -- Data for Name: buckets_analytics; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6215,7 +7393,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4785 (class 0 OID 22419)
+-- TOC entry 4824 (class 0 OID 22419)
 -- Dependencies: 407
 -- Data for Name: buckets_vectors; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6223,7 +7401,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4741 (class 0 OID 16588)
+-- TOC entry 4780 (class 0 OID 16588)
 -- Dependencies: 356
 -- Data for Name: migrations; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6277,10 +7455,11 @@ INSERT INTO storage.migrations VALUES (45, 'vector-buckets', '049e27196d77a7cb76
 INSERT INTO storage.migrations VALUES (46, 'buckets-objects-grants', 'fedeb96d60fefd8e02ab3ded9fbde05632f84aed', '2025-11-19 12:23:34.488659');
 INSERT INTO storage.migrations VALUES (47, 'iceberg-table-metadata', '649df56855c24d8b36dd4cc1aeb8251aa9ad42c2', '2025-11-19 12:23:34.495051');
 INSERT INTO storage.migrations VALUES (48, 'iceberg-catalog-ids', '2666dff93346e5d04e0a878416be1d5fec345d6f', '2025-11-19 12:23:34.499393');
+INSERT INTO storage.migrations VALUES (49, 'buckets-objects-grants-postgres', '072b1195d0d5a2f888af6b2302a1938dd94b8b3d', '2025-12-19 16:20:55.885751');
 
 
 --
--- TOC entry 4740 (class 0 OID 16561)
+-- TOC entry 4779 (class 0 OID 16561)
 -- Dependencies: 355
 -- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6295,7 +7474,7 @@ INSERT INTO storage.objects VALUES ('d2556d6a-b427-45b3-88f4-a98c434f7058', 'pro
 
 
 --
--- TOC entry 4758 (class 0 OID 17197)
+-- TOC entry 4797 (class 0 OID 17197)
 -- Dependencies: 376
 -- Data for Name: prefixes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6308,7 +7487,7 @@ INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1
 
 
 --
--- TOC entry 4756 (class 0 OID 17144)
+-- TOC entry 4795 (class 0 OID 17144)
 -- Dependencies: 374
 -- Data for Name: s3_multipart_uploads; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6316,7 +7495,7 @@ INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1
 
 
 --
--- TOC entry 4757 (class 0 OID 17158)
+-- TOC entry 4796 (class 0 OID 17158)
 -- Dependencies: 375
 -- Data for Name: s3_multipart_uploads_parts; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6324,7 +7503,7 @@ INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1
 
 
 --
--- TOC entry 4786 (class 0 OID 22429)
+-- TOC entry 4825 (class 0 OID 22429)
 -- Dependencies: 408
 -- Data for Name: vector_indexes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -6332,7 +7511,7 @@ INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1
 
 
 --
--- TOC entry 3823 (class 0 OID 16658)
+-- TOC entry 3836 (class 0 OID 16658)
 -- Dependencies: 357
 -- Data for Name: secrets; Type: TABLE DATA; Schema: vault; Owner: supabase_admin
 --
@@ -6340,25 +7519,25 @@ INSERT INTO storage.prefixes VALUES ('progress-photos', 'bf547c35-e240-45db-bdb1
 
 
 --
--- TOC entry 5018 (class 0 OID 0)
+-- TOC entry 5068 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 731, true);
+SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 1133, true);
 
 
 --
--- TOC entry 5019 (class 0 OID 0)
+-- TOC entry 5069 (class 0 OID 0)
 -- Dependencies: 380
 -- Name: subscription_id_seq; Type: SEQUENCE SET; Schema: realtime; Owner: supabase_admin
 --
 
-SELECT pg_catalog.setval('realtime.subscription_id_seq', 1930, true);
+SELECT pg_catalog.setval('realtime.subscription_id_seq', 2800, true);
 
 
 --
--- TOC entry 4119 (class 2606 OID 16829)
+-- TOC entry 4142 (class 2606 OID 16829)
 -- Name: mfa_amr_claims amr_id_pk; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6367,7 +7546,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4073 (class 2606 OID 16531)
+-- TOC entry 4096 (class 2606 OID 16531)
 -- Name: audit_log_entries audit_log_entries_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6376,7 +7555,7 @@ ALTER TABLE ONLY auth.audit_log_entries
 
 
 --
--- TOC entry 4142 (class 2606 OID 16935)
+-- TOC entry 4165 (class 2606 OID 16935)
 -- Name: flow_state flow_state_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6385,7 +7564,7 @@ ALTER TABLE ONLY auth.flow_state
 
 
 --
--- TOC entry 4097 (class 2606 OID 16953)
+-- TOC entry 4120 (class 2606 OID 16953)
 -- Name: identities identities_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6394,7 +7573,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4099 (class 2606 OID 16963)
+-- TOC entry 4122 (class 2606 OID 16963)
 -- Name: identities identities_provider_id_provider_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6403,7 +7582,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4071 (class 2606 OID 16524)
+-- TOC entry 4094 (class 2606 OID 16524)
 -- Name: instances instances_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6412,7 +7591,7 @@ ALTER TABLE ONLY auth.instances
 
 
 --
--- TOC entry 4121 (class 2606 OID 16822)
+-- TOC entry 4144 (class 2606 OID 16822)
 -- Name: mfa_amr_claims mfa_amr_claims_session_id_authentication_method_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6421,7 +7600,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4117 (class 2606 OID 16810)
+-- TOC entry 4140 (class 2606 OID 16810)
 -- Name: mfa_challenges mfa_challenges_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6430,7 +7609,7 @@ ALTER TABLE ONLY auth.mfa_challenges
 
 
 --
--- TOC entry 4109 (class 2606 OID 17003)
+-- TOC entry 4132 (class 2606 OID 17003)
 -- Name: mfa_factors mfa_factors_last_challenged_at_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6439,7 +7618,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4111 (class 2606 OID 16797)
+-- TOC entry 4134 (class 2606 OID 16797)
 -- Name: mfa_factors mfa_factors_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6448,7 +7627,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4155 (class 2606 OID 17062)
+-- TOC entry 4178 (class 2606 OID 17062)
 -- Name: oauth_authorizations oauth_authorizations_authorization_code_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6457,7 +7636,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4157 (class 2606 OID 17060)
+-- TOC entry 4180 (class 2606 OID 17060)
 -- Name: oauth_authorizations oauth_authorizations_authorization_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6466,7 +7645,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4159 (class 2606 OID 17058)
+-- TOC entry 4182 (class 2606 OID 17058)
 -- Name: oauth_authorizations oauth_authorizations_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6475,7 +7654,16 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4152 (class 2606 OID 17022)
+-- TOC entry 4311 (class 2606 OID 49849)
+-- Name: oauth_client_states oauth_client_states_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+--
+
+ALTER TABLE ONLY auth.oauth_client_states
+    ADD CONSTRAINT oauth_client_states_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4175 (class 2606 OID 17022)
 -- Name: oauth_clients oauth_clients_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6484,7 +7672,7 @@ ALTER TABLE ONLY auth.oauth_clients
 
 
 --
--- TOC entry 4163 (class 2606 OID 17084)
+-- TOC entry 4186 (class 2606 OID 17084)
 -- Name: oauth_consents oauth_consents_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6493,7 +7681,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4165 (class 2606 OID 17086)
+-- TOC entry 4188 (class 2606 OID 17086)
 -- Name: oauth_consents oauth_consents_user_client_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6502,7 +7690,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4146 (class 2606 OID 16988)
+-- TOC entry 4169 (class 2606 OID 16988)
 -- Name: one_time_tokens one_time_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6511,7 +7699,7 @@ ALTER TABLE ONLY auth.one_time_tokens
 
 
 --
--- TOC entry 4065 (class 2606 OID 16514)
+-- TOC entry 4088 (class 2606 OID 16514)
 -- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6520,7 +7708,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4068 (class 2606 OID 16740)
+-- TOC entry 4091 (class 2606 OID 16740)
 -- Name: refresh_tokens refresh_tokens_token_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6529,7 +7717,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4131 (class 2606 OID 16869)
+-- TOC entry 4154 (class 2606 OID 16869)
 -- Name: saml_providers saml_providers_entity_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6538,7 +7726,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4133 (class 2606 OID 16867)
+-- TOC entry 4156 (class 2606 OID 16867)
 -- Name: saml_providers saml_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6547,7 +7735,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4138 (class 2606 OID 16883)
+-- TOC entry 4161 (class 2606 OID 16883)
 -- Name: saml_relay_states saml_relay_states_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6556,7 +7744,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4076 (class 2606 OID 16537)
+-- TOC entry 4099 (class 2606 OID 16537)
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6565,7 +7753,7 @@ ALTER TABLE ONLY auth.schema_migrations
 
 
 --
--- TOC entry 4104 (class 2606 OID 16761)
+-- TOC entry 4127 (class 2606 OID 16761)
 -- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6574,7 +7762,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4128 (class 2606 OID 16850)
+-- TOC entry 4151 (class 2606 OID 16850)
 -- Name: sso_domains sso_domains_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6583,7 +7771,7 @@ ALTER TABLE ONLY auth.sso_domains
 
 
 --
--- TOC entry 4123 (class 2606 OID 16841)
+-- TOC entry 4146 (class 2606 OID 16841)
 -- Name: sso_providers sso_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6592,7 +7780,7 @@ ALTER TABLE ONLY auth.sso_providers
 
 
 --
--- TOC entry 4058 (class 2606 OID 16923)
+-- TOC entry 4081 (class 2606 OID 16923)
 -- Name: users users_phone_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6601,7 +7789,7 @@ ALTER TABLE ONLY auth.users
 
 
 --
--- TOC entry 4060 (class 2606 OID 16501)
+-- TOC entry 4083 (class 2606 OID 16501)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -6610,7 +7798,7 @@ ALTER TABLE ONLY auth.users
 
 
 --
--- TOC entry 4268 (class 2606 OID 29870)
+-- TOC entry 4291 (class 2606 OID 29870)
 -- Name: achievements achievements_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6619,7 +7807,7 @@ ALTER TABLE ONLY public.achievements
 
 
 --
--- TOC entry 4270 (class 2606 OID 29868)
+-- TOC entry 4293 (class 2606 OID 29868)
 -- Name: achievements achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6628,7 +7816,7 @@ ALTER TABLE ONLY public.achievements
 
 
 --
--- TOC entry 4242 (class 2606 OID 17802)
+-- TOC entry 4265 (class 2606 OID 17802)
 -- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6637,7 +7825,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4237 (class 2606 OID 17784)
+-- TOC entry 4260 (class 2606 OID 17784)
 -- Name: biometric_data biometric_data_client_id_date_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6646,7 +7834,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4239 (class 2606 OID 17782)
+-- TOC entry 4262 (class 2606 OID 17782)
 -- Name: biometric_data biometric_data_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6655,7 +7843,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4246 (class 2606 OID 17824)
+-- TOC entry 4269 (class 2606 OID 17824)
 -- Name: chat_messages chat_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6664,7 +7852,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4193 (class 2606 OID 17490)
+-- TOC entry 4216 (class 2606 OID 17490)
 -- Name: client_details client_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6673,7 +7861,7 @@ ALTER TABLE ONLY public.client_details
 
 
 --
--- TOC entry 4227 (class 2606 OID 17719)
+-- TOC entry 4250 (class 2606 OID 17719)
 -- Name: client_meal_plans client_meal_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6682,7 +7870,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4195 (class 2606 OID 17508)
+-- TOC entry 4218 (class 2606 OID 17508)
 -- Name: client_professionals client_professionals_client_id_professional_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6691,7 +7879,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4197 (class 2606 OID 17506)
+-- TOC entry 4220 (class 2606 OID 17506)
 -- Name: client_professionals client_professionals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6700,7 +7888,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4209 (class 2606 OID 17582)
+-- TOC entry 4232 (class 2606 OID 17582)
 -- Name: client_workouts client_workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6709,7 +7897,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4201 (class 2606 OID 17530)
+-- TOC entry 4224 (class 2606 OID 17530)
 -- Name: exercises_library exercises_library_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6718,7 +7906,7 @@ ALTER TABLE ONLY public.exercises_library
 
 
 --
--- TOC entry 4215 (class 2606 OID 17628)
+-- TOC entry 4238 (class 2606 OID 17628)
 -- Name: foods_library foods_library_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6727,7 +7915,7 @@ ALTER TABLE ONLY public.foods_library
 
 
 --
--- TOC entry 4232 (class 2606 OID 17744)
+-- TOC entry 4255 (class 2606 OID 17744)
 -- Name: meal_logs meal_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6736,7 +7924,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4225 (class 2606 OID 17692)
+-- TOC entry 4248 (class 2606 OID 17692)
 -- Name: meal_plan_items meal_plan_items_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6745,7 +7933,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4222 (class 2606 OID 17678)
+-- TOC entry 4245 (class 2606 OID 17678)
 -- Name: meal_plans meal_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6754,7 +7942,7 @@ ALTER TABLE ONLY public.meal_plans
 
 
 --
--- TOC entry 4191 (class 2606 OID 17476)
+-- TOC entry 4214 (class 2606 OID 17476)
 -- Name: professional_details professional_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6763,7 +7951,7 @@ ALTER TABLE ONLY public.professional_details
 
 
 --
--- TOC entry 4259 (class 2606 OID 22397)
+-- TOC entry 4282 (class 2606 OID 22397)
 -- Name: professional_notifications professional_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6772,7 +7960,25 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4189 (class 2606 OID 17460)
+-- TOC entry 4306 (class 2606 OID 48450)
+-- Name: professional_reviews professional_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professional_reviews
+    ADD CONSTRAINT professional_reviews_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4308 (class 2606 OID 48452)
+-- Name: professional_reviews professional_reviews_professional_id_client_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professional_reviews
+    ADD CONSTRAINT professional_reviews_professional_id_client_id_key UNIQUE (professional_id, client_id);
+
+
+--
+-- TOC entry 4212 (class 2606 OID 17460)
 -- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6781,7 +7987,7 @@ ALTER TABLE ONLY public.profiles
 
 
 --
--- TOC entry 4235 (class 2606 OID 17768)
+-- TOC entry 4258 (class 2606 OID 17768)
 -- Name: progress_photos progress_photos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6790,7 +7996,7 @@ ALTER TABLE ONLY public.progress_photos
 
 
 --
--- TOC entry 4219 (class 2606 OID 17657)
+-- TOC entry 4242 (class 2606 OID 17657)
 -- Name: recipe_ingredients recipe_ingredients_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6799,7 +8005,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4217 (class 2606 OID 17644)
+-- TOC entry 4240 (class 2606 OID 17644)
 -- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6808,7 +8014,7 @@ ALTER TABLE ONLY public.recipes
 
 
 --
--- TOC entry 4302 (class 2606 OID 45813)
+-- TOC entry 4304 (class 2606 OID 45813)
 -- Name: scheduled_workouts scheduled_workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6817,7 +8023,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4272 (class 2606 OID 29877)
+-- TOC entry 4295 (class 2606 OID 29877)
 -- Name: user_achievements user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6826,7 +8032,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4274 (class 2606 OID 29879)
+-- TOC entry 4297 (class 2606 OID 29879)
 -- Name: user_achievements user_achievements_user_id_achievement_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6835,7 +8041,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4266 (class 2606 OID 28710)
+-- TOC entry 4289 (class 2606 OID 28710)
 -- Name: workout_execution_logs workout_execution_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6844,7 +8050,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4207 (class 2606 OID 17560)
+-- TOC entry 4230 (class 2606 OID 17560)
 -- Name: workout_exercises workout_exercises_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6853,7 +8059,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4213 (class 2606 OID 17607)
+-- TOC entry 4236 (class 2606 OID 17607)
 -- Name: workout_logs workout_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6862,7 +8068,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4253 (class 2606 OID 20130)
+-- TOC entry 4276 (class 2606 OID 20130)
 -- Name: workout_sessions workout_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6871,7 +8077,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4204 (class 2606 OID 17547)
+-- TOC entry 4227 (class 2606 OID 17547)
 -- Name: workouts workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6880,7 +8086,7 @@ ALTER TABLE ONLY public.workouts
 
 
 --
--- TOC entry 4186 (class 2606 OID 17448)
+-- TOC entry 4209 (class 2606 OID 17448)
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -6889,70 +8095,70 @@ ALTER TABLE ONLY realtime.messages
 
 
 --
--- TOC entry 4277 (class 2606 OID 40112)
--- Name: messages_2025_12_07 messages_2025_12_07_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4314 (class 2606 OID 55491)
+-- Name: messages_2025_12_20 messages_2025_12_20_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_12_07
-    ADD CONSTRAINT messages_2025_12_07_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4280 (class 2606 OID 40124)
--- Name: messages_2025_12_08 messages_2025_12_08_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_12_08
-    ADD CONSTRAINT messages_2025_12_08_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_20
+    ADD CONSTRAINT messages_2025_12_20_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4283 (class 2606 OID 44548)
--- Name: messages_2025_12_09 messages_2025_12_09_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4317 (class 2606 OID 55503)
+-- Name: messages_2025_12_21 messages_2025_12_21_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_12_09
-    ADD CONSTRAINT messages_2025_12_09_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4286 (class 2606 OID 44560)
--- Name: messages_2025_12_10 messages_2025_12_10_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_12_10
-    ADD CONSTRAINT messages_2025_12_10_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_21
+    ADD CONSTRAINT messages_2025_12_21_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4289 (class 2606 OID 44572)
--- Name: messages_2025_12_11 messages_2025_12_11_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4320 (class 2606 OID 56620)
+-- Name: messages_2025_12_22 messages_2025_12_22_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_12_11
-    ADD CONSTRAINT messages_2025_12_11_pkey PRIMARY KEY (id, inserted_at);
-
-
---
--- TOC entry 4292 (class 2606 OID 44584)
--- Name: messages_2025_12_12 messages_2025_12_12_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE ONLY realtime.messages_2025_12_12
-    ADD CONSTRAINT messages_2025_12_12_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_22
+    ADD CONSTRAINT messages_2025_12_22_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4295 (class 2606 OID 45699)
--- Name: messages_2025_12_13 messages_2025_12_13_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4323 (class 2606 OID 57756)
+-- Name: messages_2025_12_23 messages_2025_12_23_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
-ALTER TABLE ONLY realtime.messages_2025_12_13
-    ADD CONSTRAINT messages_2025_12_13_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY realtime.messages_2025_12_23
+    ADD CONSTRAINT messages_2025_12_23_pkey PRIMARY KEY (id, inserted_at);
 
 
 --
--- TOC entry 4182 (class 2606 OID 17297)
+-- TOC entry 4326 (class 2606 OID 58871)
+-- Name: messages_2025_12_24 messages_2025_12_24_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_24
+    ADD CONSTRAINT messages_2025_12_24_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4329 (class 2606 OID 59986)
+-- Name: messages_2025_12_25 messages_2025_12_25_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_25
+    ADD CONSTRAINT messages_2025_12_25_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4332 (class 2606 OID 61103)
+-- Name: messages_2025_12_26 messages_2025_12_26_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY realtime.messages_2025_12_26
+    ADD CONSTRAINT messages_2025_12_26_pkey PRIMARY KEY (id, inserted_at);
+
+
+--
+-- TOC entry 4205 (class 2606 OID 17297)
 -- Name: subscription pk_subscription; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -6961,7 +8167,7 @@ ALTER TABLE ONLY realtime.subscription
 
 
 --
--- TOC entry 4176 (class 2606 OID 17229)
+-- TOC entry 4199 (class 2606 OID 17229)
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -6970,7 +8176,7 @@ ALTER TABLE ONLY realtime.schema_migrations
 
 
 --
--- TOC entry 4178 (class 2606 OID 22452)
+-- TOC entry 4201 (class 2606 OID 22452)
 -- Name: buckets_analytics buckets_analytics_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -6979,7 +8185,7 @@ ALTER TABLE ONLY storage.buckets_analytics
 
 
 --
--- TOC entry 4079 (class 2606 OID 16554)
+-- TOC entry 4102 (class 2606 OID 16554)
 -- Name: buckets buckets_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -6988,7 +8194,7 @@ ALTER TABLE ONLY storage.buckets
 
 
 --
--- TOC entry 4261 (class 2606 OID 22428)
+-- TOC entry 4284 (class 2606 OID 22428)
 -- Name: buckets_vectors buckets_vectors_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -6997,7 +8203,7 @@ ALTER TABLE ONLY storage.buckets_vectors
 
 
 --
--- TOC entry 4089 (class 2606 OID 16595)
+-- TOC entry 4112 (class 2606 OID 16595)
 -- Name: migrations migrations_name_key; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7006,7 +8212,7 @@ ALTER TABLE ONLY storage.migrations
 
 
 --
--- TOC entry 4091 (class 2606 OID 16593)
+-- TOC entry 4114 (class 2606 OID 16593)
 -- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7015,7 +8221,7 @@ ALTER TABLE ONLY storage.migrations
 
 
 --
--- TOC entry 4087 (class 2606 OID 16571)
+-- TOC entry 4110 (class 2606 OID 16571)
 -- Name: objects objects_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7024,7 +8230,7 @@ ALTER TABLE ONLY storage.objects
 
 
 --
--- TOC entry 4174 (class 2606 OID 17206)
+-- TOC entry 4197 (class 2606 OID 17206)
 -- Name: prefixes prefixes_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7033,7 +8239,7 @@ ALTER TABLE ONLY storage.prefixes
 
 
 --
--- TOC entry 4171 (class 2606 OID 17167)
+-- TOC entry 4194 (class 2606 OID 17167)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7042,7 +8248,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4169 (class 2606 OID 17152)
+-- TOC entry 4192 (class 2606 OID 17152)
 -- Name: s3_multipart_uploads s3_multipart_uploads_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7051,7 +8257,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads
 
 
 --
--- TOC entry 4264 (class 2606 OID 22438)
+-- TOC entry 4287 (class 2606 OID 22438)
 -- Name: vector_indexes vector_indexes_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7060,7 +8266,7 @@ ALTER TABLE ONLY storage.vector_indexes
 
 
 --
--- TOC entry 4074 (class 1259 OID 16532)
+-- TOC entry 4097 (class 1259 OID 16532)
 -- Name: audit_logs_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7068,7 +8274,7 @@ CREATE INDEX audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (i
 
 
 --
--- TOC entry 4048 (class 1259 OID 16750)
+-- TOC entry 4071 (class 1259 OID 16750)
 -- Name: confirmation_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7076,7 +8282,7 @@ CREATE UNIQUE INDEX confirmation_token_idx ON auth.users USING btree (confirmati
 
 
 --
--- TOC entry 4049 (class 1259 OID 16752)
+-- TOC entry 4072 (class 1259 OID 16752)
 -- Name: email_change_token_current_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7084,7 +8290,7 @@ CREATE UNIQUE INDEX email_change_token_current_idx ON auth.users USING btree (em
 
 
 --
--- TOC entry 4050 (class 1259 OID 16753)
+-- TOC entry 4073 (class 1259 OID 16753)
 -- Name: email_change_token_new_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7092,7 +8298,7 @@ CREATE UNIQUE INDEX email_change_token_new_idx ON auth.users USING btree (email_
 
 
 --
--- TOC entry 4107 (class 1259 OID 16831)
+-- TOC entry 4130 (class 1259 OID 16831)
 -- Name: factor_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7100,7 +8306,7 @@ CREATE INDEX factor_id_created_at_idx ON auth.mfa_factors USING btree (user_id, 
 
 
 --
--- TOC entry 4140 (class 1259 OID 16939)
+-- TOC entry 4163 (class 1259 OID 16939)
 -- Name: flow_state_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7108,7 +8314,7 @@ CREATE INDEX flow_state_created_at_idx ON auth.flow_state USING btree (created_a
 
 
 --
--- TOC entry 4095 (class 1259 OID 16919)
+-- TOC entry 4118 (class 1259 OID 16919)
 -- Name: identities_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7116,8 +8322,8 @@ CREATE INDEX identities_email_idx ON auth.identities USING btree (email text_pat
 
 
 --
--- TOC entry 5020 (class 0 OID 0)
--- Dependencies: 4095
+-- TOC entry 5070 (class 0 OID 0)
+-- Dependencies: 4118
 -- Name: INDEX identities_email_idx; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7125,7 +8331,7 @@ COMMENT ON INDEX auth.identities_email_idx IS 'Auth: Ensures indexed queries on 
 
 
 --
--- TOC entry 4100 (class 1259 OID 16747)
+-- TOC entry 4123 (class 1259 OID 16747)
 -- Name: identities_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7133,7 +8339,7 @@ CREATE INDEX identities_user_id_idx ON auth.identities USING btree (user_id);
 
 
 --
--- TOC entry 4143 (class 1259 OID 16936)
+-- TOC entry 4166 (class 1259 OID 16936)
 -- Name: idx_auth_code; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7141,7 +8347,15 @@ CREATE INDEX idx_auth_code ON auth.flow_state USING btree (auth_code);
 
 
 --
--- TOC entry 4144 (class 1259 OID 16937)
+-- TOC entry 4309 (class 1259 OID 49850)
+-- Name: idx_oauth_client_states_created_at; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+--
+
+CREATE INDEX idx_oauth_client_states_created_at ON auth.oauth_client_states USING btree (created_at);
+
+
+--
+-- TOC entry 4167 (class 1259 OID 16937)
 -- Name: idx_user_id_auth_method; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7149,7 +8363,7 @@ CREATE INDEX idx_user_id_auth_method ON auth.flow_state USING btree (user_id, au
 
 
 --
--- TOC entry 4115 (class 1259 OID 16942)
+-- TOC entry 4138 (class 1259 OID 16942)
 -- Name: mfa_challenge_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7157,7 +8371,7 @@ CREATE INDEX mfa_challenge_created_at_idx ON auth.mfa_challenges USING btree (cr
 
 
 --
--- TOC entry 4112 (class 1259 OID 16803)
+-- TOC entry 4135 (class 1259 OID 16803)
 -- Name: mfa_factors_user_friendly_name_unique; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7165,7 +8379,7 @@ CREATE UNIQUE INDEX mfa_factors_user_friendly_name_unique ON auth.mfa_factors US
 
 
 --
--- TOC entry 4113 (class 1259 OID 16948)
+-- TOC entry 4136 (class 1259 OID 16948)
 -- Name: mfa_factors_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7173,7 +8387,7 @@ CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id);
 
 
 --
--- TOC entry 4153 (class 1259 OID 17073)
+-- TOC entry 4176 (class 1259 OID 17073)
 -- Name: oauth_auth_pending_exp_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7181,7 +8395,7 @@ CREATE INDEX oauth_auth_pending_exp_idx ON auth.oauth_authorizations USING btree
 
 
 --
--- TOC entry 4150 (class 1259 OID 17026)
+-- TOC entry 4173 (class 1259 OID 17026)
 -- Name: oauth_clients_deleted_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7189,7 +8403,7 @@ CREATE INDEX oauth_clients_deleted_at_idx ON auth.oauth_clients USING btree (del
 
 
 --
--- TOC entry 4160 (class 1259 OID 17099)
+-- TOC entry 4183 (class 1259 OID 17099)
 -- Name: oauth_consents_active_client_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7197,7 +8411,7 @@ CREATE INDEX oauth_consents_active_client_idx ON auth.oauth_consents USING btree
 
 
 --
--- TOC entry 4161 (class 1259 OID 17097)
+-- TOC entry 4184 (class 1259 OID 17097)
 -- Name: oauth_consents_active_user_client_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7205,7 +8419,7 @@ CREATE INDEX oauth_consents_active_user_client_idx ON auth.oauth_consents USING 
 
 
 --
--- TOC entry 4166 (class 1259 OID 17098)
+-- TOC entry 4189 (class 1259 OID 17098)
 -- Name: oauth_consents_user_order_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7213,7 +8427,7 @@ CREATE INDEX oauth_consents_user_order_idx ON auth.oauth_consents USING btree (u
 
 
 --
--- TOC entry 4147 (class 1259 OID 16995)
+-- TOC entry 4170 (class 1259 OID 16995)
 -- Name: one_time_tokens_relates_to_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7221,7 +8435,7 @@ CREATE INDEX one_time_tokens_relates_to_hash_idx ON auth.one_time_tokens USING h
 
 
 --
--- TOC entry 4148 (class 1259 OID 16994)
+-- TOC entry 4171 (class 1259 OID 16994)
 -- Name: one_time_tokens_token_hash_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7229,7 +8443,7 @@ CREATE INDEX one_time_tokens_token_hash_hash_idx ON auth.one_time_tokens USING h
 
 
 --
--- TOC entry 4149 (class 1259 OID 16996)
+-- TOC entry 4172 (class 1259 OID 16996)
 -- Name: one_time_tokens_user_id_token_type_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7237,7 +8451,7 @@ CREATE UNIQUE INDEX one_time_tokens_user_id_token_type_key ON auth.one_time_toke
 
 
 --
--- TOC entry 4051 (class 1259 OID 16754)
+-- TOC entry 4074 (class 1259 OID 16754)
 -- Name: reauthentication_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7245,7 +8459,7 @@ CREATE UNIQUE INDEX reauthentication_token_idx ON auth.users USING btree (reauth
 
 
 --
--- TOC entry 4052 (class 1259 OID 16751)
+-- TOC entry 4075 (class 1259 OID 16751)
 -- Name: recovery_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7253,7 +8467,7 @@ CREATE UNIQUE INDEX recovery_token_idx ON auth.users USING btree (recovery_token
 
 
 --
--- TOC entry 4061 (class 1259 OID 16515)
+-- TOC entry 4084 (class 1259 OID 16515)
 -- Name: refresh_tokens_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7261,7 +8475,7 @@ CREATE INDEX refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (
 
 
 --
--- TOC entry 4062 (class 1259 OID 16516)
+-- TOC entry 4085 (class 1259 OID 16516)
 -- Name: refresh_tokens_instance_id_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7269,7 +8483,7 @@ CREATE INDEX refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING
 
 
 --
--- TOC entry 4063 (class 1259 OID 16746)
+-- TOC entry 4086 (class 1259 OID 16746)
 -- Name: refresh_tokens_parent_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7277,7 +8491,7 @@ CREATE INDEX refresh_tokens_parent_idx ON auth.refresh_tokens USING btree (paren
 
 
 --
--- TOC entry 4066 (class 1259 OID 16833)
+-- TOC entry 4089 (class 1259 OID 16833)
 -- Name: refresh_tokens_session_id_revoked_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7285,7 +8499,7 @@ CREATE INDEX refresh_tokens_session_id_revoked_idx ON auth.refresh_tokens USING 
 
 
 --
--- TOC entry 4069 (class 1259 OID 16938)
+-- TOC entry 4092 (class 1259 OID 16938)
 -- Name: refresh_tokens_updated_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7293,7 +8507,7 @@ CREATE INDEX refresh_tokens_updated_at_idx ON auth.refresh_tokens USING btree (u
 
 
 --
--- TOC entry 4134 (class 1259 OID 16875)
+-- TOC entry 4157 (class 1259 OID 16875)
 -- Name: saml_providers_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7301,7 +8515,7 @@ CREATE INDEX saml_providers_sso_provider_id_idx ON auth.saml_providers USING btr
 
 
 --
--- TOC entry 4135 (class 1259 OID 16940)
+-- TOC entry 4158 (class 1259 OID 16940)
 -- Name: saml_relay_states_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7309,7 +8523,7 @@ CREATE INDEX saml_relay_states_created_at_idx ON auth.saml_relay_states USING bt
 
 
 --
--- TOC entry 4136 (class 1259 OID 16890)
+-- TOC entry 4159 (class 1259 OID 16890)
 -- Name: saml_relay_states_for_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7317,7 +8531,7 @@ CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btr
 
 
 --
--- TOC entry 4139 (class 1259 OID 16889)
+-- TOC entry 4162 (class 1259 OID 16889)
 -- Name: saml_relay_states_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7325,7 +8539,7 @@ CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USI
 
 
 --
--- TOC entry 4101 (class 1259 OID 16941)
+-- TOC entry 4124 (class 1259 OID 16941)
 -- Name: sessions_not_after_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7333,7 +8547,7 @@ CREATE INDEX sessions_not_after_idx ON auth.sessions USING btree (not_after DESC
 
 
 --
--- TOC entry 4102 (class 1259 OID 17111)
+-- TOC entry 4125 (class 1259 OID 17111)
 -- Name: sessions_oauth_client_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7341,7 +8555,7 @@ CREATE INDEX sessions_oauth_client_id_idx ON auth.sessions USING btree (oauth_cl
 
 
 --
--- TOC entry 4105 (class 1259 OID 16832)
+-- TOC entry 4128 (class 1259 OID 16832)
 -- Name: sessions_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7349,7 +8563,7 @@ CREATE INDEX sessions_user_id_idx ON auth.sessions USING btree (user_id);
 
 
 --
--- TOC entry 4126 (class 1259 OID 16857)
+-- TOC entry 4149 (class 1259 OID 16857)
 -- Name: sso_domains_domain_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7357,7 +8571,7 @@ CREATE UNIQUE INDEX sso_domains_domain_idx ON auth.sso_domains USING btree (lowe
 
 
 --
--- TOC entry 4129 (class 1259 OID 16856)
+-- TOC entry 4152 (class 1259 OID 16856)
 -- Name: sso_domains_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7365,7 +8579,7 @@ CREATE INDEX sso_domains_sso_provider_id_idx ON auth.sso_domains USING btree (ss
 
 
 --
--- TOC entry 4124 (class 1259 OID 16842)
+-- TOC entry 4147 (class 1259 OID 16842)
 -- Name: sso_providers_resource_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7373,7 +8587,7 @@ CREATE UNIQUE INDEX sso_providers_resource_id_idx ON auth.sso_providers USING bt
 
 
 --
--- TOC entry 4125 (class 1259 OID 17004)
+-- TOC entry 4148 (class 1259 OID 17004)
 -- Name: sso_providers_resource_id_pattern_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7381,7 +8595,7 @@ CREATE INDEX sso_providers_resource_id_pattern_idx ON auth.sso_providers USING b
 
 
 --
--- TOC entry 4114 (class 1259 OID 17001)
+-- TOC entry 4137 (class 1259 OID 17001)
 -- Name: unique_phone_factor_per_user; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7389,7 +8603,7 @@ CREATE UNIQUE INDEX unique_phone_factor_per_user ON auth.mfa_factors USING btree
 
 
 --
--- TOC entry 4106 (class 1259 OID 16830)
+-- TOC entry 4129 (class 1259 OID 16830)
 -- Name: user_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7397,7 +8611,7 @@ CREATE INDEX user_id_created_at_idx ON auth.sessions USING btree (user_id, creat
 
 
 --
--- TOC entry 4053 (class 1259 OID 16910)
+-- TOC entry 4076 (class 1259 OID 16910)
 -- Name: users_email_partial_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7405,8 +8619,8 @@ CREATE UNIQUE INDEX users_email_partial_key ON auth.users USING btree (email) WH
 
 
 --
--- TOC entry 5021 (class 0 OID 0)
--- Dependencies: 4053
+-- TOC entry 5071 (class 0 OID 0)
+-- Dependencies: 4076
 -- Name: INDEX users_email_partial_key; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7414,7 +8628,7 @@ COMMENT ON INDEX auth.users_email_partial_key IS 'Auth: A partial unique index t
 
 
 --
--- TOC entry 4054 (class 1259 OID 16748)
+-- TOC entry 4077 (class 1259 OID 16748)
 -- Name: users_instance_id_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7422,7 +8636,7 @@ CREATE INDEX users_instance_id_email_idx ON auth.users USING btree (instance_id,
 
 
 --
--- TOC entry 4055 (class 1259 OID 16505)
+-- TOC entry 4078 (class 1259 OID 16505)
 -- Name: users_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7430,7 +8644,7 @@ CREATE INDEX users_instance_id_idx ON auth.users USING btree (instance_id);
 
 
 --
--- TOC entry 4056 (class 1259 OID 16965)
+-- TOC entry 4079 (class 1259 OID 16965)
 -- Name: users_is_anonymous_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7438,7 +8652,7 @@ CREATE INDEX users_is_anonymous_idx ON auth.users USING btree (is_anonymous);
 
 
 --
--- TOC entry 4243 (class 1259 OID 17850)
+-- TOC entry 4266 (class 1259 OID 17850)
 -- Name: idx_appointments_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7446,7 +8660,7 @@ CREATE INDEX idx_appointments_client ON public.appointments USING btree (client_
 
 
 --
--- TOC entry 4244 (class 1259 OID 17849)
+-- TOC entry 4267 (class 1259 OID 17849)
 -- Name: idx_appointments_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7454,7 +8668,7 @@ CREATE INDEX idx_appointments_professional ON public.appointments USING btree (p
 
 
 --
--- TOC entry 4240 (class 1259 OID 17848)
+-- TOC entry 4263 (class 1259 OID 17848)
 -- Name: idx_biometric_data_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7462,7 +8676,7 @@ CREATE INDEX idx_biometric_data_client ON public.biometric_data USING btree (cli
 
 
 --
--- TOC entry 4247 (class 1259 OID 17852)
+-- TOC entry 4270 (class 1259 OID 17852)
 -- Name: idx_chat_messages_receiver; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7470,7 +8684,7 @@ CREATE INDEX idx_chat_messages_receiver ON public.chat_messages USING btree (rec
 
 
 --
--- TOC entry 4248 (class 1259 OID 17851)
+-- TOC entry 4271 (class 1259 OID 17851)
 -- Name: idx_chat_messages_sender; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7478,7 +8692,7 @@ CREATE INDEX idx_chat_messages_sender ON public.chat_messages USING btree (sende
 
 
 --
--- TOC entry 4228 (class 1259 OID 17844)
+-- TOC entry 4251 (class 1259 OID 17844)
 -- Name: idx_client_meal_plans_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7486,7 +8700,7 @@ CREATE INDEX idx_client_meal_plans_client ON public.client_meal_plans USING btre
 
 
 --
--- TOC entry 4198 (class 1259 OID 17836)
+-- TOC entry 4221 (class 1259 OID 17836)
 -- Name: idx_client_professionals_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7494,7 +8708,7 @@ CREATE INDEX idx_client_professionals_client ON public.client_professionals USIN
 
 
 --
--- TOC entry 4199 (class 1259 OID 17837)
+-- TOC entry 4222 (class 1259 OID 17837)
 -- Name: idx_client_professionals_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7502,7 +8716,7 @@ CREATE INDEX idx_client_professionals_professional ON public.client_professional
 
 
 --
--- TOC entry 4210 (class 1259 OID 17840)
+-- TOC entry 4233 (class 1259 OID 17840)
 -- Name: idx_client_workouts_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7510,7 +8724,7 @@ CREATE INDEX idx_client_workouts_client ON public.client_workouts USING btree (c
 
 
 --
--- TOC entry 4229 (class 1259 OID 17845)
+-- TOC entry 4252 (class 1259 OID 17845)
 -- Name: idx_meal_logs_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7518,7 +8732,7 @@ CREATE INDEX idx_meal_logs_client ON public.meal_logs USING btree (client_id);
 
 
 --
--- TOC entry 4230 (class 1259 OID 17846)
+-- TOC entry 4253 (class 1259 OID 17846)
 -- Name: idx_meal_logs_logged_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7526,7 +8740,7 @@ CREATE INDEX idx_meal_logs_logged_at ON public.meal_logs USING btree (logged_at)
 
 
 --
--- TOC entry 4223 (class 1259 OID 17843)
+-- TOC entry 4246 (class 1259 OID 17843)
 -- Name: idx_meal_plan_items_plan; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7534,7 +8748,7 @@ CREATE INDEX idx_meal_plan_items_plan ON public.meal_plan_items USING btree (mea
 
 
 --
--- TOC entry 4220 (class 1259 OID 17842)
+-- TOC entry 4243 (class 1259 OID 17842)
 -- Name: idx_meal_plans_nutritionist; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7542,7 +8756,7 @@ CREATE INDEX idx_meal_plans_nutritionist ON public.meal_plans USING btree (nutri
 
 
 --
--- TOC entry 4254 (class 1259 OID 22413)
+-- TOC entry 4277 (class 1259 OID 22413)
 -- Name: idx_professional_notifications_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7550,7 +8764,7 @@ CREATE INDEX idx_professional_notifications_client_id ON public.professional_not
 
 
 --
--- TOC entry 4255 (class 1259 OID 22414)
+-- TOC entry 4278 (class 1259 OID 22414)
 -- Name: idx_professional_notifications_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7558,7 +8772,7 @@ CREATE INDEX idx_professional_notifications_created_at ON public.professional_no
 
 
 --
--- TOC entry 4256 (class 1259 OID 22412)
+-- TOC entry 4279 (class 1259 OID 22412)
 -- Name: idx_professional_notifications_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7566,7 +8780,7 @@ CREATE INDEX idx_professional_notifications_professional_id ON public.profession
 
 
 --
--- TOC entry 4257 (class 1259 OID 22415)
+-- TOC entry 4280 (class 1259 OID 22415)
 -- Name: idx_professional_notifications_read; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7574,7 +8788,7 @@ CREATE INDEX idx_professional_notifications_read ON public.professional_notifica
 
 
 --
--- TOC entry 4187 (class 1259 OID 17835)
+-- TOC entry 4210 (class 1259 OID 17835)
 -- Name: idx_profiles_role; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7582,7 +8796,7 @@ CREATE INDEX idx_profiles_role ON public.profiles USING btree (role);
 
 
 --
--- TOC entry 4233 (class 1259 OID 17847)
+-- TOC entry 4256 (class 1259 OID 17847)
 -- Name: idx_progress_photos_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7590,7 +8804,7 @@ CREATE INDEX idx_progress_photos_client ON public.progress_photos USING btree (c
 
 
 --
--- TOC entry 4296 (class 1259 OID 47251)
+-- TOC entry 4298 (class 1259 OID 47251)
 -- Name: idx_scheduled_workouts_cancelled_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7598,7 +8812,7 @@ CREATE INDEX idx_scheduled_workouts_cancelled_by ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4297 (class 1259 OID 45824)
+-- TOC entry 4299 (class 1259 OID 45824)
 -- Name: idx_scheduled_workouts_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7606,7 +8820,7 @@ CREATE INDEX idx_scheduled_workouts_client_id ON public.scheduled_workouts USING
 
 
 --
--- TOC entry 4298 (class 1259 OID 47250)
+-- TOC entry 4300 (class 1259 OID 47250)
 -- Name: idx_scheduled_workouts_confirmed_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7614,7 +8828,7 @@ CREATE INDEX idx_scheduled_workouts_confirmed_by ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4299 (class 1259 OID 45930)
+-- TOC entry 4301 (class 1259 OID 45930)
 -- Name: idx_scheduled_workouts_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7622,7 +8836,7 @@ CREATE INDEX idx_scheduled_workouts_professional_id ON public.scheduled_workouts
 
 
 --
--- TOC entry 4300 (class 1259 OID 45825)
+-- TOC entry 4302 (class 1259 OID 45825)
 -- Name: idx_scheduled_workouts_scheduled_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7630,7 +8844,7 @@ CREATE INDEX idx_scheduled_workouts_scheduled_at ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4205 (class 1259 OID 17839)
+-- TOC entry 4228 (class 1259 OID 17839)
 -- Name: idx_workout_exercises_workout; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7638,7 +8852,7 @@ CREATE INDEX idx_workout_exercises_workout ON public.workout_exercises USING btr
 
 
 --
--- TOC entry 4211 (class 1259 OID 17841)
+-- TOC entry 4234 (class 1259 OID 17841)
 -- Name: idx_workout_logs_client_workout; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7646,7 +8860,7 @@ CREATE INDEX idx_workout_logs_client_workout ON public.workout_logs USING btree 
 
 
 --
--- TOC entry 4249 (class 1259 OID 20151)
+-- TOC entry 4272 (class 1259 OID 20151)
 -- Name: idx_workout_sessions_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7654,7 +8868,7 @@ CREATE INDEX idx_workout_sessions_client_id ON public.workout_sessions USING btr
 
 
 --
--- TOC entry 4250 (class 1259 OID 20153)
+-- TOC entry 4273 (class 1259 OID 20153)
 -- Name: idx_workout_sessions_client_workout_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7662,7 +8876,7 @@ CREATE INDEX idx_workout_sessions_client_workout_id ON public.workout_sessions U
 
 
 --
--- TOC entry 4251 (class 1259 OID 20152)
+-- TOC entry 4274 (class 1259 OID 20152)
 -- Name: idx_workout_sessions_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7670,7 +8884,7 @@ CREATE INDEX idx_workout_sessions_professional_id ON public.workout_sessions USI
 
 
 --
--- TOC entry 4202 (class 1259 OID 17838)
+-- TOC entry 4225 (class 1259 OID 17838)
 -- Name: idx_workouts_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -7678,7 +8892,7 @@ CREATE INDEX idx_workouts_professional ON public.workouts USING btree (professio
 
 
 --
--- TOC entry 4180 (class 1259 OID 17449)
+-- TOC entry 4203 (class 1259 OID 17449)
 -- Name: ix_realtime_subscription_entity; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -7686,7 +8900,7 @@ CREATE INDEX ix_realtime_subscription_entity ON realtime.subscription USING btre
 
 
 --
--- TOC entry 4184 (class 1259 OID 17450)
+-- TOC entry 4207 (class 1259 OID 17450)
 -- Name: messages_inserted_at_topic_index; Type: INDEX; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -7694,63 +8908,63 @@ CREATE INDEX messages_inserted_at_topic_index ON ONLY realtime.messages USING bt
 
 
 --
--- TOC entry 4275 (class 1259 OID 40113)
--- Name: messages_2025_12_07_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4312 (class 1259 OID 55492)
+-- Name: messages_2025_12_20_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_12_07_inserted_at_topic_idx ON realtime.messages_2025_12_07 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4278 (class 1259 OID 40125)
--- Name: messages_2025_12_08_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_12_08_inserted_at_topic_idx ON realtime.messages_2025_12_08 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_20_inserted_at_topic_idx ON realtime.messages_2025_12_20 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4281 (class 1259 OID 44549)
--- Name: messages_2025_12_09_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4315 (class 1259 OID 55504)
+-- Name: messages_2025_12_21_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_12_09_inserted_at_topic_idx ON realtime.messages_2025_12_09 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4284 (class 1259 OID 44561)
--- Name: messages_2025_12_10_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_12_10_inserted_at_topic_idx ON realtime.messages_2025_12_10 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_21_inserted_at_topic_idx ON realtime.messages_2025_12_21 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4287 (class 1259 OID 44573)
--- Name: messages_2025_12_11_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4318 (class 1259 OID 56621)
+-- Name: messages_2025_12_22_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_12_11_inserted_at_topic_idx ON realtime.messages_2025_12_11 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
-
-
---
--- TOC entry 4290 (class 1259 OID 44585)
--- Name: messages_2025_12_12_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
---
-
-CREATE INDEX messages_2025_12_12_inserted_at_topic_idx ON realtime.messages_2025_12_12 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_22_inserted_at_topic_idx ON realtime.messages_2025_12_22 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4293 (class 1259 OID 45700)
--- Name: messages_2025_12_13_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- TOC entry 4321 (class 1259 OID 57757)
+-- Name: messages_2025_12_23_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
-CREATE INDEX messages_2025_12_13_inserted_at_topic_idx ON realtime.messages_2025_12_13 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+CREATE INDEX messages_2025_12_23_inserted_at_topic_idx ON realtime.messages_2025_12_23 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
 
 
 --
--- TOC entry 4183 (class 1259 OID 17350)
+-- TOC entry 4324 (class 1259 OID 58872)
+-- Name: messages_2025_12_24_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_24_inserted_at_topic_idx ON realtime.messages_2025_12_24 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4327 (class 1259 OID 59987)
+-- Name: messages_2025_12_25_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_25_inserted_at_topic_idx ON realtime.messages_2025_12_25 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4330 (class 1259 OID 61104)
+-- Name: messages_2025_12_26_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
+--
+
+CREATE INDEX messages_2025_12_26_inserted_at_topic_idx ON realtime.messages_2025_12_26 USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE));
+
+
+--
+-- TOC entry 4206 (class 1259 OID 17350)
 -- Name: subscription_subscription_id_entity_filters_key; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -7758,7 +8972,7 @@ CREATE UNIQUE INDEX subscription_subscription_id_entity_filters_key ON realtime.
 
 
 --
--- TOC entry 4077 (class 1259 OID 16560)
+-- TOC entry 4100 (class 1259 OID 16560)
 -- Name: bname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7766,7 +8980,7 @@ CREATE UNIQUE INDEX bname ON storage.buckets USING btree (name);
 
 
 --
--- TOC entry 4080 (class 1259 OID 16582)
+-- TOC entry 4103 (class 1259 OID 16582)
 -- Name: bucketid_objname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7774,7 +8988,7 @@ CREATE UNIQUE INDEX bucketid_objname ON storage.objects USING btree (bucket_id, 
 
 
 --
--- TOC entry 4179 (class 1259 OID 22453)
+-- TOC entry 4202 (class 1259 OID 22453)
 -- Name: buckets_analytics_unique_name_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7782,7 +8996,7 @@ CREATE UNIQUE INDEX buckets_analytics_unique_name_idx ON storage.buckets_analyti
 
 
 --
--- TOC entry 4167 (class 1259 OID 17178)
+-- TOC entry 4190 (class 1259 OID 17178)
 -- Name: idx_multipart_uploads_list; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7790,7 +9004,7 @@ CREATE INDEX idx_multipart_uploads_list ON storage.s3_multipart_uploads USING bt
 
 
 --
--- TOC entry 4081 (class 1259 OID 17224)
+-- TOC entry 4104 (class 1259 OID 17224)
 -- Name: idx_name_bucket_level_unique; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7798,7 +9012,7 @@ CREATE UNIQUE INDEX idx_name_bucket_level_unique ON storage.objects USING btree 
 
 
 --
--- TOC entry 4082 (class 1259 OID 17143)
+-- TOC entry 4105 (class 1259 OID 17143)
 -- Name: idx_objects_bucket_id_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7806,7 +9020,7 @@ CREATE INDEX idx_objects_bucket_id_name ON storage.objects USING btree (bucket_i
 
 
 --
--- TOC entry 4083 (class 1259 OID 17231)
+-- TOC entry 4106 (class 1259 OID 17231)
 -- Name: idx_objects_lower_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7814,7 +9028,7 @@ CREATE INDEX idx_objects_lower_name ON storage.objects USING btree ((path_tokens
 
 
 --
--- TOC entry 4172 (class 1259 OID 17232)
+-- TOC entry 4195 (class 1259 OID 17232)
 -- Name: idx_prefixes_lower_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7822,7 +9036,7 @@ CREATE INDEX idx_prefixes_lower_name ON storage.prefixes USING btree (bucket_id,
 
 
 --
--- TOC entry 4084 (class 1259 OID 16583)
+-- TOC entry 4107 (class 1259 OID 16583)
 -- Name: name_prefix_search; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7830,7 +9044,7 @@ CREATE INDEX name_prefix_search ON storage.objects USING btree (name text_patter
 
 
 --
--- TOC entry 4085 (class 1259 OID 17230)
+-- TOC entry 4108 (class 1259 OID 17230)
 -- Name: objects_bucket_id_level_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7838,7 +9052,7 @@ CREATE UNIQUE INDEX objects_bucket_id_level_idx ON storage.objects USING btree (
 
 
 --
--- TOC entry 4262 (class 1259 OID 22444)
+-- TOC entry 4285 (class 1259 OID 22444)
 -- Name: vector_indexes_name_bucket_id_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -7846,119 +9060,119 @@ CREATE UNIQUE INDEX vector_indexes_name_bucket_id_idx ON storage.vector_indexes 
 
 
 --
--- TOC entry 4303 (class 0 OID 0)
--- Name: messages_2025_12_07_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4333 (class 0 OID 0)
+-- Name: messages_2025_12_20_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_07_inserted_at_topic_idx;
-
-
---
--- TOC entry 4304 (class 0 OID 0)
--- Name: messages_2025_12_07_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_07_pkey;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_20_inserted_at_topic_idx;
 
 
 --
--- TOC entry 4305 (class 0 OID 0)
--- Name: messages_2025_12_08_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4334 (class 0 OID 0)
+-- Name: messages_2025_12_20_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_08_inserted_at_topic_idx;
-
-
---
--- TOC entry 4306 (class 0 OID 0)
--- Name: messages_2025_12_08_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_08_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_20_pkey;
 
 
 --
--- TOC entry 4307 (class 0 OID 0)
--- Name: messages_2025_12_09_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4335 (class 0 OID 0)
+-- Name: messages_2025_12_21_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_09_inserted_at_topic_idx;
-
-
---
--- TOC entry 4308 (class 0 OID 0)
--- Name: messages_2025_12_09_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_09_pkey;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_21_inserted_at_topic_idx;
 
 
 --
--- TOC entry 4309 (class 0 OID 0)
--- Name: messages_2025_12_10_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4336 (class 0 OID 0)
+-- Name: messages_2025_12_21_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_10_inserted_at_topic_idx;
-
-
---
--- TOC entry 4310 (class 0 OID 0)
--- Name: messages_2025_12_10_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_10_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_21_pkey;
 
 
 --
--- TOC entry 4311 (class 0 OID 0)
--- Name: messages_2025_12_11_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4337 (class 0 OID 0)
+-- Name: messages_2025_12_22_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_11_inserted_at_topic_idx;
-
-
---
--- TOC entry 4312 (class 0 OID 0)
--- Name: messages_2025_12_11_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_11_pkey;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_22_inserted_at_topic_idx;
 
 
 --
--- TOC entry 4313 (class 0 OID 0)
--- Name: messages_2025_12_12_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4338 (class 0 OID 0)
+-- Name: messages_2025_12_22_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_12_inserted_at_topic_idx;
-
-
---
--- TOC entry 4314 (class 0 OID 0)
--- Name: messages_2025_12_12_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_12_pkey;
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_22_pkey;
 
 
 --
--- TOC entry 4315 (class 0 OID 0)
--- Name: messages_2025_12_13_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+-- TOC entry 4339 (class 0 OID 0)
+-- Name: messages_2025_12_23_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
-ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_13_inserted_at_topic_idx;
-
-
---
--- TOC entry 4316 (class 0 OID 0)
--- Name: messages_2025_12_13_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
---
-
-ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_13_pkey;
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_23_inserted_at_topic_idx;
 
 
 --
--- TOC entry 4390 (class 2620 OID 18128)
+-- TOC entry 4340 (class 0 OID 0)
+-- Name: messages_2025_12_23_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_23_pkey;
+
+
+--
+-- TOC entry 4341 (class 0 OID 0)
+-- Name: messages_2025_12_24_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_24_inserted_at_topic_idx;
+
+
+--
+-- TOC entry 4342 (class 0 OID 0)
+-- Name: messages_2025_12_24_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_24_pkey;
+
+
+--
+-- TOC entry 4343 (class 0 OID 0)
+-- Name: messages_2025_12_25_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_25_inserted_at_topic_idx;
+
+
+--
+-- TOC entry 4344 (class 0 OID 0)
+-- Name: messages_2025_12_25_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_25_pkey;
+
+
+--
+-- TOC entry 4345 (class 0 OID 0)
+-- Name: messages_2025_12_26_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.messages_2025_12_26_inserted_at_topic_idx;
+
+
+--
+-- TOC entry 4346 (class 0 OID 0)
+-- Name: messages_2025_12_26_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
+--
+
+ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2025_12_26_pkey;
+
+
+--
+-- TOC entry 4422 (class 2620 OID 18128)
 -- Name: users on_auth_user_created; Type: TRIGGER; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -7966,7 +9180,7 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 
 --
--- TOC entry 4411 (class 2620 OID 20160)
+-- TOC entry 4443 (class 2620 OID 20160)
 -- Name: workout_sessions calculate_workout_session_duration; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -7974,7 +9188,7 @@ CREATE TRIGGER calculate_workout_session_duration BEFORE UPDATE ON public.workou
 
 
 --
--- TOC entry 4410 (class 2620 OID 17862)
+-- TOC entry 4442 (class 2620 OID 17862)
 -- Name: appointments handle_appointments_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -7982,7 +9196,7 @@ CREATE TRIGGER handle_appointments_updated_at BEFORE UPDATE ON public.appointmen
 
 
 --
--- TOC entry 4402 (class 2620 OID 17856)
+-- TOC entry 4434 (class 2620 OID 17856)
 -- Name: client_details handle_client_details_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -7990,7 +9204,7 @@ CREATE TRIGGER handle_client_details_updated_at BEFORE UPDATE ON public.client_d
 
 
 --
--- TOC entry 4409 (class 2620 OID 17864)
+-- TOC entry 4441 (class 2620 OID 17864)
 -- Name: client_meal_plans handle_client_meal_plans_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -7998,7 +9212,7 @@ CREATE TRIGGER handle_client_meal_plans_updated_at BEFORE UPDATE ON public.clien
 
 
 --
--- TOC entry 4405 (class 2620 OID 17863)
+-- TOC entry 4437 (class 2620 OID 17863)
 -- Name: client_workouts handle_client_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8006,7 +9220,7 @@ CREATE TRIGGER handle_client_workouts_updated_at BEFORE UPDATE ON public.client_
 
 
 --
--- TOC entry 4403 (class 2620 OID 17857)
+-- TOC entry 4435 (class 2620 OID 17857)
 -- Name: exercises_library handle_exercises_library_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8014,7 +9228,7 @@ CREATE TRIGGER handle_exercises_library_updated_at BEFORE UPDATE ON public.exerc
 
 
 --
--- TOC entry 4406 (class 2620 OID 17861)
+-- TOC entry 4438 (class 2620 OID 17861)
 -- Name: foods_library handle_foods_library_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8022,7 +9236,7 @@ CREATE TRIGGER handle_foods_library_updated_at BEFORE UPDATE ON public.foods_lib
 
 
 --
--- TOC entry 4408 (class 2620 OID 17859)
+-- TOC entry 4440 (class 2620 OID 17859)
 -- Name: meal_plans handle_meal_plans_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8030,7 +9244,7 @@ CREATE TRIGGER handle_meal_plans_updated_at BEFORE UPDATE ON public.meal_plans F
 
 
 --
--- TOC entry 4414 (class 2620 OID 22417)
+-- TOC entry 4446 (class 2620 OID 22417)
 -- Name: professional_notifications handle_notifications_created_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8038,7 +9252,7 @@ CREATE TRIGGER handle_notifications_created_at BEFORE INSERT ON public.professio
 
 
 --
--- TOC entry 4401 (class 2620 OID 17855)
+-- TOC entry 4433 (class 2620 OID 17855)
 -- Name: professional_details handle_professional_details_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8046,7 +9260,7 @@ CREATE TRIGGER handle_professional_details_updated_at BEFORE UPDATE ON public.pr
 
 
 --
--- TOC entry 4399 (class 2620 OID 17854)
+-- TOC entry 4431 (class 2620 OID 17854)
 -- Name: profiles handle_profiles_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8054,7 +9268,7 @@ CREATE TRIGGER handle_profiles_updated_at BEFORE UPDATE ON public.profiles FOR E
 
 
 --
--- TOC entry 4407 (class 2620 OID 17860)
+-- TOC entry 4439 (class 2620 OID 17860)
 -- Name: recipes handle_recipes_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8062,7 +9276,7 @@ CREATE TRIGGER handle_recipes_updated_at BEFORE UPDATE ON public.recipes FOR EAC
 
 
 --
--- TOC entry 4415 (class 2620 OID 45831)
+-- TOC entry 4447 (class 2620 OID 45831)
 -- Name: scheduled_workouts handle_scheduled_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8070,7 +9284,7 @@ CREATE TRIGGER handle_scheduled_workouts_updated_at BEFORE UPDATE ON public.sche
 
 
 --
--- TOC entry 4412 (class 2620 OID 20154)
+-- TOC entry 4444 (class 2620 OID 20154)
 -- Name: workout_sessions handle_workout_sessions_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8078,7 +9292,7 @@ CREATE TRIGGER handle_workout_sessions_updated_at BEFORE UPDATE ON public.workou
 
 
 --
--- TOC entry 4404 (class 2620 OID 17858)
+-- TOC entry 4436 (class 2620 OID 17858)
 -- Name: workouts handle_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8086,7 +9300,7 @@ CREATE TRIGGER handle_workouts_updated_at BEFORE UPDATE ON public.workouts FOR E
 
 
 --
--- TOC entry 4413 (class 2620 OID 29916)
+-- TOC entry 4445 (class 2620 OID 29916)
 -- Name: workout_sessions set_workout_xp; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8094,7 +9308,7 @@ CREATE TRIGGER set_workout_xp BEFORE INSERT OR UPDATE ON public.workout_sessions
 
 
 --
--- TOC entry 4400 (class 2620 OID 29943)
+-- TOC entry 4432 (class 2620 OID 29943)
 -- Name: profiles update_profile_level; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -8102,7 +9316,7 @@ CREATE TRIGGER update_profile_level BEFORE INSERT OR UPDATE OF current_xp ON pub
 
 
 --
--- TOC entry 4398 (class 2620 OID 17302)
+-- TOC entry 4430 (class 2620 OID 17302)
 -- Name: subscription tr_check_filters; Type: TRIGGER; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8110,7 +9324,7 @@ CREATE TRIGGER tr_check_filters BEFORE INSERT OR UPDATE ON realtime.subscription
 
 
 --
--- TOC entry 4391 (class 2620 OID 17239)
+-- TOC entry 4423 (class 2620 OID 17239)
 -- Name: buckets enforce_bucket_name_length_trigger; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8118,7 +9332,7 @@ CREATE TRIGGER enforce_bucket_name_length_trigger BEFORE INSERT OR UPDATE OF nam
 
 
 --
--- TOC entry 4392 (class 2620 OID 17269)
+-- TOC entry 4424 (class 2620 OID 17269)
 -- Name: objects objects_delete_delete_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8126,7 +9340,7 @@ CREATE TRIGGER objects_delete_delete_prefix AFTER DELETE ON storage.objects FOR 
 
 
 --
--- TOC entry 4393 (class 2620 OID 17220)
+-- TOC entry 4425 (class 2620 OID 17220)
 -- Name: objects objects_insert_create_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8134,7 +9348,7 @@ CREATE TRIGGER objects_insert_create_prefix BEFORE INSERT ON storage.objects FOR
 
 
 --
--- TOC entry 4394 (class 2620 OID 17268)
+-- TOC entry 4426 (class 2620 OID 17268)
 -- Name: objects objects_update_create_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8142,7 +9356,7 @@ CREATE TRIGGER objects_update_create_prefix BEFORE UPDATE ON storage.objects FOR
 
 
 --
--- TOC entry 4396 (class 2620 OID 17235)
+-- TOC entry 4428 (class 2620 OID 17235)
 -- Name: prefixes prefixes_create_hierarchy; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8150,7 +9364,7 @@ CREATE TRIGGER prefixes_create_hierarchy BEFORE INSERT ON storage.prefixes FOR E
 
 
 --
--- TOC entry 4397 (class 2620 OID 17270)
+-- TOC entry 4429 (class 2620 OID 17270)
 -- Name: prefixes prefixes_delete_hierarchy; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8158,7 +9372,7 @@ CREATE TRIGGER prefixes_delete_hierarchy AFTER DELETE ON storage.prefixes FOR EA
 
 
 --
--- TOC entry 4395 (class 2620 OID 17131)
+-- TOC entry 4427 (class 2620 OID 17131)
 -- Name: objects update_objects_updated_at; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8166,7 +9380,7 @@ CREATE TRIGGER update_objects_updated_at BEFORE UPDATE ON storage.objects FOR EA
 
 
 --
--- TOC entry 4319 (class 2606 OID 16734)
+-- TOC entry 4349 (class 2606 OID 16734)
 -- Name: identities identities_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8175,7 +9389,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4324 (class 2606 OID 16823)
+-- TOC entry 4354 (class 2606 OID 16823)
 -- Name: mfa_amr_claims mfa_amr_claims_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8184,7 +9398,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4323 (class 2606 OID 16811)
+-- TOC entry 4353 (class 2606 OID 16811)
 -- Name: mfa_challenges mfa_challenges_auth_factor_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8193,7 +9407,7 @@ ALTER TABLE ONLY auth.mfa_challenges
 
 
 --
--- TOC entry 4322 (class 2606 OID 16798)
+-- TOC entry 4352 (class 2606 OID 16798)
 -- Name: mfa_factors mfa_factors_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8202,7 +9416,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4330 (class 2606 OID 17063)
+-- TOC entry 4360 (class 2606 OID 17063)
 -- Name: oauth_authorizations oauth_authorizations_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8211,7 +9425,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4331 (class 2606 OID 17068)
+-- TOC entry 4361 (class 2606 OID 17068)
 -- Name: oauth_authorizations oauth_authorizations_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8220,7 +9434,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4332 (class 2606 OID 17092)
+-- TOC entry 4362 (class 2606 OID 17092)
 -- Name: oauth_consents oauth_consents_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8229,7 +9443,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4333 (class 2606 OID 17087)
+-- TOC entry 4363 (class 2606 OID 17087)
 -- Name: oauth_consents oauth_consents_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8238,7 +9452,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4329 (class 2606 OID 16989)
+-- TOC entry 4359 (class 2606 OID 16989)
 -- Name: one_time_tokens one_time_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8247,7 +9461,7 @@ ALTER TABLE ONLY auth.one_time_tokens
 
 
 --
--- TOC entry 4317 (class 2606 OID 16767)
+-- TOC entry 4347 (class 2606 OID 16767)
 -- Name: refresh_tokens refresh_tokens_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8256,7 +9470,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4326 (class 2606 OID 16870)
+-- TOC entry 4356 (class 2606 OID 16870)
 -- Name: saml_providers saml_providers_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8265,7 +9479,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4327 (class 2606 OID 16943)
+-- TOC entry 4357 (class 2606 OID 16943)
 -- Name: saml_relay_states saml_relay_states_flow_state_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8274,7 +9488,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4328 (class 2606 OID 16884)
+-- TOC entry 4358 (class 2606 OID 16884)
 -- Name: saml_relay_states saml_relay_states_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8283,7 +9497,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4320 (class 2606 OID 17106)
+-- TOC entry 4350 (class 2606 OID 17106)
 -- Name: sessions sessions_oauth_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8292,7 +9506,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4321 (class 2606 OID 16762)
+-- TOC entry 4351 (class 2606 OID 16762)
 -- Name: sessions sessions_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8301,7 +9515,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4325 (class 2606 OID 16851)
+-- TOC entry 4355 (class 2606 OID 16851)
 -- Name: sso_domains sso_domains_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8310,7 +9524,7 @@ ALTER TABLE ONLY auth.sso_domains
 
 
 --
--- TOC entry 4368 (class 2606 OID 17808)
+-- TOC entry 4398 (class 2606 OID 17808)
 -- Name: appointments fk_appointment_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8319,7 +9533,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4369 (class 2606 OID 17803)
+-- TOC entry 4399 (class 2606 OID 17803)
 -- Name: appointments fk_appointment_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8328,7 +9542,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4367 (class 2606 OID 17785)
+-- TOC entry 4397 (class 2606 OID 17785)
 -- Name: biometric_data fk_biometric_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8337,7 +9551,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4370 (class 2606 OID 17830)
+-- TOC entry 4400 (class 2606 OID 17830)
 -- Name: chat_messages fk_chat_receiver; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8346,7 +9560,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4371 (class 2606 OID 17825)
+-- TOC entry 4401 (class 2606 OID 17825)
 -- Name: chat_messages fk_chat_sender; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8355,7 +9569,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4341 (class 2606 OID 17509)
+-- TOC entry 4371 (class 2606 OID 17509)
 -- Name: client_professionals fk_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8364,7 +9578,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4360 (class 2606 OID 17720)
+-- TOC entry 4390 (class 2606 OID 17720)
 -- Name: client_meal_plans fk_client_meal_plan_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8373,7 +9587,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4361 (class 2606 OID 17730)
+-- TOC entry 4391 (class 2606 OID 17730)
 -- Name: client_meal_plans fk_client_meal_plan_nutritionist; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8382,7 +9596,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4362 (class 2606 OID 17725)
+-- TOC entry 4392 (class 2606 OID 17725)
 -- Name: client_meal_plans fk_client_meal_plan_plan; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8391,7 +9605,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4340 (class 2606 OID 17491)
+-- TOC entry 4370 (class 2606 OID 17491)
 -- Name: client_details fk_client_profile; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8400,7 +9614,7 @@ ALTER TABLE ONLY public.client_details
 
 
 --
--- TOC entry 4347 (class 2606 OID 17583)
+-- TOC entry 4377 (class 2606 OID 17583)
 -- Name: client_workouts fk_client_workout_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8409,7 +9623,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4348 (class 2606 OID 17593)
+-- TOC entry 4378 (class 2606 OID 17593)
 -- Name: client_workouts fk_client_workout_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8418,7 +9632,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4349 (class 2606 OID 17588)
+-- TOC entry 4379 (class 2606 OID 17588)
 -- Name: client_workouts fk_client_workout_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8427,7 +9641,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4343 (class 2606 OID 17531)
+-- TOC entry 4373 (class 2606 OID 17531)
 -- Name: exercises_library fk_exercise_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8436,7 +9650,7 @@ ALTER TABLE ONLY public.exercises_library
 
 
 --
--- TOC entry 4352 (class 2606 OID 17629)
+-- TOC entry 4382 (class 2606 OID 17629)
 -- Name: foods_library fk_food_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8445,7 +9659,7 @@ ALTER TABLE ONLY public.foods_library
 
 
 --
--- TOC entry 4357 (class 2606 OID 17698)
+-- TOC entry 4387 (class 2606 OID 17698)
 -- Name: meal_plan_items fk_meal_item_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8454,7 +9668,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4358 (class 2606 OID 17693)
+-- TOC entry 4388 (class 2606 OID 17693)
 -- Name: meal_plan_items fk_meal_item_plan; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8463,7 +9677,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4359 (class 2606 OID 17703)
+-- TOC entry 4389 (class 2606 OID 17703)
 -- Name: meal_plan_items fk_meal_item_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8472,7 +9686,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4363 (class 2606 OID 17745)
+-- TOC entry 4393 (class 2606 OID 17745)
 -- Name: meal_logs fk_meal_log_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8481,7 +9695,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4364 (class 2606 OID 17750)
+-- TOC entry 4394 (class 2606 OID 17750)
 -- Name: meal_logs fk_meal_log_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8490,7 +9704,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4365 (class 2606 OID 17755)
+-- TOC entry 4395 (class 2606 OID 17755)
 -- Name: meal_logs fk_meal_log_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8499,7 +9713,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4356 (class 2606 OID 17679)
+-- TOC entry 4386 (class 2606 OID 17679)
 -- Name: meal_plans fk_meal_plan_nutritionist; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8508,7 +9722,7 @@ ALTER TABLE ONLY public.meal_plans
 
 
 --
--- TOC entry 4342 (class 2606 OID 17514)
+-- TOC entry 4372 (class 2606 OID 17514)
 -- Name: client_professionals fk_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8517,7 +9731,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4339 (class 2606 OID 17477)
+-- TOC entry 4369 (class 2606 OID 17477)
 -- Name: professional_details fk_professional_profile; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8526,7 +9740,7 @@ ALTER TABLE ONLY public.professional_details
 
 
 --
--- TOC entry 4338 (class 2606 OID 17461)
+-- TOC entry 4368 (class 2606 OID 17461)
 -- Name: profiles fk_profile_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8535,7 +9749,7 @@ ALTER TABLE ONLY public.profiles
 
 
 --
--- TOC entry 4366 (class 2606 OID 17769)
+-- TOC entry 4396 (class 2606 OID 17769)
 -- Name: progress_photos fk_progress_photo_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8544,7 +9758,7 @@ ALTER TABLE ONLY public.progress_photos
 
 
 --
--- TOC entry 4353 (class 2606 OID 17645)
+-- TOC entry 4383 (class 2606 OID 17645)
 -- Name: recipes fk_recipe_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8553,7 +9767,7 @@ ALTER TABLE ONLY public.recipes
 
 
 --
--- TOC entry 4354 (class 2606 OID 17663)
+-- TOC entry 4384 (class 2606 OID 17663)
 -- Name: recipe_ingredients fk_recipe_ingredient_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8562,7 +9776,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4355 (class 2606 OID 17658)
+-- TOC entry 4385 (class 2606 OID 17658)
 -- Name: recipe_ingredients fk_recipe_ingredient_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8571,7 +9785,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4345 (class 2606 OID 17566)
+-- TOC entry 4375 (class 2606 OID 17566)
 -- Name: workout_exercises fk_workout_exercise_exercise; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8580,7 +9794,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4346 (class 2606 OID 17561)
+-- TOC entry 4376 (class 2606 OID 17561)
 -- Name: workout_exercises fk_workout_exercise_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8589,7 +9803,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4350 (class 2606 OID 17608)
+-- TOC entry 4380 (class 2606 OID 17608)
 -- Name: workout_logs fk_workout_log_client_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8598,7 +9812,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4351 (class 2606 OID 17613)
+-- TOC entry 4381 (class 2606 OID 17613)
 -- Name: workout_logs fk_workout_log_exercise; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8607,7 +9821,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4344 (class 2606 OID 17548)
+-- TOC entry 4374 (class 2606 OID 17548)
 -- Name: workouts fk_workout_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8616,7 +9830,7 @@ ALTER TABLE ONLY public.workouts
 
 
 --
--- TOC entry 4376 (class 2606 OID 22403)
+-- TOC entry 4406 (class 2606 OID 22403)
 -- Name: professional_notifications professional_notifications_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8625,7 +9839,7 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4377 (class 2606 OID 22398)
+-- TOC entry 4407 (class 2606 OID 22398)
 -- Name: professional_notifications professional_notifications_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8634,7 +9848,25 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4384 (class 2606 OID 47245)
+-- TOC entry 4420 (class 2606 OID 48458)
+-- Name: professional_reviews professional_reviews_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professional_reviews
+    ADD CONSTRAINT professional_reviews_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.profiles(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4421 (class 2606 OID 48453)
+-- Name: professional_reviews professional_reviews_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.professional_reviews
+    ADD CONSTRAINT professional_reviews_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.profiles(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4414 (class 2606 OID 47245)
 -- Name: scheduled_workouts scheduled_workouts_cancelled_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8643,7 +9875,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4385 (class 2606 OID 45814)
+-- TOC entry 4415 (class 2606 OID 45814)
 -- Name: scheduled_workouts scheduled_workouts_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8652,7 +9884,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4386 (class 2606 OID 47240)
+-- TOC entry 4416 (class 2606 OID 47240)
 -- Name: scheduled_workouts scheduled_workouts_confirmed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8661,7 +9893,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4387 (class 2606 OID 45854)
+-- TOC entry 4417 (class 2606 OID 45854)
 -- Name: scheduled_workouts scheduled_workouts_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8670,7 +9902,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4388 (class 2606 OID 45925)
+-- TOC entry 4418 (class 2606 OID 45925)
 -- Name: scheduled_workouts scheduled_workouts_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8679,7 +9911,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4389 (class 2606 OID 45819)
+-- TOC entry 4419 (class 2606 OID 45819)
 -- Name: scheduled_workouts scheduled_workouts_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8688,7 +9920,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4382 (class 2606 OID 29885)
+-- TOC entry 4412 (class 2606 OID 29885)
 -- Name: user_achievements user_achievements_achievement_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8697,7 +9929,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4383 (class 2606 OID 29880)
+-- TOC entry 4413 (class 2606 OID 29880)
 -- Name: user_achievements user_achievements_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8706,7 +9938,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4379 (class 2606 OID 28716)
+-- TOC entry 4409 (class 2606 OID 28716)
 -- Name: workout_execution_logs workout_execution_logs_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8715,7 +9947,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4380 (class 2606 OID 28721)
+-- TOC entry 4410 (class 2606 OID 28721)
 -- Name: workout_execution_logs workout_execution_logs_workout_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8724,7 +9956,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4381 (class 2606 OID 28711)
+-- TOC entry 4411 (class 2606 OID 28711)
 -- Name: workout_execution_logs workout_execution_logs_workout_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8733,7 +9965,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4372 (class 2606 OID 20131)
+-- TOC entry 4402 (class 2606 OID 20131)
 -- Name: workout_sessions workout_sessions_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8742,7 +9974,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4373 (class 2606 OID 20146)
+-- TOC entry 4403 (class 2606 OID 20146)
 -- Name: workout_sessions workout_sessions_client_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8751,7 +9983,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4374 (class 2606 OID 20136)
+-- TOC entry 4404 (class 2606 OID 20136)
 -- Name: workout_sessions workout_sessions_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8760,7 +9992,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4375 (class 2606 OID 20141)
+-- TOC entry 4405 (class 2606 OID 20141)
 -- Name: workout_sessions workout_sessions_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8769,7 +10001,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4318 (class 2606 OID 16572)
+-- TOC entry 4348 (class 2606 OID 16572)
 -- Name: objects objects_bucketId_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8778,7 +10010,7 @@ ALTER TABLE ONLY storage.objects
 
 
 --
--- TOC entry 4337 (class 2606 OID 17207)
+-- TOC entry 4367 (class 2606 OID 17207)
 -- Name: prefixes prefixes_bucketId_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8787,7 +10019,7 @@ ALTER TABLE ONLY storage.prefixes
 
 
 --
--- TOC entry 4334 (class 2606 OID 17153)
+-- TOC entry 4364 (class 2606 OID 17153)
 -- Name: s3_multipart_uploads s3_multipart_uploads_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8796,7 +10028,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads
 
 
 --
--- TOC entry 4335 (class 2606 OID 17173)
+-- TOC entry 4365 (class 2606 OID 17173)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8805,7 +10037,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4336 (class 2606 OID 17168)
+-- TOC entry 4366 (class 2606 OID 17168)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_upload_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8814,7 +10046,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4378 (class 2606 OID 22439)
+-- TOC entry 4408 (class 2606 OID 22439)
 -- Name: vector_indexes vector_indexes_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8823,7 +10055,7 @@ ALTER TABLE ONLY storage.vector_indexes
 
 
 --
--- TOC entry 4567 (class 0 OID 16525)
+-- TOC entry 4599 (class 0 OID 16525)
 -- Dependencies: 352
 -- Name: audit_log_entries; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8831,7 +10063,7 @@ ALTER TABLE ONLY storage.vector_indexes
 ALTER TABLE auth.audit_log_entries ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4581 (class 0 OID 16929)
+-- TOC entry 4613 (class 0 OID 16929)
 -- Dependencies: 369
 -- Name: flow_state; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8839,7 +10071,7 @@ ALTER TABLE auth.audit_log_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.flow_state ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4572 (class 0 OID 16727)
+-- TOC entry 4604 (class 0 OID 16727)
 -- Dependencies: 360
 -- Name: identities; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8847,7 +10079,7 @@ ALTER TABLE auth.flow_state ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.identities ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4566 (class 0 OID 16518)
+-- TOC entry 4598 (class 0 OID 16518)
 -- Dependencies: 351
 -- Name: instances; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8855,7 +10087,7 @@ ALTER TABLE auth.identities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.instances ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4576 (class 0 OID 16816)
+-- TOC entry 4608 (class 0 OID 16816)
 -- Dependencies: 364
 -- Name: mfa_amr_claims; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8863,7 +10095,7 @@ ALTER TABLE auth.instances ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_amr_claims ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4575 (class 0 OID 16804)
+-- TOC entry 4607 (class 0 OID 16804)
 -- Dependencies: 363
 -- Name: mfa_challenges; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8871,7 +10103,7 @@ ALTER TABLE auth.mfa_amr_claims ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_challenges ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4574 (class 0 OID 16791)
+-- TOC entry 4606 (class 0 OID 16791)
 -- Dependencies: 362
 -- Name: mfa_factors; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8879,7 +10111,7 @@ ALTER TABLE auth.mfa_challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_factors ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4582 (class 0 OID 16979)
+-- TOC entry 4614 (class 0 OID 16979)
 -- Dependencies: 370
 -- Name: one_time_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8887,7 +10119,7 @@ ALTER TABLE auth.mfa_factors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.one_time_tokens ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4565 (class 0 OID 16507)
+-- TOC entry 4597 (class 0 OID 16507)
 -- Dependencies: 350
 -- Name: refresh_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8895,7 +10127,7 @@ ALTER TABLE auth.one_time_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.refresh_tokens ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4579 (class 0 OID 16858)
+-- TOC entry 4611 (class 0 OID 16858)
 -- Dependencies: 367
 -- Name: saml_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8903,7 +10135,7 @@ ALTER TABLE auth.refresh_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.saml_providers ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4580 (class 0 OID 16876)
+-- TOC entry 4612 (class 0 OID 16876)
 -- Dependencies: 368
 -- Name: saml_relay_states; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8911,7 +10143,7 @@ ALTER TABLE auth.saml_providers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.saml_relay_states ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4568 (class 0 OID 16533)
+-- TOC entry 4600 (class 0 OID 16533)
 -- Dependencies: 353
 -- Name: schema_migrations; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8919,7 +10151,7 @@ ALTER TABLE auth.saml_relay_states ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.schema_migrations ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4573 (class 0 OID 16757)
+-- TOC entry 4605 (class 0 OID 16757)
 -- Dependencies: 361
 -- Name: sessions; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8927,7 +10159,7 @@ ALTER TABLE auth.schema_migrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sessions ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4578 (class 0 OID 16843)
+-- TOC entry 4610 (class 0 OID 16843)
 -- Dependencies: 366
 -- Name: sso_domains; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8935,7 +10167,7 @@ ALTER TABLE auth.sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sso_domains ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4577 (class 0 OID 16834)
+-- TOC entry 4609 (class 0 OID 16834)
 -- Dependencies: 365
 -- Name: sso_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8943,7 +10175,7 @@ ALTER TABLE auth.sso_domains ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sso_providers ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4564 (class 0 OID 16495)
+-- TOC entry 4596 (class 0 OID 16495)
 -- Dependencies: 348
 -- Name: users; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -8951,7 +10183,7 @@ ALTER TABLE auth.sso_providers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4644 (class 3256 OID 26243)
+-- TOC entry 4677 (class 3256 OID 26243)
 -- Name: professional_details Anyone can view professional details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -8959,7 +10191,7 @@ CREATE POLICY "Anyone can view professional details" ON public.professional_deta
 
 
 --
--- TOC entry 4643 (class 3256 OID 26242)
+-- TOC entry 4676 (class 3256 OID 26242)
 -- Name: profiles Authenticated users can view profiles; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -8967,7 +10199,7 @@ CREATE POLICY "Authenticated users can view profiles" ON public.profiles FOR SEL
 
 
 --
--- TOC entry 4713 (class 3256 OID 26423)
+-- TOC entry 4746 (class 3256 OID 26423)
 -- Name: biometric_data Biometrics Insert Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -8977,7 +10209,7 @@ CREATE POLICY "Biometrics Insert Policy" ON public.biometric_data FOR INSERT TO 
 
 
 --
--- TOC entry 4714 (class 3256 OID 26424)
+-- TOC entry 4747 (class 3256 OID 26424)
 -- Name: biometric_data Biometrics Modify Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -8987,7 +10219,7 @@ CREATE POLICY "Biometrics Modify Policy" ON public.biometric_data TO authenticat
 
 
 --
--- TOC entry 4635 (class 3256 OID 26422)
+-- TOC entry 4668 (class 3256 OID 26422)
 -- Name: biometric_data Biometrics Select Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -8997,7 +10229,23 @@ CREATE POLICY "Biometrics Select Policy" ON public.biometric_data FOR SELECT TO 
 
 
 --
--- TOC entry 4646 (class 3256 OID 29890)
+-- TOC entry 4761 (class 3256 OID 48464)
+-- Name: professional_reviews Clients can review; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Clients can review" ON public.professional_reviews FOR INSERT WITH CHECK ((auth.uid() = client_id));
+
+
+--
+-- TOC entry 4764 (class 3256 OID 48465)
+-- Name: professional_reviews Clients can update own review; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Clients can update own review" ON public.professional_reviews FOR UPDATE USING ((auth.uid() = client_id));
+
+
+--
+-- TOC entry 4679 (class 3256 OID 29890)
 -- Name: achievements Everyone can view achievements; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9005,7 +10253,7 @@ CREATE POLICY "Everyone can view achievements" ON public.achievements FOR SELECT
 
 
 --
--- TOC entry 4631 (class 3256 OID 26373)
+-- TOC entry 4664 (class 3256 OID 26373)
 -- Name: chat_messages Insert Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9013,7 +10261,7 @@ CREATE POLICY "Insert Messages Logic" ON public.chat_messages FOR INSERT TO auth
 
 
 --
--- TOC entry 4623 (class 3256 OID 26269)
+-- TOC entry 4656 (class 3256 OID 26269)
 -- Name: client_details Insert client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9023,7 +10271,7 @@ CREATE POLICY "Insert client details logic" ON public.client_details FOR INSERT 
 
 
 --
--- TOC entry 4720 (class 3256 OID 28728)
+-- TOC entry 4753 (class 3256 OID 28728)
 -- Name: workout_execution_logs Professionals can view execution logs of their clients; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9033,7 +10281,7 @@ CREATE POLICY "Professionals can view execution logs of their clients" ON public
 
 
 --
--- TOC entry 4717 (class 3256 OID 27553)
+-- TOC entry 4750 (class 3256 OID 27553)
 -- Name: progress_photos Progress Photos Delete; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9043,7 +10291,7 @@ CREATE POLICY "Progress Photos Delete" ON public.progress_photos FOR DELETE TO a
 
 
 --
--- TOC entry 4716 (class 3256 OID 27552)
+-- TOC entry 4749 (class 3256 OID 27552)
 -- Name: progress_photos Progress Photos Insert; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9053,7 +10301,7 @@ CREATE POLICY "Progress Photos Insert" ON public.progress_photos FOR INSERT TO a
 
 
 --
--- TOC entry 4715 (class 3256 OID 27551)
+-- TOC entry 4748 (class 3256 OID 27551)
 -- Name: progress_photos Progress Photos Select; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9063,7 +10311,15 @@ CREATE POLICY "Progress Photos Select" ON public.progress_photos FOR SELECT TO a
 
 
 --
--- TOC entry 4632 (class 3256 OID 26374)
+-- TOC entry 4760 (class 3256 OID 48463)
+-- Name: professional_reviews Reviews are public; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Reviews are public" ON public.professional_reviews FOR SELECT USING (true);
+
+
+--
+-- TOC entry 4665 (class 3256 OID 26374)
 -- Name: chat_messages Update Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9071,7 +10327,7 @@ CREATE POLICY "Update Messages Logic" ON public.chat_messages FOR UPDATE TO auth
 
 
 --
--- TOC entry 4675 (class 3256 OID 26268)
+-- TOC entry 4708 (class 3256 OID 26268)
 -- Name: client_details Update client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9081,7 +10337,17 @@ CREATE POLICY "Update client details logic" ON public.client_details FOR UPDATE 
 
 
 --
--- TOC entry 4719 (class 3256 OID 28727)
+-- TOC entry 4766 (class 3256 OID 52126)
+-- Name: workout_execution_logs Users can delete their own execution logs; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Users can delete their own execution logs" ON public.workout_execution_logs FOR DELETE USING ((auth.uid() IN ( SELECT workout_sessions.client_id
+   FROM public.workout_sessions
+  WHERE (workout_sessions.id = workout_execution_logs.workout_session_id))));
+
+
+--
+-- TOC entry 4752 (class 3256 OID 28727)
 -- Name: workout_execution_logs Users can insert their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9091,7 +10357,7 @@ CREATE POLICY "Users can insert their own execution logs" ON public.workout_exec
 
 
 --
--- TOC entry 4712 (class 3256 OID 26190)
+-- TOC entry 4745 (class 3256 OID 26190)
 -- Name: profiles Users can update own profile; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9099,7 +10365,19 @@ CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING
 
 
 --
--- TOC entry 4647 (class 3256 OID 29891)
+-- TOC entry 4767 (class 3256 OID 52127)
+-- Name: workout_execution_logs Users can update their own execution logs; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Users can update their own execution logs" ON public.workout_execution_logs FOR UPDATE USING ((auth.uid() IN ( SELECT workout_sessions.client_id
+   FROM public.workout_sessions
+  WHERE (workout_sessions.id = workout_execution_logs.workout_session_id)))) WITH CHECK ((auth.uid() IN ( SELECT workout_sessions.client_id
+   FROM public.workout_sessions
+  WHERE (workout_sessions.id = workout_execution_logs.workout_session_id))));
+
+
+--
+-- TOC entry 4680 (class 3256 OID 29891)
 -- Name: user_achievements Users can view own achievements; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9107,7 +10385,7 @@ CREATE POLICY "Users can view own achievements" ON public.user_achievements FOR 
 
 
 --
--- TOC entry 4718 (class 3256 OID 28726)
+-- TOC entry 4751 (class 3256 OID 28726)
 -- Name: workout_execution_logs Users can view their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9117,7 +10395,7 @@ CREATE POLICY "Users can view their own execution logs" ON public.workout_execut
 
 
 --
--- TOC entry 4630 (class 3256 OID 26372)
+-- TOC entry 4663 (class 3256 OID 26372)
 -- Name: chat_messages View Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9125,7 +10403,7 @@ CREATE POLICY "View Messages Logic" ON public.chat_messages FOR SELECT TO authen
 
 
 --
--- TOC entry 4645 (class 3256 OID 26244)
+-- TOC entry 4678 (class 3256 OID 26244)
 -- Name: client_details View client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9135,7 +10413,7 @@ CREATE POLICY "View client details logic" ON public.client_details FOR SELECT TO
 
 
 --
--- TOC entry 4613 (class 0 OID 29858)
+-- TOC entry 4645 (class 0 OID 29858)
 -- Dependencies: 410
 -- Name: achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9143,7 +10421,7 @@ CREATE POLICY "View client details logic" ON public.client_details FOR SELECT TO
 ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4606 (class 0 OID 17790)
+-- TOC entry 4638 (class 0 OID 17790)
 -- Dependencies: 403
 -- Name: appointments; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9151,7 +10429,7 @@ ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4711 (class 3256 OID 18093)
+-- TOC entry 4744 (class 3256 OID 18093)
 -- Name: appointments appointments_delete_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9159,7 +10437,7 @@ CREATE POLICY appointments_delete_participants ON public.appointments FOR DELETE
 
 
 --
--- TOC entry 4709 (class 3256 OID 18091)
+-- TOC entry 4742 (class 3256 OID 18091)
 -- Name: appointments appointments_insert_with_active_link; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9167,7 +10445,7 @@ CREATE POLICY appointments_insert_with_active_link ON public.appointments FOR IN
 
 
 --
--- TOC entry 4628 (class 3256 OID 18090)
+-- TOC entry 4661 (class 3256 OID 18090)
 -- Name: appointments appointments_select_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9175,7 +10453,7 @@ CREATE POLICY appointments_select_participants ON public.appointments FOR SELECT
 
 
 --
--- TOC entry 4710 (class 3256 OID 18092)
+-- TOC entry 4743 (class 3256 OID 18092)
 -- Name: appointments appointments_update_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9183,7 +10461,7 @@ CREATE POLICY appointments_update_participants ON public.appointments FOR UPDATE
 
 
 --
--- TOC entry 4605 (class 0 OID 17774)
+-- TOC entry 4637 (class 0 OID 17774)
 -- Dependencies: 402
 -- Name: biometric_data; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9191,7 +10469,7 @@ CREATE POLICY appointments_update_participants ON public.appointments FOR UPDATE
 ALTER TABLE public.biometric_data ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4607 (class 0 OID 17813)
+-- TOC entry 4639 (class 0 OID 17813)
 -- Dependencies: 404
 -- Name: chat_messages; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9199,7 +10477,7 @@ ALTER TABLE public.biometric_data ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4590 (class 0 OID 17482)
+-- TOC entry 4622 (class 0 OID 17482)
 -- Dependencies: 387
 -- Name: client_details; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9207,7 +10485,7 @@ ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.client_details ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4648 (class 3256 OID 18029)
+-- TOC entry 4681 (class 3256 OID 18029)
 -- Name: client_details client_details_delete_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9215,7 +10493,7 @@ CREATE POLICY client_details_delete_own ON public.client_details FOR DELETE USIN
 
 
 --
--- TOC entry 4602 (class 0 OID 17708)
+-- TOC entry 4634 (class 0 OID 17708)
 -- Dependencies: 399
 -- Name: client_meal_plans; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9223,7 +10501,7 @@ CREATE POLICY client_details_delete_own ON public.client_details FOR DELETE USIN
 ALTER TABLE public.client_meal_plans ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4707 (class 3256 OID 18077)
+-- TOC entry 4740 (class 3256 OID 18077)
 -- Name: client_meal_plans client_meal_plans_delete_assigning_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9231,7 +10509,7 @@ CREATE POLICY client_meal_plans_delete_assigning_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4705 (class 3256 OID 18075)
+-- TOC entry 4738 (class 3256 OID 18075)
 -- Name: client_meal_plans client_meal_plans_insert_nutritionist_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9239,7 +10517,7 @@ CREATE POLICY client_meal_plans_insert_nutritionist_only ON public.client_meal_p
 
 
 --
--- TOC entry 4704 (class 3256 OID 18074)
+-- TOC entry 4737 (class 3256 OID 18074)
 -- Name: client_meal_plans client_meal_plans_select_client_or_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9247,7 +10525,7 @@ CREATE POLICY client_meal_plans_select_client_or_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4706 (class 3256 OID 18076)
+-- TOC entry 4739 (class 3256 OID 18076)
 -- Name: client_meal_plans client_meal_plans_update_assigning_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9255,7 +10533,7 @@ CREATE POLICY client_meal_plans_update_assigning_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4591 (class 0 OID 17496)
+-- TOC entry 4623 (class 0 OID 17496)
 -- Dependencies: 388
 -- Name: client_professionals; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9263,7 +10541,7 @@ CREATE POLICY client_meal_plans_update_assigning_nutritionist ON public.client_m
 ALTER TABLE public.client_professionals ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4652 (class 3256 OID 18033)
+-- TOC entry 4685 (class 3256 OID 18033)
 -- Name: client_professionals client_professionals_delete_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9271,7 +10549,7 @@ CREATE POLICY client_professionals_delete_professional_only ON public.client_pro
 
 
 --
--- TOC entry 4650 (class 3256 OID 18031)
+-- TOC entry 4683 (class 3256 OID 18031)
 -- Name: client_professionals client_professionals_insert_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9279,7 +10557,7 @@ CREATE POLICY client_professionals_insert_participants ON public.client_professi
 
 
 --
--- TOC entry 4649 (class 3256 OID 18030)
+-- TOC entry 4682 (class 3256 OID 18030)
 -- Name: client_professionals client_professionals_select_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9287,7 +10565,7 @@ CREATE POLICY client_professionals_select_participants ON public.client_professi
 
 
 --
--- TOC entry 4651 (class 3256 OID 18032)
+-- TOC entry 4684 (class 3256 OID 18032)
 -- Name: client_professionals client_professionals_update_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9295,7 +10573,7 @@ CREATE POLICY client_professionals_update_professional_only ON public.client_pro
 
 
 --
--- TOC entry 4641 (class 3256 OID 22710)
+-- TOC entry 4674 (class 3256 OID 22710)
 -- Name: client_professionals client_view_own_link; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9303,7 +10581,7 @@ CREATE POLICY client_view_own_link ON public.client_professionals FOR SELECT USI
 
 
 --
--- TOC entry 4595 (class 0 OID 17571)
+-- TOC entry 4627 (class 0 OID 17571)
 -- Dependencies: 392
 -- Name: client_workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9311,7 +10589,7 @@ CREATE POLICY client_view_own_link ON public.client_professionals FOR SELECT USI
 ALTER TABLE public.client_workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4619 (class 3256 OID 19767)
+-- TOC entry 4652 (class 3256 OID 19767)
 -- Name: client_workouts client_workouts_delete_assigning_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9319,7 +10597,7 @@ CREATE POLICY client_workouts_delete_assigning_professional ON public.client_wor
 
 
 --
--- TOC entry 4617 (class 3256 OID 19765)
+-- TOC entry 4650 (class 3256 OID 19765)
 -- Name: client_workouts client_workouts_insert_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9327,7 +10605,7 @@ CREATE POLICY client_workouts_insert_professional_only ON public.client_workouts
 
 
 --
--- TOC entry 4616 (class 3256 OID 19764)
+-- TOC entry 4649 (class 3256 OID 19764)
 -- Name: client_workouts client_workouts_select_client_or_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9335,7 +10613,7 @@ CREATE POLICY client_workouts_select_client_or_professional ON public.client_wor
 
 
 --
--- TOC entry 4618 (class 3256 OID 19766)
+-- TOC entry 4651 (class 3256 OID 19766)
 -- Name: client_workouts client_workouts_update_assigning_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9343,7 +10621,15 @@ CREATE POLICY client_workouts_update_assigning_professional ON public.client_wor
 
 
 --
--- TOC entry 4592 (class 0 OID 17519)
+-- TOC entry 4765 (class 3256 OID 48676)
+-- Name: profiles everyone_can_view_admins; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY everyone_can_view_admins ON public.profiles FOR SELECT USING ((role = 'admin'::text));
+
+
+--
+-- TOC entry 4624 (class 0 OID 17519)
 -- Dependencies: 389
 -- Name: exercises_library; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9351,7 +10637,7 @@ CREATE POLICY client_workouts_update_assigning_professional ON public.client_wor
 ALTER TABLE public.exercises_library ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4656 (class 3256 OID 18037)
+-- TOC entry 4689 (class 3256 OID 18037)
 -- Name: exercises_library exercises_library_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9359,7 +10645,7 @@ CREATE POLICY exercises_library_delete_creator ON public.exercises_library FOR D
 
 
 --
--- TOC entry 4654 (class 3256 OID 18035)
+-- TOC entry 4687 (class 3256 OID 18035)
 -- Name: exercises_library exercises_library_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9367,7 +10653,7 @@ CREATE POLICY exercises_library_insert_professionals_only ON public.exercises_li
 
 
 --
--- TOC entry 4653 (class 3256 OID 18034)
+-- TOC entry 4686 (class 3256 OID 18034)
 -- Name: exercises_library exercises_library_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9375,7 +10661,7 @@ CREATE POLICY exercises_library_select_own_or_public ON public.exercises_library
 
 
 --
--- TOC entry 4655 (class 3256 OID 18036)
+-- TOC entry 4688 (class 3256 OID 18036)
 -- Name: exercises_library exercises_library_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9383,7 +10669,7 @@ CREATE POLICY exercises_library_update_creator ON public.exercises_library FOR U
 
 
 --
--- TOC entry 4597 (class 0 OID 17618)
+-- TOC entry 4629 (class 0 OID 17618)
 -- Dependencies: 394
 -- Name: foods_library; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9391,7 +10677,7 @@ CREATE POLICY exercises_library_update_creator ON public.exercises_library FOR U
 ALTER TABLE public.foods_library ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4688 (class 3256 OID 18057)
+-- TOC entry 4721 (class 3256 OID 18057)
 -- Name: foods_library foods_library_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9399,7 +10685,7 @@ CREATE POLICY foods_library_delete_creator ON public.foods_library FOR DELETE US
 
 
 --
--- TOC entry 4686 (class 3256 OID 18055)
+-- TOC entry 4719 (class 3256 OID 18055)
 -- Name: foods_library foods_library_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9407,7 +10693,7 @@ CREATE POLICY foods_library_insert_professionals_only ON public.foods_library FO
 
 
 --
--- TOC entry 4685 (class 3256 OID 18054)
+-- TOC entry 4718 (class 3256 OID 18054)
 -- Name: foods_library foods_library_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9415,7 +10701,7 @@ CREATE POLICY foods_library_select_own_or_public ON public.foods_library FOR SEL
 
 
 --
--- TOC entry 4687 (class 3256 OID 18056)
+-- TOC entry 4720 (class 3256 OID 18056)
 -- Name: foods_library foods_library_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9423,7 +10709,7 @@ CREATE POLICY foods_library_update_creator ON public.foods_library FOR UPDATE US
 
 
 --
--- TOC entry 4603 (class 0 OID 17735)
+-- TOC entry 4635 (class 0 OID 17735)
 -- Dependencies: 400
 -- Name: meal_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9431,7 +10717,7 @@ CREATE POLICY foods_library_update_creator ON public.foods_library FOR UPDATE US
 ALTER TABLE public.meal_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4627 (class 3256 OID 18081)
+-- TOC entry 4660 (class 3256 OID 18081)
 -- Name: meal_logs meal_logs_delete_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9439,7 +10725,7 @@ CREATE POLICY meal_logs_delete_client_only ON public.meal_logs FOR DELETE USING 
 
 
 --
--- TOC entry 4708 (class 3256 OID 18079)
+-- TOC entry 4741 (class 3256 OID 18079)
 -- Name: meal_logs meal_logs_insert_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9447,7 +10733,7 @@ CREATE POLICY meal_logs_insert_client_only ON public.meal_logs FOR INSERT WITH C
 
 
 --
--- TOC entry 4700 (class 3256 OID 18078)
+-- TOC entry 4733 (class 3256 OID 18078)
 -- Name: meal_logs meal_logs_select_client_or_linked_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9455,7 +10741,7 @@ CREATE POLICY meal_logs_select_client_or_linked_nutritionist ON public.meal_logs
 
 
 --
--- TOC entry 4626 (class 3256 OID 18080)
+-- TOC entry 4659 (class 3256 OID 18080)
 -- Name: meal_logs meal_logs_update_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9463,7 +10749,7 @@ CREATE POLICY meal_logs_update_client_only ON public.meal_logs FOR UPDATE USING 
 
 
 --
--- TOC entry 4601 (class 0 OID 17684)
+-- TOC entry 4633 (class 0 OID 17684)
 -- Dependencies: 398
 -- Name: meal_plan_items; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9471,7 +10757,7 @@ CREATE POLICY meal_logs_update_client_only ON public.meal_logs FOR UPDATE USING 
 ALTER TABLE public.meal_plan_items ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4703 (class 3256 OID 18073)
+-- TOC entry 4736 (class 3256 OID 18073)
 -- Name: meal_plan_items meal_plan_items_delete_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9481,7 +10767,7 @@ CREATE POLICY meal_plan_items_delete_plan_owner ON public.meal_plan_items FOR DE
 
 
 --
--- TOC entry 4701 (class 3256 OID 18071)
+-- TOC entry 4734 (class 3256 OID 18071)
 -- Name: meal_plan_items meal_plan_items_insert_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9491,7 +10777,7 @@ CREATE POLICY meal_plan_items_insert_plan_owner ON public.meal_plan_items FOR IN
 
 
 --
--- TOC entry 4640 (class 3256 OID 20117)
+-- TOC entry 4673 (class 3256 OID 20117)
 -- Name: meal_plan_items meal_plan_items_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9503,7 +10789,7 @@ CREATE POLICY meal_plan_items_select_policy ON public.meal_plan_items FOR SELECT
 
 
 --
--- TOC entry 4702 (class 3256 OID 18072)
+-- TOC entry 4735 (class 3256 OID 18072)
 -- Name: meal_plan_items meal_plan_items_update_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9513,7 +10799,7 @@ CREATE POLICY meal_plan_items_update_plan_owner ON public.meal_plan_items FOR UP
 
 
 --
--- TOC entry 4600 (class 0 OID 17668)
+-- TOC entry 4632 (class 0 OID 17668)
 -- Dependencies: 397
 -- Name: meal_plans; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9521,7 +10807,7 @@ CREATE POLICY meal_plan_items_update_plan_owner ON public.meal_plan_items FOR UP
 ALTER TABLE public.meal_plans ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4699 (class 3256 OID 18069)
+-- TOC entry 4732 (class 3256 OID 18069)
 -- Name: meal_plans meal_plans_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9529,7 +10815,7 @@ CREATE POLICY meal_plans_delete_creator ON public.meal_plans FOR DELETE USING ((
 
 
 --
--- TOC entry 4697 (class 3256 OID 18067)
+-- TOC entry 4730 (class 3256 OID 18067)
 -- Name: meal_plans meal_plans_insert_nutritionists_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9537,7 +10823,7 @@ CREATE POLICY meal_plans_insert_nutritionists_only ON public.meal_plans FOR INSE
 
 
 --
--- TOC entry 4625 (class 3256 OID 20094)
+-- TOC entry 4658 (class 3256 OID 20094)
 -- Name: meal_plans meal_plans_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9547,7 +10833,7 @@ CREATE POLICY meal_plans_select_policy ON public.meal_plans FOR SELECT USING (((
 
 
 --
--- TOC entry 4698 (class 3256 OID 18068)
+-- TOC entry 4731 (class 3256 OID 18068)
 -- Name: meal_plans meal_plans_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9555,7 +10841,7 @@ CREATE POLICY meal_plans_update_creator ON public.meal_plans FOR UPDATE USING ((
 
 
 --
--- TOC entry 4670 (class 3256 OID 22411)
+-- TOC entry 4703 (class 3256 OID 22411)
 -- Name: professional_notifications prof_delete_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9563,7 +10849,7 @@ CREATE POLICY prof_delete_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4668 (class 3256 OID 22409)
+-- TOC entry 4701 (class 3256 OID 22409)
 -- Name: professional_notifications prof_insert_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9571,7 +10857,7 @@ CREATE POLICY prof_insert_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4669 (class 3256 OID 22410)
+-- TOC entry 4702 (class 3256 OID 22410)
 -- Name: professional_notifications prof_update_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9579,7 +10865,7 @@ CREATE POLICY prof_update_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4667 (class 3256 OID 22408)
+-- TOC entry 4700 (class 3256 OID 22408)
 -- Name: professional_notifications prof_view_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9587,7 +10873,7 @@ CREATE POLICY prof_view_own_notifications ON public.professional_notifications F
 
 
 --
--- TOC entry 4589 (class 0 OID 17466)
+-- TOC entry 4621 (class 0 OID 17466)
 -- Dependencies: 386
 -- Name: professional_details; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9595,7 +10881,7 @@ CREATE POLICY prof_view_own_notifications ON public.professional_notifications F
 ALTER TABLE public.professional_details ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4680 (class 3256 OID 18025)
+-- TOC entry 4713 (class 3256 OID 18025)
 -- Name: professional_details professional_details_delete_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9603,7 +10889,7 @@ CREATE POLICY professional_details_delete_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4678 (class 3256 OID 18023)
+-- TOC entry 4711 (class 3256 OID 18023)
 -- Name: professional_details professional_details_insert_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9611,7 +10897,7 @@ CREATE POLICY professional_details_insert_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4679 (class 3256 OID 18024)
+-- TOC entry 4712 (class 3256 OID 18024)
 -- Name: professional_details professional_details_update_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9619,7 +10905,7 @@ CREATE POLICY professional_details_update_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4609 (class 0 OID 22388)
+-- TOC entry 4641 (class 0 OID 22388)
 -- Dependencies: 406
 -- Name: professional_notifications; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9627,7 +10913,15 @@ CREATE POLICY professional_details_update_own ON public.professional_details FOR
 ALTER TABLE public.professional_notifications ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4588 (class 0 OID 17451)
+-- TOC entry 4648 (class 0 OID 48437)
+-- Dependencies: 413
+-- Name: professional_reviews; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.professional_reviews ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 4620 (class 0 OID 17451)
 -- Dependencies: 385
 -- Name: profiles; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9635,7 +10929,7 @@ ALTER TABLE public.professional_notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4677 (class 3256 OID 18021)
+-- TOC entry 4710 (class 3256 OID 18021)
 -- Name: profiles profiles_delete_admin_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9643,7 +10937,7 @@ CREATE POLICY profiles_delete_admin_only ON public.profiles FOR DELETE USING (pu
 
 
 --
--- TOC entry 4639 (class 3256 OID 19603)
+-- TOC entry 4672 (class 3256 OID 19603)
 -- Name: profiles profiles_delete_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9651,7 +10945,7 @@ CREATE POLICY profiles_delete_policy ON public.profiles FOR DELETE TO authentica
 
 
 --
--- TOC entry 4676 (class 3256 OID 18019)
+-- TOC entry 4709 (class 3256 OID 18019)
 -- Name: profiles profiles_insert_admin_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9659,7 +10953,7 @@ CREATE POLICY profiles_insert_admin_only ON public.profiles FOR INSERT WITH CHEC
 
 
 --
--- TOC entry 4638 (class 3256 OID 19601)
+-- TOC entry 4671 (class 3256 OID 19601)
 -- Name: profiles profiles_insert_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9667,7 +10961,7 @@ CREATE POLICY profiles_insert_policy ON public.profiles FOR INSERT TO authentica
 
 
 --
--- TOC entry 4642 (class 3256 OID 22711)
+-- TOC entry 4675 (class 3256 OID 22711)
 -- Name: profiles profiles_view_linked_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9677,7 +10971,7 @@ CREATE POLICY profiles_view_linked_professional ON public.profiles FOR SELECT US
 
 
 --
--- TOC entry 4604 (class 0 OID 17760)
+-- TOC entry 4636 (class 0 OID 17760)
 -- Dependencies: 401
 -- Name: progress_photos; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9685,7 +10979,7 @@ CREATE POLICY profiles_view_linked_professional ON public.profiles FOR SELECT US
 ALTER TABLE public.progress_photos ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4599 (class 0 OID 17650)
+-- TOC entry 4631 (class 0 OID 17650)
 -- Dependencies: 396
 -- Name: recipe_ingredients; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9693,7 +10987,7 @@ ALTER TABLE public.progress_photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.recipe_ingredients ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4696 (class 3256 OID 18065)
+-- TOC entry 4729 (class 3256 OID 18065)
 -- Name: recipe_ingredients recipe_ingredients_delete_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9703,7 +10997,7 @@ CREATE POLICY recipe_ingredients_delete_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4694 (class 3256 OID 18063)
+-- TOC entry 4727 (class 3256 OID 18063)
 -- Name: recipe_ingredients recipe_ingredients_insert_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9713,7 +11007,7 @@ CREATE POLICY recipe_ingredients_insert_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4693 (class 3256 OID 18062)
+-- TOC entry 4726 (class 3256 OID 18062)
 -- Name: recipe_ingredients recipe_ingredients_select_via_recipe; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9723,7 +11017,7 @@ CREATE POLICY recipe_ingredients_select_via_recipe ON public.recipe_ingredients 
 
 
 --
--- TOC entry 4695 (class 3256 OID 18064)
+-- TOC entry 4728 (class 3256 OID 18064)
 -- Name: recipe_ingredients recipe_ingredients_update_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9733,7 +11027,7 @@ CREATE POLICY recipe_ingredients_update_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4598 (class 0 OID 17634)
+-- TOC entry 4630 (class 0 OID 17634)
 -- Dependencies: 395
 -- Name: recipes; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9741,7 +11035,7 @@ CREATE POLICY recipe_ingredients_update_recipe_owner ON public.recipe_ingredient
 ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4692 (class 3256 OID 18061)
+-- TOC entry 4725 (class 3256 OID 18061)
 -- Name: recipes recipes_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9749,7 +11043,7 @@ CREATE POLICY recipes_delete_creator ON public.recipes FOR DELETE USING ((create
 
 
 --
--- TOC entry 4690 (class 3256 OID 18059)
+-- TOC entry 4723 (class 3256 OID 18059)
 -- Name: recipes recipes_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9757,7 +11051,7 @@ CREATE POLICY recipes_insert_professionals_only ON public.recipes FOR INSERT WIT
 
 
 --
--- TOC entry 4689 (class 3256 OID 18058)
+-- TOC entry 4722 (class 3256 OID 18058)
 -- Name: recipes recipes_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9765,7 +11059,7 @@ CREATE POLICY recipes_select_own_or_public ON public.recipes FOR SELECT USING ((
 
 
 --
--- TOC entry 4691 (class 3256 OID 18060)
+-- TOC entry 4724 (class 3256 OID 18060)
 -- Name: recipes recipes_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9773,15 +11067,15 @@ CREATE POLICY recipes_update_creator ON public.recipes FOR UPDATE USING ((create
 
 
 --
--- TOC entry 4615 (class 0 OID 45802)
--- Dependencies: 419
+-- TOC entry 4647 (class 0 OID 45802)
+-- Dependencies: 412
 -- Name: scheduled_workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.scheduled_workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4724 (class 3256 OID 45829)
+-- TOC entry 4757 (class 3256 OID 45829)
 -- Name: scheduled_workouts scheduled_workouts_delete_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9789,7 +11083,7 @@ CREATE POLICY scheduled_workouts_delete_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4728 (class 3256 OID 47272)
+-- TOC entry 4763 (class 3256 OID 47272)
 -- Name: scheduled_workouts scheduled_workouts_delete_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9799,7 +11093,7 @@ CREATE POLICY scheduled_workouts_delete_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4722 (class 3256 OID 45827)
+-- TOC entry 4755 (class 3256 OID 45827)
 -- Name: scheduled_workouts scheduled_workouts_insert_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9807,7 +11101,7 @@ CREATE POLICY scheduled_workouts_insert_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4727 (class 3256 OID 47218)
+-- TOC entry 4762 (class 3256 OID 47218)
 -- Name: scheduled_workouts scheduled_workouts_insert_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9817,7 +11111,7 @@ CREATE POLICY scheduled_workouts_insert_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4721 (class 3256 OID 45826)
+-- TOC entry 4754 (class 3256 OID 45826)
 -- Name: scheduled_workouts scheduled_workouts_select_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9825,7 +11119,7 @@ CREATE POLICY scheduled_workouts_select_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4725 (class 3256 OID 45830)
+-- TOC entry 4758 (class 3256 OID 45830)
 -- Name: scheduled_workouts scheduled_workouts_select_professional_view; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9835,7 +11129,7 @@ CREATE POLICY scheduled_workouts_select_professional_view ON public.scheduled_wo
 
 
 --
--- TOC entry 4723 (class 3256 OID 45828)
+-- TOC entry 4756 (class 3256 OID 45828)
 -- Name: scheduled_workouts scheduled_workouts_update_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9843,7 +11137,7 @@ CREATE POLICY scheduled_workouts_update_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4726 (class 3256 OID 47197)
+-- TOC entry 4759 (class 3256 OID 47197)
 -- Name: scheduled_workouts scheduled_workouts_update_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9853,7 +11147,7 @@ CREATE POLICY scheduled_workouts_update_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4614 (class 0 OID 29871)
+-- TOC entry 4646 (class 0 OID 29871)
 -- Dependencies: 411
 -- Name: user_achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9861,7 +11155,7 @@ CREATE POLICY scheduled_workouts_update_professional ON public.scheduled_workout
 ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4612 (class 0 OID 28702)
+-- TOC entry 4644 (class 0 OID 28702)
 -- Dependencies: 409
 -- Name: workout_execution_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9869,7 +11163,7 @@ ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.workout_execution_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4594 (class 0 OID 17553)
+-- TOC entry 4626 (class 0 OID 17553)
 -- Dependencies: 391
 -- Name: workout_exercises; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9877,7 +11171,7 @@ ALTER TABLE public.workout_execution_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.workout_exercises ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4666 (class 3256 OID 18045)
+-- TOC entry 4699 (class 3256 OID 18045)
 -- Name: workout_exercises workout_exercises_delete_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9887,7 +11181,7 @@ CREATE POLICY workout_exercises_delete_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4664 (class 3256 OID 18043)
+-- TOC entry 4697 (class 3256 OID 18043)
 -- Name: workout_exercises workout_exercises_insert_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9897,7 +11191,7 @@ CREATE POLICY workout_exercises_insert_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4629 (class 3256 OID 20116)
+-- TOC entry 4662 (class 3256 OID 20116)
 -- Name: workout_exercises workout_exercises_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9909,7 +11203,7 @@ CREATE POLICY workout_exercises_select_policy ON public.workout_exercises FOR SE
 
 
 --
--- TOC entry 4665 (class 3256 OID 18044)
+-- TOC entry 4698 (class 3256 OID 18044)
 -- Name: workout_exercises workout_exercises_update_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9919,7 +11213,7 @@ CREATE POLICY workout_exercises_update_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4596 (class 0 OID 17598)
+-- TOC entry 4628 (class 0 OID 17598)
 -- Dependencies: 393
 -- Name: workout_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9927,7 +11221,7 @@ CREATE POLICY workout_exercises_update_workout_owner ON public.workout_exercises
 ALTER TABLE public.workout_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4684 (class 3256 OID 18053)
+-- TOC entry 4717 (class 3256 OID 18053)
 -- Name: workout_logs workout_logs_delete_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9937,7 +11231,7 @@ CREATE POLICY workout_logs_delete_client_only ON public.workout_logs FOR DELETE 
 
 
 --
--- TOC entry 4682 (class 3256 OID 18051)
+-- TOC entry 4715 (class 3256 OID 18051)
 -- Name: workout_logs workout_logs_insert_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9947,7 +11241,7 @@ CREATE POLICY workout_logs_insert_client_only ON public.workout_logs FOR INSERT 
 
 
 --
--- TOC entry 4681 (class 3256 OID 18050)
+-- TOC entry 4714 (class 3256 OID 18050)
 -- Name: workout_logs workout_logs_select_client_or_linked_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9957,7 +11251,7 @@ CREATE POLICY workout_logs_select_client_or_linked_professional ON public.workou
 
 
 --
--- TOC entry 4683 (class 3256 OID 18052)
+-- TOC entry 4716 (class 3256 OID 18052)
 -- Name: workout_logs workout_logs_update_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9967,7 +11261,7 @@ CREATE POLICY workout_logs_update_client_only ON public.workout_logs FOR UPDATE 
 
 
 --
--- TOC entry 4608 (class 0 OID 20118)
+-- TOC entry 4640 (class 0 OID 20118)
 -- Dependencies: 405
 -- Name: workout_sessions; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -9975,7 +11269,7 @@ CREATE POLICY workout_logs_update_client_only ON public.workout_logs FOR UPDATE 
 ALTER TABLE public.workout_sessions ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4662 (class 3256 OID 20158)
+-- TOC entry 4695 (class 3256 OID 20158)
 -- Name: workout_sessions workout_sessions_delete_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9983,7 +11277,7 @@ CREATE POLICY workout_sessions_delete_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4659 (class 3256 OID 20155)
+-- TOC entry 4692 (class 3256 OID 20155)
 -- Name: workout_sessions workout_sessions_insert_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9991,7 +11285,7 @@ CREATE POLICY workout_sessions_insert_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4660 (class 3256 OID 20156)
+-- TOC entry 4693 (class 3256 OID 20156)
 -- Name: workout_sessions workout_sessions_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -9999,7 +11293,7 @@ CREATE POLICY workout_sessions_select_policy ON public.workout_sessions FOR SELE
 
 
 --
--- TOC entry 4661 (class 3256 OID 20157)
+-- TOC entry 4694 (class 3256 OID 20157)
 -- Name: workout_sessions workout_sessions_update_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10007,7 +11301,7 @@ CREATE POLICY workout_sessions_update_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4593 (class 0 OID 17536)
+-- TOC entry 4625 (class 0 OID 17536)
 -- Dependencies: 390
 -- Name: workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -10015,7 +11309,7 @@ CREATE POLICY workout_sessions_update_client_own ON public.workout_sessions FOR 
 ALTER TABLE public.workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4663 (class 3256 OID 18041)
+-- TOC entry 4696 (class 3256 OID 18041)
 -- Name: workouts workouts_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10023,7 +11317,7 @@ CREATE POLICY workouts_delete_creator ON public.workouts FOR DELETE USING ((prof
 
 
 --
--- TOC entry 4657 (class 3256 OID 18039)
+-- TOC entry 4690 (class 3256 OID 18039)
 -- Name: workouts workouts_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10031,7 +11325,7 @@ CREATE POLICY workouts_insert_professionals_only ON public.workouts FOR INSERT W
 
 
 --
--- TOC entry 4624 (class 3256 OID 18225)
+-- TOC entry 4657 (class 3256 OID 18225)
 -- Name: workouts workouts_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10041,7 +11335,7 @@ CREATE POLICY workouts_select_policy ON public.workouts FOR SELECT USING (((prof
 
 
 --
--- TOC entry 4658 (class 3256 OID 18040)
+-- TOC entry 4691 (class 3256 OID 18040)
 -- Name: workouts workouts_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10049,7 +11343,7 @@ CREATE POLICY workouts_update_creator ON public.workouts FOR UPDATE USING ((prof
 
 
 --
--- TOC entry 4587 (class 0 OID 17434)
+-- TOC entry 4619 (class 0 OID 17434)
 -- Dependencies: 384
 -- Name: messages; Type: ROW SECURITY; Schema: realtime; Owner: supabase_realtime_admin
 --
@@ -10057,7 +11351,7 @@ CREATE POLICY workouts_update_creator ON public.workouts FOR UPDATE USING ((prof
 ALTER TABLE realtime.messages ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4672 (class 3256 OID 26160)
+-- TOC entry 4705 (class 3256 OID 26160)
 -- Name: objects Authenticated users can upload avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10065,7 +11359,7 @@ CREATE POLICY "Authenticated users can upload avatar" ON storage.objects FOR INS
 
 
 --
--- TOC entry 4622 (class 3256 OID 26194)
+-- TOC entry 4655 (class 3256 OID 26194)
 -- Name: objects Avatar Auth Update; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10073,7 +11367,7 @@ CREATE POLICY "Avatar Auth Update" ON storage.objects FOR UPDATE USING ((auth.ui
 
 
 --
--- TOC entry 4621 (class 3256 OID 26193)
+-- TOC entry 4654 (class 3256 OID 26193)
 -- Name: objects Avatar Auth Upload; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10081,7 +11375,7 @@ CREATE POLICY "Avatar Auth Upload" ON storage.objects FOR INSERT WITH CHECK (((b
 
 
 --
--- TOC entry 4620 (class 3256 OID 26192)
+-- TOC entry 4653 (class 3256 OID 26192)
 -- Name: objects Avatar Public Select; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10089,7 +11383,7 @@ CREATE POLICY "Avatar Public Select" ON storage.objects FOR SELECT USING ((bucke
 
 
 --
--- TOC entry 4671 (class 3256 OID 26159)
+-- TOC entry 4704 (class 3256 OID 26159)
 -- Name: objects Avatar images are publicly accessible; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10097,7 +11391,7 @@ CREATE POLICY "Avatar images are publicly accessible" ON storage.objects FOR SEL
 
 
 --
--- TOC entry 4633 (class 3256 OID 26398)
+-- TOC entry 4666 (class 3256 OID 26398)
 -- Name: objects Give me access to chat files; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10105,7 +11399,7 @@ CREATE POLICY "Give me access to chat files" ON storage.objects FOR SELECT TO au
 
 
 --
--- TOC entry 4634 (class 3256 OID 26399)
+-- TOC entry 4667 (class 3256 OID 26399)
 -- Name: objects Let me upload chat files; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10113,7 +11407,7 @@ CREATE POLICY "Let me upload chat files" ON storage.objects FOR INSERT TO authen
 
 
 --
--- TOC entry 4637 (class 3256 OID 27550)
+-- TOC entry 4670 (class 3256 OID 27550)
 -- Name: objects Upload Progress Photos; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10121,7 +11415,7 @@ CREATE POLICY "Upload Progress Photos" ON storage.objects FOR INSERT TO authenti
 
 
 --
--- TOC entry 4674 (class 3256 OID 26162)
+-- TOC entry 4707 (class 3256 OID 26162)
 -- Name: objects Users can delete their own avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10129,7 +11423,7 @@ CREATE POLICY "Users can delete their own avatar" ON storage.objects FOR DELETE 
 
 
 --
--- TOC entry 4673 (class 3256 OID 26161)
+-- TOC entry 4706 (class 3256 OID 26161)
 -- Name: objects Users can update their own avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10137,7 +11431,7 @@ CREATE POLICY "Users can update their own avatar" ON storage.objects FOR UPDATE 
 
 
 --
--- TOC entry 4636 (class 3256 OID 27549)
+-- TOC entry 4669 (class 3256 OID 27549)
 -- Name: objects View Progress Photos; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10145,7 +11439,7 @@ CREATE POLICY "View Progress Photos" ON storage.objects FOR SELECT TO authentica
 
 
 --
--- TOC entry 4569 (class 0 OID 16546)
+-- TOC entry 4601 (class 0 OID 16546)
 -- Dependencies: 354
 -- Name: buckets; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10153,7 +11447,7 @@ CREATE POLICY "View Progress Photos" ON storage.objects FOR SELECT TO authentica
 ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4586 (class 0 OID 17246)
+-- TOC entry 4618 (class 0 OID 17246)
 -- Dependencies: 378
 -- Name: buckets_analytics; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10161,7 +11455,7 @@ ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.buckets_analytics ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4610 (class 0 OID 22419)
+-- TOC entry 4642 (class 0 OID 22419)
 -- Dependencies: 407
 -- Name: buckets_vectors; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10169,7 +11463,7 @@ ALTER TABLE storage.buckets_analytics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.buckets_vectors ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4571 (class 0 OID 16588)
+-- TOC entry 4603 (class 0 OID 16588)
 -- Dependencies: 356
 -- Name: migrations; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10177,7 +11471,7 @@ ALTER TABLE storage.buckets_vectors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.migrations ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4570 (class 0 OID 16561)
+-- TOC entry 4602 (class 0 OID 16561)
 -- Dependencies: 355
 -- Name: objects; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10185,7 +11479,7 @@ ALTER TABLE storage.migrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4585 (class 0 OID 17197)
+-- TOC entry 4617 (class 0 OID 17197)
 -- Dependencies: 376
 -- Name: prefixes; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10193,7 +11487,7 @@ ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.prefixes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4583 (class 0 OID 17144)
+-- TOC entry 4615 (class 0 OID 17144)
 -- Dependencies: 374
 -- Name: s3_multipart_uploads; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10201,7 +11495,7 @@ ALTER TABLE storage.prefixes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.s3_multipart_uploads ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4584 (class 0 OID 17158)
+-- TOC entry 4616 (class 0 OID 17158)
 -- Dependencies: 375
 -- Name: s3_multipart_uploads_parts; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10209,7 +11503,7 @@ ALTER TABLE storage.s3_multipart_uploads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.s3_multipart_uploads_parts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4611 (class 0 OID 22429)
+-- TOC entry 4643 (class 0 OID 22429)
 -- Dependencies: 408
 -- Name: vector_indexes; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -10217,7 +11511,7 @@ ALTER TABLE storage.s3_multipart_uploads_parts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.vector_indexes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4729 (class 6104 OID 16426)
+-- TOC entry 4768 (class 6104 OID 16426)
 -- Name: supabase_realtime; Type: PUBLICATION; Schema: -; Owner: postgres
 --
 
@@ -10227,7 +11521,7 @@ CREATE PUBLICATION supabase_realtime WITH (publish = 'insert, update, delete, tr
 ALTER PUBLICATION supabase_realtime OWNER TO postgres;
 
 --
--- TOC entry 4730 (class 6104 OID 22584)
+-- TOC entry 4769 (class 6104 OID 22584)
 -- Name: supabase_realtime_messages_publication; Type: PUBLICATION; Schema: -; Owner: supabase_admin
 --
 
@@ -10237,7 +11531,7 @@ CREATE PUBLICATION supabase_realtime_messages_publication WITH (publish = 'inser
 ALTER PUBLICATION supabase_realtime_messages_publication OWNER TO supabase_admin;
 
 --
--- TOC entry 4732 (class 6106 OID 22732)
+-- TOC entry 4771 (class 6106 OID 22732)
 -- Name: supabase_realtime chat_messages; Type: PUBLICATION TABLE; Schema: public; Owner: postgres
 --
 
@@ -10245,7 +11539,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE ONLY public.chat_messages;
 
 
 --
--- TOC entry 4731 (class 6106 OID 22585)
+-- TOC entry 4770 (class 6106 OID 22585)
 -- Name: supabase_realtime_messages_publication messages; Type: PUBLICATION TABLE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -10253,7 +11547,7 @@ ALTER PUBLICATION supabase_realtime_messages_publication ADD TABLE ONLY realtime
 
 
 --
--- TOC entry 4803 (class 0 OID 0)
+-- TOC entry 4844 (class 0 OID 0)
 -- Dependencies: 37
 -- Name: SCHEMA auth; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -10267,7 +11561,7 @@ GRANT USAGE ON SCHEMA auth TO postgres;
 
 
 --
--- TOC entry 4804 (class 0 OID 0)
+-- TOC entry 4845 (class 0 OID 0)
 -- Dependencies: 23
 -- Name: SCHEMA extensions; Type: ACL; Schema: -; Owner: postgres
 --
@@ -10279,7 +11573,7 @@ GRANT ALL ON SCHEMA extensions TO dashboard_user;
 
 
 --
--- TOC entry 4805 (class 0 OID 0)
+-- TOC entry 4846 (class 0 OID 0)
 -- Dependencies: 39
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
 --
@@ -10291,7 +11585,7 @@ GRANT USAGE ON SCHEMA public TO service_role;
 
 
 --
--- TOC entry 4806 (class 0 OID 0)
+-- TOC entry 4847 (class 0 OID 0)
 -- Dependencies: 13
 -- Name: SCHEMA realtime; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -10304,7 +11598,7 @@ GRANT ALL ON SCHEMA realtime TO supabase_realtime_admin;
 
 
 --
--- TOC entry 4807 (class 0 OID 0)
+-- TOC entry 4848 (class 0 OID 0)
 -- Dependencies: 38
 -- Name: SCHEMA storage; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -10318,7 +11612,7 @@ GRANT ALL ON SCHEMA storage TO dashboard_user;
 
 
 --
--- TOC entry 4808 (class 0 OID 0)
+-- TOC entry 4849 (class 0 OID 0)
 -- Dependencies: 32
 -- Name: SCHEMA vault; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -10328,8 +11622,8 @@ GRANT USAGE ON SCHEMA vault TO service_role;
 
 
 --
--- TOC entry 4815 (class 0 OID 0)
--- Dependencies: 473
+-- TOC entry 4856 (class 0 OID 0)
+-- Dependencies: 476
 -- Name: FUNCTION email(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10337,8 +11631,8 @@ GRANT ALL ON FUNCTION auth.email() TO dashboard_user;
 
 
 --
--- TOC entry 4816 (class 0 OID 0)
--- Dependencies: 481
+-- TOC entry 4857 (class 0 OID 0)
+-- Dependencies: 484
 -- Name: FUNCTION jwt(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10347,8 +11641,8 @@ GRANT ALL ON FUNCTION auth.jwt() TO dashboard_user;
 
 
 --
--- TOC entry 4818 (class 0 OID 0)
--- Dependencies: 426
+-- TOC entry 4859 (class 0 OID 0)
+-- Dependencies: 428
 -- Name: FUNCTION role(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10356,8 +11650,8 @@ GRANT ALL ON FUNCTION auth.role() TO dashboard_user;
 
 
 --
--- TOC entry 4820 (class 0 OID 0)
--- Dependencies: 447
+-- TOC entry 4861 (class 0 OID 0)
+-- Dependencies: 449
 -- Name: FUNCTION uid(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10365,8 +11659,8 @@ GRANT ALL ON FUNCTION auth.uid() TO dashboard_user;
 
 
 --
--- TOC entry 4821 (class 0 OID 0)
--- Dependencies: 480
+-- TOC entry 4862 (class 0 OID 0)
+-- Dependencies: 483
 -- Name: FUNCTION armor(bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10376,8 +11670,8 @@ GRANT ALL ON FUNCTION extensions.armor(bytea) TO dashboard_user;
 
 
 --
--- TOC entry 4822 (class 0 OID 0)
--- Dependencies: 524
+-- TOC entry 4863 (class 0 OID 0)
+-- Dependencies: 528
 -- Name: FUNCTION armor(bytea, text[], text[]); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10387,8 +11681,8 @@ GRANT ALL ON FUNCTION extensions.armor(bytea, text[], text[]) TO dashboard_user;
 
 
 --
--- TOC entry 4823 (class 0 OID 0)
--- Dependencies: 508
+-- TOC entry 4864 (class 0 OID 0)
+-- Dependencies: 512
 -- Name: FUNCTION crypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10398,8 +11692,8 @@ GRANT ALL ON FUNCTION extensions.crypt(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 4824 (class 0 OID 0)
--- Dependencies: 494
+-- TOC entry 4865 (class 0 OID 0)
+-- Dependencies: 498
 -- Name: FUNCTION dearmor(text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10409,8 +11703,8 @@ GRANT ALL ON FUNCTION extensions.dearmor(text) TO dashboard_user;
 
 
 --
--- TOC entry 4825 (class 0 OID 0)
--- Dependencies: 497
+-- TOC entry 4866 (class 0 OID 0)
+-- Dependencies: 501
 -- Name: FUNCTION decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10420,8 +11714,8 @@ GRANT ALL ON FUNCTION extensions.decrypt(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 4826 (class 0 OID 0)
--- Dependencies: 466
+-- TOC entry 4867 (class 0 OID 0)
+-- Dependencies: 469
 -- Name: FUNCTION decrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10431,8 +11725,8 @@ GRANT ALL ON FUNCTION extensions.decrypt_iv(bytea, bytea, bytea, text) TO dashbo
 
 
 --
--- TOC entry 4827 (class 0 OID 0)
--- Dependencies: 543
+-- TOC entry 4868 (class 0 OID 0)
+-- Dependencies: 548
 -- Name: FUNCTION digest(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10442,8 +11736,8 @@ GRANT ALL ON FUNCTION extensions.digest(bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 4828 (class 0 OID 0)
--- Dependencies: 515
+-- TOC entry 4869 (class 0 OID 0)
+-- Dependencies: 519
 -- Name: FUNCTION digest(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10453,8 +11747,8 @@ GRANT ALL ON FUNCTION extensions.digest(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 4829 (class 0 OID 0)
--- Dependencies: 458
+-- TOC entry 4870 (class 0 OID 0)
+-- Dependencies: 460
 -- Name: FUNCTION encrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10464,8 +11758,8 @@ GRANT ALL ON FUNCTION extensions.encrypt(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 4830 (class 0 OID 0)
--- Dependencies: 436
+-- TOC entry 4871 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: FUNCTION encrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10475,8 +11769,8 @@ GRANT ALL ON FUNCTION extensions.encrypt_iv(bytea, bytea, bytea, text) TO dashbo
 
 
 --
--- TOC entry 4831 (class 0 OID 0)
--- Dependencies: 519
+-- TOC entry 4872 (class 0 OID 0)
+-- Dependencies: 523
 -- Name: FUNCTION gen_random_bytes(integer); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10486,8 +11780,8 @@ GRANT ALL ON FUNCTION extensions.gen_random_bytes(integer) TO dashboard_user;
 
 
 --
--- TOC entry 4832 (class 0 OID 0)
--- Dependencies: 429
+-- TOC entry 4873 (class 0 OID 0)
+-- Dependencies: 431
 -- Name: FUNCTION gen_random_uuid(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10497,8 +11791,8 @@ GRANT ALL ON FUNCTION extensions.gen_random_uuid() TO dashboard_user;
 
 
 --
--- TOC entry 4833 (class 0 OID 0)
--- Dependencies: 568
+-- TOC entry 4874 (class 0 OID 0)
+-- Dependencies: 575
 -- Name: FUNCTION gen_salt(text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10508,8 +11802,8 @@ GRANT ALL ON FUNCTION extensions.gen_salt(text) TO dashboard_user;
 
 
 --
--- TOC entry 4834 (class 0 OID 0)
--- Dependencies: 565
+-- TOC entry 4875 (class 0 OID 0)
+-- Dependencies: 571
 -- Name: FUNCTION gen_salt(text, integer); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10519,8 +11813,8 @@ GRANT ALL ON FUNCTION extensions.gen_salt(text, integer) TO dashboard_user;
 
 
 --
--- TOC entry 4836 (class 0 OID 0)
--- Dependencies: 513
+-- TOC entry 4877 (class 0 OID 0)
+-- Dependencies: 517
 -- Name: FUNCTION grant_pg_cron_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10530,8 +11824,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_cron_access() TO dashboard_user;
 
 
 --
--- TOC entry 4838 (class 0 OID 0)
--- Dependencies: 493
+-- TOC entry 4879 (class 0 OID 0)
+-- Dependencies: 497
 -- Name: FUNCTION grant_pg_graphql_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10539,8 +11833,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_graphql_access() TO postgres WITH GRAN
 
 
 --
--- TOC entry 4840 (class 0 OID 0)
--- Dependencies: 462
+-- TOC entry 4881 (class 0 OID 0)
+-- Dependencies: 465
 -- Name: FUNCTION grant_pg_net_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10550,8 +11844,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_net_access() TO dashboard_user;
 
 
 --
--- TOC entry 4841 (class 0 OID 0)
--- Dependencies: 435
+-- TOC entry 4882 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: FUNCTION hmac(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10561,8 +11855,8 @@ GRANT ALL ON FUNCTION extensions.hmac(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 4842 (class 0 OID 0)
--- Dependencies: 557
+-- TOC entry 4883 (class 0 OID 0)
+-- Dependencies: 562
 -- Name: FUNCTION hmac(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10572,8 +11866,8 @@ GRANT ALL ON FUNCTION extensions.hmac(text, text, text) TO dashboard_user;
 
 
 --
--- TOC entry 4843 (class 0 OID 0)
--- Dependencies: 529
+-- TOC entry 4884 (class 0 OID 0)
+-- Dependencies: 534
 -- Name: FUNCTION pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10583,8 +11877,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements(showtext boolean, OUT userid
 
 
 --
--- TOC entry 4844 (class 0 OID 0)
--- Dependencies: 563
+-- TOC entry 4885 (class 0 OID 0)
+-- Dependencies: 569
 -- Name: FUNCTION pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10594,8 +11888,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements_info(OUT dealloc bigint, OUT
 
 
 --
--- TOC entry 4845 (class 0 OID 0)
--- Dependencies: 518
+-- TOC entry 4886 (class 0 OID 0)
+-- Dependencies: 522
 -- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10605,8 +11899,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements_reset(userid oid, dbid oid, 
 
 
 --
--- TOC entry 4846 (class 0 OID 0)
--- Dependencies: 471
+-- TOC entry 4887 (class 0 OID 0)
+-- Dependencies: 474
 -- Name: FUNCTION pgp_armor_headers(text, OUT key text, OUT value text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10616,8 +11910,8 @@ GRANT ALL ON FUNCTION extensions.pgp_armor_headers(text, OUT key text, OUT value
 
 
 --
--- TOC entry 4847 (class 0 OID 0)
--- Dependencies: 467
+-- TOC entry 4888 (class 0 OID 0)
+-- Dependencies: 470
 -- Name: FUNCTION pgp_key_id(bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10627,8 +11921,8 @@ GRANT ALL ON FUNCTION extensions.pgp_key_id(bytea) TO dashboard_user;
 
 
 --
--- TOC entry 4848 (class 0 OID 0)
--- Dependencies: 551
+-- TOC entry 4889 (class 0 OID 0)
+-- Dependencies: 556
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10638,8 +11932,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea) TO dashboard_user
 
 
 --
--- TOC entry 4849 (class 0 OID 0)
--- Dependencies: 422
+-- TOC entry 4890 (class 0 OID 0)
+-- Dependencies: 424
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10649,8 +11943,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text) TO dashboar
 
 
 --
--- TOC entry 4850 (class 0 OID 0)
--- Dependencies: 553
+-- TOC entry 4891 (class 0 OID 0)
+-- Dependencies: 558
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10660,8 +11954,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text, text) TO da
 
 
 --
--- TOC entry 4851 (class 0 OID 0)
--- Dependencies: 440
+-- TOC entry 4892 (class 0 OID 0)
+-- Dependencies: 442
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10671,8 +11965,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea) TO dashboar
 
 
 --
--- TOC entry 4852 (class 0 OID 0)
--- Dependencies: 561
+-- TOC entry 4893 (class 0 OID 0)
+-- Dependencies: 567
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10682,8 +11976,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text) TO da
 
 
 --
--- TOC entry 4853 (class 0 OID 0)
--- Dependencies: 559
+-- TOC entry 4894 (class 0 OID 0)
+-- Dependencies: 564
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10693,8 +11987,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text, text)
 
 
 --
--- TOC entry 4854 (class 0 OID 0)
--- Dependencies: 477
+-- TOC entry 4895 (class 0 OID 0)
+-- Dependencies: 480
 -- Name: FUNCTION pgp_pub_encrypt(text, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10704,8 +11998,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea) TO dashboard_user;
 
 
 --
--- TOC entry 4855 (class 0 OID 0)
--- Dependencies: 472
+-- TOC entry 4896 (class 0 OID 0)
+-- Dependencies: 475
 -- Name: FUNCTION pgp_pub_encrypt(text, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10715,8 +12009,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea, text) TO dashboard
 
 
 --
--- TOC entry 4856 (class 0 OID 0)
--- Dependencies: 456
+-- TOC entry 4897 (class 0 OID 0)
+-- Dependencies: 458
 -- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10726,8 +12020,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea) TO dashboar
 
 
 --
--- TOC entry 4857 (class 0 OID 0)
--- Dependencies: 546
+-- TOC entry 4898 (class 0 OID 0)
+-- Dependencies: 551
 -- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10737,8 +12031,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea, text) TO da
 
 
 --
--- TOC entry 4858 (class 0 OID 0)
--- Dependencies: 549
+-- TOC entry 4899 (class 0 OID 0)
+-- Dependencies: 554
 -- Name: FUNCTION pgp_sym_decrypt(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10748,8 +12042,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 4859 (class 0 OID 0)
--- Dependencies: 474
+-- TOC entry 4900 (class 0 OID 0)
+-- Dependencies: 477
 -- Name: FUNCTION pgp_sym_decrypt(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10759,8 +12053,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text, text) TO dashboard
 
 
 --
--- TOC entry 4860 (class 0 OID 0)
--- Dependencies: 552
+-- TOC entry 4901 (class 0 OID 0)
+-- Dependencies: 557
 -- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10770,8 +12064,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text) TO dashboard
 
 
 --
--- TOC entry 4861 (class 0 OID 0)
--- Dependencies: 548
+-- TOC entry 4902 (class 0 OID 0)
+-- Dependencies: 553
 -- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10781,8 +12075,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text, text) TO das
 
 
 --
--- TOC entry 4862 (class 0 OID 0)
--- Dependencies: 567
+-- TOC entry 4903 (class 0 OID 0)
+-- Dependencies: 573
 -- Name: FUNCTION pgp_sym_encrypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10792,8 +12086,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 4863 (class 0 OID 0)
--- Dependencies: 485
+-- TOC entry 4904 (class 0 OID 0)
+-- Dependencies: 488
 -- Name: FUNCTION pgp_sym_encrypt(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10803,8 +12097,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text, text) TO dashboard_
 
 
 --
--- TOC entry 4864 (class 0 OID 0)
--- Dependencies: 446
+-- TOC entry 4905 (class 0 OID 0)
+-- Dependencies: 448
 -- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10814,8 +12108,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text) TO dashboard
 
 
 --
--- TOC entry 4865 (class 0 OID 0)
--- Dependencies: 554
+-- TOC entry 4906 (class 0 OID 0)
+-- Dependencies: 559
 -- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10825,8 +12119,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text, text) TO das
 
 
 --
--- TOC entry 4866 (class 0 OID 0)
--- Dependencies: 420
+-- TOC entry 4907 (class 0 OID 0)
+-- Dependencies: 422
 -- Name: FUNCTION pgrst_ddl_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10834,8 +12128,8 @@ GRANT ALL ON FUNCTION extensions.pgrst_ddl_watch() TO postgres WITH GRANT OPTION
 
 
 --
--- TOC entry 4867 (class 0 OID 0)
--- Dependencies: 530
+-- TOC entry 4908 (class 0 OID 0)
+-- Dependencies: 535
 -- Name: FUNCTION pgrst_drop_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10843,8 +12137,8 @@ GRANT ALL ON FUNCTION extensions.pgrst_drop_watch() TO postgres WITH GRANT OPTIO
 
 
 --
--- TOC entry 4869 (class 0 OID 0)
--- Dependencies: 433
+-- TOC entry 4910 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: FUNCTION set_graphql_placeholder(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -10852,8 +12146,8 @@ GRANT ALL ON FUNCTION extensions.set_graphql_placeholder() TO postgres WITH GRAN
 
 
 --
--- TOC entry 4870 (class 0 OID 0)
--- Dependencies: 478
+-- TOC entry 4911 (class 0 OID 0)
+-- Dependencies: 481
 -- Name: FUNCTION uuid_generate_v1(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10863,8 +12157,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v1() TO dashboard_user;
 
 
 --
--- TOC entry 4871 (class 0 OID 0)
--- Dependencies: 535
+-- TOC entry 4912 (class 0 OID 0)
+-- Dependencies: 540
 -- Name: FUNCTION uuid_generate_v1mc(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10874,8 +12168,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v1mc() TO dashboard_user;
 
 
 --
--- TOC entry 4872 (class 0 OID 0)
--- Dependencies: 421
+-- TOC entry 4913 (class 0 OID 0)
+-- Dependencies: 423
 -- Name: FUNCTION uuid_generate_v3(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10885,8 +12179,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v3(namespace uuid, name text) TO 
 
 
 --
--- TOC entry 4873 (class 0 OID 0)
--- Dependencies: 444
+-- TOC entry 4914 (class 0 OID 0)
+-- Dependencies: 446
 -- Name: FUNCTION uuid_generate_v4(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10896,8 +12190,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v4() TO dashboard_user;
 
 
 --
--- TOC entry 4874 (class 0 OID 0)
--- Dependencies: 455
+-- TOC entry 4915 (class 0 OID 0)
+-- Dependencies: 457
 -- Name: FUNCTION uuid_generate_v5(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10907,8 +12201,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v5(namespace uuid, name text) TO 
 
 
 --
--- TOC entry 4875 (class 0 OID 0)
--- Dependencies: 509
+-- TOC entry 4916 (class 0 OID 0)
+-- Dependencies: 513
 -- Name: FUNCTION uuid_nil(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10918,8 +12212,8 @@ GRANT ALL ON FUNCTION extensions.uuid_nil() TO dashboard_user;
 
 
 --
--- TOC entry 4876 (class 0 OID 0)
--- Dependencies: 457
+-- TOC entry 4917 (class 0 OID 0)
+-- Dependencies: 459
 -- Name: FUNCTION uuid_ns_dns(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10929,8 +12223,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_dns() TO dashboard_user;
 
 
 --
--- TOC entry 4877 (class 0 OID 0)
--- Dependencies: 556
+-- TOC entry 4918 (class 0 OID 0)
+-- Dependencies: 561
 -- Name: FUNCTION uuid_ns_oid(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10940,8 +12234,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_oid() TO dashboard_user;
 
 
 --
--- TOC entry 4878 (class 0 OID 0)
--- Dependencies: 501
+-- TOC entry 4919 (class 0 OID 0)
+-- Dependencies: 505
 -- Name: FUNCTION uuid_ns_url(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10951,8 +12245,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_url() TO dashboard_user;
 
 
 --
--- TOC entry 4879 (class 0 OID 0)
--- Dependencies: 510
+-- TOC entry 4920 (class 0 OID 0)
+-- Dependencies: 514
 -- Name: FUNCTION uuid_ns_x500(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -10962,8 +12256,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_x500() TO dashboard_user;
 
 
 --
--- TOC entry 4880 (class 0 OID 0)
--- Dependencies: 558
+-- TOC entry 4921 (class 0 OID 0)
+-- Dependencies: 563
 -- Name: FUNCTION graphql("operationName" text, query text, variables jsonb, extensions jsonb); Type: ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -10974,8 +12268,8 @@ GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, v
 
 
 --
--- TOC entry 4881 (class 0 OID 0)
--- Dependencies: 438
+-- TOC entry 4922 (class 0 OID 0)
+-- Dependencies: 440
 -- Name: FUNCTION pg_reload_conf(); Type: ACL; Schema: pg_catalog; Owner: supabase_admin
 --
 
@@ -10983,19 +12277,29 @@ GRANT ALL ON FUNCTION pg_catalog.pg_reload_conf() TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4882 (class 0 OID 0)
--- Dependencies: 475
+-- TOC entry 4923 (class 0 OID 0)
+-- Dependencies: 478
 -- Name: FUNCTION get_auth(p_usename text); Type: ACL; Schema: pgbouncer; Owner: supabase_admin
 --
 
 REVOKE ALL ON FUNCTION pgbouncer.get_auth(p_usename text) FROM PUBLIC;
 GRANT ALL ON FUNCTION pgbouncer.get_auth(p_usename text) TO pgbouncer;
-GRANT ALL ON FUNCTION pgbouncer.get_auth(p_usename text) TO postgres;
 
 
 --
--- TOC entry 4883 (class 0 OID 0)
--- Dependencies: 490
+-- TOC entry 4924 (class 0 OID 0)
+-- Dependencies: 530
+-- Name: FUNCTION admin_update_user_role(target_user_id uuid, new_role text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) TO anon;
+GRANT ALL ON FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) TO authenticated;
+GRANT ALL ON FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) TO service_role;
+
+
+--
+-- TOC entry 4925 (class 0 OID 0)
+-- Dependencies: 494
 -- Name: FUNCTION calculate_capipoints(duration_seconds integer, activity_type text, calories integer, distance_meters numeric); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11005,8 +12309,8 @@ GRANT ALL ON FUNCTION public.calculate_capipoints(duration_seconds integer, acti
 
 
 --
--- TOC entry 4884 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 4926 (class 0 OID 0)
+-- Dependencies: 429
 -- Name: FUNCTION calculate_final_xp(base_cp numeric, trust_score numeric, workout_date timestamp with time zone, activity_type text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11016,8 +12320,8 @@ GRANT ALL ON FUNCTION public.calculate_final_xp(base_cp numeric, trust_score num
 
 
 --
--- TOC entry 4885 (class 0 OID 0)
--- Dependencies: 533
+-- TOC entry 4927 (class 0 OID 0)
+-- Dependencies: 538
 -- Name: FUNCTION calculate_level(xp integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11027,8 +12331,8 @@ GRANT ALL ON FUNCTION public.calculate_level(xp integer) TO service_role;
 
 
 --
--- TOC entry 4886 (class 0 OID 0)
--- Dependencies: 453
+-- TOC entry 4928 (class 0 OID 0)
+-- Dependencies: 455
 -- Name: FUNCTION calculate_session_duration(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11038,8 +12342,8 @@ GRANT ALL ON FUNCTION public.calculate_session_duration() TO service_role;
 
 
 --
--- TOC entry 4887 (class 0 OID 0)
--- Dependencies: 492
+-- TOC entry 4929 (class 0 OID 0)
+-- Dependencies: 496
 -- Name: FUNCTION check_professional_availability(p_professional_id uuid, p_start_time timestamp with time zone, p_duration_minutes integer, p_exclude_schedule_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11049,8 +12353,19 @@ GRANT ALL ON FUNCTION public.check_professional_availability(p_professional_id u
 
 
 --
--- TOC entry 4888 (class 0 OID 0)
--- Dependencies: 445
+-- TOC entry 4930 (class 0 OID 0)
+-- Dependencies: 490
+-- Name: FUNCTION cleanup_abandoned_sessions(); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.cleanup_abandoned_sessions() TO anon;
+GRANT ALL ON FUNCTION public.cleanup_abandoned_sessions() TO authenticated;
+GRANT ALL ON FUNCTION public.cleanup_abandoned_sessions() TO service_role;
+
+
+--
+-- TOC entry 4931 (class 0 OID 0)
+-- Dependencies: 447
 -- Name: FUNCTION client_has_professional_access(professional_uuid uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11060,8 +12375,8 @@ GRANT ALL ON FUNCTION public.client_has_professional_access(professional_uuid uu
 
 
 --
--- TOC entry 4889 (class 0 OID 0)
--- Dependencies: 531
+-- TOC entry 4932 (class 0 OID 0)
+-- Dependencies: 536
 -- Name: FUNCTION count_total_unread_messages(user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11071,8 +12386,8 @@ GRANT ALL ON FUNCTION public.count_total_unread_messages(user_id uuid) TO servic
 
 
 --
--- TOC entry 4890 (class 0 OID 0)
--- Dependencies: 544
+-- TOC entry 4933 (class 0 OID 0)
+-- Dependencies: 549
 -- Name: FUNCTION count_unread_messages(user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11082,8 +12397,8 @@ GRANT ALL ON FUNCTION public.count_unread_messages(user_id uuid) TO service_role
 
 
 --
--- TOC entry 4891 (class 0 OID 0)
--- Dependencies: 469
+-- TOC entry 4934 (class 0 OID 0)
+-- Dependencies: 472
 -- Name: FUNCTION find_client_by_email(client_email text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11093,8 +12408,19 @@ GRANT ALL ON FUNCTION public.find_client_by_email(client_email text) TO service_
 
 
 --
--- TOC entry 4892 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 4935 (class 0 OID 0)
+-- Dependencies: 566
+-- Name: FUNCTION get_all_users(); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.get_all_users() TO anon;
+GRANT ALL ON FUNCTION public.get_all_users() TO authenticated;
+GRANT ALL ON FUNCTION public.get_all_users() TO service_role;
+
+
+--
+-- TOC entry 4936 (class 0 OID 0)
+-- Dependencies: 425
 -- Name: FUNCTION get_conversation(user_id uuid, other_user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11104,8 +12430,8 @@ GRANT ALL ON FUNCTION public.get_conversation(user_id uuid, other_user_id uuid) 
 
 
 --
--- TOC entry 4893 (class 0 OID 0)
--- Dependencies: 441
+-- TOC entry 4937 (class 0 OID 0)
+-- Dependencies: 443
 -- Name: FUNCTION get_conversation(user1_id uuid, user2_id uuid, limit_count integer, offset_count integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11115,8 +12441,30 @@ GRANT ALL ON FUNCTION public.get_conversation(user1_id uuid, user2_id uuid, limi
 
 
 --
--- TOC entry 4894 (class 0 OID 0)
--- Dependencies: 439
+-- TOC entry 4938 (class 0 OID 0)
+-- Dependencies: 461
+-- Name: FUNCTION get_linked_clients(prof_id uuid); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.get_linked_clients(prof_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.get_linked_clients(prof_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.get_linked_clients(prof_id uuid) TO service_role;
+
+
+--
+-- TOC entry 4939 (class 0 OID 0)
+-- Dependencies: 574
+-- Name: FUNCTION get_professional_reputation(prof_id uuid); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.get_professional_reputation(prof_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.get_professional_reputation(prof_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.get_professional_reputation(prof_id uuid) TO service_role;
+
+
+--
+-- TOC entry 4940 (class 0 OID 0)
+-- Dependencies: 441
 -- Name: FUNCTION get_rank_title(level integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11126,8 +12474,8 @@ GRANT ALL ON FUNCTION public.get_rank_title(level integer) TO service_role;
 
 
 --
--- TOC entry 4895 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 4941 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: FUNCTION handle_new_user(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11137,8 +12485,8 @@ GRANT ALL ON FUNCTION public.handle_new_user() TO service_role;
 
 
 --
--- TOC entry 4896 (class 0 OID 0)
--- Dependencies: 470
+-- TOC entry 4942 (class 0 OID 0)
+-- Dependencies: 473
 -- Name: FUNCTION handle_notifications_updated_at(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11148,8 +12496,8 @@ GRANT ALL ON FUNCTION public.handle_notifications_updated_at() TO service_role;
 
 
 --
--- TOC entry 4897 (class 0 OID 0)
--- Dependencies: 525
+-- TOC entry 4943 (class 0 OID 0)
+-- Dependencies: 529
 -- Name: FUNCTION handle_updated_at(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11159,8 +12507,8 @@ GRANT ALL ON FUNCTION public.handle_updated_at() TO service_role;
 
 
 --
--- TOC entry 4898 (class 0 OID 0)
--- Dependencies: 454
+-- TOC entry 4944 (class 0 OID 0)
+-- Dependencies: 456
 -- Name: FUNCTION is_admin(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11170,8 +12518,8 @@ GRANT ALL ON FUNCTION public.is_admin() TO service_role;
 
 
 --
--- TOC entry 4899 (class 0 OID 0)
--- Dependencies: 434
+-- TOC entry 4945 (class 0 OID 0)
+-- Dependencies: 436
 -- Name: FUNCTION is_client(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11181,8 +12529,8 @@ GRANT ALL ON FUNCTION public.is_client() TO service_role;
 
 
 --
--- TOC entry 4900 (class 0 OID 0)
--- Dependencies: 463
+-- TOC entry 4946 (class 0 OID 0)
+-- Dependencies: 466
 -- Name: FUNCTION is_professional(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11192,8 +12540,8 @@ GRANT ALL ON FUNCTION public.is_professional() TO service_role;
 
 
 --
--- TOC entry 4902 (class 0 OID 0)
--- Dependencies: 450
+-- TOC entry 4948 (class 0 OID 0)
+-- Dependencies: 452
 -- Name: FUNCTION link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11203,8 +12551,8 @@ GRANT ALL ON FUNCTION public.link_client_and_update_profile(p_client_id uuid, p_
 
 
 --
--- TOC entry 4903 (class 0 OID 0)
--- Dependencies: 555
+-- TOC entry 4949 (class 0 OID 0)
+-- Dependencies: 560
 -- Name: FUNCTION mark_conversation_as_read(current_user_id uuid, other_user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11214,8 +12562,8 @@ GRANT ALL ON FUNCTION public.mark_conversation_as_read(current_user_id uuid, oth
 
 
 --
--- TOC entry 4905 (class 0 OID 0)
--- Dependencies: 495
+-- TOC entry 4951 (class 0 OID 0)
+-- Dependencies: 499
 -- Name: FUNCTION professional_can_link_client(p_client_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11225,8 +12573,8 @@ GRANT ALL ON FUNCTION public.professional_can_link_client(p_client_id uuid) TO s
 
 
 --
--- TOC entry 4906 (class 0 OID 0)
--- Dependencies: 526
+-- TOC entry 4952 (class 0 OID 0)
+-- Dependencies: 531
 -- Name: FUNCTION professional_has_client_access(client_uuid uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11236,8 +12584,8 @@ GRANT ALL ON FUNCTION public.professional_has_client_access(client_uuid uuid) TO
 
 
 --
--- TOC entry 4907 (class 0 OID 0)
--- Dependencies: 520
+-- TOC entry 4953 (class 0 OID 0)
+-- Dependencies: 524
 -- Name: FUNCTION trigger_calculate_xp(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11247,8 +12595,8 @@ GRANT ALL ON FUNCTION public.trigger_calculate_xp() TO service_role;
 
 
 --
--- TOC entry 4908 (class 0 OID 0)
--- Dependencies: 517
+-- TOC entry 4954 (class 0 OID 0)
+-- Dependencies: 521
 -- Name: FUNCTION trigger_update_level(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11258,8 +12606,8 @@ GRANT ALL ON FUNCTION public.trigger_update_level() TO service_role;
 
 
 --
--- TOC entry 4909 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 4955 (class 0 OID 0)
+-- Dependencies: 430
 -- Name: FUNCTION apply_rls(wal jsonb, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11272,8 +12620,8 @@ GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO
 
 
 --
--- TOC entry 4910 (class 0 OID 0)
--- Dependencies: 564
+-- TOC entry 4956 (class 0 OID 0)
+-- Dependencies: 570
 -- Name: FUNCTION broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11282,8 +12630,8 @@ GRANT ALL ON FUNCTION realtime.broadcast_changes(topic_name text, event_name tex
 
 
 --
--- TOC entry 4911 (class 0 OID 0)
--- Dependencies: 487
+-- TOC entry 4957 (class 0 OID 0)
+-- Dependencies: 491
 -- Name: FUNCTION build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11296,8 +12644,8 @@ GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_n
 
 
 --
--- TOC entry 4912 (class 0 OID 0)
--- Dependencies: 442
+-- TOC entry 4958 (class 0 OID 0)
+-- Dependencies: 444
 -- Name: FUNCTION "cast"(val text, type_ regtype); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11310,8 +12658,8 @@ GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO supabase_realt
 
 
 --
--- TOC entry 4913 (class 0 OID 0)
--- Dependencies: 476
+-- TOC entry 4959 (class 0 OID 0)
+-- Dependencies: 479
 -- Name: FUNCTION check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11324,8 +12672,8 @@ GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ 
 
 
 --
--- TOC entry 4914 (class 0 OID 0)
--- Dependencies: 528
+-- TOC entry 4960 (class 0 OID 0)
+-- Dependencies: 533
 -- Name: FUNCTION is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11338,8 +12686,8 @@ GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_c
 
 
 --
--- TOC entry 4915 (class 0 OID 0)
--- Dependencies: 550
+-- TOC entry 4961 (class 0 OID 0)
+-- Dependencies: 555
 -- Name: FUNCTION list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11352,8 +12700,8 @@ GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, ma
 
 
 --
--- TOC entry 4916 (class 0 OID 0)
--- Dependencies: 540
+-- TOC entry 4962 (class 0 OID 0)
+-- Dependencies: 545
 -- Name: FUNCTION quote_wal2json(entity regclass); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11366,8 +12714,8 @@ GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO supabase_realt
 
 
 --
--- TOC entry 4917 (class 0 OID 0)
--- Dependencies: 452
+-- TOC entry 4963 (class 0 OID 0)
+-- Dependencies: 454
 -- Name: FUNCTION send(payload jsonb, event text, topic text, private boolean); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11376,8 +12724,8 @@ GRANT ALL ON FUNCTION realtime.send(payload jsonb, event text, topic text, priva
 
 
 --
--- TOC entry 4918 (class 0 OID 0)
--- Dependencies: 498
+-- TOC entry 4964 (class 0 OID 0)
+-- Dependencies: 502
 -- Name: FUNCTION subscription_check_filters(); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11390,8 +12738,8 @@ GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO supabase_realtime
 
 
 --
--- TOC entry 4919 (class 0 OID 0)
--- Dependencies: 503
+-- TOC entry 4965 (class 0 OID 0)
+-- Dependencies: 507
 -- Name: FUNCTION to_regrole(role_name text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -11404,8 +12752,8 @@ GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO supabase_realtime_a
 
 
 --
--- TOC entry 4920 (class 0 OID 0)
--- Dependencies: 483
+-- TOC entry 4966 (class 0 OID 0)
+-- Dependencies: 486
 -- Name: FUNCTION topic(); Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -11414,8 +12762,8 @@ GRANT ALL ON FUNCTION realtime.topic() TO dashboard_user;
 
 
 --
--- TOC entry 4921 (class 0 OID 0)
--- Dependencies: 449
+-- TOC entry 4967 (class 0 OID 0)
+-- Dependencies: 451
 -- Name: FUNCTION _crypto_aead_det_decrypt(message bytea, additional bytea, key_id bigint, context bytea, nonce bytea); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -11424,8 +12772,8 @@ GRANT ALL ON FUNCTION vault._crypto_aead_det_decrypt(message bytea, additional b
 
 
 --
--- TOC entry 4922 (class 0 OID 0)
--- Dependencies: 432
+-- TOC entry 4968 (class 0 OID 0)
+-- Dependencies: 434
 -- Name: FUNCTION create_secret(new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -11434,8 +12782,8 @@ GRANT ALL ON FUNCTION vault.create_secret(new_secret text, new_name text, new_de
 
 
 --
--- TOC entry 4923 (class 0 OID 0)
--- Dependencies: 491
+-- TOC entry 4969 (class 0 OID 0)
+-- Dependencies: 495
 -- Name: FUNCTION update_secret(secret_id uuid, new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -11444,7 +12792,7 @@ GRANT ALL ON FUNCTION vault.update_secret(secret_id uuid, new_secret text, new_n
 
 
 --
--- TOC entry 4925 (class 0 OID 0)
+-- TOC entry 4971 (class 0 OID 0)
 -- Dependencies: 352
 -- Name: TABLE audit_log_entries; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11455,7 +12803,7 @@ GRANT SELECT ON TABLE auth.audit_log_entries TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4927 (class 0 OID 0)
+-- TOC entry 4973 (class 0 OID 0)
 -- Dependencies: 369
 -- Name: TABLE flow_state; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11466,7 +12814,7 @@ GRANT ALL ON TABLE auth.flow_state TO dashboard_user;
 
 
 --
--- TOC entry 4930 (class 0 OID 0)
+-- TOC entry 4976 (class 0 OID 0)
 -- Dependencies: 360
 -- Name: TABLE identities; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11477,7 +12825,7 @@ GRANT ALL ON TABLE auth.identities TO dashboard_user;
 
 
 --
--- TOC entry 4932 (class 0 OID 0)
+-- TOC entry 4978 (class 0 OID 0)
 -- Dependencies: 351
 -- Name: TABLE instances; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11488,7 +12836,7 @@ GRANT SELECT ON TABLE auth.instances TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4934 (class 0 OID 0)
+-- TOC entry 4980 (class 0 OID 0)
 -- Dependencies: 364
 -- Name: TABLE mfa_amr_claims; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11499,7 +12847,7 @@ GRANT ALL ON TABLE auth.mfa_amr_claims TO dashboard_user;
 
 
 --
--- TOC entry 4936 (class 0 OID 0)
+-- TOC entry 4982 (class 0 OID 0)
 -- Dependencies: 363
 -- Name: TABLE mfa_challenges; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11510,7 +12858,7 @@ GRANT ALL ON TABLE auth.mfa_challenges TO dashboard_user;
 
 
 --
--- TOC entry 4939 (class 0 OID 0)
+-- TOC entry 4985 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: TABLE mfa_factors; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11521,7 +12869,7 @@ GRANT ALL ON TABLE auth.mfa_factors TO dashboard_user;
 
 
 --
--- TOC entry 4940 (class 0 OID 0)
+-- TOC entry 4986 (class 0 OID 0)
 -- Dependencies: 372
 -- Name: TABLE oauth_authorizations; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11531,7 +12879,17 @@ GRANT ALL ON TABLE auth.oauth_authorizations TO dashboard_user;
 
 
 --
--- TOC entry 4941 (class 0 OID 0)
+-- TOC entry 4988 (class 0 OID 0)
+-- Dependencies: 414
+-- Name: TABLE oauth_client_states; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+--
+
+GRANT ALL ON TABLE auth.oauth_client_states TO postgres;
+GRANT ALL ON TABLE auth.oauth_client_states TO dashboard_user;
+
+
+--
+-- TOC entry 4989 (class 0 OID 0)
 -- Dependencies: 371
 -- Name: TABLE oauth_clients; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11541,7 +12899,7 @@ GRANT ALL ON TABLE auth.oauth_clients TO dashboard_user;
 
 
 --
--- TOC entry 4942 (class 0 OID 0)
+-- TOC entry 4990 (class 0 OID 0)
 -- Dependencies: 373
 -- Name: TABLE oauth_consents; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11551,7 +12909,7 @@ GRANT ALL ON TABLE auth.oauth_consents TO dashboard_user;
 
 
 --
--- TOC entry 4943 (class 0 OID 0)
+-- TOC entry 4991 (class 0 OID 0)
 -- Dependencies: 370
 -- Name: TABLE one_time_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11562,7 +12920,7 @@ GRANT ALL ON TABLE auth.one_time_tokens TO dashboard_user;
 
 
 --
--- TOC entry 4945 (class 0 OID 0)
+-- TOC entry 4993 (class 0 OID 0)
 -- Dependencies: 350
 -- Name: TABLE refresh_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11573,7 +12931,7 @@ GRANT SELECT ON TABLE auth.refresh_tokens TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4947 (class 0 OID 0)
+-- TOC entry 4995 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: SEQUENCE refresh_tokens_id_seq; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11583,7 +12941,7 @@ GRANT ALL ON SEQUENCE auth.refresh_tokens_id_seq TO postgres;
 
 
 --
--- TOC entry 4949 (class 0 OID 0)
+-- TOC entry 4997 (class 0 OID 0)
 -- Dependencies: 367
 -- Name: TABLE saml_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11594,7 +12952,7 @@ GRANT ALL ON TABLE auth.saml_providers TO dashboard_user;
 
 
 --
--- TOC entry 4951 (class 0 OID 0)
+-- TOC entry 4999 (class 0 OID 0)
 -- Dependencies: 368
 -- Name: TABLE saml_relay_states; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11605,7 +12963,7 @@ GRANT ALL ON TABLE auth.saml_relay_states TO dashboard_user;
 
 
 --
--- TOC entry 4953 (class 0 OID 0)
+-- TOC entry 5001 (class 0 OID 0)
 -- Dependencies: 353
 -- Name: TABLE schema_migrations; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11614,7 +12972,7 @@ GRANT SELECT ON TABLE auth.schema_migrations TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4958 (class 0 OID 0)
+-- TOC entry 5006 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: TABLE sessions; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11625,7 +12983,7 @@ GRANT ALL ON TABLE auth.sessions TO dashboard_user;
 
 
 --
--- TOC entry 4960 (class 0 OID 0)
+-- TOC entry 5008 (class 0 OID 0)
 -- Dependencies: 366
 -- Name: TABLE sso_domains; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11636,7 +12994,7 @@ GRANT ALL ON TABLE auth.sso_domains TO dashboard_user;
 
 
 --
--- TOC entry 4963 (class 0 OID 0)
+-- TOC entry 5011 (class 0 OID 0)
 -- Dependencies: 365
 -- Name: TABLE sso_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11647,7 +13005,7 @@ GRANT ALL ON TABLE auth.sso_providers TO dashboard_user;
 
 
 --
--- TOC entry 4966 (class 0 OID 0)
+-- TOC entry 5014 (class 0 OID 0)
 -- Dependencies: 348
 -- Name: TABLE users; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -11658,7 +13016,7 @@ GRANT SELECT ON TABLE auth.users TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 4967 (class 0 OID 0)
+-- TOC entry 5015 (class 0 OID 0)
 -- Dependencies: 347
 -- Name: TABLE pg_stat_statements; Type: ACL; Schema: extensions; Owner: postgres
 --
@@ -11669,7 +13027,7 @@ GRANT ALL ON TABLE extensions.pg_stat_statements TO dashboard_user;
 
 
 --
--- TOC entry 4968 (class 0 OID 0)
+-- TOC entry 5016 (class 0 OID 0)
 -- Dependencies: 346
 -- Name: TABLE pg_stat_statements_info; Type: ACL; Schema: extensions; Owner: postgres
 --
@@ -11680,7 +13038,7 @@ GRANT ALL ON TABLE extensions.pg_stat_statements_info TO dashboard_user;
 
 
 --
--- TOC entry 4969 (class 0 OID 0)
+-- TOC entry 5017 (class 0 OID 0)
 -- Dependencies: 410
 -- Name: TABLE achievements; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11691,7 +13049,7 @@ GRANT ALL ON TABLE public.achievements TO service_role;
 
 
 --
--- TOC entry 4970 (class 0 OID 0)
+-- TOC entry 5018 (class 0 OID 0)
 -- Dependencies: 403
 -- Name: TABLE appointments; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11702,7 +13060,7 @@ GRANT ALL ON TABLE public.appointments TO service_role;
 
 
 --
--- TOC entry 4971 (class 0 OID 0)
+-- TOC entry 5019 (class 0 OID 0)
 -- Dependencies: 402
 -- Name: TABLE biometric_data; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11713,7 +13071,7 @@ GRANT ALL ON TABLE public.biometric_data TO service_role;
 
 
 --
--- TOC entry 4972 (class 0 OID 0)
+-- TOC entry 5020 (class 0 OID 0)
 -- Dependencies: 404
 -- Name: TABLE chat_messages; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11724,7 +13082,7 @@ GRANT ALL ON TABLE public.chat_messages TO service_role;
 
 
 --
--- TOC entry 4973 (class 0 OID 0)
+-- TOC entry 5021 (class 0 OID 0)
 -- Dependencies: 387
 -- Name: TABLE client_details; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11735,7 +13093,7 @@ GRANT ALL ON TABLE public.client_details TO service_role;
 
 
 --
--- TOC entry 4974 (class 0 OID 0)
+-- TOC entry 5022 (class 0 OID 0)
 -- Dependencies: 399
 -- Name: TABLE client_meal_plans; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11746,7 +13104,7 @@ GRANT ALL ON TABLE public.client_meal_plans TO service_role;
 
 
 --
--- TOC entry 4975 (class 0 OID 0)
+-- TOC entry 5023 (class 0 OID 0)
 -- Dependencies: 388
 -- Name: TABLE client_professionals; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11757,7 +13115,7 @@ GRANT ALL ON TABLE public.client_professionals TO service_role;
 
 
 --
--- TOC entry 4976 (class 0 OID 0)
+-- TOC entry 5024 (class 0 OID 0)
 -- Dependencies: 392
 -- Name: TABLE client_workouts; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11768,7 +13126,7 @@ GRANT ALL ON TABLE public.client_workouts TO service_role;
 
 
 --
--- TOC entry 4977 (class 0 OID 0)
+-- TOC entry 5026 (class 0 OID 0)
 -- Dependencies: 389
 -- Name: TABLE exercises_library; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11779,7 +13137,7 @@ GRANT ALL ON TABLE public.exercises_library TO service_role;
 
 
 --
--- TOC entry 4978 (class 0 OID 0)
+-- TOC entry 5027 (class 0 OID 0)
 -- Dependencies: 394
 -- Name: TABLE foods_library; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11790,7 +13148,7 @@ GRANT ALL ON TABLE public.foods_library TO service_role;
 
 
 --
--- TOC entry 4979 (class 0 OID 0)
+-- TOC entry 5028 (class 0 OID 0)
 -- Dependencies: 400
 -- Name: TABLE meal_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11801,7 +13159,7 @@ GRANT ALL ON TABLE public.meal_logs TO service_role;
 
 
 --
--- TOC entry 4980 (class 0 OID 0)
+-- TOC entry 5029 (class 0 OID 0)
 -- Dependencies: 398
 -- Name: TABLE meal_plan_items; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11812,7 +13170,7 @@ GRANT ALL ON TABLE public.meal_plan_items TO service_role;
 
 
 --
--- TOC entry 4981 (class 0 OID 0)
+-- TOC entry 5030 (class 0 OID 0)
 -- Dependencies: 397
 -- Name: TABLE meal_plans; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11823,7 +13181,7 @@ GRANT ALL ON TABLE public.meal_plans TO service_role;
 
 
 --
--- TOC entry 4982 (class 0 OID 0)
+-- TOC entry 5031 (class 0 OID 0)
 -- Dependencies: 386
 -- Name: TABLE professional_details; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11834,7 +13192,7 @@ GRANT ALL ON TABLE public.professional_details TO service_role;
 
 
 --
--- TOC entry 4983 (class 0 OID 0)
+-- TOC entry 5032 (class 0 OID 0)
 -- Dependencies: 406
 -- Name: TABLE professional_notifications; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11845,7 +13203,18 @@ GRANT ALL ON TABLE public.professional_notifications TO service_role;
 
 
 --
--- TOC entry 4984 (class 0 OID 0)
+-- TOC entry 5033 (class 0 OID 0)
+-- Dependencies: 413
+-- Name: TABLE professional_reviews; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.professional_reviews TO anon;
+GRANT ALL ON TABLE public.professional_reviews TO authenticated;
+GRANT ALL ON TABLE public.professional_reviews TO service_role;
+
+
+--
+-- TOC entry 5034 (class 0 OID 0)
 -- Dependencies: 385
 -- Name: TABLE profiles; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11856,7 +13225,7 @@ GRANT ALL ON TABLE public.profiles TO service_role;
 
 
 --
--- TOC entry 4985 (class 0 OID 0)
+-- TOC entry 5035 (class 0 OID 0)
 -- Dependencies: 401
 -- Name: TABLE progress_photos; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11867,7 +13236,7 @@ GRANT ALL ON TABLE public.progress_photos TO service_role;
 
 
 --
--- TOC entry 4986 (class 0 OID 0)
+-- TOC entry 5036 (class 0 OID 0)
 -- Dependencies: 396
 -- Name: TABLE recipe_ingredients; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11878,7 +13247,7 @@ GRANT ALL ON TABLE public.recipe_ingredients TO service_role;
 
 
 --
--- TOC entry 4987 (class 0 OID 0)
+-- TOC entry 5037 (class 0 OID 0)
 -- Dependencies: 395
 -- Name: TABLE recipes; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11889,8 +13258,8 @@ GRANT ALL ON TABLE public.recipes TO service_role;
 
 
 --
--- TOC entry 4988 (class 0 OID 0)
--- Dependencies: 419
+-- TOC entry 5038 (class 0 OID 0)
+-- Dependencies: 412
 -- Name: TABLE scheduled_workouts; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -11900,7 +13269,7 @@ GRANT ALL ON TABLE public.scheduled_workouts TO service_role;
 
 
 --
--- TOC entry 4989 (class 0 OID 0)
+-- TOC entry 5039 (class 0 OID 0)
 -- Dependencies: 411
 -- Name: TABLE user_achievements; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11911,7 +13280,7 @@ GRANT ALL ON TABLE public.user_achievements TO service_role;
 
 
 --
--- TOC entry 4990 (class 0 OID 0)
+-- TOC entry 5040 (class 0 OID 0)
 -- Dependencies: 409
 -- Name: TABLE workout_execution_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11922,7 +13291,7 @@ GRANT ALL ON TABLE public.workout_execution_logs TO service_role;
 
 
 --
--- TOC entry 4991 (class 0 OID 0)
+-- TOC entry 5041 (class 0 OID 0)
 -- Dependencies: 391
 -- Name: TABLE workout_exercises; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11933,7 +13302,7 @@ GRANT ALL ON TABLE public.workout_exercises TO service_role;
 
 
 --
--- TOC entry 4992 (class 0 OID 0)
+-- TOC entry 5042 (class 0 OID 0)
 -- Dependencies: 393
 -- Name: TABLE workout_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11944,7 +13313,7 @@ GRANT ALL ON TABLE public.workout_logs TO service_role;
 
 
 --
--- TOC entry 4993 (class 0 OID 0)
+-- TOC entry 5043 (class 0 OID 0)
 -- Dependencies: 405
 -- Name: TABLE workout_sessions; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11955,7 +13324,7 @@ GRANT ALL ON TABLE public.workout_sessions TO service_role;
 
 
 --
--- TOC entry 4994 (class 0 OID 0)
+-- TOC entry 5044 (class 0 OID 0)
 -- Dependencies: 390
 -- Name: TABLE workouts; Type: ACL; Schema: public; Owner: postgres
 --
@@ -11966,7 +13335,7 @@ GRANT ALL ON TABLE public.workouts TO service_role;
 
 
 --
--- TOC entry 4995 (class 0 OID 0)
+-- TOC entry 5045 (class 0 OID 0)
 -- Dependencies: 384
 -- Name: TABLE messages; Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
 --
@@ -11979,77 +13348,77 @@ GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO service_role;
 
 
 --
--- TOC entry 4996 (class 0 OID 0)
--- Dependencies: 412
--- Name: TABLE messages_2025_12_07; Type: ACL; Schema: realtime; Owner: supabase_admin
---
-
-GRANT ALL ON TABLE realtime.messages_2025_12_07 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_07 TO dashboard_user;
-
-
---
--- TOC entry 4997 (class 0 OID 0)
--- Dependencies: 413
--- Name: TABLE messages_2025_12_08; Type: ACL; Schema: realtime; Owner: supabase_admin
---
-
-GRANT ALL ON TABLE realtime.messages_2025_12_08 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_08 TO dashboard_user;
-
-
---
--- TOC entry 4998 (class 0 OID 0)
--- Dependencies: 414
--- Name: TABLE messages_2025_12_09; Type: ACL; Schema: realtime; Owner: supabase_admin
---
-
-GRANT ALL ON TABLE realtime.messages_2025_12_09 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_09 TO dashboard_user;
-
-
---
--- TOC entry 4999 (class 0 OID 0)
+-- TOC entry 5046 (class 0 OID 0)
 -- Dependencies: 415
--- Name: TABLE messages_2025_12_10; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: TABLE messages_2025_12_20; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_12_10 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_10 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_20 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_20 TO dashboard_user;
 
 
 --
--- TOC entry 5000 (class 0 OID 0)
+-- TOC entry 5047 (class 0 OID 0)
 -- Dependencies: 416
--- Name: TABLE messages_2025_12_11; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: TABLE messages_2025_12_21; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_12_11 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_11 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_21 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_21 TO dashboard_user;
 
 
 --
--- TOC entry 5001 (class 0 OID 0)
+-- TOC entry 5048 (class 0 OID 0)
 -- Dependencies: 417
--- Name: TABLE messages_2025_12_12; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: TABLE messages_2025_12_22; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_12_12 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_12 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_22 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_22 TO dashboard_user;
 
 
 --
--- TOC entry 5002 (class 0 OID 0)
+-- TOC entry 5049 (class 0 OID 0)
 -- Dependencies: 418
--- Name: TABLE messages_2025_12_13; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: TABLE messages_2025_12_23; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
-GRANT ALL ON TABLE realtime.messages_2025_12_13 TO postgres;
-GRANT ALL ON TABLE realtime.messages_2025_12_13 TO dashboard_user;
+GRANT ALL ON TABLE realtime.messages_2025_12_23 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_23 TO dashboard_user;
 
 
 --
--- TOC entry 5003 (class 0 OID 0)
+-- TOC entry 5050 (class 0 OID 0)
+-- Dependencies: 419
+-- Name: TABLE messages_2025_12_24; Type: ACL; Schema: realtime; Owner: supabase_admin
+--
+
+GRANT ALL ON TABLE realtime.messages_2025_12_24 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_24 TO dashboard_user;
+
+
+--
+-- TOC entry 5051 (class 0 OID 0)
+-- Dependencies: 420
+-- Name: TABLE messages_2025_12_25; Type: ACL; Schema: realtime; Owner: supabase_admin
+--
+
+GRANT ALL ON TABLE realtime.messages_2025_12_25 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_25 TO dashboard_user;
+
+
+--
+-- TOC entry 5052 (class 0 OID 0)
+-- Dependencies: 421
+-- Name: TABLE messages_2025_12_26; Type: ACL; Schema: realtime; Owner: supabase_admin
+--
+
+GRANT ALL ON TABLE realtime.messages_2025_12_26 TO postgres;
+GRANT ALL ON TABLE realtime.messages_2025_12_26 TO dashboard_user;
+
+
+--
+-- TOC entry 5053 (class 0 OID 0)
 -- Dependencies: 377
 -- Name: TABLE schema_migrations; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -12063,7 +13432,7 @@ GRANT ALL ON TABLE realtime.schema_migrations TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5004 (class 0 OID 0)
+-- TOC entry 5054 (class 0 OID 0)
 -- Dependencies: 381
 -- Name: TABLE subscription; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -12077,7 +13446,7 @@ GRANT ALL ON TABLE realtime.subscription TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5005 (class 0 OID 0)
+-- TOC entry 5055 (class 0 OID 0)
 -- Dependencies: 380
 -- Name: SEQUENCE subscription_id_seq; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -12091,7 +13460,7 @@ GRANT ALL ON SEQUENCE realtime.subscription_id_seq TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5007 (class 0 OID 0)
+-- TOC entry 5057 (class 0 OID 0)
 -- Dependencies: 354
 -- Name: TABLE buckets; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12105,7 +13474,7 @@ GRANT ALL ON TABLE storage.buckets TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5008 (class 0 OID 0)
+-- TOC entry 5058 (class 0 OID 0)
 -- Dependencies: 378
 -- Name: TABLE buckets_analytics; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12116,7 +13485,7 @@ GRANT ALL ON TABLE storage.buckets_analytics TO anon;
 
 
 --
--- TOC entry 5009 (class 0 OID 0)
+-- TOC entry 5059 (class 0 OID 0)
 -- Dependencies: 407
 -- Name: TABLE buckets_vectors; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12127,7 +13496,7 @@ GRANT SELECT ON TABLE storage.buckets_vectors TO anon;
 
 
 --
--- TOC entry 5011 (class 0 OID 0)
+-- TOC entry 5061 (class 0 OID 0)
 -- Dependencies: 355
 -- Name: TABLE objects; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12141,7 +13510,7 @@ GRANT ALL ON TABLE storage.objects TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5012 (class 0 OID 0)
+-- TOC entry 5062 (class 0 OID 0)
 -- Dependencies: 376
 -- Name: TABLE prefixes; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12152,7 +13521,7 @@ GRANT ALL ON TABLE storage.prefixes TO anon;
 
 
 --
--- TOC entry 5013 (class 0 OID 0)
+-- TOC entry 5063 (class 0 OID 0)
 -- Dependencies: 374
 -- Name: TABLE s3_multipart_uploads; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12163,7 +13532,7 @@ GRANT SELECT ON TABLE storage.s3_multipart_uploads TO anon;
 
 
 --
--- TOC entry 5014 (class 0 OID 0)
+-- TOC entry 5064 (class 0 OID 0)
 -- Dependencies: 375
 -- Name: TABLE s3_multipart_uploads_parts; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12174,7 +13543,7 @@ GRANT SELECT ON TABLE storage.s3_multipart_uploads_parts TO anon;
 
 
 --
--- TOC entry 5015 (class 0 OID 0)
+-- TOC entry 5065 (class 0 OID 0)
 -- Dependencies: 408
 -- Name: TABLE vector_indexes; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12185,7 +13554,7 @@ GRANT SELECT ON TABLE storage.vector_indexes TO anon;
 
 
 --
--- TOC entry 5016 (class 0 OID 0)
+-- TOC entry 5066 (class 0 OID 0)
 -- Dependencies: 357
 -- Name: TABLE secrets; Type: ACL; Schema: vault; Owner: supabase_admin
 --
@@ -12195,7 +13564,7 @@ GRANT SELECT,DELETE ON TABLE vault.secrets TO service_role;
 
 
 --
--- TOC entry 5017 (class 0 OID 0)
+-- TOC entry 5067 (class 0 OID 0)
 -- Dependencies: 358
 -- Name: TABLE decrypted_secrets; Type: ACL; Schema: vault; Owner: supabase_admin
 --
@@ -12205,7 +13574,7 @@ GRANT SELECT,DELETE ON TABLE vault.decrypted_secrets TO service_role;
 
 
 --
--- TOC entry 2635 (class 826 OID 16603)
+-- TOC entry 2648 (class 826 OID 16603)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12214,7 +13583,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2636 (class 826 OID 16604)
+-- TOC entry 2649 (class 826 OID 16604)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12223,7 +13592,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2634 (class 826 OID 16602)
+-- TOC entry 2647 (class 826 OID 16602)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12232,7 +13601,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2645 (class 826 OID 16682)
+-- TOC entry 2658 (class 826 OID 16682)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12240,7 +13609,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2644 (class 826 OID 16681)
+-- TOC entry 2657 (class 826 OID 16681)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12248,7 +13617,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2643 (class 826 OID 16680)
+-- TOC entry 2656 (class 826 OID 16680)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12256,7 +13625,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2648 (class 826 OID 16637)
+-- TOC entry 2661 (class 826 OID 16637)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -12267,7 +13636,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2647 (class 826 OID 16636)
+-- TOC entry 2660 (class 826 OID 16636)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -12278,7 +13647,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2646 (class 826 OID 16635)
+-- TOC entry 2659 (class 826 OID 16635)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -12289,7 +13658,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2640 (class 826 OID 16617)
+-- TOC entry 2653 (class 826 OID 16617)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -12300,7 +13669,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2642 (class 826 OID 16616)
+-- TOC entry 2655 (class 826 OID 16616)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -12311,7 +13680,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2641 (class 826 OID 16615)
+-- TOC entry 2654 (class 826 OID 16615)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -12322,7 +13691,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2627 (class 826 OID 16490)
+-- TOC entry 2640 (class 826 OID 16490)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -12333,7 +13702,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENC
 
 
 --
--- TOC entry 2628 (class 826 OID 16491)
+-- TOC entry 2641 (class 826 OID 16491)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -12344,7 +13713,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON S
 
 
 --
--- TOC entry 2626 (class 826 OID 16489)
+-- TOC entry 2639 (class 826 OID 16489)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -12355,7 +13724,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIO
 
 
 --
--- TOC entry 2630 (class 826 OID 16493)
+-- TOC entry 2643 (class 826 OID 16493)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -12366,7 +13735,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON F
 
 
 --
--- TOC entry 2625 (class 826 OID 16488)
+-- TOC entry 2638 (class 826 OID 16488)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -12377,7 +13746,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES 
 
 
 --
--- TOC entry 2629 (class 826 OID 16492)
+-- TOC entry 2642 (class 826 OID 16492)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -12388,7 +13757,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON T
 
 
 --
--- TOC entry 2638 (class 826 OID 16607)
+-- TOC entry 2651 (class 826 OID 16607)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -12397,7 +13766,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2639 (class 826 OID 16608)
+-- TOC entry 2652 (class 826 OID 16608)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -12406,7 +13775,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2637 (class 826 OID 16606)
+-- TOC entry 2650 (class 826 OID 16606)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -12415,7 +13784,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2633 (class 826 OID 16545)
+-- TOC entry 2646 (class 826 OID 16545)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -12426,7 +13795,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUEN
 
 
 --
--- TOC entry 2632 (class 826 OID 16544)
+-- TOC entry 2645 (class 826 OID 16544)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -12437,7 +13806,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTI
 
 
 --
--- TOC entry 2631 (class 826 OID 16543)
+-- TOC entry 2644 (class 826 OID 16543)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -12448,7 +13817,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES
 
 
 --
--- TOC entry 3816 (class 3466 OID 16621)
+-- TOC entry 3829 (class 3466 OID 16621)
 -- Name: issue_graphql_placeholder; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12460,7 +13829,7 @@ CREATE EVENT TRIGGER issue_graphql_placeholder ON sql_drop
 ALTER EVENT TRIGGER issue_graphql_placeholder OWNER TO supabase_admin;
 
 --
--- TOC entry 3821 (class 3466 OID 16700)
+-- TOC entry 3834 (class 3466 OID 16700)
 -- Name: issue_pg_cron_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12472,7 +13841,7 @@ CREATE EVENT TRIGGER issue_pg_cron_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_cron_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3815 (class 3466 OID 16619)
+-- TOC entry 3828 (class 3466 OID 16619)
 -- Name: issue_pg_graphql_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12484,7 +13853,7 @@ CREATE EVENT TRIGGER issue_pg_graphql_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_graphql_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3822 (class 3466 OID 16703)
+-- TOC entry 3835 (class 3466 OID 16703)
 -- Name: issue_pg_net_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12496,7 +13865,7 @@ CREATE EVENT TRIGGER issue_pg_net_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_net_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3817 (class 3466 OID 16622)
+-- TOC entry 3830 (class 3466 OID 16622)
 -- Name: pgrst_ddl_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12507,7 +13876,7 @@ CREATE EVENT TRIGGER pgrst_ddl_watch ON ddl_command_end
 ALTER EVENT TRIGGER pgrst_ddl_watch OWNER TO supabase_admin;
 
 --
--- TOC entry 3818 (class 3466 OID 16623)
+-- TOC entry 3831 (class 3466 OID 16623)
 -- Name: pgrst_drop_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -12517,15 +13886,15 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 
 ALTER EVENT TRIGGER pgrst_drop_watch OWNER TO supabase_admin;
 
--- Completed on 2025-12-10 22:53:13
+-- Completed on 2025-12-23 10:46:10
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 6un3EaXZpMoaywUoO0xzFUifqSUuPjmT5a7m55dUtqKVl7WuQOGKj6yEbbA18el
+\unrestrict jUy8sLJQBqyce8VuDQWeGcP1ILTnvQmLydcaehQ26kjH7Rev0ml3HTccHtTbVZ1
 
--- Completed on 2025-12-10 22:53:13
+-- Completed on 2025-12-23 10:46:10
 
 --
 -- PostgreSQL database cluster dump complete

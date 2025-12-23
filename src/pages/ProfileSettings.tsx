@@ -16,10 +16,12 @@ import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight } from 'lucide-react'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy, Trophy } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
+import { useStrengthProfile } from '@/hooks/useStrengthProfile'
+import StrengthRadar from '@/components/analytics/StrengthRadar'
 
 // --- UTILITÁRIOS DE IMAGEM ---
 const sanitizeFileName = (fileName: string): string => {
@@ -161,6 +163,10 @@ const ProfileSettings: React.FC = () => {
   }
   const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
+
+  // Strength Hook
+  const pWeight = assessments?.[0]?.weight || 70
+  const { stats: strengthStats, dotsScore } = useStrengthProfile(user?.id, pWeight)
 
   // --- EFEITO DE CARREGAMENTO INICIAL ---
   useEffect(() => {
@@ -703,6 +709,38 @@ const ProfileSettings: React.FC = () => {
                           ))}
                         </div>
                       )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="performance" className="mt-6">
+                  <Card className="bg-card w-full">
+                    <CardHeader className="p-6 border-b border-border">
+                      <CardTitle className="flex items-center gap-2"><Trophy className="h-6 w-6 text-yellow-500" /> Análise de Força</CardTitle>
+                      <CardDescription>Baseado nos seus recordes (1RM) e peso corporal.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6 flex flex-col items-center">
+                      <div className="w-full max-w-2xl h-[400px]">
+                        <StrengthRadar stats={strengthStats} />
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-8">
+                        {strengthStats.map(s => (
+                          <Card key={s.subject} className="bg-muted/30 border-border">
+                            <CardContent className="p-4 text-center">
+                              <div className="text-xs uppercase text-muted-foreground font-bold mb-1">{s.subject}</div>
+                              <div className="text-2xl font-black text-foreground">{s.oneRM} kg</div>
+                              <Badge className="mt-2 bg-primary/20 text-primary hover:bg-primary/30 border-none">{s.level}</Badge>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                      <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border flex items-center gap-4">
+                        <div className="bg-primary/10 p-3 rounded-full"><Activity className="h-6 w-6 text-primary" /></div>
+                        <div>
+                          <div className="text-sm text-muted-foreground font-bold uppercase">DOTS Score</div>
+                          <div className="text-3xl font-black text-foreground">{dotsScore.toFixed(2)}</div>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
