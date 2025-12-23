@@ -20,8 +20,9 @@ import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, 
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
-import { useStrengthProfile } from '@/hooks/useStrengthProfile'
+import { useStrengthData } from '@/hooks/useStrengthData'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
+
 
 // --- UTILITÁRIOS DE IMAGEM ---
 const sanitizeFileName = (fileName: string): string => {
@@ -163,10 +164,8 @@ const ProfileSettings: React.FC = () => {
   }
   const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
+  const { strengthStats, loading: strengthLoading, overallLevel } = useStrengthData(user?.id)
 
-  // Strength Hook
-  const pWeight = assessments?.[0]?.weight || 70
-  const { stats: strengthStats, dotsScore } = useStrengthProfile(user?.id, pWeight)
 
   // --- EFEITO DE CARREGAMENTO INICIAL ---
   useEffect(() => {
@@ -538,6 +537,7 @@ const ProfileSettings: React.FC = () => {
                     <TabsTrigger value="assessments" className="px-4">Avaliações</TabsTrigger>
                     <TabsTrigger value="anamnesis" className="px-4">Anamnese</TabsTrigger>
                     <TabsTrigger value="history" className="px-4">Histórico</TabsTrigger>
+                    <TabsTrigger value="performance" className="px-4">Performance</TabsTrigger>
                     <TabsTrigger value="achievements" className="px-4">Conquistas</TabsTrigger>
                   </>
                 )}
@@ -713,38 +713,6 @@ const ProfileSettings: React.FC = () => {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="performance" className="mt-6">
-                  <Card className="bg-card w-full">
-                    <CardHeader className="p-6 border-b border-border">
-                      <CardTitle className="flex items-center gap-2"><Trophy className="h-6 w-6 text-yellow-500" /> Análise de Força</CardTitle>
-                      <CardDescription>Baseado nos seus recordes (1RM) e peso corporal.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-6 flex flex-col items-center">
-                      <div className="w-full max-w-2xl h-[400px]">
-                        <StrengthRadar stats={strengthStats} />
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-8">
-                        {strengthStats.map(s => (
-                          <Card key={s.subject} className="bg-muted/30 border-border">
-                            <CardContent className="p-4 text-center">
-                              <div className="text-xs uppercase text-muted-foreground font-bold mb-1">{s.subject}</div>
-                              <div className="text-2xl font-black text-foreground">{s.oneRM} kg</div>
-                              <Badge className="mt-2 bg-primary/20 text-primary hover:bg-primary/30 border-none">{s.level}</Badge>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                      <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border flex items-center gap-4">
-                        <div className="bg-primary/10 p-3 rounded-full"><Activity className="h-6 w-6 text-primary" /></div>
-                        <div>
-                          <div className="text-sm text-muted-foreground font-bold uppercase">DOTS Score</div>
-                          <div className="text-3xl font-black text-foreground">{dotsScore.toFixed(2)}</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
                 <TabsContent value="anamnesis" className="mt-6 space-y-6">
                   <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                     <CardHeader>
@@ -857,6 +825,47 @@ const ProfileSettings: React.FC = () => {
                         </div>
                       </div>
 
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="performance" className="mt-6">
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-foreground"><Trophy className="h-5 w-5 text-yellow-500" /> Perfil de Força (Estimado)</CardTitle>
+                      <CardDescription>Baseado nos seus recordes (1RM) registrados nos treinos.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {strengthLoading ? (
+                        <div className="flex justify-center p-8"><Loader2 className="animate-spin text-primary" /></div>
+                      ) : strengthStats.length === 0 ? (
+                        <div className="text-center py-12 text-muted-foreground">Sem dados suficientes. Registre cargas nos treinos (Squat, Bench, Deadlift, Overhead).</div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                          <div className="bg-muted/50 rounded-xl p-4">
+                            <StrengthRadar stats={strengthStats} />
+                            <div className="text-center mt-[-20px] mb-4">
+                              <Badge className="bg-primary text-primary-foreground text-lg px-6 py-2 shadow-lg">Nível Geral: {overallLevel}</Badge>
+                            </div>
+                          </div>
+                          <div className="space-y-4">
+                            {strengthStats.map((s) => (
+                              <div key={s.subject} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
+                                <div>
+                                  <span className="block font-bold text-foreground text-lg">{s.subject}</span>
+                                  <span className="text-sm text-muted-foreground flex items-center gap-2"><Dumbbell className="h-3 w-3" /> 1RM Est: {s.val} kg</span>
+                                </div>
+                                <div className="text-right">
+                                  <Badge variant={s.level === 'Elite' ? 'default' : s.level === 'Avançado' ? 'secondary' : 'outline'} className={`mb-1 ${s.level === 'Elite' ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : ''}`}>
+                                    {s.level}
+                                  </Badge>
+                                  <div className="text-xs text-muted-foreground font-mono">Score: {s.A.toFixed(1)}/5.0</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>

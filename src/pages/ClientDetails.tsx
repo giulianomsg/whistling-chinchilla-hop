@@ -30,9 +30,9 @@ import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
-import { useStrengthProfile } from '@/hooks/useStrengthProfile'
-import { StrengthLevel } from '@/utils/strength'
+
 import StrengthRadar from '@/components/analytics/StrengthRadar'
+import { useStrengthData } from '@/hooks/useStrengthData'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
@@ -119,7 +119,10 @@ const ClientDetails: React.FC = () => {
 
   // ... existing imports ...
 
+  // ... existing imports ...
 
+  // Inside ClientDetails component:
+  const { strengthStats, dotsScore, overallLevel } = useStrengthData(id)
 
   const [selectedAgendaDate, setSelectedAgendaDate] = useState<Date | undefined>(new Date())
   const [selectedTime, setSelectedTime] = useState('09:00')
@@ -240,10 +243,6 @@ const ClientDetails: React.FC = () => {
     return () => { supabase.removeChannel(channel) }
   }, [id, user])
 
-  // --- STRENGTH PROFILE (Via Hook) ---
-  const currentWeight = assessments?.[0]?.weight || 70
-  const { stats: strengthStats, dotsScore } = useStrengthProfile(id, currentWeight)
-  const strengthLevel: StrengthLevel = strengthStats.length > 0 ? strengthStats[0].level : 'Iniciante'
 
   const handleAssignWorkout = async () => {
     try {
@@ -731,7 +730,7 @@ const ClientDetails: React.FC = () => {
                     {strengthStats.map(s => (
                       <div key={s.subject} className="bg-muted p-2 rounded">
                         <div className="font-bold text-foreground">{s.subject}</div>
-                        <div>{s.oneRM}kg (1RM)</div>
+                        <div>{s.val}kg (1RM)</div>
                         <div className="text-blue-500">Nível {s.A.toFixed(1)}</div>
                       </div>
                     ))}
@@ -755,20 +754,17 @@ const ClientDetails: React.FC = () => {
                   <CardHeader><CardTitle>Nível Estimado</CardTitle></CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-2">
-                      {strengthStats.map(s => {
-                        const { level } = getClassificaton(s.val, clientDetails?.weight || 70, s.subject === 'Agachamento' ? 'squat' : s.subject === 'Supino' ? 'bench' : s.subject === 'Lev. Terra' ? 'deadlift' : 'overhead')
-                        return (
-                          <div key={s.subject} className="flex justify-between items-center text-sm border-b border-border/50 pb-2 last:border-0">
-                            <span>{s.subject}</span>
-                            <Badge variant="outline" className={
-                              level === 'Elite' ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' :
-                                level === 'Avançado' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
-                                  level === 'Intermediário' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
-                                    'text-muted-foreground'
-                            }>{level}</Badge>
-                          </div>
-                        )
-                      })}
+                      {strengthStats.map(s => (
+                        <div key={s.subject} className="flex justify-between items-center text-sm border-b border-border/50 pb-2 last:border-0">
+                          <span>{s.subject}</span>
+                          <Badge variant="outline" className={
+                            s.level === 'Elite' ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' :
+                              s.level === 'Avançado' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                s.level === 'Intermediário' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                                  'text-muted-foreground'
+                          }>{s.level}</Badge>
+                        </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
