@@ -161,7 +161,7 @@ const ProfileSettings: React.FC = () => {
     circumferences: { shoulder: '', chest: '', arm_right: '', arm_left: '', waist: '', abdomen: '', hips: '', thigh_right: '', thigh_left: '', calf_right: '', calf_left: '' },
     notes: ''
   }
-
+  const [newAssessment, setNewAssessment] = useState(initialAssessmentState)
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
 
   // Strength Hook
