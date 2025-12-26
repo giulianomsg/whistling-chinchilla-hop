@@ -39,7 +39,7 @@ export const useAnalyticsData = (clientId: string | undefined) => {
             created_at,
             exercise_id,
             exercise:exercises_library(id, name),
-            workout_session:workout_sessions!inner(id, name, created_at, client_id)
+            workout_session:workout_sessions!inner(id, created_at, client_id)
           `)
                     .eq('workout_session.client_id', clientId)
                     .order('created_at', { ascending: true })
@@ -95,7 +95,7 @@ export const useAnalyticsData = (clientId: string | undefined) => {
                 sessionMap.set(sessionId, {
                     date: log.workout_session.created_at,
                     volume: 0,
-                    sessionName: log.workout_session.name || 'Treino'
+                    sessionName: `Treino ${new Date(log.workout_session.created_at).toLocaleDateString()}`
                 })
             }
 
