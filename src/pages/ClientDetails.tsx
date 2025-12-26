@@ -32,6 +32,7 @@ import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/b
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 
 import StrengthRadar from '@/components/analytics/StrengthRadar'
+import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
 import { useStrengthData } from '@/hooks/useStrengthData'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
@@ -769,6 +770,11 @@ const ClientDetails: React.FC = () => {
                   </CardContent>
                 </Card>
               </div>
+
+              <div className="md:col-span-3 mt-6">
+                <AnalyticsDashboard clientId={id} />
+              </div>
+
             </div>
           </TabsContent>
           <TabsContent value="agenda">
