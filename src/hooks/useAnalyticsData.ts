@@ -36,13 +36,13 @@ export const useAnalyticsData = (clientId: string | undefined) => {
             id,
             weight,
             reps,
-            created_at,
+            created_at:completed_at,
             exercise_id,
             exercise:exercises_library(id, name),
             workout_session:workout_sessions!inner(id, created_at, client_id)
           `)
                     .eq('workout_session.client_id', clientId)
-                    .order('created_at', { ascending: true })
+                    .order('completed_at', { ascending: true })
 
                 if (error) throw error
 
