@@ -10,7 +10,10 @@ ADD COLUMN IF NOT EXISTS years_experience INTEGER DEFAULT 0,
 ADD COLUMN IF NOT EXISTS instagram_url TEXT,
 ADD COLUMN IF NOT EXISTS linkedin_url TEXT,
 ADD COLUMN IF NOT EXISTS city TEXT,
-ADD COLUMN IF NOT EXISTS state TEXT;
+ADD COLUMN IF NOT EXISTS state TEXT,
+ADD COLUMN IF NOT EXISTS phone TEXT,
+ADD COLUMN IF NOT EXISTS whatsapp TEXT,
+ADD COLUMN IF NOT EXISTS telegram TEXT;
 
 -- 2. Garantir que a tabela de reviews existe (caso a migration 0072 não tenha rodado ou para reforço)
 -- (Omitido pois já vimos no arquivo 0072, mas vamos garantir índices)
@@ -19,6 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_professional_reviews_professional_id ON public.pr
 
 -- 3. View Otimizada para o Marketplace
 -- Retorna os dados do perfil + média de avaliações + contagem
+DROP VIEW IF EXISTS public.marketplace_professionals_view;
 CREATE OR REPLACE VIEW public.marketplace_professionals_view AS
 SELECT 
     p.id,
@@ -31,6 +35,10 @@ SELECT
     p.instagram_url,
     p.city,
     p.state,
+    p.phone,
+    p.whatsapp,
+    p.telegram,
+    p.email,
     -- Cálculo da Média Geral (somando as 4 categorias e dividindo por 4, depois média das reviews)
     COALESCE(
         (
