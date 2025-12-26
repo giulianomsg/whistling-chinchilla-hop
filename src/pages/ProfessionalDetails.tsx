@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Loader2, Star, MapPin, Briefcase, Instagram, Linkedin, MessageCircle, ArrowLeft } from 'lucide-react'
+import { Loader2, Star, MapPin, Briefcase, Instagram, Linkedin, MessageCircle, ArrowLeft, User, FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -169,12 +169,46 @@ const ProfessionalDetails: React.FC = () => {
 
                 {/* Left Column: Bio & Details */}
                 <div className="md:col-span-2 space-y-8">
-                    <section>
-                        <h2 className="text-xl font-bold mb-4">Sobre o Profissional</h2>
-                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                            {professional.bio || "Nenhuma biografia disponível."}
-                        </p>
-                    </section>
+                    {/* Contact & Bio Card */}
+                    <Card className="bg-card border-border shadow-sm">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Sobre o Profissional</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {/* Tags / Info Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {professional.city || professional.state ? (
+                                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+                                        <div className="bg-primary/10 p-2 rounded-full"><MapPin className="h-4 w-4 text-primary" /></div>
+                                        <div>
+                                            <p className="text-xs text-muted-foreground uppercase font-semibold">Localização</p>
+                                            <p className="text-sm font-medium">{professional.city ? `${professional.city}, ` : ''}{professional.state || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                ) : null}
+
+                                <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+                                    <div className="bg-blue-500/10 p-2 rounded-full"><Briefcase className="h-4 w-4 text-blue-500" /></div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground uppercase font-semibold">Experiência</p>
+                                        <p className="text-sm font-medium">{professional.years_experience} Anos</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            {/* Bio */}
+                            <div>
+                                <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                                    <FileText className="h-4 w-4" /> Biografia
+                                </h3>
+                                <p className="text-foreground/90 leading-relaxed whitespace-pre-line text-sm md:text-base">
+                                    {professional.bio || "Nenhuma biografia disponível."}
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
 
                     <Separator />
 
