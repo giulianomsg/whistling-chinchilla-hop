@@ -16,7 +16,8 @@ import {
   MoreVertical,
   Settings,
   Calendar,
-  ShieldCheck
+  ShieldCheck,
+  Search
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -80,6 +81,7 @@ const DashboardLayout: React.FC = () => {
         { label: 'Meu Treino', icon: Dumbbell, path: '/app/my-workout' },
         { label: 'Minha Dieta', icon: Utensils, path: '/app/my-meal-plan' },
         { label: 'Meus Profissionais', icon: Users, path: '/app/my-professionals' },
+        { label: 'Encontrar Profissionais', icon: Search, path: '/app/marketplace' },
         { label: 'Agenda', icon: Calendar, path: '/app/agenda' },
       ]
     }
