@@ -8,7 +8,9 @@ ADD COLUMN IF NOT EXISTS specialties TEXT[] DEFAULT '{}',
 ADD COLUMN IF NOT EXISTS price_range TEXT, -- Ex: 'low', 'medium', 'high' ou faixas 'R$100-200'
 ADD COLUMN IF NOT EXISTS years_experience INTEGER DEFAULT 0,
 ADD COLUMN IF NOT EXISTS instagram_url TEXT,
-ADD COLUMN IF NOT EXISTS linkedin_url TEXT;
+ADD COLUMN IF NOT EXISTS linkedin_url TEXT,
+ADD COLUMN IF NOT EXISTS city TEXT,
+ADD COLUMN IF NOT EXISTS state TEXT;
 
 -- 2. Garantir que a tabela de reviews existe (caso a migration 0072 não tenha rodado ou para reforço)
 -- (Omitido pois já vimos no arquivo 0072, mas vamos garantir índices)
