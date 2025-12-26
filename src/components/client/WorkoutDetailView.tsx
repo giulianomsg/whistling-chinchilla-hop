@@ -55,7 +55,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   // Gamification State
   const [showSummaryModal, setShowSummaryModal] = useState(false)
-  const [summaryData, setSummaryData] = useState({ xpEarned: 0, currentXP: 0, newLevel: 1, oldLevel: 1 })
+  const [summaryData, setSummaryData] = useState({ xpEarned: 0, currentXP: 0, newLevel: 1, oldLevel: 1, workoutName: '', durationSeconds: 0, totalLoadKg: 0 })
 
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
@@ -361,11 +361,17 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             xpResult.details.forEach(d => showSuccess(d))
           }
 
+          // Calculate Total Load for Sharing
+          const totalLoadKg = enrichedLogs.reduce((acc, log) => acc + (log.weight || 0) * (log.reps || 0), 0)
+
           setSummaryData({
             xpEarned: xpGained,
             currentXP: newTotalXP,
             newLevel: newLevel,
-            oldLevel: currentLevel
+            oldLevel: currentLevel,
+            workoutName: clientWorkout.workout.name,
+            durationSeconds: elapsedTime,
+            totalLoadKg: totalLoadKg
           })
           setShowSummaryModal(true)
           if (refreshProfile) refreshProfile()
@@ -662,6 +668,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         currentXP={summaryData.currentXP}
         newLevel={summaryData.newLevel}
         oldLevel={summaryData.oldLevel}
+        workoutName={summaryData.workoutName}
+        durationSeconds={summaryData.durationSeconds}
+        totalLoadKg={summaryData.totalLoadKg}
       />
     </div>
   )

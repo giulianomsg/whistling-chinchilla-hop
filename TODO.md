@@ -120,7 +120,7 @@ No frontend, utilize um gráfico de radar (Spider Chart) para plotar o equilíbr
 
 3 - Feedback Visual: Na dashboard, exiba uma barra de progresso percentual para cada meta ativa (ex: 'Você já percorreu 80% do caminho para atingir 80kg').
 
-- [ ] Implemente funcionalidade de Compartilhamento Social (Social Sharing) focada em viralização do app.
+- [x] Implemente funcionalidade de Compartilhamento Social (Social Sharing) focada em viralização do app.
 
 1 - Geração de Assets: Utilize uma biblioteca (como html2canvas ou geração de OG Images no servidor) para criar uma imagem estática resumindo o treino finalizado. A imagem deve conter: Logo do App (Branding), Nome do Treino, Duração, Carga Total e uma frase de impacto ou nível atingido.
 
