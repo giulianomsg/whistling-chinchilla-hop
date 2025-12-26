@@ -28,17 +28,20 @@ SELECT
     p.id,
     p.full_name,
     p.avatar_url,
-    p.bio,
-    p.specialties,
-    p.price_range,
+    COALESCE(pd.bio, p.bio) as bio,
+    COALESCE(ARRAY[pd.specialty], p.specialties) as specialties,
+    pd.specialty as professional_type,
+    COALESCE(pd.consultation_price::text, p.price_range) as price_range,
     p.years_experience,
     p.instagram_url,
     p.city,
     p.state,
     p.phone,
-    p.whatsapp,
-    p.telegram,
+    COALESCE(pd.whatsapp, p.whatsapp) as whatsapp,
+    COALESCE(pd.telegram, p.telegram) as telegram,
     p.email,
+    p.data_nascimento,
+    pd.certifications,
     -- Cálculo da Média Geral (somando as 4 categorias e dividindo por 4, depois média das reviews)
     COALESCE(
         (
@@ -57,6 +60,7 @@ SELECT
         WHERE r.professional_id = p.id
     ) as review_count
 FROM public.profiles p
+LEFT JOIN public.professional_details pd ON pd.profile_id = p.id
 WHERE p.role = 'professional';
 
 -- 4. Função para buscar reviews com detalhes do autor (para a página de detalhes)

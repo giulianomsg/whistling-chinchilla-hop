@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Loader2, Star, MapPin, Briefcase, Instagram, Linkedin, MessageCircle, ArrowLeft, User, FileText, Mail, Phone, ExternalLink } from 'lucide-react'
+import { Loader2, Star, MapPin, Briefcase, Instagram, Linkedin, MessageCircle, ArrowLeft, User, FileText, Mail, Phone, ExternalLink, Scroll, Calendar } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -27,6 +27,9 @@ interface FullProfessional {
     whatsapp: string | null
     telegram: string | null
     email: string | null
+    data_nascimento: string | null
+    professional_type: string | null
+    certifications: any
     overall_rating: number
     review_count: number
 }
@@ -89,6 +92,18 @@ const ProfessionalDetails: React.FC = () => {
         // Navigate to chat with a special state/param
         // We will need to update Chat.tsx to handle this
         navigate('/app/chat', { state: { startChatWith: professional?.id } })
+    }
+
+    const calculateAge = (dateString: string | null) => {
+        if (!dateString) return null
+        const today = new Date()
+        const birthDate = new Date(dateString)
+        let age = today.getFullYear() - birthDate.getFullYear()
+        const m = today.getMonth() - birthDate.getMonth()
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--
+        }
+        return age
     }
 
     if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8 text-primary" /></div>
@@ -181,6 +196,15 @@ const ProfessionalDetails: React.FC = () => {
                         <CardContent className="space-y-6">
                             {/* Tags / Info Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {professional.professional_type && (
+                                    <div className="sm:col-span-2 flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border/50">
+                                        <Badge variant="default" className="text-sm px-3 py-1 capitalize">
+                                            {professional.professional_type.replace('_', ' ')}
+                                        </Badge>
+                                        <span className="text-xs text-muted-foreground uppercase font-semibold">Profissional Verificado</span>
+                                    </div>
+                                )}
+
                                 {professional.city || professional.state ? (
                                     <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
                                         <div className="bg-primary/10 p-2 rounded-full"><MapPin className="h-4 w-4 text-primary" /></div>
@@ -199,12 +223,22 @@ const ProfessionalDetails: React.FC = () => {
                                     </div>
                                 </div>
 
+                                {professional.data_nascimento && (
+                                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+                                        <div className="bg-purple-500/10 p-2 rounded-full"><Calendar className="h-4 w-4 text-purple-500" /></div>
+                                        <div>
+                                            <p className="text-xs text-muted-foreground uppercase font-semibold">Idade</p>
+                                            <p className="text-sm font-medium">{calculateAge(professional.data_nascimento)} Anos</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {professional.email && (
                                     <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
                                         <div className="bg-orange-500/10 p-2 rounded-full"><Mail className="h-4 w-4 text-orange-500" /></div>
                                         <div className="overflow-hidden">
                                             <p className="text-xs text-muted-foreground uppercase font-semibold">Email</p>
-                                            <p className="text-sm font-medium truncate" title={professional.email}>{professional.email}</p>
+                                            <a href={`mailto:${professional.email}`} className="text-sm font-medium truncate hover:underline block" title={professional.email}>{professional.email}</a>
                                         </div>
                                     </div>
                                 )}
@@ -214,7 +248,7 @@ const ProfessionalDetails: React.FC = () => {
                                         <div className="bg-green-500/10 p-2 rounded-full"><Phone className="h-4 w-4 text-green-500" /></div>
                                         <div>
                                             <p className="text-xs text-muted-foreground uppercase font-semibold">Telefone</p>
-                                            <p className="text-sm font-medium">{professional.phone}</p>
+                                            <a href={`tel:${professional.phone}`} className="text-sm font-medium hover:underline">{professional.phone}</a>
                                         </div>
                                     </div>
                                 )}
@@ -224,12 +258,12 @@ const ProfessionalDetails: React.FC = () => {
                             {(professional.whatsapp || professional.telegram) && (
                                 <div className="flex flex-wrap gap-3">
                                     {professional.whatsapp && (
-                                        <Button variant="outline" className="gap-2 text-green-600 hover:text-green-700 border-green-200 bg-green-50 hover:bg-green-100" onClick={() => window.open(`https://wa.me/${professional.whatsapp.replace(/\D/g, '')}`, '_blank')}>
+                                        <Button variant="outline" className="gap-2 text-green-600 hover:text-green-700 border-green-200 bg-green-50 hover:bg-green-100" onClick={() => window.open(`https://wa.me/${professional.whatsapp?.replace(/\D/g, '')}`, '_blank')}>
                                             <MessageCircle className="h-4 w-4" /> WhatsApp
                                         </Button>
                                     )}
                                     {professional.telegram && (
-                                        <Button variant="outline" className="gap-2 text-blue-500 hover:text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100" onClick={() => window.open(`https://t.me/${professional.telegram.replace('@', '')}`, '_blank')}>
+                                        <Button variant="outline" className="gap-2 text-blue-500 hover:text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100" onClick={() => window.open(`https://t.me/${professional.telegram?.replace('@', '')}`, '_blank')}>
                                             <ExternalLink className="h-4 w-4" /> Telegram
                                         </Button>
                                     )}
@@ -247,6 +281,23 @@ const ProfessionalDetails: React.FC = () => {
                                     {professional.bio || "Nenhuma biografia disponível."}
                                 </p>
                             </div>
+
+                            {/* Certifications - Only show if exists */}
+                            {professional.certifications && (professional.certifications.raw_text || typeof professional.certifications === 'string') && (
+                                <>
+                                    <Separator />
+                                    <div>
+                                        <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                                            <Scroll className="h-4 w-4" /> Certificações & Qualificações
+                                        </h3>
+                                        <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
+                                            {typeof professional.certifications === 'string'
+                                                ? professional.certifications
+                                                : professional.certifications.raw_text}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
                     </Card>
 
