@@ -156,6 +156,57 @@ Ação Crítica (Call-to-Action): Implemente um botão flutuante ou fixo 'Inicia
 
 Lógica do Chat: Ao clicar, o sistema deve verificar se já existe um channel_id entre este aluno e este profissional. Se existir, redirecionar para /chat/{id}. Se não, criar o canal automaticamente antes de redirecionar.
 
+- [ ] Reimaginação do Módulo de Nutrição (Padrão Híbrido)
+Contexto: O sistema atual possui tabelas básicas (foods_library, meal_plans) que dependem de cadastro manual. Precisamos evoluir isso para um Sistema de Cache de Leitura (Read-Through Caching) integrado à API do FatSecret. O objetivo é que o banco de dados local cresça organicamente conforme os usuários buscam alimentos, garantindo independência futura da API.
+
+1. Atualização do Schema (Banco de Dados): Escreva as migrações SQL para adaptar a tabela public.foods_library:
+
+Identificador Externo: Adicione a coluna external_fatsecret_id (TEXT, UNIQUE, Nullable) para evitar duplicar alimentos já importados.
+
+Unidades de Medida: A coluna atual serving_size é apenas numérica. Adicione serving_unit (TEXT, ex: 'g', 'ml', 'fatia') e metric_serving_amount (NUMERIC) para normalizar tudo para gramas/ml para cálculos precisos.
+
+Controle de Origem: Adicione uma coluna source_type (ENUM: 'manual', 'fatsecret_api', 'system') para identificar a procedência.
+
+Índices: Crie índices GIN/B-Tree para busca rápida por name e external_fatsecret_id.
+
+2. Backend: Lógica de Busca Unificada (Hybrid Search Service): Crie um serviço/função (Node.js/Edge Function) chamado searchFoods(query) que opere na seguinte ordem:
+
+Busca Local: Execute um SELECT na foods_library usando ilike %query%.
+
+Busca Externa: Se a busca local retornar menos de 10 resultados, chame a API foods.search do FatSecret.
+
+Fusão: Retorne uma lista única para o frontend, marcando visualmente quais itens já estão no banco ("Salvo") e quais são da API ("Nuvem").
+
+3. Backend: Importação "Just-in-Time" (O Coração da Funcionalidade): Esta é a funcionalidade mais crítica. Implemente o endpoint importFood(fatsecret_id):
+
+Fluxo: Quando o usuário clica em um alimento da "Nuvem":
+
+O sistema verifica se external_fatsecret_id já existe no banco. Se sim, retorna o id (UUID) existente imediatamente.
+
+Se não, chama food.get.v2 na API para obter todos os macros e conversões.
+
+Normalização: Converte os dados da API para a estrutura da foods_library (ex: 100g como padrão).
+
+Persistência: Salva o novo registro na foods_library.
+
+Retorno: Devolve o novo UUID local.
+
+Resultado: O "Planejador de Dietas" (meal_plan_items) e os "Meus Alimentos" sempre referenciam o UUID local, nunca o ID da API. Isso garante que a dieta funcione 100% offline após a importação.
+
+4. Funcionalidade "Meus Alimentos":
+
+No frontend, crie uma aba "Meus Alimentos" que filtra foods_library onde created_by == auth.uid() OU onde o usuário marcou como favorito (crie uma tabela de junção user_favorite_foods se necessário).
+
+Permita que o usuário edite alimentos importados (ex: ajustar a marca), mas salve como uma cópia (is_custom = true) para não corromper o dado original da API para outros usuários.
+
+Gere:
+
+O SQL de migração (ALTER TABLE...).
+
+O pseudocódigo ou lógica TypeScript para o importFood.
+
+A query SQL para o Planejador de Dietas que consome esses dados híbridos.
+
 ## Correções
 - [x] Gifs de animação para os treinos não estão mostrados no treino do cliente.
 - [x] Previsualização de vídeos de treinos, gifs, instruções e dicas no card do cadastro do exercício, não funciona click no icone nada acontece.
