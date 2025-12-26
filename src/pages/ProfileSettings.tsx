@@ -22,6 +22,8 @@ import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
 import { useStrengthData } from '@/hooks/useStrengthData'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
+import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
+import GoalsManager from '@/components/goals/GoalsManager'
 
 
 // --- UTILITÁRIOS DE IMAGEM ---
@@ -535,6 +537,7 @@ const ProfileSettings: React.FC = () => {
                   <>
                     <TabsTrigger value="photos" className="px-4">Fotos</TabsTrigger>
                     <TabsTrigger value="assessments" className="px-4">Avaliações</TabsTrigger>
+                    <TabsTrigger value="goals" className="px-4">Metas</TabsTrigger>
                     <TabsTrigger value="anamnesis" className="px-4">Anamnese</TabsTrigger>
                     <TabsTrigger value="history" className="px-4">Histórico</TabsTrigger>
                     <TabsTrigger value="performance" className="px-4">Performance</TabsTrigger>
@@ -639,6 +642,8 @@ const ProfileSettings: React.FC = () => {
                   </Card>
                 </TabsContent>
 
+
+
                 <TabsContent value="assessments" className="mt-6">
                   <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
@@ -669,6 +674,12 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </CardContent>
                   </Card>
+                </TabsContent>
+
+
+
+                <TabsContent value="goals" className="mt-6">
+                  <GoalsManager clientId={user?.id} />
                 </TabsContent>
 
                 <TabsContent value="history" className="mt-6">
@@ -712,6 +723,8 @@ const ProfileSettings: React.FC = () => {
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+
 
                 <TabsContent value="anamnesis" className="mt-6 space-y-6">
                   <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
@@ -829,6 +842,8 @@ const ProfileSettings: React.FC = () => {
                   </Card>
                 </TabsContent>
 
+
+
                 <TabsContent value="performance" className="mt-6">
                   <Card className="bg-card border-border">
                     <CardHeader>
@@ -868,11 +883,17 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </CardContent>
                   </Card>
+                  {/* Seção de Analytics Detalhado */}
+                  <AnalyticsDashboard clientId={user?.id} />
                 </TabsContent>
+
+
 
                 <TabsContent value="achievements" className="mt-6">
                   <AchievementsList />
                 </TabsContent>
+
+
               </>
             )}
           </Tabs>

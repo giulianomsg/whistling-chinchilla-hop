@@ -78,7 +78,7 @@ Este arquivo serve como ponto central para acompanhar o progresso do projeto, ta
 
 - [x] Criar uma agenda para que o cliente possa agendar e consultar os treinos com o seu profissional, acessar os treinos executados para ver o histórico de treinos e detalhes, receber avisos de pedidos de feedbacks e avaliações, como medições e pesagens.
 
-- [ ] Desenvolva um módulo completo de Perfil de Força e Performance Relativa, utilizando padrões matemáticos do Powerlifting para classificar o nível do usuário. O sistema deve operar em três camadas de lógica:
+- [x] Desenvolva um módulo completo de Perfil de Força e Performance Relativa, utilizando padrões matemáticos do Powerlifting para classificar o nível do usuário. O sistema deve operar em três camadas de lógica:
 
 1 - Normalização de Carga (Estimativa de 1RM):
 
@@ -98,11 +98,11 @@ Crie uma estrutura de dados (JSON) que defina os níveis (Iniciante, Novato, Int
 
 O sistema deve cruzar o 1RM estimado com o peso atual do usuário para determinar em qual faixa ele se encontra para os exercícios base (Squat, Bench Press, Deadlift, Overhead Press).
 
-4 - Visualização de Dados (Radar Chart):
+- [x] 4 - Visualização de Dados (Radar Chart):
 
 No frontend, utilize um gráfico de radar (Spider Chart) para plotar o equilíbrio do usuário entre os 4 movimentos principais, permitindo identificar visualmente se ele tem, por exemplo, 'Pernas de Elite' mas 'Empurre de Iniciante'.
 
-[ ] Desenvolva a seção de Analytics e Progresso do usuário utilizando uma biblioteca de gráficos (como Recharts ou Chart.js).
+- [x] Desenvolva a seção de Analytics e Progresso do usuário utilizando uma biblioteca de gráficos (como Recharts ou Chart.js).
 
 1 - Eixo Temporal: Os gráficos devem ter o Eixo X como linha do tempo, permitindo filtros de período (Último mês, 3 meses, 1 ano, Tudo).
 
@@ -112,7 +112,7 @@ No frontend, utilize um gráfico de radar (Spider Chart) para plotar o equilíbr
 
 4 - Backend: Crie uma query otimizada que agrupe esses dados históricos para alimentar o frontend sem latência excessiva.
 
-- [ ] Crie o esquema de banco de dados e as interfaces para Biometria e Metas.
+- [x] Crie o esquema de banco de dados e as interfaces para Biometria e Metas.
 
 1 - Histórico de Medidas: Crie uma tabela body_measurements (peso, % gordura, circunferências: braço, cintura, coxa, peito). A interface deve permitir adicionar novos registros datados e visualizar uma tabela histórica.
 
