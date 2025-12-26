@@ -8,10 +8,14 @@ import { Contact, ChatMessage } from '@/components/chat/types'
 import ContactsList from '@/components/chat/ContactsList'
 import ChatArea from '@/components/chat/ChatArea'
 
+import { useLocation } from 'react-router-dom'
+// ... imports
+
 const Chat: React.FC = () => {
   const { user, profile } = useAuth()
   const { refreshUnreadCount } = useChat()
   const isMobile = useIsMobile()
+  const location = useLocation()
 
   const [contacts, setContacts] = useState<Contact[]>([])
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -202,6 +206,51 @@ const Chat: React.FC = () => {
   }, [user, selectedContact])
 
   useEffect(() => { fetchContacts() }, [user, profile])
+
+  // Handle Marketplace "Start Chat"
+  useEffect(() => {
+    const handleStartChat = async () => {
+      const state = location.state as { startChatWith?: string } | null
+      if (state?.startChatWith && user) {
+        const targetId = state.startChatWith
+
+        // 1. Check if already in contacts
+        const existing = contacts.find(c => c.id === targetId)
+        if (existing) {
+          setSelectedContact(existing)
+          fetchMessages(existing.id)
+        } else {
+          // 2. If not, fetch profile and add to list temporarily
+          try {
+            const { data } = await supabase.from('profiles').select('*').eq('id', targetId).single()
+            if (data) {
+              // Determine logic for roles if needed, but for now just add
+              const newContact: Contact = {
+                id: data.id,
+                email: data.email || '', // Fix type error
+                full_name: data.full_name,
+                avatar_url: data.avatar_url,
+                role: data.role,
+                unread_count: 0
+              }
+              setContacts(prev => [newContact, ...prev])
+              setSelectedContact(newContact)
+              fetchMessages(newContact.id)
+            }
+          } catch (e) {
+            console.error("Error fetching target chat profile", e)
+          }
+        }
+        // Clear state so it doesn't persist on reload weirdly
+        window.history.replaceState({}, document.title)
+      }
+    }
+
+    // Only run if we are done loading contacts (or if contacts list is empty but loading is false)
+    if (!loading) {
+      handleStartChat()
+    }
+  }, [loading, location.state, user])
 
   return (
     <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-border shadow-2xl">

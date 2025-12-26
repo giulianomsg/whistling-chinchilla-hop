@@ -31,6 +31,8 @@ const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página
 const ClientProfessionals = lazy(() => import("./pages/ClientProfessionals")); // Nova Página Meus Profissionais
 const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // Nova Página Agenda Global
 const AdminUsers = lazy(() => import("./pages/AdminUsers")); // Nova Página Admin Users
+const ProfessionalMarketplace = lazy(() => import("./pages/ProfessionalMarketplace"));
+const ProfessionalDetails = lazy(() => import("./pages/ProfessionalDetails"));
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
@@ -252,6 +254,28 @@ const AppRoutes: React.FC = () => {
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
                 <ClientProfessionals />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+
+        {/* Marketplace (Clientes) */}
+        <Route
+          path="marketplace"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ProfessionalMarketplace />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+        <Route
+          path="marketplace/:id"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ProfessionalDetails />
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }

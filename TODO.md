@@ -128,6 +128,34 @@ No frontend, utilize um gráfico de radar (Spider Chart) para plotar o equilíbr
 
 3 - Link de Indicação: No texto compartilhado, inclua um link parametrizado (ex: capifit.app/ref=USER_ID) para rastrear novos cadastros vindos desse compartilhamento (preparando terreno para um futuro sistema de rewards).
 
+- [x] Implemente o módulo 'Marketplace de Profissionais' para o perfil do Aluno. A funcionalidade deve ser dividida em três camadas de implementação:
+
+Arquitetura de Dados (Backend/Supabase):
+
+Estenda a tabela de perfis para incluir campos específicos de profissional: bio, specialties (array de tags ex: ['Hipertrofia', 'Reabilitação']), price_range e years_experience.
+
+Crie uma tabela reviews vinculada ao profissional, contendo: rating (1-5), comment (texto), author_id (aluno) e timestamps.
+
+Crie uma View ou Function SQL que retorne a lista de profissionais já com a média calculada (average_rating) e a contagem de avaliações (review_count) para evitar N+1 queries no frontend.
+
+Interface de Listagem (Discovery UI):
+
+Desenvolva uma página com layout em Grid (Cards).
+
+Filtros: Adicione uma barra lateral ou topo para filtrar por Especialidade (Tags) e ordenar por 'Melhor Avaliados'.
+
+Card do Profissional: Deve exibir Foto, Nome, Especialidades (badges), Nota Média (estrelas) e um resumo da Bio.
+
+Perfil Detalhado e Conversão:
+
+Ao clicar no card, abrir a página ProfessionalDetails.
+
+Exibir a lista completa de feedbacks (comentários dos alunos).
+
+Ação Crítica (Call-to-Action): Implemente um botão flutuante ou fixo 'Iniciar Conversa' (ícone de Chat).
+
+Lógica do Chat: Ao clicar, o sistema deve verificar se já existe um channel_id entre este aluno e este profissional. Se existir, redirecionar para /chat/{id}. Se não, criar o canal automaticamente antes de redirecionar.
+
 ## Correções
 - [x] Gifs de animação para os treinos não estão mostrados no treino do cliente.
 - [x] Previsualização de vídeos de treinos, gifs, instruções e dicas no card do cadastro do exercício, não funciona click no icone nada acontece.
