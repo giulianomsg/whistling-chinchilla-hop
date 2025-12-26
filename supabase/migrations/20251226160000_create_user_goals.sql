@@ -37,7 +37,7 @@ create policy "Professionals can view client goals"
   on user_goals for select
   using (
     exists (
-      select 1 from professional_clients pc
+      select 1 from client_professionals pc
       where pc.client_id = user_goals.client_id
       and pc.professional_id = auth.uid()
     )
