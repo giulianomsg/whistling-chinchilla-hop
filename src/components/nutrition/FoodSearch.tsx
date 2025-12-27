@@ -25,6 +25,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState<any[]>([])
     const [loading, setLoading] = useState(false)
+    const [translate, setTranslate] = useState(false)
     const [importingId, setImportingId] = useState<string | null>(null)
 
     const handleSearch = async (searchQuery: string) => {
