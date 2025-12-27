@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { fatsecret_id } = await req.json()
+        const { fatsecret_id, translate } = await req.json()
         if (!fatsecret_id) throw new Error('fatsecret_id is required')
 
         const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
                 'Content-Type': 'application/json',
                 'x-proxy-secret': proxySecret
             },
-            body: JSON.stringify({ food_id: fatsecret_id })
+            body: JSON.stringify({ food_id: fatsecret_id, translate: translate })
         })
 
         if (!foodResp.ok) {

@@ -35,7 +35,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
         setLoading(true)
         try {
             const { data, error } = await supabase.functions.invoke('search-foods', {
-                body: { query: searchQuery }
+                body: { query: searchQuery, translate } // Passed translate flag
             })
             if (error) throw error
             setResults(data.foods || [])
@@ -72,7 +72,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
         setImportingId(food.external_fatsecret_id)
         try {
             const { data, error } = await supabase.functions.invoke('import-food', {
-                body: { fatsecret_id: food.external_fatsecret_id }
+                body: { fatsecret_id: food.external_fatsecret_id, translate }
             })
 
             if (error) throw error
@@ -111,7 +111,11 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
                 </DialogHeader>
 
                 <div className="space-y-4">
-                    <div className="flex justify-end">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="translate" checked={translate} onChange={e => setTranslate(e.target.checked)} className="rounded border-gray-300" />
+                            <label htmlFor="translate" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Traduzir (BETA)</label>
+                        </div>
                         <Button variant="ghost" size="sm" onClick={async () => {
                             try {
                                 const { data } = await supabase.functions.invoke('search-foods', { body: { debug: true, query: 'test' } })

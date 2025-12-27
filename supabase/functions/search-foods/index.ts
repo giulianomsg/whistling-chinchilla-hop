@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { query, debug } = await req.json()
+        const { query, debug, translate } = await req.json()
 
         // DEBUG MODE
         if (debug) {
@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
                         },
                         body: JSON.stringify({
                             query: query,
-                            max_results: 10 - results.length
+                            max_results: 10 - results.length,
+                            translate: translate
                         })
                     })
 

@@ -51,24 +51,60 @@ const getAccessToken = async () => {
 };
 
 app.post('/search', authenticate, async (req, res) => {
+    const { query, max_results, translate: doTranslate } = req.body; // Added translate param
+
     try {
-        const { query, max_results = 10 } = req.body;
         if (!query) return res.status(400).json({ error: 'Query required' });
 
         const token = await getAccessToken();
+
+        let searchQuery = query;
+        if (doTranslate) {
+            try {
+                // 1. Translate Query (PT -> EN)
+                const tRes = await translate(query, { to: 'en' });
+                if (tRes.text) searchQuery = tRes.text;
+                console.log(`[Translate] Query: '${query}' -> '${searchQuery}'`);
+            } catch (e) {
+                console.error('Translation error (query):', e.message);
+            }
+        }
+
         const response = await axios.get('https://platform.fatsecret.com/rest/server.api', {
             params: {
                 method: 'foods.search',
                 format: 'json',
-                search_expression: query,
-                max_results: max_results,
-                region: 'BR',
-                language: 'pt'
+                search_expression: searchQuery,
+                max_results: max_results
             },
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        res.json(response.data);
+        let data = response.data;
+
+        if (doTranslate && data.foods && data.foods.food) {
+            // 2. Translate Results (EN -> PT)
+            // Handle single or array results
+            const foods = Array.isArray(data.foods.food) ? data.foods.food : [data.foods.food];
+
+            // Translate names in parallel batch (avoid spamming api too fast, but here we do batch)
+            // google-translate-api-x supports array input, let's try mapping manually for safety/control
+            await Promise.all(foods.map(async (f) => {
+                try {
+                    const tName = await translate(f.food_name, { to: 'pt', from: 'en' });
+                    f.food_name = tName.text;
+
+                    if (f.food_description) {
+                        // descriptions are like "Per 100g - Calories: 100kcal | Fat: 2g..."
+                        // Translating this might break parsing if we rely on regex later, 
+                        // but for display it's nice. Let's keep it minimal for now or translate.
+                        // f.food_description = (await translate(f.food_description, { to: 'pt' })).text;
+                    }
+                } catch (e) { console.error('Translation error (result):', e.message); }
+            }));
+        }
+
+        res.json(data);
     } catch (error) {
         console.error('Search Error:', error.response?.data || error.message);
         res.status(error.response?.status || 500).json({ error: error.message });
@@ -76,7 +112,7 @@ app.post('/search', authenticate, async (req, res) => {
 });
 
 app.post('/food', authenticate, async (req, res) => {
-    const { food_id } = req.body;
+    const { food_id, translate: doTranslate } = req.body;
 
     if (!food_id) return res.status(400).json({ error: 'Missing food_id' });
 
@@ -86,17 +122,48 @@ app.post('/food', authenticate, async (req, res) => {
             params: {
                 method: 'food.get.v2',
                 format: 'json',
-                food_id: food_id,
-                region: 'BR',
-                language: 'pt'
+                food_id: food_id
             },
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        res.json(response.data);
+        let data = response.data;
+
+        if (doTranslate && data.food) {
+            try {
+                // Translate Name
+                const tName = await translate(data.food.food_name, { to: 'pt', from: 'en' });
+                data.food.food_name = tName.text;
+
+                // Translate Brand (if exists)
+                if (data.food.brand_name) {
+                    const tBrand = await translate(data.food.brand_name, { to: 'pt', from: 'en' });
+                    data.food.brand_name = tBrand.text;
+                }
+
+                // Servings names (e.g., "1 cup", "1 oz")
+                if (data.food.servings && data.food.servings.serving) {
+                    const servings = Array.isArray(data.food.servings.serving) ? data.food.servings.serving : [data.food.servings.serving];
+                    await Promise.all(servings.map(async (s) => {
+                        if (s.serving_description) {
+                            const tDesc = await translate(s.serving_description, { to: 'pt', from: 'en' });
+                            s.serving_description = tDesc.text;
+                        }
+                        if (s.measurement_description) {
+                            const tMeas = await translate(s.measurement_description, { to: 'pt', from: 'en' });
+                            s.measurement_description = tMeas.text;
+                        }
+                    }));
+                }
+            } catch (e) {
+                console.error('Translation error (food detail):', e.message);
+            }
+        }
+
+        res.json(data);
     } catch (error) {
-        console.error('Get Food error:', error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data || 'Proxied Get Food Failed' });
+        console.error('Food Get Error:', error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ error: error.response?.data || 'Proxied Get Food Failed' });
     }
 });
 
