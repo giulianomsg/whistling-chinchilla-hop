@@ -38,6 +38,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
             const { data, error } = await supabase.functions.invoke('search-foods', {
                 body: { query: searchQuery, translate } // Passed translate flag
             })
+            console.log('SEARCH RESPONSE (Frontend):', data); // DEBUG LOG
             if (error) throw error
             setResults(data.foods || [])
         } catch (err) {

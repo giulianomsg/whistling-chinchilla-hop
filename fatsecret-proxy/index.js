@@ -64,7 +64,7 @@ app.post('/search', authenticate, async (req, res) => {
                 // 1. Translate Query (PT -> EN)
                 const tRes = await translate(query, { to: 'en' });
                 if (tRes.text) searchQuery = tRes.text;
-                console.log(`[Translate] Query: '${query}' -> '${searchQuery}'`);
+                console.log(`[Translate DEBUG] Original: '${query}' -> Translated: '${searchQuery}'`);
             } catch (e) {
                 console.error('Translation error (query):', e.message);
             }
@@ -75,33 +75,38 @@ app.post('/search', authenticate, async (req, res) => {
                 method: 'foods.search',
                 format: 'json',
                 search_expression: searchQuery,
-                max_results: max_results
+                max_results: max_results,
+                // Force US/EN to ensure translation source is consistent
+                region: 'US',
+                language: 'en'
             },
             headers: { Authorization: `Bearer ${token}` }
         });
 
         let data = response.data;
+        console.log('[Proxy DEBUG] FatSecret Response Status:', response.status);
 
         if (doTranslate && data.foods && data.foods.food) {
+            console.log('[Proxy DEBUG] Translating results...');
             // 2. Translate Results (EN -> PT)
             // Handle single or array results
             const foods = Array.isArray(data.foods.food) ? data.foods.food : [data.foods.food];
 
-            // Translate names in parallel batch (avoid spamming api too fast, but here we do batch)
-            // google-translate-api-x supports array input, let's try mapping manually for safety/control
+            // Translate names in parallel batch
             await Promise.all(foods.map(async (f) => {
                 try {
+                    const originalName = f.food_name;
                     const tName = await translate(f.food_name, { to: 'pt', from: 'en' });
                     f.food_name = tName.text;
+                    console.log(`[Translate DEBUG] Food: '${originalName}' -> '${f.food_name}'`);
 
                     if (f.food_description) {
-                        // descriptions are like "Per 100g - Calories: 100kcal | Fat: 2g..."
-                        // Translating this might break parsing if we rely on regex later, 
-                        // but for display it's nice. Let's keep it minimal for now or translate.
-                        // f.food_description = (await translate(f.food_description, { to: 'pt' })).text;
+                        // Optional: Translate description too or leave as is
                     }
                 } catch (e) { console.error('Translation error (result):', e.message); }
             }));
+        } else {
+            console.log('[Proxy DEBUG] No translation performed on results (translate flag: ' + doTranslate + ', foods found: ' + (!!data.foods) + ')');
         }
 
         res.json(data);
