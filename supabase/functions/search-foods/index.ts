@@ -16,38 +16,23 @@ Deno.serve(async (req) => {
 
         // DEBUG MODE
         if (debug) {
-            const clientId = Deno.env.get('FATSECRET_CLIENT_ID')
-            const clientSecret = Deno.env.get('FATSECRET_CLIENT_SECRET')
+            const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+            const proxySecret = Deno.env.get('PROXY_SECRET')
 
-            if (!clientId || !clientSecret) return new Response(JSON.stringify({ error: 'Missing Keys', stage: 'env' }), { headers: corsHeaders })
+            if (!proxyUrl || !proxySecret) return new Response(JSON.stringify({ error: 'Missing Proxy Keys', stage: 'env' }), { headers: corsHeaders })
 
             try {
-                // 1. Get Token
-                const tokenResp = await fetch('https://oauth.fatsecret.com/connect/token', {
+                // Test Proxy Connection
+                const searchResp = await fetch(`${proxyUrl}/search`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `grant_type=client_credentials&scope=basic&client_id=${clientId}&client_secret=${clientSecret}`
-                })
-                const tokenData = await tokenResp.json()
-
-                if (!tokenResp.ok || !tokenData.access_token) {
-                    return new Response(JSON.stringify({
-                        stage: 'oauth2_token_fail',
-                        status: tokenResp.status,
-                        error: tokenData
-                    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-                }
-
-                // 2. Try Search (Force test)
-                const testQuery = query || 'apple'
-
-                // FatSecret sometimes strictly checks Accept header or User-Agent
-                const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search.v2&format=json&search_expression=${encodeURIComponent(testQuery)}&max_results=3`, {
                     headers: {
-                        Authorization: `Bearer ${tokenData.access_token}`,
                         'Content-Type': 'application/json',
-                        'X-Forwarded-For': req.headers.get('x-forwarded-for') || '127.0.0.1'
-                    }
+                        'x-proxy-secret': proxySecret
+                    },
+                    body: JSON.stringify({
+                        query: 'test_apple',
+                        max_results: 1
+                    })
                 })
 
                 const searchText = await searchResp.text()
@@ -55,14 +40,14 @@ Deno.serve(async (req) => {
                 try { searchJson = JSON.parse(searchText) } catch (e) { }
 
                 return new Response(JSON.stringify({
-                    stage: 'fatsecret_search_test',
-                    query: testQuery,
+                    stage: 'proxy_debug_test',
+                    proxy_url: proxyUrl,
                     status: searchResp.status,
                     raw_body: searchText,
                     parsed: searchJson
                 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-            } catch (err) {
-                return new Response(JSON.stringify({ error: err.message, stage: 'fetch_error_debug' }), { headers: corsHeaders })
+            } catch (err: any) {
+                return new Response(JSON.stringify({ error: err.message, stage: 'proxy_fetch_error' }), { headers: corsHeaders })
             }
         }
 

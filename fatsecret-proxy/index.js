@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const CLIENT_ID = process.env.FATSECRET_CLIENT_ID;
 const CLIENT_SECRET = process.env.FATSECRET_CLIENT_SECRET;
 const PROXY_SECRET = process.env.PROXY_SECRET;

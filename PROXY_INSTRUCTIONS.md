@@ -14,7 +14,7 @@ Para contornar o bloqueio de IP do FatSecret, criamos um serviço de Proxy. Siga
     ```
 3.  Configure o `.env` (Crie baseado no `.env.example`):
     ```env
-    PORT=3000
+    PORT=3001
     FATSECRET_CLIENT_ID=seu_client_id_aqui
     FATSECRET_CLIENT_SECRET=seu_client_secret_aqui
     PROXY_SECRET=crie_uma_senha_forte_aqui
@@ -24,13 +24,17 @@ Para contornar o bloqueio de IP do FatSecret, criamos um serviço de Proxy. Siga
     pm2 start index.js --name "fatsecret-proxy"
     pm2 save
     ```
-5.  Certifique-se que a porta 3000 (ou a que escolheu) está liberada no Firewall ou configure um Nginx Reverso se preferir usar HTTPS/dominio.
+    *Se já estiver rodando, reinicie:*
+    ```bash
+    pm2 restart fatsecret-proxy
+    ```
+5.  Certifique-se que a porta 3001 (ou a que escolheu) está liberada no Firewall ou configure um Nginx Reverso se preferir usar HTTPS/dominio.
 
 ## 2. No Dashboard do Supabase
 
 Vá em **Settings > Edge Functions** (ou Secrets) e adicione as seguintes variáveis:
 
-*   `VPS_PROXY_URL`: `http://SEU_IP_DA_VPS:3000` (ou seu dominio com https)
+*   `VPS_PROXY_URL`: `http://SEU_IP_DA_VPS:3001` (ou seu dominio com https)
 *   `PROXY_SECRET`: A mesma senha que você colocou no `.env` da VPS.
 
 *Nota: Você pode remover as chaves `FATSECRET_CLIENT_ID` e `FATSECRET_CLIENT_SECRET` do Supabase se quiser, pois agora elas ficam apenas na VPS.*
