@@ -91,6 +91,22 @@ Deno.serve(async (req) => {
             protein: p(targetServing.protein),
             carbs: p(targetServing.carbohydrate),
             fat: p(targetServing.fat),
+
+            // New micronutrients
+            fiber: p(targetServing.fiber),
+            sugar: p(targetServing.sugar),
+            sodium: p(targetServing.sodium),
+            potassium: p(targetServing.potassium),
+            cholesterol: p(targetServing.cholesterol),
+            fat_saturated: p(targetServing.saturated_fat),
+            fat_trans: p(targetServing.trans_fat),
+            fat_monounsaturated: p(targetServing.monounsaturated_fat),
+            fat_polyunsaturated: p(targetServing.polyunsaturated_fat),
+            vitamin_a: p(targetServing.vitamin_a),
+            vitamin_c: p(targetServing.vitamin_c),
+            calcium: p(targetServing.calcium),
+            iron: p(targetServing.iron),
+
             serving_size: 100,
             serving_unit: 'g',
             metric_serving_amount: 100,
