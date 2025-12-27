@@ -23,6 +23,15 @@ Deno.serve(async (req) => {
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+        // 0. Get User ID from Auth Header
+        const authHeader = req.headers.get('Authorization')
+        if (!authHeader) throw new Error('Missing Authorization Header')
+
+        const token = authHeader.replace('Bearer ', '')
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+
+        if (authError || !user) throw new Error('User authentication failed')
+
         // 1. Check if exists
         const { data: existing } = await supabase
             .from('foods_library')
@@ -111,7 +120,8 @@ Deno.serve(async (req) => {
             serving_unit: 'g',
             metric_serving_amount: 100,
             source_type: 'fatsecret_api',
-            is_public: true
+            is_public: true,
+            created_by: user.id
         }
 
         const { data: inserted, error: insertError } = await supabase
