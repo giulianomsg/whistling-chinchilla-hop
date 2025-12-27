@@ -1,11 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { hmac } from "https://cdnjs.cloudflare.com/ajax/libs/hash.js/1.1.7/hash.min.js";
-// We generally avoid OAuth 1.0 logic in modern apps if posssible, but here is a simplified version if user insists.
-// BUT WAIT. FatSecret OAuth 2.0 (Client Credentials) does NOT require IP Allowlisting strictness usually for Basic tier?
-// Actually, FatSecret OAuth 2.0 "Client Credentials Grant" is standard and works from Server-to-Server.
-// If the user says they need IP Whitelisting, they might be using "REST API" Premier or restrict settings.
-// However, implementing OAuth 1.0 is extremely verbose and error prone (Timestamp, Nonce, Signature Base String...).
-// BETTER APPROACH: Add a debug endpoint to TEST the connection and return exact error from FatSecret.
+
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
