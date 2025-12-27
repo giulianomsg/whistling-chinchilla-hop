@@ -91,9 +91,17 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
                 onSelect(fullFood)
                 setOpen(false)
             }
-        } catch (err) {
-            console.error(err)
-            showError('Erro ao importar alimento')
+        } catch (err: any) {
+            console.error('Import/Search Error:', err)
+            // Supabase functions invoke error usually has context
+            if (err.context && err.context.json) {
+                err.context.json().then((e: any) => {
+                    console.error('Detailed Function Error:', e)
+                    showError(`Erro: ${e.error || 'Falha ao importar'}`)
+                }).catch(() => showError('Erro ao importar alimento'))
+            } else {
+                showError(`Erro: ${err.message || 'Falha ao importar'}`)
+            }
         } finally {
             setImportingId(null)
         }
