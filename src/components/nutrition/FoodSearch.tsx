@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Search, Loader2, Cloud, Database, Plus } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { supabase } from '@/integrations/supabase/client'
@@ -105,9 +105,9 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
             <DialogContent className="bg-card border-border text-foreground w-[90%] max-w-md">
                 <DialogHeader>
                     <DialogTitle>Buscar Alimento</DialogTitle>
-                    <div className="text-sm text-muted-foreground">
+                    <DialogDescription>
                         Busque alimentos da nossa base de dados ou da nuvem.
-                    </div>
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
