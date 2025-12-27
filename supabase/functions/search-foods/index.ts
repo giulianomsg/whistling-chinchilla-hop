@@ -111,6 +111,8 @@ Deno.serve(async (req) => {
                             name: f.food_name,
                             external_fatsecret_id: f.food_id,
                             description: f.food_description,
+                            brand: f.brand_name,
+                            fatsecret_type: f.food_type,
                             source: 'cloud',
                             saved: false
                         }))
