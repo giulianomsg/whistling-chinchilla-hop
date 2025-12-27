@@ -28,3 +28,4 @@ USING (auth.uid() = user_id);
 -- Add indexes
 CREATE INDEX IF NOT EXISTS "idx_user_favorite_foods_user" ON "public"."user_favorite_foods" ("user_id");
 CREATE INDEX IF NOT EXISTS "idx_user_favorite_foods_food" ON "public"."user_favorite_foods" ("food_id");
+
