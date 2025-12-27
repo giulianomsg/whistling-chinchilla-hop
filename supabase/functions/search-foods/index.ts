@@ -28,7 +28,8 @@ Deno.serve(async (req) => {
 
             try {
                 // Test Proxy Connection
-                const searchResp = await fetch(`${proxyUrl}/search`, {
+                const targetUrl = `${proxyUrl}/search`
+                const searchResp = await fetch(targetUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -46,13 +47,19 @@ Deno.serve(async (req) => {
 
                 return new Response(JSON.stringify({
                     stage: 'proxy_debug_test',
-                    proxy_url: proxyUrl,
+                    target_url: targetUrl, // DEBUG: Show what we hit
                     status: searchResp.status,
+                    status_text: searchResp.statusText,
                     raw_body: searchText,
                     parsed: searchJson
                 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
             } catch (err: any) {
-                return new Response(JSON.stringify({ error: err.message, stage: 'proxy_fetch_error' }), { headers: corsHeaders })
+                return new Response(JSON.stringify({
+                    error: err.message,
+                    stack: err.stack,
+                    stage: 'proxy_fetch_error',
+                    target_url: `${proxyUrl}/search`
+                }), { headers: corsHeaders })
             }
         }
 
