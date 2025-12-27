@@ -1,22 +1,27 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
     if (req.method === 'OPTIONS') {
-        return new Response('ok', { headers: corsHeaders })
+        return new Response(null, { headers: corsHeaders })
     }
 
     try {
         const { fatsecret_id } = await req.json()
         if (!fatsecret_id) throw new Error('fatsecret_id is required')
 
-        const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-        const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')! // Use Service Role to write system foods
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')
+        const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') // Use Service Role to write system foods
+
+        if (!supabaseUrl || !supabaseServiceKey) {
+            throw new Error('CONFIG_ERROR: Missing Supabase URL or Service Key')
+        }
+
         const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
         // 1. Check if exists
@@ -67,7 +72,7 @@ serve(async (req) => {
         // If the API gives us `calcium` for `30g`, we need to math it to `100g`.
 
         const baseAmount = parseFloat(targetServing.metric_serving_amount || '100')
-        const multiplier = 100 / baseAmount // To get to 100g/ml
+        const multiplier = 100 / (baseAmount || 1) // To get to 100g/ml check div by zero
 
         // Helper to parse
         const p = (val: string) => parseFloat(val || '0') * multiplier
@@ -86,16 +91,6 @@ serve(async (req) => {
             is_public: true
         }
 
-        // Note: I need to verify actual column names in foods_library.
-        // Assuming standard names: calories, protein, carbs, fat (or carbohydrates, fats check DB schema if possible but I can't read it easily).
-        // From MealPlanner.tsx line 186-189: "prot", "carb", "fat", "kcal".
-        // But those are for `meal_plans`. `foods_library` columns?
-        // In MealPlanner line 98: `quantity` references `meal_plan_items`.
-        // I haven't seen `foods_library` columns. I should have checked.
-        // I will do a quick check on `foods_library` columns by checking `MealPlanDetailView` or similar if possible.
-        // But I will assume standard snake_case based on `meal_plans` schema `daily_calories_target`. 
-        // Usually foods have `calories`, `proteins`, `carbs`, `fats`.
-
         const { data: inserted, error: insertError } = await supabase
             .from('foods_library')
             .insert(newFood)
@@ -108,7 +103,7 @@ serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
 
-    } catch (error) {
+    } catch (error: any) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },

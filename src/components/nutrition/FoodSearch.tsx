@@ -105,6 +105,9 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
             <DialogContent className="bg-card border-border text-foreground w-[90%] max-w-md">
                 <DialogHeader>
                     <DialogTitle>Buscar Alimento</DialogTitle>
+                    <div className="text-sm text-muted-foreground">
+                        Busque alimentos da nossa base de dados ou da nuvem.
+                    </div>
                 </DialogHeader>
 
                 <div className="space-y-4">

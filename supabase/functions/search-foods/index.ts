@@ -1,14 +1,15 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+    // Handle CORS preflight requests
     if (req.method === 'OPTIONS') {
-        return new Response('ok', { headers: corsHeaders })
+        return new Response(null, { headers: corsHeaders })
     }
 
     try {
@@ -16,8 +17,13 @@ serve(async (req) => {
         if (!query) throw new Error('Query is required')
 
         // Initialize Supabase Client
-        const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-        const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')
+        const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')
+
+        if (!supabaseUrl || !supabaseKey) {
+            throw new Error('CONFIG_ERROR: Missing Supabase URL or Key')
+        }
+
         const supabase = createClient(supabaseUrl, supabaseKey)
 
         // 1. Local Search
@@ -29,7 +35,7 @@ serve(async (req) => {
 
         if (localError) throw localError
 
-        let results = localFoods.map(f => ({ ...f, source: 'local', saved: true }))
+        let results = localFoods.map((f: any) => ({ ...f, source: 'local', saved: true }))
 
         // 2. External Search (if needed)
         if (results.length < 10) {
@@ -43,31 +49,37 @@ serve(async (req) => {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `grant_type=client_credentials&scope=basic&client_id=${clientId}&client_secret=${clientSecret}`
                 })
-                const { access_token } = await tokenResp.json()
 
-                if (access_token) {
-                    // Call FatSecret Search
-                    const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search&format=json&search_expression=${encodeURIComponent(query)}&max_results=${10 - results.length}`, {
-                        headers: { Authorization: `Bearer ${access_token}` }
-                    })
-                    const searchData = await searchResp.json()
-                    const externalFoods = searchData?.foods?.food || []
+                if (tokenResp.ok) {
+                    const { access_token } = await tokenResp.json()
 
-                    // Map external foods
-                    const mappedExternal = (Array.isArray(externalFoods) ? externalFoods : [externalFoods]).map((f: any) => ({
-                        id: null, // No local ID yet
-                        name: f.food_name,
-                        external_fatsecret_id: f.food_id,
-                        description: f.food_description, // Usually contains calories info string
-                        source: 'cloud',
-                        saved: false
-                    }))
+                    if (access_token) {
+                        // Call FatSecret Search
+                        const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search&format=json&search_expression=${encodeURIComponent(query)}&max_results=${10 - results.length}`, {
+                            headers: { Authorization: `Bearer ${access_token}` }
+                        })
 
-                    // check for duplicates by external_fatsecret_id in local results (optional optimization)
-                    const localIds = new Set(results.map(r => r.external_fatsecret_id))
-                    const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
+                        if (searchResp.ok) {
+                            const searchData = await searchResp.json()
+                            const externalFoods = searchData?.foods?.food || []
 
-                    results = [...results, ...uniqueExternal]
+                            // Map external foods
+                            const mappedExternal = (Array.isArray(externalFoods) ? externalFoods : [externalFoods]).map((f: any) => ({
+                                id: null, // No local ID yet
+                                name: f.food_name,
+                                external_fatsecret_id: f.food_id,
+                                description: f.food_description, // Usually contains calories info string
+                                source: 'cloud',
+                                saved: false
+                            }))
+
+                            // check for duplicates by external_fatsecret_id in local results (optional optimization)
+                            const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
+                            const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
+
+                            results = [...results, ...uniqueExternal]
+                        }
+                    }
                 }
             }
         }
@@ -76,7 +88,7 @@ serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
 
-    } catch (error) {
+    } catch (error: any) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
