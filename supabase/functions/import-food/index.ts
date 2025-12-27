@@ -36,21 +36,27 @@ Deno.serve(async (req) => {
             })
         }
 
-        // 2. Fetch from API
-        const clientId = Deno.env.get('FATSECRET_CLIENT_ID')
-        const clientSecret = Deno.env.get('FATSECRET_CLIENT_SECRET')
+        // 2. Fetch from API via Proxy
+        const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+        const proxySecret = Deno.env.get('PROXY_SECRET')
 
-        const tokenResp = await fetch('https://oauth.fatsecret.com/connect/token', {
+        if (!proxyUrl || !proxySecret) {
+            throw new Error('CONFIG_ERROR: Missing Proxy Configuration')
+        }
+
+        const foodResp = await fetch(`${proxyUrl}/food`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `grant_type=client_credentials&scope=basic&client_id=${clientId}&client_secret=${clientSecret}`
+            headers: {
+                'Content-Type': 'application/json',
+                'x-proxy-secret': proxySecret
+            },
+            body: JSON.stringify({ food_id: fatsecret_id })
         })
-        const { access_token } = await tokenResp.json()
-        if (!access_token) throw new Error('Failed to get upstream token')
 
-        const foodResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=food.get.v2&format=json&food_id=${fatsecret_id}`, {
-            headers: { Authorization: `Bearer ${access_token}` }
-        })
+        if (!foodResp.ok) {
+            throw new Error(`Proxy Error: ${await foodResp.text()}`)
+        }
+
         const foodData = await foodResp.json()
         const food = foodData.food
 

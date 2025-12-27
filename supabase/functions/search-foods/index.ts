@@ -85,46 +85,47 @@ Deno.serve(async (req) => {
 
         // 2. External Search
         if (results.length < 10) {
-            const clientId = Deno.env.get('FATSECRET_CLIENT_ID')
-            const clientSecret = Deno.env.get('FATSECRET_CLIENT_SECRET')
+            const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+            const proxySecret = Deno.env.get('PROXY_SECRET')
 
-            if (clientId && clientSecret) {
-                // OAuth 2.0 Flow
-                const tokenResp = await fetch('https://oauth.fatsecret.com/connect/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `grant_type=client_credentials&scope=basic&client_id=${clientId}&client_secret=${clientSecret}`
-                })
-
-                if (tokenResp.ok) {
-                    const { access_token } = await tokenResp.json()
-                    if (access_token) {
-                        const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search&format=json&search_expression=${encodeURIComponent(query)}&max_results=${10 - results.length}`, {
-                            headers: { Authorization: `Bearer ${access_token}` }
+            if (proxyUrl && proxySecret) {
+                try {
+                    // Call Proxy
+                    const searchResp = await fetch(`${proxyUrl}/search`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-proxy-secret': proxySecret
+                        },
+                        body: JSON.stringify({
+                            query: query,
+                            max_results: 10 - results.length
                         })
+                    })
 
-                        if (searchResp.ok) {
-                            const searchData = await searchResp.json()
-                            const externalFoods = searchData?.foods?.food || []
-                            const mappedExternal = (Array.isArray(externalFoods) ? externalFoods : [externalFoods]).map((f: any) => ({
-                                id: null,
-                                name: f.food_name,
-                                external_fatsecret_id: f.food_id,
-                                description: f.food_description,
-                                source: 'cloud',
-                                saved: false
-                            }))
+                    if (searchResp.ok) {
+                        const searchData = await searchResp.json()
+                        const externalFoods = searchData?.foods?.food || []
+                        const mappedExternal = (Array.isArray(externalFoods) ? externalFoods : [externalFoods]).map((f: any) => ({
+                            id: null,
+                            name: f.food_name,
+                            external_fatsecret_id: f.food_id,
+                            description: f.food_description,
+                            source: 'cloud',
+                            saved: false
+                        }))
 
-                            const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
-                            const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
-                            results = [...results, ...uniqueExternal]
-                        } else {
-                            console.error('FatSecret Search Error:', await searchResp.text())
-                        }
+                        const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
+                        const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
+                        results = [...results, ...uniqueExternal]
+                    } else {
+                        console.error('Proxy Search Error:', await searchResp.text())
                     }
-                } else {
-                    console.error('FatSecret Token Error:', await tokenResp.text())
+                } catch (proxyErr) {
+                    console.error('Proxy Connection Error:', proxyErr)
                 }
+            } else {
+                console.error('Missing Proxy Configuration (VPS_PROXY_URL or PROXY_SECRET)')
             }
         }
 
