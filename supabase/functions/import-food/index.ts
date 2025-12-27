@@ -37,12 +37,14 @@ Deno.serve(async (req) => {
         }
 
         // 2. Fetch from API via Proxy
-        const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+        let proxyUrl = Deno.env.get('VPS_PROXY_URL')
         const proxySecret = Deno.env.get('PROXY_SECRET')
 
         if (!proxyUrl || !proxySecret) {
             throw new Error('CONFIG_ERROR: Missing Proxy Configuration')
         }
+
+        if (proxyUrl.endsWith('/')) proxyUrl = proxyUrl.slice(0, -1)
 
         const foodResp = await fetch(`${proxyUrl}/food`, {
             method: 'POST',

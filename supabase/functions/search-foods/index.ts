@@ -16,10 +16,15 @@ Deno.serve(async (req) => {
 
         // DEBUG MODE
         if (debug) {
-            const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+            let proxyUrl = Deno.env.get('VPS_PROXY_URL')
             const proxySecret = Deno.env.get('PROXY_SECRET')
 
             if (!proxyUrl || !proxySecret) return new Response(JSON.stringify({ error: 'Missing Proxy Keys', stage: 'env' }), { headers: corsHeaders })
+
+            // Remove trailing slash if present
+            if (proxyUrl.endsWith('/')) {
+                proxyUrl = proxyUrl.slice(0, -1)
+            }
 
             try {
                 // Test Proxy Connection
@@ -70,10 +75,12 @@ Deno.serve(async (req) => {
 
         // 2. External Search
         if (results.length < 10) {
-            const proxyUrl = Deno.env.get('VPS_PROXY_URL')
+            let proxyUrl = Deno.env.get('VPS_PROXY_URL')
             const proxySecret = Deno.env.get('PROXY_SECRET')
 
             if (proxyUrl && proxySecret) {
+                if (proxyUrl.endsWith('/')) proxyUrl = proxyUrl.slice(0, -1)
+
                 try {
                     // Call Proxy
                     const searchResp = await fetch(`${proxyUrl}/search`, {
