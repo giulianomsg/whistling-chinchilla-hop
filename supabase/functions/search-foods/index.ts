@@ -38,10 +38,16 @@ Deno.serve(async (req) => {
                     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
                 }
 
-                // 2. Try Search (using the provided query or default 'apple')
+                // 2. Try Search (Force test)
                 const testQuery = query || 'apple'
-                const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search&format=json&search_expression=${encodeURIComponent(testQuery)}&max_results=5`, {
-                    headers: { Authorization: `Bearer ${tokenData.access_token}` }
+
+                // FatSecret sometimes strictly checks Accept header or User-Agent
+                const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search.v2&format=json&search_expression=${encodeURIComponent(testQuery)}&max_results=3`, {
+                    headers: {
+                        Authorization: `Bearer ${tokenData.access_token}`,
+                        'Content-Type': 'application/json',
+                        'X-Forwarded-For': req.headers.get('x-forwarded-for') || '127.0.0.1'
+                    }
                 })
 
                 const searchText = await searchResp.text()
@@ -55,7 +61,6 @@ Deno.serve(async (req) => {
                     raw_body: searchText,
                     parsed: searchJson
                 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-
             } catch (err) {
                 return new Response(JSON.stringify({ error: err.message, stage: 'fetch_error_debug' }), { headers: corsHeaders })
             }
