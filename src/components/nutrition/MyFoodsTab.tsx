@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Search, Edit2, Trash2, Plus, AlertCircle } from 'lucide-react'
+import { Loader2, Search, Edit2, Trash2, Plus, AlertCircle, Heart } from 'lucide-react'
 import { FoodSearch } from './FoodSearch'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 export function MyFoodsTab() {
     const { user } = useAuth()
     const [foods, setFoods] = useState<any[]>([])
+    const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [editingFood, setEditingFood] = useState<any>(null)
@@ -22,29 +23,39 @@ export function MyFoodsTab() {
     // Load foods
     const loadFoods = async () => {
         setLoading(true)
-        // Fetch system foods and user created foods
-        // Using a simple OR query is tricky in Supabase JS basic client sometimes if logic is complex, 
-        // but here: created_by = user.id OR is_public = true
+        try {
+            // 1. Get Favorites IDs
+            const { data: favs } = await supabase
+                .from('user_favorite_foods')
+                .select('food_id')
+                .eq('user_id', user?.id)
 
-        // We will just fetch user foods for "Meus Alimentos" logic explicitly, 
-        // or maybe everything the user can see?
-        // "filtra foods_library onde created_by == auth.uid() OU onde o usuário marcou como favorito"
-        // Let's stick to created_by first as favorites table wasn't implemented/requested in detail yet.
+            const favIds = favs?.map(f => f.food_id) || []
+            setFavorites(new Set(favIds))
 
-        const { data, error } = await supabase
-            .from('foods_library')
-            .select('*')
-            .or(`created_by.eq.${user?.id},is_public.eq.true`) // Show public/system foods too? Prompt says "created_by == auth.id OR favorite". 
-            // I'll assume they want to manage THEIR foods. 
-            // But wait, "Permita que o usuário edite alimentos importados (ex: ajustar a marca), mas salve como uma cópia"
-            // This implies they can see imported foods.
-            .order('name')
+            // 2. Fetch Foods (Created by user OR In Favorites)
+            // leveraging the OR syntax with filter on IDs if we have favorites
+            let query = supabase
+                .from('foods_library')
+                .select('*')
 
-        if (!error) {
-            // Client side filter for search
-            setFoods(data || [])
+            if (favIds.length > 0) {
+                query = query.or(`created_by.eq.${user?.id},id.in.(${favIds.join(',')})`)
+            } else {
+                query = query.eq('created_by', user?.id)
+            }
+
+            const { data, error } = await query.order('name')
+
+            if (!error) {
+                setFoods(data || [])
+            }
+        } catch (err) {
+            console.error(err)
+            showError('Erro ao carregar alimentos')
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     useEffect(() => {
@@ -113,6 +124,41 @@ export function MyFoodsTab() {
         }
     }
 
+    const handleToggleFavorite = async (foodId: string, e: React.MouseEvent) => {
+        e.stopPropagation()
+        const isFav = favorites.has(foodId)
+
+        if (isFav) {
+            const { error } = await supabase
+                .from('user_favorite_foods')
+                .delete()
+                .eq('user_id', user?.id)
+                .eq('food_id', foodId)
+
+            if (!error) {
+                const newFavs = new Set(favorites)
+                newFavs.delete(foodId)
+                setFavorites(newFavs)
+                // Optional: remove from list if not created by user? 
+                // UX decision: let's keep it visible until refresh or remove immediately?
+                // If we remove immediately it might feel jumpy. Let's reloading or just updating state.
+                // If it's NOT created by me, and I unfavorite, it should disappear from "My Foods"
+                // but maybe we wait for next load.
+                loadFoods()
+            }
+        } else {
+            const { error } = await supabase
+                .from('user_favorite_foods')
+                .insert({ user_id: user?.id, food_id: foodId })
+
+            if (!error) {
+                const newFavs = new Set(favorites)
+                newFavs.add(foodId)
+                setFavorites(newFavs)
+            }
+        }
+    }
+
     const filteredFoods = foods.filter(f => f.name.toLowerCase().includes(search.toLowerCase()))
 
     return (
@@ -128,9 +174,31 @@ export function MyFoodsTab() {
                     />
                 </div>
                 <FoodSearch
-                    onSelect={(food) => {
-                        showSuccess(`Selecionado: ${food.name}`)
-                        loadFoods() // Reload to show if it was imported
+                    onSelect={async (food) => {
+                        try {
+                            const isMyFood = food.created_by === user?.id
+                            // If it's not created by me, I want to favorite it so it appears in my list
+                            // If it IS created by me, it already appears.
+                            if (!isMyFood) {
+                                const { error } = await supabase
+                                    .from('user_favorite_foods')
+                                    .insert({ user_id: user?.id, food_id: food.id })
+                                // Ignore duplicate error if already favorited, or use upsert? 
+                                // Insert will fail if unique constraint violated. 
+                                // Let's check if not already favorited to avoid error log or just suppress.
+                                // simple clean way:
+                                if (error && error.code !== '23505') { // 23505 is unique violation
+                                    console.error('Error favoring', error)
+                                } else {
+                                    showSuccess('Adicionado aos seus alimentos')
+                                }
+                            } else {
+                                showSuccess('Alimento adicionado')
+                            }
+                        } catch (e) {
+                            console.error(e)
+                        }
+                        loadFoods()
                     }}
                     trigger={<Button className="bg-green-600 hover:bg-green-500 text-white"><Plus className="mr-2 h-4 w-4" /> Importar/Novo</Button>}
                 />
@@ -144,11 +212,21 @@ export function MyFoodsTab() {
                                 <CardTitle className="text-base text-foreground truncate" title={food.name}>{food.name}</CardTitle>
                                 {food.created_by === user?.id ? (
                                     <div className="flex gap-1">
-                                        <Button variant="ghost" size="icon" onClick={() => { setEditingFood(food); setIsEditDialogOpen(true) }} className="h-6 w-6 text-blue-400 hover:text-blue-300"><Edit2 className="h-3 w-3" /></Button>
-                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(food.id)} className="h-6 w-6 text-red-400 hover:text-red-300"><Trash2 className="h-3 w-3" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={(e) => handleToggleFavorite(food.id, e)} className={`h-6 w-6 ${favorites.has(food.id) ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-400'}`}><Heart className={`h-3 w-3 ${favorites.has(food.id) ? 'fill-current' : ''}`} /></Button>
+                                        {food.created_by === user?.id ? (
+                                            <>
+                                                <Button variant="ghost" size="icon" onClick={() => { setEditingFood(food); setIsEditDialogOpen(true) }} className="h-6 w-6 text-blue-400 hover:text-blue-300"><Edit2 className="h-3 w-3" /></Button>
+                                                <Button variant="ghost" size="icon" onClick={() => handleDelete(food.id)} className="h-6 w-6 text-red-400 hover:text-red-300"><Trash2 className="h-3 w-3" /></Button>
+                                            </>
+                                        ) : (
+                                            <Button variant="ghost" size="icon" onClick={() => { setEditingFood(food); setIsEditDialogOpen(true) }} className="h-6 w-6 text-yellow-400 hover:text-yellow-300" title="Personalizar Cópia"><Edit2 className="h-3 w-3" /></Button>
+                                        )}
                                     </div>
                                 ) : (
-                                    <Button variant="ghost" size="icon" onClick={() => { setEditingFood(food); setIsEditDialogOpen(true) }} className="h-6 w-6 text-yellow-400 hover:text-yellow-300" title="Personalizar Cópia"><Edit2 className="h-3 w-3" /></Button>
+                                    <div className="flex gap-1">
+                                        <Button variant="ghost" size="icon" onClick={(e) => handleToggleFavorite(food.id, e)} className={`h-6 w-6 ${favorites.has(food.id) ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-400'}`}><Heart className={`h-3 w-3 ${favorites.has(food.id) ? 'fill-current' : ''}`} /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => { setEditingFood(food); setIsEditDialogOpen(true) }} className="h-6 w-6 text-yellow-400 hover:text-yellow-300" title="Personalizar Cópia"><Edit2 className="h-3 w-3" /></Button>
+                                    </div>
                                 )}
                             </div>
                             <div className="text-xs text-muted-foreground">
