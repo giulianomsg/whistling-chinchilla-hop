@@ -111,6 +111,16 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
                 </DialogHeader>
 
                 <div className="space-y-4">
+                    <div className="flex justify-end">
+                        <Button variant="ghost" size="sm" onClick={async () => {
+                            try {
+                                const { data } = await supabase.functions.invoke('search-foods', { body: { debug: true, query: 'test' } })
+                                console.log('DEBUG RESULT:', data)
+                                if (data.status === 200 && data.data?.access_token) showSuccess('Conexão FatSecret OK!')
+                                else showError(`Erro Conexão: ${JSON.stringify(data)}`)
+                            } catch (e) { console.error(e); showError('Erro ao testar conexão') }
+                        }} className="text-xs h-6 text-muted-foreground">Testar Conexão API</Button>
+                    </div>
                     <Input
                         placeholder="Digite o nome do alimento..."
                         value={query}
