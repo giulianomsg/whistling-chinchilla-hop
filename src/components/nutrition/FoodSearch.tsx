@@ -165,10 +165,14 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
                                     <div className="flex-1">
                                         <div className="font-medium flex items-center gap-2">
                                             {food.name}
+                                            {food.brand && <span className="text-xs text-muted-foreground ml-1">({food.brand})</span>}
                                             {food.saved ? (
                                                 <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-500 hover:bg-green-500/20"><Database className="h-3 w-3 mr-1" /> Salvo</Badge>
                                             ) : (
-                                                <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/30"><Cloud className="h-3 w-3 mr-1" /> Nuvem</Badge>
+                                                <>
+                                                    <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/30"><Cloud className="h-3 w-3 mr-1" /> Nuvem</Badge>
+                                                    {food.fatsecret_type === 'Brand' && <Badge variant="outline" className="text-xs text-amber-500 border-amber-500/30 ml-1">Marca</Badge>}
+                                                </>
                                             )}
                                         </div>
                                         <div className="text-xs text-muted-foreground mt-1">

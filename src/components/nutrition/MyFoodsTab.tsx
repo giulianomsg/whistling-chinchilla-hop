@@ -99,7 +99,15 @@ export function MyFoodsTab() {
                     carbs: editingFood.carbs,
                     fat: editingFood.fat,
                     serving_size: editingFood.serving_size,
-                    serving_unit: editingFood.serving_unit
+                    serving_unit: editingFood.serving_unit,
+                    // Micronutrients
+                    fiber: editingFood.fiber,
+                    sugar: editingFood.sugar,
+                    sodium: editingFood.sodium,
+                    potassium: editingFood.potassium,
+                    cholesterol: editingFood.cholesterol,
+                    fat_saturated: editingFood.fat_saturated,
+                    brand: editingFood.brand
                 })
                 .eq('id', editingFood.id)
 
@@ -273,6 +281,22 @@ export function MyFoodsTab() {
                                 <div><Label>Proteína</Label><Input type="number" value={editingFood.protein} onChange={e => setEditingFood({ ...editingFood, protein: e.target.value })} className="bg-muted border-border" /></div>
                                 <div><Label>Carbo</Label><Input type="number" value={editingFood.carbs} onChange={e => setEditingFood({ ...editingFood, carbs: e.target.value })} className="bg-muted border-border" /></div>
                                 <div><Label>Gordura</Label><Input type="number" value={editingFood.fat} onChange={e => setEditingFood({ ...editingFood, fat: e.target.value })} className="bg-muted border-border" /></div>
+
+                                {/* Micronutrients */}
+                                <div><Label>Fibras</Label><Input type="number" value={editingFood.fiber || 0} onChange={e => setEditingFood({ ...editingFood, fiber: e.target.value })} className="bg-muted border-border" /></div>
+                                <div><Label>Açúcar</Label><Input type="number" value={editingFood.sugar || 0} onChange={e => setEditingFood({ ...editingFood, sugar: e.target.value })} className="bg-muted border-border" /></div>
+                                <div><Label>Sódio (mg)</Label><Input type="number" value={editingFood.sodium || 0} onChange={e => setEditingFood({ ...editingFood, sodium: e.target.value })} className="bg-muted border-border" /></div>
+                                <div><Label>Potássio (mg)</Label><Input type="number" value={editingFood.potassium || 0} onChange={e => setEditingFood({ ...editingFood, potassium: e.target.value })} className="bg-muted border-border" /></div>
+                                <div><Label>Colesterol (mg)</Label><Input type="number" value={editingFood.cholesterol || 0} onChange={e => setEditingFood({ ...editingFood, cholesterol: e.target.value })} className="bg-muted border-border" /></div>
+                                <div><Label>Gord. Sat.</Label><Input type="number" value={editingFood.fat_saturated || 0} onChange={e => setEditingFood({ ...editingFood, fat_saturated: e.target.value })} className="bg-muted border-border" /></div>
+
+                                <div className="col-span-2 pt-2 border-t border-border mt-2">
+                                    <Label>Informações Extras</Label>
+                                    <div className="grid grid-cols-2 gap-4 mt-2">
+                                        <div className="col-span-2"><Label>Marca</Label><Input value={editingFood.brand || ''} onChange={e => setEditingFood({ ...editingFood, brand: e.target.value })} className="bg-muted border-border" /></div>
+                                        {/* URL and Type can be view only or editable */}
+                                    </div>
+                                </div>
                             </div>
                             <Button type="submit" className="w-full bg-primary text-primary-foreground">Salvar</Button>
                         </form>
