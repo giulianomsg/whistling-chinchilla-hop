@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import {
@@ -14,11 +13,12 @@ import {
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
+import { FoodSearch } from '@/components/nutrition/FoodSearch'
+import { MyFoodsTab } from '@/components/nutrition/MyFoodsTab'
 
 const MealPlanner: React.FC = () => {
   const { user, loading } = useAuth()
   const [mealPlans, setMealPlans] = useState<any[]>([])
-  const [foods, setFoods] = useState<any[]>([])
   const [mealPlanItems, setMealPlanItems] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -31,17 +31,13 @@ const MealPlanner: React.FC = () => {
 
   const initialPlanState = { name: '', objective: '', kcal: 2000, prot: 150, carb: 250, fat: 65 }
   const [planForm, setPlanForm] = useState(initialPlanState)
-  const [newMeal, setNewMeal] = useState({ foodId: '', day: 1, name: 'Refeição', qty: 100, note: '' })
+  const [newMeal, setNewMeal] = useState({ foodId: '', foodName: '', day: 1, name: 'Refeição', qty: 100, note: '' })
 
   const fetchData = async () => {
     if (!user) return
     setPageLoading(true)
-    const [pRes, fRes] = await Promise.all([
-      supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('foods_library').select('*').order('name')
-    ])
-    setMealPlans(pRes.data || [])
-    setFoods(fRes.data || [])
+    const { data } = await supabase.from('meal_plans').select('*').eq('nutritionist_id', user.id).order('created_at', { ascending: false })
+    setMealPlans(data || [])
     setPageLoading(false)
   }
 
@@ -98,7 +94,7 @@ const MealPlanner: React.FC = () => {
       day_number: newMeal.day, meal_name: newMeal.name, quantity: newMeal.qty, notes: newMeal.note,
       meal_order: 99
     })
-    if (!error) { showSuccess('Adicionado!'); handleManage(selectedMealPlan); setIsAddMealDialogOpen(false) }
+    if (!error) { showSuccess('Adicionado!'); handleManage(selectedMealPlan); setIsAddMealDialogOpen(false); setNewMeal({ ...newMeal, foodId: '', foodName: '' }); }
   }
 
   const handleDeleteItem = async (itemId: string) => {
@@ -121,55 +117,70 @@ const MealPlanner: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Utensils className="text-green-600 dark:text-green-400" /> Planos Alimentares</h1>
-          <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4" /> Novo Plano</Button>
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Utensils className="text-green-600 dark:text-green-400" /> Nutrição</h1>
         </div>
 
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar planos..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="pl-10 pr-10 bg-card border-border text-foreground"
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        <Tabs defaultValue="plans" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="plans">Meus Planos</TabsTrigger>
+            <TabsTrigger value="foods">Meus Alimentos</TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {mealPlans.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).map(plan => (
-            <Card key={plan.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-foreground text-lg">{plan.name}</CardTitle>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => handleManage(plan)} className="text-muted-foreground hover:text-foreground"><Settings className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(plan)} className="text-muted-foreground hover:text-blue-500"><Edit className="h-4 w-4" /></Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                      <AlertDialogContent className="bg-card border-border text-foreground">
-                        <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Essa ação não pode ser desfeita.</AlertDialogDescription></AlertDialogHeader>
-                        <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeletePlan(plan.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="text-muted-foreground text-sm space-y-2">
-                <div className="flex gap-2 items-center"><Flame className="h-4 w-4 text-orange-500" /> {plan.daily_calories_target} kcal</div>
-                <div className="flex gap-2 items-center"><Target className="h-4 w-4" /> {plan.objective || 'Geral'}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          <TabsContent value="plans">
+            <div className="flex justify-between items-center mb-6">
+              <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar planos..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-10 bg-card border-border text-foreground"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500 ml-4"><Plus className="mr-2 h-4 w-4" /> Novo Plano</Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {mealPlans.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).map(plan => (
+                <Card key={plan.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-foreground text-lg">{plan.name}</CardTitle>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" onClick={() => handleManage(plan)} className="text-muted-foreground hover:text-foreground"><Settings className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(plan)} className="text-muted-foreground hover:text-blue-500"><Edit className="h-4 w-4" /></Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
+                          <AlertDialogContent className="bg-card border-border text-foreground">
+                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Essa ação não pode ser desfeita.</AlertDialogDescription></AlertDialogHeader>
+                            <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeletePlan(plan.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="text-muted-foreground text-sm space-y-2">
+                    <div className="flex gap-2 items-center"><Flame className="h-4 w-4 text-orange-500" /> {plan.daily_calories_target} kcal</div>
+                    <div className="flex gap-2 items-center"><Target className="h-4 w-4" /> {plan.objective || 'Geral'}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="foods">
+            <MyFoodsTab />
+          </TabsContent>
+        </Tabs>
 
         {[
           { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Plano', handler: handleCreatePlan },
@@ -195,7 +206,7 @@ const MealPlanner: React.FC = () => {
 
         <Sheet open={isManageSheetOpen} onOpenChange={setIsManageSheetOpen}>
           <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] sm:max-w-[30rem] overflow-y-auto">
-            <SheetHeader><SheetTitle className="text-foreground">Refeições</SheetTitle></SheetHeader>
+            <SheetHeader><SheetTitle className="text-foreground">Refeições - {selectedMealPlan?.name}</SheetTitle></SheetHeader>
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold">Itens</h3>
@@ -204,18 +215,28 @@ const MealPlanner: React.FC = () => {
                   <DialogContent className="bg-card border-border text-foreground">
                     <DialogHeader><DialogTitle>Adicionar Refeição</DialogTitle></DialogHeader>
                     <div className="space-y-4 mt-4">
-                      <Select onValueChange={v => setNewMeal({ ...newMeal, foodId: v })}>
-                        <SelectTrigger className="bg-muted border-border"><SelectValue placeholder="Alimento..." /></SelectTrigger>
-                        <SelectContent className="bg-card border-border text-foreground">
-                          {foods.map(f => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
+
+                      <div className="space-y-2">
+                        <Label>Alimento</Label>
+                        {newMeal.foodId ? (
+                          <div className="flex items-center justify-between p-3 border rounded-md bg-muted/20">
+                            <span className="font-medium">{newMeal.foodName}</span>
+                            <Button variant="ghost" size="sm" onClick={() => setNewMeal({ ...newMeal, foodId: '', foodName: '' })}><X className="h-4 w-4" /></Button>
+                          </div>
+                        ) : (
+                          <FoodSearch
+                            onSelect={(f) => setNewMeal({ ...newMeal, foodId: f.id, foodName: f.name })}
+                            trigger={<Button variant="outline" className="w-full justify-start text-muted-foreground"><Search className="mr-2 h-4 w-4" /> Buscar Alimento...</Button>}
+                          />
+                        )}
+                      </div>
+
                       <div><Label>Nome da Refeição</Label><Input className="bg-muted border-border" value={newMeal.name} onChange={e => setNewMeal({ ...newMeal, name: e.target.value })} /></div>
                       <div className="grid grid-cols-2 gap-2">
                         <div><Label>Dia</Label><Input type="number" className="bg-muted border-border" value={newMeal.day} onChange={e => setNewMeal({ ...newMeal, day: +e.target.value })} /></div>
                         <div><Label>Qtd (g)</Label><Input type="number" className="bg-muted border-border" value={newMeal.qty} onChange={e => setNewMeal({ ...newMeal, qty: +e.target.value })} /></div>
                       </div>
-                      <Button onClick={handleAddMeal} className="w-full bg-green-600 hover:bg-green-500 text-white">Confirmar</Button>
+                      <Button onClick={handleAddMeal} className="w-full bg-green-600 hover:bg-green-500 text-white" disabled={!newMeal.foodId}>Confirmar</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
