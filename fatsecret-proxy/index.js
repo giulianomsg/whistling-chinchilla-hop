@@ -58,7 +58,7 @@ app.post('/search', authenticate, async (req, res) => {
         const token = await getAccessToken();
         const response = await axios.get('https://platform.fatsecret.com/rest/server.api', {
             params: {
-                method: 'foods.search.v2',
+                method: 'foods.search',
                 format: 'json',
                 search_expression: query,
                 max_results: max_results
