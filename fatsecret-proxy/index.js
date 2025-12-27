@@ -61,29 +61,34 @@ app.post('/search', authenticate, async (req, res) => {
                 method: 'foods.search',
                 format: 'json',
                 search_expression: query,
-                max_results: max_results
+                max_results: max_results,
+                region: 'BR',
+                language: 'pt'
             },
             headers: { Authorization: `Bearer ${token}` }
         });
 
         res.json(response.data);
     } catch (error) {
-        console.error('Search error:', error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data || 'Proxied Search Failed' });
+        console.error('Search Error:', error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ error: error.message });
     }
 });
 
 app.post('/food', authenticate, async (req, res) => {
-    try {
-        const { food_id } = req.body;
-        if (!food_id) return res.status(400).json({ error: 'food_id required' });
+    const { food_id } = req.body;
 
+    if (!food_id) return res.status(400).json({ error: 'Missing food_id' });
+
+    try {
         const token = await getAccessToken();
         const response = await axios.get('https://platform.fatsecret.com/rest/server.api', {
             params: {
                 method: 'food.get.v2',
                 format: 'json',
-                food_id: food_id
+                food_id: food_id,
+                region: 'BR',
+                language: 'pt'
             },
             headers: { Authorization: `Bearer ${token}` }
         });
