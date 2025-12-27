@@ -119,9 +119,15 @@ Deno.serve(async (req) => {
             serving_size: 100,
             serving_unit: 'g',
             metric_serving_amount: 100,
+            metric_serving_amount: 100,
             source_type: 'fatsecret_api',
             is_public: true,
-            created_by: user.id
+            created_by: user.id,
+
+            // New metadata
+            brand: food.brand_name,
+            fatsecret_type: food.food_type,
+            url: food.food_url
         }
 
         const { data: inserted, error: insertError } = await supabase
