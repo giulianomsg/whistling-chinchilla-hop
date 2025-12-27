@@ -21,8 +21,8 @@ Deno.serve(async (req) => {
 
             if (!clientId || !clientSecret) return new Response(JSON.stringify({ error: 'Missing Keys', stage: 'env' }), { headers: corsHeaders })
 
-            // Test OAuth 2.0 Token Call
             try {
+                // 1. Get Token
                 const tokenResp = await fetch('https://oauth.fatsecret.com/connect/token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -30,13 +30,34 @@ Deno.serve(async (req) => {
                 })
                 const tokenData = await tokenResp.json()
 
+                if (!tokenResp.ok || !tokenData.access_token) {
+                    return new Response(JSON.stringify({
+                        stage: 'oauth2_token_fail',
+                        status: tokenResp.status,
+                        error: tokenData
+                    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+                }
+
+                // 2. Try Search (using the provided query or default 'apple')
+                const testQuery = query || 'apple'
+                const searchResp = await fetch(`https://platform.fatsecret.com/rest/server.api?method=foods.search&format=json&search_expression=${encodeURIComponent(testQuery)}&max_results=5`, {
+                    headers: { Authorization: `Bearer ${tokenData.access_token}` }
+                })
+
+                const searchText = await searchResp.text()
+                let searchJson = null
+                try { searchJson = JSON.parse(searchText) } catch (e) { }
+
                 return new Response(JSON.stringify({
-                    stage: 'oauth2_token',
-                    status: tokenResp.status,
-                    data: tokenData
+                    stage: 'fatsecret_search_test',
+                    query: testQuery,
+                    status: searchResp.status,
+                    raw_body: searchText,
+                    parsed: searchJson
                 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+
             } catch (err) {
-                return new Response(JSON.stringify({ error: err.message, stage: 'fetch_error' }), { headers: corsHeaders })
+                return new Response(JSON.stringify({ error: err.message, stage: 'fetch_error_debug' }), { headers: corsHeaders })
             }
         }
 
