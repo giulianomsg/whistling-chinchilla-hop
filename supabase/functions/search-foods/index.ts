@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
             .from('foods_library')
             .select('*')
             .ilike('name', `%${query}%`)
-            .limit(10)
+            .limit(20)
 
         if (localError) throw localError
         let results = localFoods.map((f: any) => ({ ...f, source: 'local', saved: true }))

@@ -78,8 +78,8 @@ app.post('/search', authenticate, async (req, res) => {
                 search_expression: searchQuery,
                 max_results: max_results,
                 // Force US/EN to ensure translation source is consistent
-                region: 'US',
-                language: 'en'
+                region: 'BR',
+                language: 'pt'
             },
             headers: { Authorization: `Bearer ${token}` }
         });
