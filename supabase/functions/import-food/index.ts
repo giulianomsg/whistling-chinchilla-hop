@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import tacoData from './taco.json' with { type: "json" }
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -46,11 +47,7 @@ Deno.serve(async (req) => {
         }
 
         // 2. Fetch from TACO Local Data
-        const tacoUrl = new URL('./taco.json', import.meta.url)
-        const tacoFile = await Deno.readTextFile(tacoUrl)
-        const tacoData: any[] = JSON.parse(tacoFile)
-
-        const food = tacoData.find(f => String(f.id) === String(fatsecret_id))
+        const food = (tacoData as any[]).find(f => String(f.id) === String(fatsecret_id))
 
         if (!food) throw new Error('Food not found in TACO data')
 

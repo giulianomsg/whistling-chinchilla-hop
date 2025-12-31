@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import tacoData from './taco.json' with { type: "json" }
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -34,13 +35,8 @@ Deno.serve(async (req) => {
             try {
                 const qLower = query.toLowerCase()
 
-                // Read TACO data dynamically (avoiding bundling issues)
-                const tacoUrl = new URL('./taco.json', import.meta.url)
-                const tacoFile = await Deno.readTextFile(tacoUrl)
-                const tacoData: any[] = JSON.parse(tacoFile)
-
                 // Filter TACO data
-                const tacoResults = tacoData.filter(f =>
+                const tacoResults = (tacoData as any[]).filter(f =>
                     f.description && f.description.toLowerCase().includes(qLower)
                 )
 
