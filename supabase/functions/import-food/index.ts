@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
             serving_size: 100,
             serving_unit: 'g',
             metric_serving_amount: 100,
-            source_type: 'taco_api',
+            source_type: 'fatsecret_api',
             is_public: true,
             created_by: user.id,
 
