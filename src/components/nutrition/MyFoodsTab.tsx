@@ -238,7 +238,7 @@ export function MyFoodsTab() {
                                 )}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                                {food.source_type === 'taco_api' || (food.source_type === 'fatsecret_api' && food.brand === 'TACO') ? 'Importado (TACO)' : food.source_type === 'fatsecret_api' ? 'Importado (FatSecret)' : food.is_public ? 'Sistema' : 'Manual'}
+                                {food.source_type === 'taco_api' ? 'Importado (TACO)' : food.source_type === 'fatsecret_api' ? 'Importado (FatSecret)' : food.is_public ? 'Sistema' : 'Manual'}
                             </div>
                         </CardHeader>
                         <CardContent>

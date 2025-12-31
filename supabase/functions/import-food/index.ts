@@ -69,23 +69,37 @@ Deno.serve(async (req) => {
             // Micronutrients (Mapping from taco.json keys)
             fiber: p(food.fiber_g),
             sodium: p(food.sodium_mg),
+            potassium: p(food.potassium_mg),
             calcium: p(food.calcium_mg),
             iron: p(food.iron_mg),
+            magnesium: p(food.magnesium_mg),
+            manganese: p(food.manganese_mg),
+            phosphorus: p(food.phosphorus_mg),
+            copper: p(food.copper_mg),
+            zinc: p(food.zinc_mg),
+            ashes: p(food.ashes_g),
             cholesterol: p(food.cholesterol_mg),
 
-            // Others (check if mapped)
-            sugar: 0, // TACO doesn't explicitly separate sugar usually
+            // Vitamins
+            vitamin_a: p(food.rae_mcg) || p(food.retinol_mcg) || 0,
+            vitamin_c: p(food.vitaminC_mg),
+            thiamine: p(food.thiamine_mg),
+            riboflavin: p(food.riboflavin_mg),
+            pyridoxine: p(food.pyridoxine_mg),
+            niacin: p(food.niacin_mg),
+            retinol: p(food.retinol_mcg),
+
+            // Fats
+            sugar: 0,
             fat_saturated: p(food.saturated_g),
             fat_trans: 0,
             fat_monounsaturated: p(food.monounsaturated_g),
             fat_polyunsaturated: p(food.polyunsaturated_g),
-            vitamin_a: 0, // Need to checking RE/RAE
-            vitamin_c: p(food.vitaminC_mg),
 
             serving_size: 100,
             serving_unit: 'g',
             metric_serving_amount: 100,
-            source_type: 'fatsecret_api',
+            source_type: 'taco_api',
             is_public: true,
             created_by: user.id,
 
