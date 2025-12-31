@@ -1,6 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -12,57 +11,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { query, debug, translate } = await req.json()
-
-        // DEBUG MODE
-        if (debug) {
-            let proxyUrl = Deno.env.get('VPS_PROXY_URL')
-            const proxySecret = Deno.env.get('PROXY_SECRET')
-
-            if (!proxyUrl || !proxySecret) return new Response(JSON.stringify({ error: 'Missing Proxy Keys', stage: 'env' }), { headers: corsHeaders })
-
-            // Remove trailing slash if present
-            if (proxyUrl.endsWith('/')) {
-                proxyUrl = proxyUrl.slice(0, -1)
-            }
-
-            try {
-                // Test Proxy Connection
-                const targetUrl = `${proxyUrl}/search`
-                const searchResp = await fetch(targetUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-proxy-secret': proxySecret
-                    },
-                    body: JSON.stringify({
-                        query: 'test_apple',
-                        max_results: 1
-                    })
-                })
-
-                const searchText = await searchResp.text()
-                let searchJson = null
-                try { searchJson = JSON.parse(searchText) } catch (e) { }
-
-                return new Response(JSON.stringify({
-                    stage: 'proxy_debug_test',
-                    target_url: targetUrl, // DEBUG: Show what we hit
-                    status: searchResp.status,
-                    status_text: searchResp.statusText,
-                    raw_body: searchText,
-                    parsed: searchJson
-                }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-            } catch (err: any) {
-                return new Response(JSON.stringify({
-                    error: err.message,
-                    stack: err.stack,
-                    stage: 'proxy_fetch_error',
-                    target_url: `${proxyUrl}/search`
-                }), { headers: corsHeaders })
-            }
-        }
-
+        const { query } = await req.json()
         if (!query) throw new Error('Query is required')
 
         // Initialize Supabase
@@ -80,54 +29,69 @@ Deno.serve(async (req) => {
         if (localError) throw localError
         let results = localFoods.map((f: any) => ({ ...f, source: 'local', saved: true }))
 
-        // 2. External Search
-        if (results.length < 10) {
-            let proxyUrl = Deno.env.get('VPS_PROXY_URL')
-            const proxySecret = Deno.env.get('PROXY_SECRET')
-
-            if (proxyUrl && proxySecret) {
-                if (proxyUrl.endsWith('/')) proxyUrl = proxyUrl.slice(0, -1)
-
-                try {
-                    // Call Proxy
-                    const searchResp = await fetch(`${proxyUrl}/search`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-proxy-secret': proxySecret
-                        },
-                        body: JSON.stringify({
-                            query: query,
-                            max_results: 10 - results.length,
-                            translate: translate
-                        })
-                    })
-
-                    if (searchResp.ok) {
-                        const searchData = await searchResp.json()
-                        const externalFoods = searchData?.foods?.food || []
-                        const mappedExternal = (Array.isArray(externalFoods) ? externalFoods : [externalFoods]).map((f: any) => ({
-                            id: null,
-                            name: f.food_name,
-                            external_fatsecret_id: f.food_id,
-                            description: f.food_description,
-                            brand: f.brand_name,
-                            fatsecret_type: f.food_type,
-                            source: 'cloud',
-                            saved: false
-                        }))
-
-                        const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
-                        const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
-                        results = [...results, ...uniqueExternal]
-                    } else {
-                        console.error('Proxy Search Error:', await searchResp.text())
+        // 2. External Search (TACO API)
+        // Only fetch if we need more results
+        if (results.length < 20) {
+            try {
+                const tacoQuery = `
+                query GetAllFoods {
+                    getAllFoods {
+                        id
+                        description
+                        kcal
+                        protein
+                        carbohydrate
+                        lipid
+                        category {
+                            category
+                        }
                     }
-                } catch (proxyErr) {
-                    console.error('Proxy Connection Error:', proxyErr)
                 }
-            } else {
-                console.error('Missing Proxy Configuration (VPS_PROXY_URL or PROXY_SECRET)')
+                `
+
+                const resp = await fetch('https://taco-api.netlify.app/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: tacoQuery })
+                })
+
+                if (!resp.ok) {
+                    console.error('TACO API Error:', resp.status, await resp.text())
+                } else {
+                    const data = await resp.json()
+                    const allFoods = data.data?.getAllFoods || []
+
+                    // Simple case-insensitive filter
+                    const filtered = allFoods.filter((f: any) =>
+                        f.description && f.description.toLowerCase().includes(query.toLowerCase())
+                    )
+
+                    // Map to our format
+                    const mappedExternal = filtered.map((f: any) => ({
+                        id: null,
+                        name: f.description,
+                        external_fatsecret_id: f.id, // Using TACO ID here
+                        description: f.category?.category || 'TACO DB',
+                        brand: 'TACO',
+                        fatsecret_type: 'Generic',
+                        source: 'cloud',
+                        saved: false,
+                        // Add preview macros if available
+                        calories_per_serving: f.kcal,
+                        protein: f.protein,
+                        carbs: f.carbohydrate,
+                        fat: f.lipid
+                    }))
+
+                    // Deduplicate against local
+                    const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
+                    const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
+
+                    // Take only what we need to fill up to 30 or so
+                    results = [...results, ...uniqueExternal].slice(0, 50)
+                }
+            } catch (err) {
+                console.error('TACO Search Error:', err)
             }
         }
 
@@ -142,3 +106,4 @@ Deno.serve(async (req) => {
         })
     }
 })
+

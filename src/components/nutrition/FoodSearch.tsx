@@ -25,7 +25,6 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState<any[]>([])
     const [loading, setLoading] = useState(false)
-    const [translate, setTranslate] = useState(false)
     const [importingId, setImportingId] = useState<string | null>(null)
 
     const handleSearch = async (searchQuery: string) => {
@@ -36,7 +35,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
         setLoading(true)
         try {
             const { data, error } = await supabase.functions.invoke('search-foods', {
-                body: { query: searchQuery, translate } // Passed translate flag
+                body: { query: searchQuery }
             })
             console.log('SEARCH RESPONSE (Frontend):', data); // DEBUG LOG
             if (error) throw error
@@ -74,7 +73,7 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
         setImportingId(food.external_fatsecret_id)
         try {
             const { data, error } = await supabase.functions.invoke('import-food', {
-                body: { fatsecret_id: food.external_fatsecret_id, translate }
+                body: { fatsecret_id: food.external_fatsecret_id }
             })
 
             if (error) throw error
@@ -116,25 +115,11 @@ export function FoodSearch({ onSelect, trigger }: FoodSearchProps) {
                 <DialogHeader>
                     <DialogTitle>Buscar Alimento</DialogTitle>
                     <DialogDescription>
-                        Busque alimentos da nossa base de dados ou da nuvem.
+                        Busque alimentos da nossa base de dados (TACO).
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                            <input type="checkbox" id="translate" checked={translate} onChange={e => setTranslate(e.target.checked)} className="rounded border-gray-300" />
-                            <label htmlFor="translate" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Traduzir (BETA)</label>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={async () => {
-                            try {
-                                const { data } = await supabase.functions.invoke('search-foods', { body: { debug: true, query: 'test' } })
-                                console.log('DEBUG RESULT:', data)
-                                if (data.status === 200) showSuccess('Conexão Proxy OK!')
-                                else showError(`Erro Proxy: ${JSON.stringify(data)}`)
-                            } catch (e) { console.error(e); showError('Erro ao testar conexão') }
-                        }} className="text-xs h-6 text-muted-foreground">Testar Conexão API</Button>
-                    </div>
                     <Input
                         placeholder="Digite o nome do alimento..."
                         value={query}
