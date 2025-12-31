@@ -1,4 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+// Import local TACO data directly
+import tacoData from './taco.json' with { type: "json" }
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -23,82 +25,63 @@ Deno.serve(async (req) => {
         const { data: localFoods, error: localError } = await supabase
             .from('foods_library')
             .select('*')
-            .ilike('name', `%${query}%`)
+            .ilike('name', `%${query}%')
             .limit(20)
 
         if (localError) throw localError
         let results = localFoods.map((f: any) => ({ ...f, source: 'local', saved: true }))
 
-        // 2. External Search (TACO API)
-        // Only fetch if we need more results
-        if (results.length < 20) {
-            console.log('Fetching from TACO API...')
+        // 2. Local Static TACO Search
+        // Since we have the data locally, we can filter it directly.
+        // TACO data structure: { id, description, energy_kcal, ... }
+        if (results.length < 50) {
             try {
-                const tacoQuery = `
-                query GetAllFoods {
-                    getAllFoods {
-                        id
-                        description
-                        kcal
-                        protein
-                        carbohydrate
-                        lipid
-                        category {
-                            category
-                        }
-                    }
+                const qLower = query.toLowerCase()
+                
+                // Filter TACO data
+                const tacoResults = (tacoData as any[]).filter(f => 
+                    f.description && f.description.toLowerCase().includes(qLower)
+                )
+
+                console.log(`Found ${ tacoResults.length } matches in TACO local data`)
+
+                // Helper to parse numeric values safely
+                const p = (val: any) => {
+                   if (typeof val === 'number') return val
+                   if (typeof val === 'string' && val !== 'NA' && val !== 'Tr' && val !== '') return parseFloat(val.replace(',', '.'))
+                   return 0
                 }
-                `
 
-                const resp = await fetch('https://taco-api.netlify.app/graphql', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: tacoQuery })
-                })
+                const mappedTaco = tacoResults.map(f => ({
+                    id: null,
+                    name: f.description,
+                    external_fatsecret_id: String(f.id), // Use TACO ID stringified
+                    description: f.category || 'TACO',
+                    brand: 'TACO',
+                    fatsecret_type: 'Generic',
+                    source: 'cloud',
+                    source_type: 'taco_api', 
+                    saved: false,
+                    
+                    // Macro/Micro mapping
+                    calories_per_serving: p(f.energy_kcal),
+                    protein: p(f.protein_g),
+                    carbs: p(f.carbohydrate_g),
+                    fat: p(f.lipid_g),
+                    
+                    // Extra fields for preview if needed
+                    serving_size: 100,
+                    serving_unit: 'g'
+                }))
 
-                if (!resp.ok) {
-                    console.error('TACO API Error:', resp.status, await resp.text())
-                } else {
-                    const data = await resp.json()
-                    // Create a safe logging object
-                    console.log('TACO Response Status:', resp.status)
+                // Deduplicate
+                const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
+                const uniqueTaco = mappedTaco.filter(e => !localIds.has(e.external_fatsecret_id))
+                
+                results = [...results, ...uniqueTaco].slice(0, 50)
 
-                    const allFoods = data.data?.getAllFoods || []
-                    console.log('TACO Total Foods Fetched:', allFoods.length)
-
-                    // Simple case-insensitive filter
-                    const filtered = allFoods.filter((f: any) =>
-                        f.description && f.description.toLowerCase().includes(query.toLowerCase())
-                    )
-                    console.log('TACO Filtered Results:', filtered.length)
-
-                    // Map to our format
-                    const mappedExternal = filtered.map((f: any) => ({
-                        id: null,
-                        name: f.description,
-                        external_fatsecret_id: f.id, // Using TACO ID here
-                        description: f.category?.category || 'TACO DB',
-                        brand: 'TACO',
-                        fatsecret_type: 'Generic',
-                        source: 'cloud',
-                        source_type: 'taco_api', // Ensure this is set
-                        saved: false,
-                        // Add preview macros if available
-                        calories_per_serving: f.kcal,
-                        protein: f.protein,
-                        carbs: f.carbohydrate,
-                        fat: f.lipid
-                    }))
-
-                    // Deduplicate against local
-                    const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
-                    const uniqueExternal = mappedExternal.filter((e: any) => !localIds.has(e.external_fatsecret_id))
-
-                    // Take only what we need to fill up to 30 or so
-                    results = [...results, ...uniqueExternal].slice(0, 50)
-                }
             } catch (err) {
-                console.error('TACO Search Error Try/Catch:', err)
+                console.error('Local TACO Processing Error:', err)
             }
         }
 
@@ -113,4 +96,5 @@ Deno.serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
     }
+})
 
