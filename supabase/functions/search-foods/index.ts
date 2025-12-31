@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
         // 2. External Search (TACO API)
         // Only fetch if we need more results
         if (results.length < 20) {
+            console.log('Fetching from TACO API...')
             try {
                 const tacoQuery = `
                 query GetAllFoods {
@@ -59,12 +60,17 @@ Deno.serve(async (req) => {
                     console.error('TACO API Error:', resp.status, await resp.text())
                 } else {
                     const data = await resp.json()
+                    // Create a safe logging object
+                    console.log('TACO Response Status:', resp.status)
+
                     const allFoods = data.data?.getAllFoods || []
+                    console.log('TACO Total Foods Fetched:', allFoods.length)
 
                     // Simple case-insensitive filter
                     const filtered = allFoods.filter((f: any) =>
                         f.description && f.description.toLowerCase().includes(query.toLowerCase())
                     )
+                    console.log('TACO Filtered Results:', filtered.length)
 
                     // Map to our format
                     const mappedExternal = filtered.map((f: any) => ({
@@ -75,6 +81,7 @@ Deno.serve(async (req) => {
                         brand: 'TACO',
                         fatsecret_type: 'Generic',
                         source: 'cloud',
+                        source_type: 'taco_api', // Ensure this is set
                         saved: false,
                         // Add preview macros if available
                         calories_per_serving: f.kcal,
@@ -91,7 +98,7 @@ Deno.serve(async (req) => {
                     results = [...results, ...uniqueExternal].slice(0, 50)
                 }
             } catch (err) {
-                console.error('TACO Search Error:', err)
+                console.error('TACO Search Error Try/Catch:', err)
             }
         }
 
@@ -100,10 +107,10 @@ Deno.serve(async (req) => {
         })
 
     } catch (error: any) {
+        console.error('General Function Error:', error)
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
     }
-})
 
