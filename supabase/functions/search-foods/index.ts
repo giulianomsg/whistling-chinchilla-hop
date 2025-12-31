@@ -1,6 +1,4 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-// Import local TACO data directly
-import tacoData from './taco.json' with { type: "json" }
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -25,31 +23,34 @@ Deno.serve(async (req) => {
         const { data: localFoods, error: localError } = await supabase
             .from('foods_library')
             .select('*')
-            .ilike('name', `%${query}%')
+            .ilike('name', '%' + query + '%')
             .limit(20)
 
         if (localError) throw localError
         let results = localFoods.map((f: any) => ({ ...f, source: 'local', saved: true }))
 
         // 2. Local Static TACO Search
-        // Since we have the data locally, we can filter it directly.
-        // TACO data structure: { id, description, energy_kcal, ... }
         if (results.length < 50) {
             try {
                 const qLower = query.toLowerCase()
-                
+
+                // Read TACO data dynamically (avoiding bundling issues)
+                const tacoUrl = new URL('./taco.json', import.meta.url)
+                const tacoFile = await Deno.readTextFile(tacoUrl)
+                const tacoData: any[] = JSON.parse(tacoFile)
+
                 // Filter TACO data
-                const tacoResults = (tacoData as any[]).filter(f => 
+                const tacoResults = tacoData.filter(f =>
                     f.description && f.description.toLowerCase().includes(qLower)
                 )
 
-                console.log(`Found ${ tacoResults.length } matches in TACO local data`)
+                console.log('Found ' + tacoResults.length + ' matches in TACO local data')
 
                 // Helper to parse numeric values safely
                 const p = (val: any) => {
-                   if (typeof val === 'number') return val
-                   if (typeof val === 'string' && val !== 'NA' && val !== 'Tr' && val !== '') return parseFloat(val.replace(',', '.'))
-                   return 0
+                    if (typeof val === 'number') return val
+                    if (typeof val === 'string' && val !== 'NA' && val !== 'Tr' && val !== '') return parseFloat(val.replace(',', '.'))
+                    return 0
                 }
 
                 const mappedTaco = tacoResults.map(f => ({
@@ -60,15 +61,15 @@ Deno.serve(async (req) => {
                     brand: 'TACO',
                     fatsecret_type: 'Generic',
                     source: 'cloud',
-                    source_type: 'taco_api', 
+                    source_type: 'taco_api',
                     saved: false,
-                    
+
                     // Macro/Micro mapping
                     calories_per_serving: p(f.energy_kcal),
                     protein: p(f.protein_g),
                     carbs: p(f.carbohydrate_g),
                     fat: p(f.lipid_g),
-                    
+
                     // Extra fields for preview if needed
                     serving_size: 100,
                     serving_unit: 'g'
@@ -77,7 +78,7 @@ Deno.serve(async (req) => {
                 // Deduplicate
                 const localIds = new Set(results.map((r: any) => r.external_fatsecret_id))
                 const uniqueTaco = mappedTaco.filter(e => !localIds.has(e.external_fatsecret_id))
-                
+
                 results = [...results, ...uniqueTaco].slice(0, 50)
 
             } catch (err) {
