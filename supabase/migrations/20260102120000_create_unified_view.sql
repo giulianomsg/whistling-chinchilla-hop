@@ -23,7 +23,10 @@ CREATE POLICY "Public Read TACO" ON "public"."taco" FOR SELECT USING (true);
 
 -- 2. Create Unified View
 -- Combines TACO (Public) and foods_library (Custom/RLS)
-CREATE OR REPLACE VIEW "public"."unified_foods_view" AS
+-- WITH (security_invoker = true) ensures RLS from underlying tables is respected.
+CREATE OR REPLACE VIEW "public"."unified_foods_view" 
+WITH (security_invoker = true)
+AS
 SELECT
     'taco_' || t.id::text as id, -- Prefix to ensure uniqueness across types
     t.description as name,
@@ -48,5 +51,7 @@ SELECT
     COALESCE(f.metric_serving_amount, 100) as serving_base,
     'custom' as origin,
     f.created_by
-FROM "public"."foods_library" f
-WHERE f.deleted_at IS NULL; -- Assuming standard soft delete pattern, or remove if column invalid
+FROM "public"."foods_library" f;
+
+-- Grant access to the view
+GRANT SELECT ON "public"."unified_foods_view" TO anon, authenticated, service_role;
