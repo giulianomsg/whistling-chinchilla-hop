@@ -200,6 +200,14 @@ const MealPlanner: React.FC = () => {
                   <CardContent className="text-muted-foreground text-sm space-y-2">
                     <div className="flex gap-2 items-center"><Flame className="h-4 w-4 text-orange-500" /> {plan.daily_calories_target} kcal/dia</div>
                     <div className="flex gap-2 items-center"><Target className="h-4 w-4" /> {plan.objective || 'Geral'}</div>
+                    <div className="pt-2">
+                      <Button className="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20" onClick={(e) => {
+                        e.stopPropagation();
+                        handleManage(plan);
+                      }}>
+                        <Utensils className="mr-2 h-4 w-4" /> Gerenciar Dieta
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
