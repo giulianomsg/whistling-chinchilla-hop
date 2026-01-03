@@ -77,15 +77,10 @@ const MyClients: React.FC = () => {
     if (!newClientEmail.trim()) return
     setAddingClient(true)
     try {
-      const { data: foundUser } = await supabase.from('profiles').select('id').eq('email', newClientEmail.trim()).eq('role', 'client').maybeSingle()
-      if (!foundUser) throw new Error('Aluno não encontrado.')
-
-      const { error } = await supabase.from('client_professionals').insert({
-        client_id: foundUser.id,
-        professional_id: user!.id,
-        status: 'active',
-        started_at: new Date().toISOString()
+      const { error } = await supabase.rpc('link_client_via_email', {
+        client_email: newClientEmail.trim()
       })
+
       if (error) throw error
 
       showSuccess('Aluno vinculado!')
