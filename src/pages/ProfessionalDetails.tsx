@@ -306,6 +306,7 @@ const ProfessionalDetails: React.FC = () => {
                             </div>
 
                             {/* Certifications - Only show if exists */}
+                            {/* Certifications - TEMPORARILY DISABLED FOR DEBUGGING
                             {(() => {
                                 // Defensive rendering for certifications
                                 try {
@@ -315,13 +316,11 @@ const ProfessionalDetails: React.FC = () => {
                                     if (typeof certs === 'string') {
                                         certText = certs;
                                     } else if (certs && typeof certs === 'object') {
-                                        // Handle specific raw_text key or generic object
                                         if ('raw_text' in certs) {
-                                            certText = String(certs.raw_text);
+                                            certText = String((certs as any).raw_text);
                                         } else {
-                                            // Fallback: try to display as string if it's not a complex object, or ignore
-                                            // Don't render [object Object]
-                                            return null;
+                                            // Fallback to empty to avoid crash
+                                            return null; 
                                         }
                                     }
 
@@ -344,7 +343,8 @@ const ProfessionalDetails: React.FC = () => {
                                     console.error("Error rendering certifications", e);
                                     return null;
                                 }
-                            })()}
+                            })()} 
+                            */}
                         </CardContent>
                     </Card>
 
