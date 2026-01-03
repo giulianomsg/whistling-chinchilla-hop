@@ -70,6 +70,7 @@ const ProfessionalDetails: React.FC = () => {
                 .single()
 
             if (profError) throw profError
+            console.log('Professional Debug:', profData);
             setProfessional(profData)
 
             // Fetch Reviews
@@ -146,20 +147,23 @@ const ProfessionalDetails: React.FC = () => {
                             </div>
 
                             <div className="flex flex-wrap gap-2">
-                                {professional.specialties?.map(spec => (
-                                    <Badge key={spec} variant="secondary" className="text-sm px-3 py-1">
-                                        {(() => {
-                                            const map: Record<string, string> = {
-                                                'personal_trainer': 'Personal Trainer',
-                                                'nutritionist': 'Nutricionista',
-                                                'sports_doctor': 'Médico do Esporte',
-                                                'clinic': 'Clínica / Estúdio',
-                                                'performance_coach': 'Performance Coach'
-                                            }
-                                            return map[spec] || spec.replace(/_/g, ' ')
-                                        })()}
-                                    </Badge>
-                                ))}
+                                {professional.specialties?.map(spec => {
+                                    if (typeof spec !== 'string') return null;
+                                    return (
+                                        <Badge key={spec} variant="secondary" className="text-sm px-3 py-1">
+                                            {(() => {
+                                                const map: Record<string, string> = {
+                                                    'personal_trainer': 'Personal Trainer',
+                                                    'nutritionist': 'Nutricionista',
+                                                    'sports_doctor': 'Médico do Esporte',
+                                                    'clinic': 'Clínica / Estúdio',
+                                                    'performance_coach': 'Performance Coach'
+                                                }
+                                                return map[spec] || spec.replace(/_/g, ' ')
+                                            })()}
+                                        </Badge>
+                                    )
+                                })}
                             </div>
 
                             <div className="flex gap-3 pt-2">
@@ -210,6 +214,10 @@ const ProfessionalDetails: React.FC = () => {
                                         <p className="text-xs text-muted-foreground uppercase font-semibold">Especialidades</p>
                                         <div className="flex flex-wrap gap-2">
                                             {professional.specialties.map(spec => {
+                                                if (typeof spec !== 'string') {
+                                                    console.warn("Invalid specialty type:", spec);
+                                                    return null;
+                                                }
                                                 const map: Record<string, string> = {
                                                     'personal_trainer': 'Personal Trainer',
                                                     'nutritionist': 'Nutricionista',
