@@ -196,11 +196,11 @@ const ProfessionalDetails: React.FC = () => {
                         <CardContent className="space-y-6">
                             {/* Tags / Info Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {professional.professional_type && (
-                                    <div className="sm:col-span-2 flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border/50">
-                                        <Badge variant="default" className="text-sm px-3 py-1 capitalize">
-                                            {(() => {
-                                                const type = professional.professional_type;
+                                {professional.specialties && professional.specialties.length > 0 && (
+                                    <div className="sm:col-span-2 flex flex-col gap-2 p-3 bg-muted/50 rounded-lg border border-border/50">
+                                        <p className="text-xs text-muted-foreground uppercase font-semibold">Especialidades</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {professional.specialties.map(spec => {
                                                 const map: Record<string, string> = {
                                                     'personal_trainer': 'Personal Trainer',
                                                     'nutritionist': 'Nutricionista',
@@ -208,10 +208,14 @@ const ProfessionalDetails: React.FC = () => {
                                                     'clinic': 'Clínica / Estúdio',
                                                     'performance_coach': 'Coach de Performance'
                                                 };
-                                                return map[type] || type.replace(/_/g, ' ');
-                                            })()}
-                                        </Badge>
-                                        <span className="text-xs text-muted-foreground uppercase font-semibold">Profissional Verificado</span>
+                                                const label = map[spec] || spec.replace(/_/g, ' ');
+                                                return (
+                                                    <Badge key={spec} variant="default" className="text-sm px-3 py-1 capitalize">
+                                                        {label}
+                                                    </Badge>
+                                                )
+                                            })}
+                                        </div>
                                     </div>
                                 )}
 
