@@ -172,6 +172,8 @@ const ClientDetails: React.FC = () => {
       try {
         const profileRes = await supabase.from('profiles').select('*').eq('id', id).maybeSingle()
         const detailsRes = await supabase.from('client_details').select('*').eq('profile_id', id).maybeSingle()
+        if (detailsRes.error) console.error('Error fetching details:', detailsRes.error)
+        console.log('Details Res Data:', detailsRes.data)
         const cWorkouts = await supabase.from('client_workouts').select(`*, workout:workouts(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cMeals = await supabase.from('client_meal_plans').select(`*, meal_plan:meal_plans(*)`).eq('client_id', id).order('created_at', { ascending: false })
         const cAssessments = await supabase.from('biometric_data').select('*').eq('client_id', id).order('date', { ascending: false })
@@ -946,7 +948,7 @@ const ClientDetails: React.FC = () => {
 
               {/* Profile Info Overlay */}
               <div className="px-6 pb-6 relative flex flex-col md:flex-row items-end md:items-end gap-6 -mt-12 md:-mt-16">
-                <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-card shadow-xl rounded-2xl">
+                <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-card shadow-xl">
                   <AvatarImage src={clientProfile?.avatar_url} className="object-cover" />
                   <AvatarFallback className="text-3xl font-bold bg-muted text-foreground">
                     {clientProfile?.full_name?.substring(0, 2).toUpperCase()}

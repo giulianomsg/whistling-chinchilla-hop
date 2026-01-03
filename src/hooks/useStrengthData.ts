@@ -37,9 +37,6 @@ export const useStrengthData = (clientId: string | undefined) => {
                     .order('date', { ascending: false })
                     .limit(1)
 
-                // Fetch Base Profile for Gender
-                const { data: profile } = await supabase.from('profiles').select('gender').eq('id', clientId).single()
-
                 const currentWeight = assessments?.[0]?.weight || 70 // Fallback 70kg
 
                 if (!userLogs) {
@@ -99,7 +96,7 @@ export const useStrengthData = (clientId: string | undefined) => {
                 }
 
                 const totalLifted = maxLifts.squat + maxLifts.bench + maxLifts.deadlift
-                const gender = profile?.gender === 'female' ? 'female' : 'male'
+                const gender = 'male' // Default to male as we don't have gender in profile yet
                 const dots = calculateDots(totalLifted, currentWeight, gender)
                 setDotsScore(dots)
 
