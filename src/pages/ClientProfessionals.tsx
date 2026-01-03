@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
@@ -47,17 +48,23 @@ const ClientProfessionals = () => {
                 full_name: item.professional.full_name,
                 avatar_url: item.professional.avatar_url,
                 // professional_details might be an array or single object depending on definition, usually single for 1:1 if defined correctly or array
-                specialty: Array.isArray(item.professional.professional_details)
-                    ? item.professional.professional_details[0]?.specialty
-                    : item.professional.professional_details?.specialty,
+                // Correctly handle professional_details relation and specialty array
+                specialties: (() => {
+                    const details = Array.isArray(item.professional.professional_details)
+                        ? item.professional.professional_details[0]
+                        : item.professional.professional_details;
+
+                    let specs = details?.specialty;
+                    if (typeof specs === 'string') specs = [specs];
+                    if (!Array.isArray(specs)) specs = [];
+                    return specs;
+                })(),
                 link_id: item.id
             }))
 
             setProfessionals(formatted)
         } catch (error: any) {
             console.error(error)
-            // If table relation doesn't exist explicitly with !professional_id, it might fail.
-            // But let's assume standard setup.
             showError('Erro ao carregar profissionais.')
         } finally {
             setLoading(false)
@@ -90,9 +97,16 @@ const ClientProfessionals = () => {
                                 </Avatar>
                                 <div>
                                     <CardTitle className="text-lg">{prof.full_name}</CardTitle>
-                                    <p className="text-sm text-muted-foreground capitalize">
-                                        {prof.specialty === 'nutritionist' ? 'Nutricionista' : 'Personal Trainer'}
-                                    </p>
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                        {prof.specialties && prof.specialties.length > 0 ? (
+                                            prof.specialties.slice(0, 2).map((s: string) => {
+                                                const label = { 'personal_trainer': 'Personal', 'nutritionist': 'Nutri', 'sports_doctor': 'Médico', 'performance_coach': 'Coach' }[s] || s;
+                                                return <Badge key={s} variant="secondary" className="text-[10px] px-1.5 h-5">{label}</Badge>
+                                            })
+                                        ) : (
+                                            <span className="text-sm text-muted-foreground">Profissional</span>
+                                        )}
+                                    </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4 pt-2">

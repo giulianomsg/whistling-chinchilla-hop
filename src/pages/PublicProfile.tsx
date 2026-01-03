@@ -115,7 +115,7 @@ const PublicProfile = () => {
                         <div className="absolute inset-0 bg-black/20" />
                     </div>
 
-                    <div className="px-6 pb-8 pt-16 relative">
+                    <div className="px-6 pb-8 pt-16 md:pt-32 relative">
                         {/* Avatar Overlapping */}
                         <div className="absolute -top-16 left-6 md:left-10">
                             <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-card shadow-xl">

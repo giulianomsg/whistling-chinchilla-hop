@@ -997,7 +997,19 @@ const ProfileSettings: React.FC = () => {
               <DialogDescription>Enquadre seu rosto para a foto de perfil.</DialogDescription>
             </DialogHeader>
             <div className="relative flex-1 bg-black w-full overflow-hidden rounded-md my-4 border border-border">
-              {imageSrc && <Cropper image={imageSrc} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onCropComplete={onCropComplete} onZoomChange={setZoom} cropShape="round" showGrid={true} />}
+              {imageSrc && (
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={uploadType === 'avatar' ? 1 : 3 / 1}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                  cropShape={uploadType === 'avatar' ? 'round' : 'rect'}
+                  showGrid={true}
+                />
+              )}
             </div>
             <div className="space-y-4 px-2">
               <div className="flex items-center gap-4"><ZoomIn className="h-4 w-4 text-muted-foreground" /><Slider value={[zoom]} min={1} max={3} step={0.1} onValueChange={(val) => setZoom(val[0])} className="flex-1 cursor-pointer" /></div>
