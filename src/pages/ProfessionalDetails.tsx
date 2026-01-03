@@ -70,7 +70,6 @@ const ProfessionalDetails: React.FC = () => {
                 .single()
 
             if (profError) throw profError
-            console.log('Professional Debug:', profData);
             setProfessional(profData)
 
             // Fetch Reviews
@@ -314,45 +313,35 @@ const ProfessionalDetails: React.FC = () => {
                             </div>
 
                             {/* Certifications - Only show if exists */}
-                            {/* Certifications - TEMPORARILY DISABLED FOR DEBUGGING
+                            {/* Certifications - Only show if exists */}
                             {(() => {
-                                // Defensive rendering for certifications
-                                try {
-                                    const certs = professional.certifications;
-                                    let certText = '';
+                                const certs = professional.certifications;
+                                let certText = '';
 
-                                    if (typeof certs === 'string') {
-                                        certText = certs;
-                                    } else if (certs && typeof certs === 'object') {
-                                        if ('raw_text' in certs) {
-                                            certText = String((certs as any).raw_text);
-                                        } else {
-                                            // Fallback to empty to avoid crash
-                                            return null; 
-                                        }
+                                if (typeof certs === 'string') {
+                                    certText = certs;
+                                } else if (certs && typeof certs === 'object') {
+                                    if (certs.raw_text) {
+                                        certText = String(certs.raw_text);
                                     }
-
-                                    if (!certText) return null;
-
-                                    return (
-                                        <>
-                                            <Separator />
-                                            <div>
-                                                <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-                                                    <Scroll className="h-4 w-4" /> Certificações & Qualificações
-                                                </h3>
-                                                <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
-                                                    {certText}
-                                                </div>
-                                            </div>
-                                        </>
-                                    );
-                                } catch (e) {
-                                    console.error("Error rendering certifications", e);
-                                    return null;
                                 }
-                            })()} 
-                            */}
+
+                                if (!certText) return null;
+
+                                return (
+                                    <>
+                                        <Separator />
+                                        <div>
+                                            <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Scroll className="h-4 w-4" /> Certificações & Qualificações
+                                            </h3>
+                                            <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
+                                                {certText}
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
                         </CardContent>
                     </Card>
 

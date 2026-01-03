@@ -176,7 +176,13 @@ const PublicProfile = () => {
                             <div>
                                 <h4 className="font-semibold text-foreground mb-1">Certificações & Licenças</h4>
                                 <div className="p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground whitespace-pre-wrap">
-                                    {details?.certifications?.raw_text || details?.certifications || 'Não informado.'}
+                                    {(() => {
+                                        const certs = details?.certifications;
+                                        if (!certs) return 'Não informado.';
+                                        if (typeof certs === 'string') return certs;
+                                        if (typeof certs === 'object' && certs.raw_text) return String(certs.raw_text);
+                                        return 'Não informado.';
+                                    })()}
                                 </div>
                             </div>
                             <div>
