@@ -20,7 +20,7 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
-  signUp: (email: string, password: string, fullName: string, role?: 'client' | 'professional') => Promise<{ error: any }>
+  signUp: (email: string, password: string, fullName: string, role?: 'client' | 'professional', details?: { phone?: string; data_nascimento?: string; cpf?: string }) => Promise<{ error: any }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -39,11 +39,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error }
   }
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'client' | 'professional' = 'client') => {
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    role: 'client' | 'professional' = 'client',
+    details?: { phone?: string; data_nascimento?: string; cpf?: string }
+  ) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, role } }
+      options: {
+        data: {
+          full_name: fullName,
+          role,
+          phone: details?.phone,
+          data_nascimento: details?.data_nascimento,
+          cpf: details?.cpf
+        }
+      }
     })
     return { error }
   }

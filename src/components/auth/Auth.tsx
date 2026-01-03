@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, Mail, Lock, User } from 'lucide-react'
+import { Loader2, Mail, Lock, User, Phone, Calendar, FileText } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { showSuccess, showError } from '@/utils/toast'
 import { Switch } from "@/components/ui/switch"
@@ -22,6 +22,9 @@ export const Auth: React.FC = () => {
   const [signupEmail, setSignupEmail] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
   const [signupFullName, setSignupFullName] = useState('')
+  const [signupPhone, setSignupPhone] = useState('')
+  const [signupDOB, setSignupDOB] = useState('')
+  const [signupCPF, setSignupCPF] = useState('')
   const [signupLoading, setSignupLoading] = useState(false)
   const [isProfessional, setIsProfessional] = useState(false)
 
@@ -73,9 +76,30 @@ export const Auth: React.FC = () => {
       return
     }
 
+
+    // Validação de Idade para Profissionais
+    if (isProfessional && signupDOB) {
+      const birthDate = new Date(signupDOB);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      if (age < 18) {
+        setSignupError('Profissionais devem ser maiores de 18 anos.');
+        setSignupLoading(false);
+        return;
+      }
+    }
+
     try {
       const role = isProfessional ? 'professional' : 'client'
-      const { error } = await signUp(signupEmail, signupPassword, signupFullName, role)
+      const { error } = await signUp(signupEmail, signupPassword, signupFullName, role, {
+        phone: signupPhone,
+        data_nascimento: signupDOB,
+        cpf: signupCPF
+      })
 
       if (error) {
         setSignupError(error.message)
@@ -202,6 +226,58 @@ export const Auth: React.FC = () => {
                         placeholder="João Silva"
                         value={signupFullName}
                         onChange={(e) => setSignupFullName(e.target.value)}
+                        className="pl-10"
+                        required
+                        disabled={signupLoading}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-phone">Celular / WhatsApp</Label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="signup-phone"
+                          type="tel"
+                          placeholder="(00) 00000-0000"
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value)}
+                          className="pl-10"
+                          required
+                          disabled={signupLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-dob">Data de Nascimento</Label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="signup-dob"
+                          type="date"
+                          value={signupDOB}
+                          onChange={(e) => setSignupDOB(e.target.value)}
+                          className="pl-10"
+                          required
+                          disabled={signupLoading}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-cpf">CPF</Label>
+                    <div className="relative">
+                      <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="signup-cpf"
+                        type="text"
+                        placeholder="000.000.000-00"
+                        value={signupCPF}
+                        onChange={(e) => setSignupCPF(e.target.value)}
                         className="pl-10"
                         required
                         disabled={signupLoading}
