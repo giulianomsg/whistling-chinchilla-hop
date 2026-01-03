@@ -33,7 +33,8 @@ const ClientProfessionals = () => {
                         avatar_url,
                         role,
                         professional_details (
-                            specialty
+                            specialty,
+                            cover_url
                         )
                     )
                 `)
@@ -43,24 +44,27 @@ const ClientProfessionals = () => {
             if (error) throw error
 
             // Transform data structure if needed
-            const formatted = data.map((item: any) => ({
-                id: item.professional.id,
-                full_name: item.professional.full_name,
-                avatar_url: item.professional.avatar_url,
-                // professional_details might be an array or single object depending on definition, usually single for 1:1 if defined correctly or array
-                // Correctly handle professional_details relation and specialty array
-                specialties: (() => {
-                    const details = Array.isArray(item.professional.professional_details)
-                        ? item.professional.professional_details[0]
-                        : item.professional.professional_details;
+            const formatted = data.map((item: any) => {
+                const details = Array.isArray(item.professional.professional_details)
+                    ? item.professional.professional_details[0]
+                    : item.professional.professional_details;
 
-                    let specs = details?.specialty;
-                    if (typeof specs === 'string') specs = [specs];
-                    if (!Array.isArray(specs)) specs = [];
-                    return specs;
-                })(),
-                link_id: item.id
-            }))
+                return {
+                    id: item.professional.id,
+                    full_name: item.professional.full_name,
+                    avatar_url: item.professional.avatar_url,
+                    cover_url: details?.cover_url,
+                    // professional_details might be an array or single object depending on definition
+                    // Correctly handle professional_details relation and specialty array
+                    specialties: (() => {
+                        let specs = details?.specialty;
+                        if (typeof specs === 'string') specs = [specs];
+                        if (!Array.isArray(specs)) specs = [];
+                        return specs;
+                    })(),
+                    link_id: item.id
+                }
+            })
 
             setProfessionals(formatted)
         } catch (error: any) {
@@ -89,41 +93,58 @@ const ClientProfessionals = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {professionals.map((prof) => (
-                        <Card key={prof.id} className="border-border hover:border-primary/50 transition-all duration-300">
-                            <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                                <Avatar className="h-14 w-14 border border-border">
-                                    <AvatarImage src={prof.avatar_url} className="object-cover" />
-                                    <AvatarFallback>{prof.full_name?.[0]}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <CardTitle className="text-lg">{prof.full_name}</CardTitle>
-                                    <div className="flex flex-wrap gap-1 mt-1">
+                        <Card key={prof.id} className="border-border hover:border-primary/50 transition-all duration-300 overflow-hidden flex flex-col">
+                            {/* Cover Image Area */}
+                            <div className="h-28 w-full bg-muted relative">
+                                <img
+                                    src={prof.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+                                    alt="Capa"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/10" />
+                            </div>
+
+                            {/* Content Area with overlapping avatar */}
+                            <CardContent className="pt-0 relative flex-1 flex flex-col">
+                                <div className="-mt-10 mb-3 flex justify-between items-end">
+                                    <Avatar className="h-20 w-20 border-4 border-card bg-card shadow-sm">
+                                        <AvatarImage src={prof.avatar_url} className="object-cover" />
+                                        <AvatarFallback>{prof.full_name?.[0]}</AvatarFallback>
+                                    </Avatar>
+                                </div>
+
+                                <div className="mb-4">
+                                    <CardTitle className="text-lg leading-tight mb-1">{prof.full_name}</CardTitle>
+                                    <div className="flex flex-wrap gap-1">
                                         {prof.specialties && prof.specialties.length > 0 ? (
-                                            prof.specialties.slice(0, 2).map((s: string) => {
+                                            prof.specialties.slice(0, 3).map((s: string) => {
                                                 const label = { 'personal_trainer': 'Personal', 'nutritionist': 'Nutri', 'sports_doctor': 'Médico', 'performance_coach': 'Coach' }[s] || s;
-                                                return <Badge key={s} variant="secondary" className="text-[10px] px-1.5 h-5">{label}</Badge>
+                                                return <Badge key={s} variant="secondary" className="text-[10px] px-2 h-5 bg-secondary/50 hover:bg-secondary border-none">{label}</Badge>
                                             })
                                         ) : (
                                             <span className="text-sm text-muted-foreground">Profissional</span>
                                         )}
                                     </div>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="space-y-4 pt-2">
-                                <div className="flex gap-2 text-sm text-muted-foreground">
-                                    <div className="bg-muted px-2 py-1 rounded flex items-center gap-1">
-                                        <Dumbbell className="h-3 w-3" /> Treinos
+
+                                <div className="mt-auto space-y-3">
+                                    <div className="flex gap-2 text-xs text-muted-foreground">
+                                        <div className="bg-muted px-2 py-1 rounded flex items-center gap-1">
+                                            <Dumbbell className="h-3 w-3" /> Treinos
+                                        </div>
+                                        <div className="bg-muted px-2 py-1 rounded flex items-center gap-1">
+                                            <Utensils className="h-3 w-3" /> Dietas
+                                        </div>
                                     </div>
-                                    <div className="bg-muted px-2 py-1 rounded flex items-center gap-1">
-                                        <Utensils className="h-3 w-3" /> Dietas
-                                    </div>
+
+                                    <Button
+                                        className="w-full gap-2 font-semibold shadow-sm"
+                                        size="sm"
+                                        onClick={() => navigate(`/app/profile/public/${prof.id}`)}
+                                    >
+                                        <Eye className="h-4 w-4" /> Ver Perfil
+                                    </Button>
                                 </div>
-                                <Button
-                                    className="w-full gap-2"
-                                    onClick={() => navigate(`/app/profile/public/${prof.id}`)}
-                                >
-                                    <Eye className="h-4 w-4" /> Ver Perfil
-                                </Button>
                             </CardContent>
                         </Card>
                     ))}
