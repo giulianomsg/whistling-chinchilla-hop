@@ -201,7 +201,7 @@ const ProfileSettings: React.FC = () => {
           let role = profile.role
           let newAnamnesis = { ...DEFAULT_ANAMNESIS }
 
-          if (role === 'professional') {
+          if (role === 'professional' || role === 'admin') {
             const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
             if (profData) {
               newFormData.bio = profData.bio || ''
@@ -350,7 +350,7 @@ const ProfileSettings: React.FC = () => {
 
       await supabase.auth.updateUser({ data: { full_name: formData.fullName, phone: formData.phone } })
 
-      if (userRole === 'professional') {
+      if (userRole === 'professional' || userRole === 'admin') {
         if (!formData.specialty) throw new Error('Selecione o Tipo de Profissional')
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
 
@@ -532,7 +532,7 @@ const ProfileSettings: React.FC = () => {
             <div className="w-full overflow-x-auto pb-2">
               <TabsList className="bg-muted/50 p-1 rounded-lg flex w-max h-auto gap-2">
                 <TabsTrigger value="personal" className="px-4">Pessoal</TabsTrigger>
-                {userRole === 'professional' && <TabsTrigger value="professional" className="px-4">Profissional</TabsTrigger>}
+                {(userRole === 'professional' || userRole === 'admin') && <TabsTrigger value="professional" className="px-4">Profissional</TabsTrigger>}
                 {userRole === 'client' && (
                   <>
                     <TabsTrigger value="photos" className="px-4">Fotos</TabsTrigger>
@@ -585,7 +585,7 @@ const ProfileSettings: React.FC = () => {
               </Card>
             </TabsContent>
 
-            {userRole === 'professional' && (
+            {(userRole === 'professional' || userRole === 'admin') && (
               <TabsContent value="professional" className="mt-6 space-y-6">
                 <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                   <CardHeader>
