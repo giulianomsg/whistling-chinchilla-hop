@@ -143,7 +143,7 @@ const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId, simplified = fals
     const renderGoalCard = (goal: Goal) => {
         const progress = calculateProgress(goal.start_value, goal.current_value, goal.target_value)
         return (
-            <div key={goal.id} className={`${simplified ? 'bg-background/20 py-2 border-b border-border/50 last:border-0' : 'bg-card border border-border p-4 rounded-lg'} space-y-2 cursor-pointer hover:bg-muted/60 transition-colors`} onClick={() => handleOpenDialog(goal)}>
+            <div key={goal.id} className={`${simplified ? 'bg-muted/50 p-3 rounded-md border border-border mb-2 last:mb-0' : 'bg-card border border-border p-4 rounded-lg'} space-y-2 cursor-pointer hover:bg-muted/60 transition-colors`} onClick={() => handleOpenDialog(goal)}>
                 <div className="flex justify-between items-start">
                     <div>
                         <h4 className={`font-bold text-foreground ${simplified ? 'text-sm' : ''}`}>{goal.title}</h4>
