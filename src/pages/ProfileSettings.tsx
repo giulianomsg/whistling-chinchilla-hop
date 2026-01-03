@@ -231,6 +231,7 @@ const ProfileSettings: React.FC = () => {
             // ... existing client logic ...
             const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
             if (clientData) {
+              newFormData.coverUrl = clientData.cover_url || ''
               newFormData.goals = clientData.goals || ''
               newFormData.restrictions = clientData.health_restrictions || ''
               newFormData.whatsapp = clientData.whatsapp || ''
@@ -312,9 +313,12 @@ const ProfileSettings: React.FC = () => {
         setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
         await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
       } else {
-        // Update professional_details for cover
-        // Note: cover_url column must exist (we added it)
-        await supabase.from('professional_details').update({ cover_url: finalUrl, updated_at: new Date().toISOString() }).eq('profile_id', user.id)
+        // Update professional or client details for cover
+        if (userRole === 'professional' || userRole === 'admin') {
+          await supabase.from('professional_details').update({ cover_url: finalUrl, updated_at: new Date().toISOString() }).eq('profile_id', user.id)
+        } else if (userRole === 'client') {
+          await supabase.from('client_details').update({ cover_url: finalUrl, updated_at: new Date().toISOString() }).eq('profile_id', user.id)
+        }
         setFormData(prev => ({ ...prev, coverUrl: finalUrl }))
       }
 
@@ -400,6 +404,7 @@ const ProfileSettings: React.FC = () => {
           anamnesis_data: anamnesisForm,
           whatsapp: formData.whatsapp,
           telegram: formData.telegram,
+          cover_url: formData.coverUrl,
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 
@@ -562,14 +567,10 @@ const ProfileSettings: React.FC = () => {
               className="w-full h-full object-cover transition-opacity hover:opacity-90"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-              {(userRole === 'professional' || userRole === 'admin') && (
-                <>
-                  <input ref={coverInputRef} type="file" accept="image/*" onChange={(e) => onFileSelect(e, 'cover')} className="hidden" disabled={uploading} />
-                  <Button variant="secondary" size="sm" onClick={() => coverInputRef.current?.click()} className="gap-2">
-                    <Camera className="h-4 w-4" /> Alterar Capa
-                  </Button>
-                </>
-              )}
+              <input ref={coverInputRef} type="file" accept="image/*" onChange={(e) => onFileSelect(e, 'cover')} className="hidden" disabled={uploading} />
+              <Button variant="secondary" size="sm" onClick={() => coverInputRef.current?.click()} className="gap-2">
+                <Camera className="h-4 w-4" /> Alterar Capa
+              </Button>
             </div>
           </div>
 
