@@ -148,7 +148,16 @@ const ProfessionalDetails: React.FC = () => {
                             <div className="flex flex-wrap gap-2">
                                 {professional.specialties?.map(spec => (
                                     <Badge key={spec} variant="secondary" className="text-sm px-3 py-1">
-                                        {spec}
+                                        {(() => {
+                                            const map: Record<string, string> = {
+                                                'personal_trainer': 'Personal Trainer',
+                                                'nutritionist': 'Nutricionista',
+                                                'sports_doctor': 'Médico do Esporte',
+                                                'clinic': 'Clínica / Estúdio',
+                                                'performance_coach': 'Performance Coach'
+                                            }
+                                            return map[spec] || spec.replace(/_/g, ' ')
+                                        })()}
                                     </Badge>
                                 ))}
                             </div>
@@ -298,30 +307,43 @@ const ProfessionalDetails: React.FC = () => {
 
                             {/* Certifications - Only show if exists */}
                             {(() => {
-                                const certs = professional.certifications;
-                                let certText = '';
+                                // Defensive rendering for certifications
+                                try {
+                                    const certs = professional.certifications;
+                                    let certText = '';
 
-                                if (typeof certs === 'string') {
-                                    certText = certs;
-                                } else if (certs && typeof certs === 'object' && 'raw_text' in certs) {
-                                    certText = (certs as any).raw_text;
-                                }
+                                    if (typeof certs === 'string') {
+                                        certText = certs;
+                                    } else if (certs && typeof certs === 'object') {
+                                        // Handle specific raw_text key or generic object
+                                        if ('raw_text' in certs) {
+                                            certText = String(certs.raw_text);
+                                        } else {
+                                            // Fallback: try to display as string if it's not a complex object, or ignore
+                                            // Don't render [object Object]
+                                            return null;
+                                        }
+                                    }
 
-                                if (!certText) return null;
+                                    if (!certText) return null;
 
-                                return (
-                                    <>
-                                        <Separator />
-                                        <div>
-                                            <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Scroll className="h-4 w-4" /> Certificações & Qualificações
-                                            </h3>
-                                            <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
-                                                {certText}
+                                    return (
+                                        <>
+                                            <Separator />
+                                            <div>
+                                                <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                                                    <Scroll className="h-4 w-4" /> Certificações & Qualificações
+                                                </h3>
+                                                <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
+                                                    {certText}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </>
-                                );
+                                        </>
+                                    );
+                                } catch (e) {
+                                    console.error("Error rendering certifications", e);
+                                    return null;
+                                }
                             })()}
                         </CardContent>
                     </Card>
