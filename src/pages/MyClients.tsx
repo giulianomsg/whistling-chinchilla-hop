@@ -122,7 +122,12 @@ const MyClients: React.FC = () => {
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild><Button className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold"><Plus className="mr-2 h-4 w-4" /> Novo Aluno</Button></DialogTrigger>
             <DialogContent className="bg-card border-border text-foreground">
-              <DialogHeader><DialogTitle>Adicionar Novo Aluno</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>Adicionar Novo Aluno</DialogTitle>
+                <div className="text-sm text-muted-foreground mb-4">
+                  Digite o email do aluno para vinculá-lo à sua conta.
+                </div>
+              </DialogHeader>
               <form onSubmit={handleAddClient} className="space-y-4 mt-4">
                 <div><Label>Email do Aluno</Label><Input value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} className="bg-muted border-border mt-1.5 text-foreground" placeholder="email@exemplo.com" /></div>
                 <DialogFooter><Button type="submit" disabled={addingClient} className="bg-green-600 text-white hover:bg-green-700 w-full">{addingClient ? <Loader2 className="animate-spin h-4 w-4" /> : 'Vincular'}</Button></DialogFooter>

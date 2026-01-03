@@ -11,9 +11,9 @@ DECLARE
 BEGIN
   v_prof_id := auth.uid();
   
-  -- Check if user is professional
-  IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = v_prof_id AND role = 'professional') THEN
-    RAISE EXCEPTION 'Apenas profissionais podem vincular alunos.';
+  -- Check if user is professional OR admin
+  IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = v_prof_id AND (role = 'professional' OR role = 'admin')) THEN
+    RAISE EXCEPTION 'Apenas profissionais ou administradores podem vincular alunos.';
   END IF;
 
   -- Find client
@@ -27,7 +27,7 @@ BEGIN
   IF EXISTS (SELECT 1 FROM public.client_professionals WHERE client_id = v_client_id AND professional_id = v_prof_id) THEN
       -- If functionality exists, ensure it is active
       UPDATE public.client_professionals 
-      SET status = 'active', started_at = now() -- Update started_at to reflect new linkage? Or keep original? Let's update.
+      SET status = 'active', started_at = now() 
       WHERE client_id = v_client_id AND professional_id = v_prof_id;
   ELSE
       INSERT INTO public.client_professionals (client_id, professional_id, status)
