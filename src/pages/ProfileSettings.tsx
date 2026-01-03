@@ -123,7 +123,7 @@ const ProfileSettings: React.FC = () => {
     responsavelLegal: '',
     cpf: '',
     bio: '',
-    specialty: '',
+    specialty: [] as string[],
     consultationPrice: '',
     certifications: '',
     goals: '',
@@ -195,7 +195,7 @@ const ProfileSettings: React.FC = () => {
             cpf: profile.cpf || '',
             whatsapp: '',
             telegram: '',
-            bio: '', specialty: '', consultationPrice: '', certifications: '', goals: '', restrictions: ''
+            bio: '', specialty: [] as string[], consultationPrice: '', certifications: '', goals: '', restrictions: ''
           }
 
           let role = profile.role
@@ -205,7 +205,18 @@ const ProfileSettings: React.FC = () => {
             const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
             if (profData) {
               newFormData.bio = profData.bio || ''
-              newFormData.specialty = ['personal_trainer', 'nutritionist', 'sports_doctor', 'clinic', 'performance_coach'].includes(profData.specialty) ? profData.specialty : ''
+
+              // Handle specialty as array or legacy string
+              let loadedSpecialty = profData.specialty;
+              if (typeof loadedSpecialty === 'string') {
+                // Legacy single string
+                loadedSpecialty = [loadedSpecialty];
+              } else if (!Array.isArray(loadedSpecialty)) {
+                // Null or undefined
+                loadedSpecialty = [];
+              }
+              newFormData.specialty = loadedSpecialty;
+
               newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
               const certData = profData.certifications as any
               newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
@@ -262,7 +273,7 @@ const ProfileSettings: React.FC = () => {
     return () => { mounted = false }
   }, [user?.id])
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -351,13 +362,13 @@ const ProfileSettings: React.FC = () => {
       await supabase.auth.updateUser({ data: { full_name: formData.fullName, phone: formData.phone } })
 
       if (userRole === 'professional' || userRole === 'admin') {
-        if (!formData.specialty) throw new Error('Selecione o Tipo de Profissional')
+        if (!formData.specialty || formData.specialty.length === 0) throw new Error('Selecione pelo menos um Tipo de Profissional')
         const price = formData.consultationPrice ? parseFloat(formData.consultationPrice.replace(',', '.')) : null
 
         const { error: profError } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio: formData.bio,
-          specialty: formData.specialty,
+          specialty: formData.specialty as any, // Cast to any or adjust types if needed, Supabase client should handle array automatically if types are generated, but here we force it
           consultation_price: price,
           certifications: { raw_text: formData.certifications },
           whatsapp: formData.whatsapp,
@@ -593,23 +604,44 @@ const ProfileSettings: React.FC = () => {
                     <CardDescription className="text-muted-foreground">Especialidade e detalhes.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-muted-foreground">Tipo de Profissional</Label>
-                        <Select value={formData.specialty} onValueChange={v => handleInputChange('specialty', v)}>
-                          <SelectTrigger className="bg-background border-border text-foreground mt-1.5"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                          <SelectContent className="bg-popover text-popover-foreground border-border">
-                            <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
-                            <SelectItem value="nutritionist">Nutricionista</SelectItem>
-                            <SelectItem value="sports_doctor">Médico do Esporte / Nutrólogo</SelectItem>
-                            <SelectItem value="clinic">Clínica / Estúdio</SelectItem>
-                            <SelectItem value="performance_coach">Consultor de Alta Performance (Coach)</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold text-foreground">Tipos de Profissional</Label>
+                        <div className="grid grid-cols-1 gap-2 border border-border rounded-md p-3 bg-card/30">
+                          {[
+                            { id: 'personal_trainer', label: 'Personal Trainer' },
+                            { id: 'nutritionist', label: 'Nutricionista' },
+                            { id: 'sports_doctor', label: 'Médico do Esporte / Nutrólogo' },
+                            { id: 'clinic', label: 'Clínica / Estúdio' },
+                            { id: 'performance_coach', label: 'Consultor de Alta Performance' }
+                          ].map((type) => (
+                            <div key={type.id} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={type.id}
+                                checked={Array.isArray(formData.specialty) ? formData.specialty.includes(type.id) : false}
+                                onCheckedChange={(checked) => {
+                                  const current = Array.isArray(formData.specialty) ? formData.specialty : [];
+                                  let updated;
+                                  if (checked) {
+                                    updated = [...current, type.id];
+                                  } else {
+                                    updated = current.filter(s => s !== type.id);
+                                  }
+                                  handleInputChange('specialty', updated as any);
+                                }}
+                              />
+                              <label htmlFor={type.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                                {type.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div><Label className="text-muted-foreground">Valor da Consulta (R$)</Label><Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                      <div className="space-y-4">
+                        <div><Label className="text-muted-foreground">Valor da Consulta (R$)</Label><Input type="number" step="0.01" value={formData.consultationPrice} onChange={e => handleInputChange('consultationPrice', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+                        <div><Label className="text-muted-foreground">Biografia / Sobre Mim</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
+                      </div>
                     </div>
-                    <div><Label className="text-muted-foreground">Biografia / Sobre Mim</Label><Textarea value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} className="bg-background border-border text-foreground mt-1.5 min-h-[100px]" /></div>
                     <div><Label className="text-muted-foreground">Certificações (CRN / CREF)</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
                   </CardContent>
                 </Card>
