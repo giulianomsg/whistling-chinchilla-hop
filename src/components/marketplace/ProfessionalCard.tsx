@@ -52,6 +52,7 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ professional
             <CardContent className="p-6 flex-1">
                 <div className="flex flex-wrap gap-2 mb-4">
                     {professional.specialties?.slice(0, 3).map((spec, i) => {
+                        if (typeof spec !== 'string') return null;
                         const map: Record<string, string> = {
                             'personal_trainer': 'Personal Trainer',
                             'nutritionist': 'Nutricionista',
