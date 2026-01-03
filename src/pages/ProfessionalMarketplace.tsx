@@ -108,9 +108,17 @@ const ProfessionalMarketplace: React.FC = () => {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Todas Especialidades</SelectItem>
-                                {allSpecialties.map(s => (
-                                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                                ))}
+                                {allSpecialties.map(s => {
+                                    const map: Record<string, string> = {
+                                        'personal_trainer': 'Personal Trainer',
+                                        'nutritionist': 'Nutricionista',
+                                        'sports_doctor': 'Médico do Esporte',
+                                        'clinic': 'Clínica / Estúdio',
+                                        'performance_coach': 'Coach de Performance'
+                                    };
+                                    const label = map[s] || s.replace(/_/g, ' ');
+                                    return <SelectItem key={s} value={s}>{label}</SelectItem>
+                                })}
                             </SelectContent>
                         </Select>
 

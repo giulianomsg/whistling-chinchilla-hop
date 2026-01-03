@@ -51,11 +51,21 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ professional
             </CardHeader>
             <CardContent className="p-6 flex-1">
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {professional.specialties?.slice(0, 3).map((spec, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs bg-secondary/50 hover:bg-secondary/70">
-                            {spec}
-                        </Badge>
-                    ))}
+                    {professional.specialties?.slice(0, 3).map((spec, i) => {
+                        const map: Record<string, string> = {
+                            'personal_trainer': 'Personal Trainer',
+                            'nutritionist': 'Nutricionista',
+                            'sports_doctor': 'Médico do Esporte',
+                            'clinic': 'Clínica / Estúdio',
+                            'performance_coach': 'Performance Coach'
+                        }
+                        const label = map[spec] || spec.replace(/_/g, ' ')
+                        return (
+                            <Badge key={i} variant="secondary" className="text-xs bg-secondary/50 hover:bg-secondary/70">
+                                {label}
+                            </Badge>
+                        )
+                    })}
                     {professional.specialties && professional.specialties.length > 3 && (
                         <Badge variant="outline" className="text-xs">+{professional.specialties.length - 3}</Badge>
                     )}
