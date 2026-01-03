@@ -199,7 +199,17 @@ const ProfessionalDetails: React.FC = () => {
                                 {professional.professional_type && (
                                     <div className="sm:col-span-2 flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border/50">
                                         <Badge variant="default" className="text-sm px-3 py-1 capitalize">
-                                            {professional.professional_type.replace('_', ' ')}
+                                            {(() => {
+                                                const type = professional.professional_type;
+                                                const map: Record<string, string> = {
+                                                    'personal_trainer': 'Personal Trainer',
+                                                    'nutritionist': 'Nutricionista',
+                                                    'sports_doctor': 'Médico do Esporte',
+                                                    'clinic': 'Clínica / Estúdio',
+                                                    'performance_coach': 'Coach de Performance'
+                                                };
+                                                return map[type] || type.replace(/_/g, ' ');
+                                            })()}
                                         </Badge>
                                         <span className="text-xs text-muted-foreground uppercase font-semibold">Profissional Verificado</span>
                                     </div>
@@ -283,21 +293,32 @@ const ProfessionalDetails: React.FC = () => {
                             </div>
 
                             {/* Certifications - Only show if exists */}
-                            {professional.certifications && (professional.certifications.raw_text || typeof professional.certifications === 'string') && (
-                                <>
-                                    <Separator />
-                                    <div>
-                                        <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-                                            <Scroll className="h-4 w-4" /> Certificações & Qualificações
-                                        </h3>
-                                        <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
-                                            {typeof professional.certifications === 'string'
-                                                ? professional.certifications
-                                                : professional.certifications.raw_text}
+                            {(() => {
+                                const certs = professional.certifications;
+                                let certText = '';
+
+                                if (typeof certs === 'string') {
+                                    certText = certs;
+                                } else if (certs && typeof certs === 'object' && 'raw_text' in certs) {
+                                    certText = (certs as any).raw_text;
+                                }
+
+                                if (!certText) return null;
+
+                                return (
+                                    <>
+                                        <Separator />
+                                        <div>
+                                            <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Scroll className="h-4 w-4" /> Certificações & Qualificações
+                                            </h3>
+                                            <div className="bg-muted/30 p-4 rounded-lg border border-border text-sm whitespace-pre-line">
+                                                {certText}
+                                            </div>
                                         </div>
-                                    </div>
-                                </>
-                            )}
+                                    </>
+                                );
+                            })()}
                         </CardContent>
                     </Card>
 
