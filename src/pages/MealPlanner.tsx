@@ -38,7 +38,7 @@ const MealPlanner: React.FC = () => {
   const [pendingFood, setPendingFood] = useState<any>(null) // Food selected from Unified Search
   const [newMealQty, setNewMealQty] = useState(100)
   const [newMealName, setNewMealName] = useState('Refeição') // Or specific like 'Café da Manhã'
-  const [newMealDay, setNewMealDay] = useState(1)
+  const [selectedDays, setSelectedDays] = useState<number[]>([1])
 
   const fetchData = async () => {
     if (!user) return
@@ -100,17 +100,19 @@ const MealPlanner: React.FC = () => {
   }
 
   const handleAddMeal = async () => {
-    if (!selectedMealPlan || !pendingFood) return
+    if (!selectedMealPlan || !pendingFood || selectedDays.length === 0) return
 
-    // Auto-calculate macros happens on read-time, but here we just store the link and quantity
-    const { error } = await supabase.from('meal_plan_items').insert({
+    // Prepare batch inserts for all selected days
+    const itemsToInsert = selectedDays.map(day => ({
       meal_plan_id: selectedMealPlan.id,
       food_id: pendingFood.id,
-      day_number: newMealDay,
+      day_number: day,
       meal_name: newMealName,
       quantity: newMealQty,
       meal_order: 99
-    })
+    }))
+
+    const { error } = await supabase.from('meal_plan_items').insert(itemsToInsert)
 
     if (!error) {
       showSuccess('Item adicionado!');
@@ -267,30 +269,66 @@ const MealPlanner: React.FC = () => {
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-lg">Diário Alimentar</h3>
-                <Dialog open={isAddMealDialogOpen} onOpenChange={setIsAddMealDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white"><Plus className="h-4 w-4 mr-2" /> Adicionar Alimento</Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-card border-border text-foreground">
-                    <DialogHeader><DialogTitle>Adicionar Item</DialogTitle></DialogHeader>
+                <div className="flex gap-2">
+                  <UnifiedFoodSearch
+                    trigger={<Button size="sm" className="bg-green-600 hover:bg-green-500 text-white"><Plus className="h-4 w-4 mr-2" /> Adicionar Alimento</Button>}
+                    onSelect={(food) => {
+                      setPendingFood(food);
+                      // Open the configuration dialog immediately after selection
+                      setIsAddMealDialogOpen(true);
+                    }}
+                  />
+                </div>
 
-                    {!pendingFood ? (
-                      <div className="py-4">
-                        <UnifiedFoodSearch onSelect={setPendingFood} />
-                      </div>
-                    ) : (
+                {/* Configuration Dialog - Now opens AFTER selection */}
+                <Dialog open={isAddMealDialogOpen} onOpenChange={(open) => {
+                  setIsAddMealDialogOpen(open);
+                  if (!open) setPendingFood(null); // Reset if closed without adding
+                }}>
+                  <DialogContent className="bg-card border-border text-foreground">
+                    <DialogHeader><DialogTitle>Configurar Refeição</DialogTitle></DialogHeader>
+
+                    {pendingFood && (
                       <div className="space-y-4 mt-2">
                         <div className="p-3 bg-muted rounded-md flex justify-between items-center">
                           <div>
                             <div className="font-bold">{pendingFood.name}</div>
                             <div className="text-xs text-muted-foreground">{pendingFood.calories} kcal / {pendingFood.serving_base}g</div>
                           </div>
-                          <Button variant="ghost" size="sm" onClick={() => setPendingFood(null)}><X className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="sm" onClick={() => { setPendingFood(null); setIsAddMealDialogOpen(false); }}><X className="h-4 w-4" /></Button>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <div><Label>Refeição</Label><Input value={newMealName} onChange={e => setNewMealName(e.target.value)} placeholder="Ex: Café" /></div>
-                          <div><Label>Dia</Label><Input type="number" min="1" max="7" value={newMealDay} onChange={e => setNewMealDay(+e.target.value)} /></div>
+                        <div><Label>Refeição</Label><Input value={newMealName} onChange={e => setNewMealName(e.target.value)} placeholder="Ex: Café" /></div>
+
+                        <div>
+                          <Label className="mb-2 block">Dias</Label>
+                          <div className="flex flex-wrap gap-2">
+                            {Array.from({ length: 7 }, (_, i) => i + 1).map(day => (
+                              <div
+                                key={day}
+                                onClick={() => {
+                                  setSelectedDays(prev => prev.includes(day)
+                                    ? prev.length > 1 ? prev.filter(d => d !== day) : prev
+                                    : [...prev, day].sort()
+                                  )
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer transition-all ${selectedDays.includes(day)
+                                  ? 'bg-green-600 text-white'
+                                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                  }`}
+                              >
+                                {day}
+                              </div>
+                            ))}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="ml-auto text-xs"
+                              onClick={() => setSelectedDays([1, 2, 3, 4, 5, 6, 7])}
+                            >
+                              Todos
+                            </Button>
+                          </div>
                         </div>
 
                         <div>
@@ -299,7 +337,7 @@ const MealPlanner: React.FC = () => {
                         </div>
 
                         <div className="p-3 bg-green-500/10 rounded-md border border-green-500/20 text-sm">
-                          <div className="font-semibold text-green-700 dark:text-green-400 mb-1">Calculado:</div>
+                          <div className="font-semibold text-green-700 dark:text-green-400 mb-1">Calculado ({selectedDays.length} {selectedDays.length === 1 ? 'dia' : 'dias'}):</div>
                           <div className="grid grid-cols-4 gap-2 text-center">
                             <div><span className="block font-bold">{Math.round((pendingFood.calories || 0) * (newMealQty / 100))}</span> Kcal</div>
                             <div><span className="block font-bold">{Math.round((pendingFood.protein || 0) * (newMealQty / 100))}</span> P</div>
@@ -308,7 +346,9 @@ const MealPlanner: React.FC = () => {
                           </div>
                         </div>
 
-                        <Button onClick={handleAddMeal} className="w-full bg-green-600">Confirmar Inclusão</Button>
+                        <Button onClick={handleAddMeal} className="w-full bg-green-600">
+                          Adicionar aos Dias Selecionados
+                        </Button>
                       </div>
                     )}
                   </DialogContent>
