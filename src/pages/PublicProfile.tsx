@@ -106,7 +106,7 @@ const PublicProfile = () => {
                 {/* Header Profissional */}
                 <div className="relative mb-12 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
                     {/* Cover Image */}
-                    <div className="h-48 w-full relative">
+                    <div className="h-36 md:h-64 w-full relative">
                         <img
                             src={details?.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
                             alt="Capa"

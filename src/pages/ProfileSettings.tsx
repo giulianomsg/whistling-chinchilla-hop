@@ -555,7 +555,7 @@ const ProfileSettings: React.FC = () => {
         {/* Visual Header Editor */}
         <div className="relative mb-12 rounded-xl border border-border bg-muted overflow-visible">
           {/* Cover Area */}
-          <div className="h-48 w-full relative overflow-hidden rounded-t-xl group">
+          <div className="h-36 md:h-52 w-full relative overflow-hidden rounded-t-xl group">
             <img
               src={formData.coverUrl || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
               alt="Capa"
@@ -1002,7 +1002,7 @@ const ProfileSettings: React.FC = () => {
                   image={imageSrc}
                   crop={crop}
                   zoom={zoom}
-                  aspect={uploadType === 'avatar' ? 1 : 3 / 1}
+                  aspect={uploadType === 'avatar' ? 1 : 32 / 9} // ~3.55 ratio, wide enough for banners
                   onCropChange={setCrop}
                   onCropComplete={onCropComplete}
                   onZoomChange={setZoom}
