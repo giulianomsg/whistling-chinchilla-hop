@@ -24,9 +24,10 @@ interface Goal {
 
 interface GoalsManagerProps {
     clientId: string | undefined
+    simplified?: boolean
 }
 
-const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId }) => {
+const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId, simplified = false }) => {
     const [goals, setGoals] = useState<Goal[]>([])
     const [loading, setLoading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -139,6 +140,46 @@ const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId }) => {
         return Math.min(Math.max(percent, 0), 100)
     }
 
+    const renderGoalCard = (goal: Goal) => {
+        const progress = calculateProgress(goal.start_value, goal.current_value, goal.target_value)
+        return (
+            <div key={goal.id} className={`${simplified ? 'bg-muted/30 p-3' : 'bg-muted/40 p-4'} rounded-lg border border-border space-y-3 cursor-pointer hover:bg-muted/60 transition-colors bg-card`} onClick={() => handleOpenDialog(goal)}>
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h4 className={`font-bold text-foreground ${simplified ? 'text-sm' : ''}`}>{goal.title}</h4>
+                        {!simplified && <p className="text-xs text-muted-foreground capitalize">{goal.target_type.replace('_', ' ')}</p>}
+                    </div>
+                    {!simplified && <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-red-500" onClick={(e) => handleDeleteClick(e, goal.id)}><Trash2 className="h-4 w-4" /></Button>}
+                </div>
+
+                <div className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground text-xs">Progresso</span>
+                        <span className="font-semibold text-xs">{progress.toFixed(0)}%</span>
+                    </div>
+                    <Progress value={progress} className="h-1.5" />
+                </div>
+
+                <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    {!simplified && <div>Início: {goal.start_value}</div>}
+                    <div className="font-bold text-foreground">Atual: {goal.current_value}</div>
+                    <div className="font-bold text-blue-500">Alvo: {goal.target_value}</div>
+                </div>
+
+                {goal.deadline && (
+                    <div className="flex items-center gap-1 text-[10px] text-orange-500 mt-1">
+                        <Calendar className="h-3 w-3" /> Prazo: {new Date(goal.deadline).toLocaleDateString()}
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    if (simplified) {
+        if (goals.length === 0) return <div className="text-sm text-muted-foreground text-center py-4">Nenhuma meta específica definida.</div>
+        return <div className="space-y-3">{goals.map(renderGoalCard)}</div>
+    }
+
     return (
         <Card className="w-full">
             <CardHeader className="flex flex-row items-center justify-between">
@@ -155,40 +196,7 @@ const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId }) => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {goals.map(goal => {
-                            const progress = calculateProgress(goal.start_value, goal.current_value, goal.target_value)
-                            return (
-                                <div key={goal.id} className="p-4 bg-muted/40 rounded-lg border border-border space-y-3 cursor-pointer hover:bg-muted/60 transition-colors" onClick={() => handleOpenDialog(goal)}>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <h4 className="font-bold text-foreground">{goal.title}</h4>
-                                            <p className="text-xs text-muted-foreground capitalize">{goal.target_type.replace('_', ' ')}</p>
-                                        </div>
-                                        <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-red-500" onClick={(e) => handleDeleteClick(e, goal.id)}><Trash2 className="h-4 w-4" /></Button>
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Progresso</span>
-                                            <span className="font-semibold">{progress.toFixed(0)}%</span>
-                                        </div>
-                                        <Progress value={progress} className="h-2" />
-                                    </div>
-
-                                    <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                                        <div>Início: {goal.start_value}</div>
-                                        <div className="font-bold text-foreground">Atual: {goal.current_value}</div>
-                                        <div>Meta: {goal.target_value}</div>
-                                    </div>
-
-                                    {goal.deadline && (
-                                        <div className="flex items-center gap-1 text-xs text-orange-500 mt-1">
-                                            <Calendar className="h-3 w-3" /> Prazo: {new Date(goal.deadline).toLocaleDateString()}
-                                        </div>
-                                    )}
-                                </div>
-                            )
-                        })}
+                        {goals.map(renderGoalCard)}
                     </div>
                 )}
             </CardContent>

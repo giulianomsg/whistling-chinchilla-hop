@@ -1038,7 +1038,7 @@ const ClientDetails: React.FC = () => {
                   <div className="space-y-2">
                     <Label className="text-muted-foreground flex items-center gap-2"><Target className="h-4 w-4 text-blue-500" /> Metas Específicas</Label>
                     <div className="p-3 bg-muted/50 rounded-md border border-border text-sm min-h-[60px] max-h-[120px] overflow-y-auto">
-                      <GoalsManager clientId={id} />
+                      <GoalsManager clientId={id} simplified={true} />
                     </div>
                   </div>
                 </CardContent>
