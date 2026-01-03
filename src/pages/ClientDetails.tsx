@@ -1017,6 +1017,33 @@ const ClientDetails: React.FC = () => {
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Goals & Restrictions Summary Card */}
+              <Card className="lg:col-span-3 bg-card border-border shadow-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground"><Target className="h-5 w-5 text-primary" /> Metas & Restrições</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground flex items-center gap-2"><Trophy className="h-4 w-4 text-yellow-500" /> Objetivo Principal</Label>
+                    <div className="p-3 bg-muted/50 rounded-md border border-border text-sm font-medium min-h-[60px]">
+                      {clientDetails?.goals || 'Não definido'}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground flex items-center gap-2"><AlertCircle className="h-4 w-4 text-red-500" /> Restrições de Saúde</Label>
+                    <div className="p-3 bg-muted/50 rounded-md border border-border text-sm font-medium min-h-[60px]">
+                      {clientDetails?.health_restrictions || 'Nenhuma restrição'}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground flex items-center gap-2"><Target className="h-4 w-4 text-blue-500" /> Metas Específicas</Label>
+                    <div className="p-3 bg-muted/50 rounded-md border border-border text-sm min-h-[60px] max-h-[120px] overflow-y-auto">
+                      <GoalsManager clientId={id} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               <Card className="lg:col-span-2 bg-card border-border shadow-sm h-full">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
