@@ -21,7 +21,7 @@ import {
   Loader2, Plus,
   FileText, Save, HeartPulse, Activity, Apple, Scale, Ruler, TrendingUp,
   Pencil, LayoutDashboard, Trophy, MessageSquare, Camera, Image as ImageIcon,
-  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink
+  AlertTriangle, Stethoscope, Calendar, Clock, CheckCircle, AlertCircle, Play, ChevronRight, ExternalLink, Target
 } from 'lucide-react'
 import { ptBR } from 'date-fns/locale'
 import { isSameDay, isAfter, isBefore, startOfDay, format } from 'date-fns'
@@ -34,6 +34,7 @@ import { AchievementsList } from '@/components/gamification/AchievementsList'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
 import { useStrengthData } from '@/hooks/useStrengthData'
+import GoalsManager from '@/components/goals/GoalsManager'
 
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
@@ -747,6 +748,11 @@ const ClientDetails: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+
+            <div className="mt-8">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Target className="h-5 w-5 text-primary" /> Metas Específicas</h3>
+              <GoalsManager clientId={id} />
             </div>
           </TabsContent>
 
