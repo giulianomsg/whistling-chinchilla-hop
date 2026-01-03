@@ -205,7 +205,7 @@ const ProfileSettings: React.FC = () => {
             const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
             if (profData) {
               newFormData.bio = profData.bio || ''
-              newFormData.specialty = ['personal_trainer', 'nutritionist'].includes(profData.specialty) ? profData.specialty : ''
+              newFormData.specialty = ['personal_trainer', 'nutritionist', 'sports_doctor', 'clinic', 'performance_coach'].includes(profData.specialty) ? profData.specialty : ''
               newFormData.consultationPrice = profData.consultation_price ? profData.consultation_price.toString() : ''
               const certData = profData.certifications as any
               newFormData.certifications = (typeof profData.certifications === 'string' ? profData.certifications : certData?.raw_text) || ''
@@ -601,6 +601,9 @@ const ProfileSettings: React.FC = () => {
                           <SelectContent className="bg-popover text-popover-foreground border-border">
                             <SelectItem value="personal_trainer">Personal Trainer</SelectItem>
                             <SelectItem value="nutritionist">Nutricionista</SelectItem>
+                            <SelectItem value="sports_doctor">Médico do Esporte / Nutrólogo</SelectItem>
+                            <SelectItem value="clinic">Clínica / Estúdio</SelectItem>
+                            <SelectItem value="performance_coach">Consultor de Alta Performance (Coach)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

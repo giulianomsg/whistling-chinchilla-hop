@@ -104,6 +104,9 @@ const MyClients: React.FC = () => {
   const translateSpecialty = (spec: string) => {
     if (spec === 'personal_trainer') return 'Personal Trainer'
     if (spec === 'nutritionist') return 'Nutricionista'
+    if (spec === 'sports_doctor') return 'Médico do Esporte'
+    if (spec === 'clinic') return 'Clínica / Estúdio'
+    if (spec === 'performance_coach') return 'Coach Performance'
     return 'Profissional'
   }
 
