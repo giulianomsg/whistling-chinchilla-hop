@@ -10,11 +10,13 @@ import { Loader2, Star, MapPin, Briefcase, Instagram, Linkedin, MessageCircle, A
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { getProfessionalTypeInfo } from '@/utils/professionalTypes'
 
 interface FullProfessional {
     id: string
     full_name: string
     avatar_url: string | null
+    cover_url?: string | null
     bio: string | null
     specialties: string[] | null
     price_range: string | null
@@ -112,33 +114,42 @@ const ProfessionalDetails: React.FC = () => {
     return (
         <div className="min-h-screen bg-background pb-12">
 
-            {/* Hero Section */}
-            <div className="bg-muted/30 border-b border-border">
-                <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
-                    <Button variant="ghost" className="mb-6 pl-0 hover:bg-transparent hover:text-primary" onClick={() => navigate(-1)}>
+            {/* Hero Section with Cover */}
+            <div className="relative">
+                {/* Cover Image Background */}
+                <div className="w-full h-48 md:h-64 bg-muted overflow-hidden relative">
+                    <img
+                        src={professional.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+                        alt="Capa"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+                    <Button variant="ghost" className="absolute top-4 left-4 text-white hover:bg-black/20 hover:text-white" onClick={() => navigate(-1)}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
                     </Button>
+                </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 items-start">
-                        <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl">
-                            <AvatarImage src={professional.avatar_url || ''} />
+                <div className="max-w-5xl mx-auto px-4 -mt-20 relative z-10">
+                    <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+                        <Avatar className="h-32 w-32 md:h-48 md:w-48 border-4 border-background shadow-xl rounded-2xl">
+                            <AvatarImage src={professional.avatar_url || ''} className="object-cover" />
                             <AvatarFallback className="text-4xl">{professional.full_name.substring(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
 
-                        <div className="flex-1 space-y-4">
+                        <div className="flex-1 space-y-3 pt-6 md:pt-20">
                             <div>
-                                <h1 className="text-3xl md:text-4xl font-bold text-foreground">{professional.full_name}</h1>
+                                <h1 className="text-3xl md:text-5xl font-bold text-foreground drop-shadow-sm">{professional.full_name}</h1>
 
-                                <div className="flex flex-wrap items-center gap-4 mt-2 text-muted-foreground">
+                                <div className="flex flex-wrap items-center gap-4 mt-3 text-muted-foreground">
                                     {(professional.city || professional.state) && (
-                                        <div className="flex items-center gap-1">
-                                            <MapPin className="h-4 w-4" />
+                                        <div className="flex items-center gap-1.5 bg-muted/40 px-3 py-1 rounded-full border border-border/50 text-sm">
+                                            <MapPin className="h-4 w-4 text-primary" />
                                             <span>{professional.city}{professional.city && professional.state && ', '}{professional.state}</span>
                                         </div>
                                     )}
                                     {professional.years_experience > 0 && (
-                                        <div className="flex items-center gap-1">
-                                            <Briefcase className="h-4 w-4" />
+                                        <div className="flex items-center gap-1.5 bg-muted/40 px-3 py-1 rounded-full border border-border/50 text-sm">
+                                            <Briefcase className="h-4 w-4 text-primary" />
                                             <span>{professional.years_experience} Anos de Experiência</span>
                                         </div>
                                     )}
@@ -148,18 +159,12 @@ const ProfessionalDetails: React.FC = () => {
                             <div className="flex flex-wrap gap-2">
                                 {professional.specialties?.map(spec => {
                                     if (typeof spec !== 'string') return null;
+                                    const info = getProfessionalTypeInfo(spec);
+                                    const Icon = info.icon;
                                     return (
-                                        <Badge key={spec} variant="secondary" className="text-sm px-3 py-1">
-                                            {(() => {
-                                                const map: Record<string, string> = {
-                                                    'personal_trainer': 'Personal Trainer',
-                                                    'nutritionist': 'Nutricionista',
-                                                    'sports_doctor': 'Médico do Esporte',
-                                                    'clinic': 'Clínica / Estúdio',
-                                                    'performance_coach': 'Performance Coach'
-                                                }
-                                                return map[spec] || spec.replace(/_/g, ' ')
-                                            })()}
+                                        <Badge key={spec} variant="secondary" className="text-sm px-3 py-1 gap-2 border-primary/20 bg-primary/5">
+                                            <Icon className={`h-3.5 w-3.5 ${info.color}`} />
+                                            {info.label}
                                         </Badge>
                                     )
                                 })}
@@ -179,16 +184,16 @@ const ProfessionalDetails: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-auto flex flex-col gap-3 min-w-[200px]">
-                            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+                        <div className="w-full md:w-auto flex flex-col gap-3 min-w-[240px] md:pt-20">
+                            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-lg">
                                 <div className="flex items-center justify-center gap-2 text-yellow-500 mb-1">
-                                    <Star className="h-6 w-6 fill-current" />
-                                    <span className="text-3xl font-bold text-foreground">{professional.overall_rating.toFixed(1)}</span>
+                                    <Star className="h-7 w-7 fill-current" />
+                                    <span className="text-4xl font-bold text-foreground">{professional.overall_rating.toFixed(1)}</span>
                                 </div>
-                                <p className="text-sm text-muted-foreground">{professional.review_count} avaliações</p>
+                                <p className="text-sm text-muted-foreground font-medium">{professional.review_count} avaliações</p>
                             </div>
 
-                            <Button size="lg" className="w-full font-bold shadow-lg shadow-primary/20" onClick={handleStartChat}>
+                            <Button size="lg" className="w-full font-bold shadow-lg shadow-primary/20 h-12 text-md transition-all hover:scale-105" onClick={handleStartChat}>
                                 <MessageCircle className="mr-2 h-5 w-5" /> Iniciar Conversa
                             </Button>
                         </div>
@@ -196,7 +201,7 @@ const ProfessionalDetails: React.FC = () => {
                 </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
 
                 {/* Left Column: Bio & Details */}
                 <div className="md:col-span-2 space-y-8">
@@ -209,26 +214,20 @@ const ProfessionalDetails: React.FC = () => {
                             {/* Tags / Info Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {professional.specialties && professional.specialties.length > 0 && (
-                                    <div className="sm:col-span-2 flex flex-col gap-2 p-3 bg-muted/50 rounded-lg border border-border/50">
-                                        <p className="text-xs text-muted-foreground uppercase font-semibold">Especialidades</p>
+                                    <div className="sm:col-span-2 flex flex-col gap-2 p-4 bg-muted/50 rounded-xl border border-border/50">
+                                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Especialidades</p>
                                         <div className="flex flex-wrap gap-2">
                                             {professional.specialties.map(spec => {
-                                                if (typeof spec !== 'string') {
-                                                    console.warn("Invalid specialty type:", spec);
-                                                    return null;
-                                                }
-                                                const map: Record<string, string> = {
-                                                    'personal_trainer': 'Personal Trainer',
-                                                    'nutritionist': 'Nutricionista',
-                                                    'sports_doctor': 'Médico do Esporte',
-                                                    'clinic': 'Clínica / Estúdio',
-                                                    'performance_coach': 'Coach de Performance'
-                                                };
-                                                const label = map[spec] || spec.replace(/_/g, ' ');
+                                                if (typeof spec !== 'string') return null;
+                                                const info = getProfessionalTypeInfo(spec);
+                                                const Icon = info.icon;
                                                 return (
-                                                    <Badge key={spec} variant="default" className="text-sm px-3 py-1 capitalize">
-                                                        {label}
-                                                    </Badge>
+                                                    <div key={spec} className="flex items-center gap-2 bg-background px-3 py-2 rounded-lg border border-border shadow-sm">
+                                                        <div className={`p-1.5 rounded-full bg-primary/10 ${info.color}`}>
+                                                            <Icon className="h-4 w-4" />
+                                                        </div>
+                                                        <span className="font-medium text-sm">{info.label}</span>
+                                                    </div>
                                                 )
                                             })}
                                         </div>

@@ -104,43 +104,81 @@ const PublicProfile = () => {
             <div className="max-w-5xl mx-auto space-y-8">
 
                 {/* Header Profissional */}
-                <Card className="border-border bg-card/50 backdrop-blur">
-                    <CardContent className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-                        <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-background shadow-xl">
-                            <AvatarImage src={profile.avatar_url} className="object-cover" />
-                            <AvatarFallback className="text-4xl">{profile.full_name?.[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 space-y-4">
+                <div className="relative mb-12 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
+                    {/* Cover Image */}
+                    <div className="h-48 w-full relative">
+                        <img
+                            src={details?.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+                            alt="Capa"
+                            className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/20" />
+                    </div>
+
+                    <div className="px-6 pb-8 pt-16 relative">
+                        {/* Avatar Overlapping */}
+                        <div className="absolute -top-16 left-6 md:left-10">
+                            <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-card shadow-xl">
+                                <AvatarImage src={profile.avatar_url} className="object-cover" />
+                                <AvatarFallback className="text-4xl">{profile.full_name?.[0]}</AvatarFallback>
+                            </Avatar>
+                        </div>
+
+                        {/* Reputation Badge (Absolute) */}
+                        {reputation && (
+                            <div className="absolute top-4 right-4 md:top-6 md:right-8 bg-card/90 backdrop-blur p-3 rounded-xl border border-border shadow-sm flex flex-col items-center">
+                                <div className="text-3xl font-bold text-primary">{reputation.overall_score || 'N/A'}</div>
+                                <div className="flex text-yellow-500">
+                                    {[1, 2, 3, 4, 5].map(s => <Star key={s} className={`h-3 w-3 ${s <= Math.round(reputation.overall_score) ? 'fill-current' : 'text-muted'}`} />)}
+                                </div>
+                                <span className="text-[10px] text-muted-foreground">{reputation.total_reviews} avaliações</span>
+                            </div>
+                        )}
+
+                        <div className="space-y-4 mt-2">
                             <div>
                                 <h1 className="text-3xl font-bold text-foreground">{profile.full_name}</h1>
-                                <p className="text-xl text-primary font-medium">{details?.specialty === 'nutritionist' ? 'Nutricionista' : 'Personal Trainer'}</p>
-                                {details?.bio && <p className="text-muted-foreground mt-2 max-w-2xl">{details.bio}</p>}
+                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                    {(() => {
+                                        let specs = details?.specialty;
+                                        if (typeof specs === 'string') {
+                                            specs = [specs];
+                                        } else if (!Array.isArray(specs)) {
+                                            specs = []; // Handle null/undefined
+                                        }
+
+                                        if (specs.length === 0) return <Badge variant="secondary">Profissional</Badge>;
+
+                                        return specs.map((s: string) => {
+                                            const label = {
+                                                'personal_trainer': 'Personal Trainer',
+                                                'nutritionist': 'Nutricionista',
+                                                'sports_doctor': 'Médico do Esporte',
+                                                'clinic': 'Clínica / Estúdio',
+                                                'performance_coach': 'Performance Coach'
+                                            }[s] || s;
+                                            return <Badge key={s} variant="secondary" className="text-sm px-3">{label}</Badge>
+                                        });
+                                    })()}
+                                </div>
+                                {details?.bio && <p className="text-muted-foreground mt-4 max-w-3xl text-base leading-relaxed">{details.bio}</p>}
                             </div>
 
-                            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                            <div className="flex flex-wrap gap-3 pt-2">
                                 {details?.whatsapp && (
-                                    <Button variant="outline" size="sm" className="gap-2 border-green-600/30 text-green-500 hover:text-green-600 hover:bg-green-500/10" onClick={() => window.open(`https://wa.me/${details.whatsapp.replace(/\D/g, '')}`, '_blank')}>
+                                    <Button size="sm" className="gap-2 bg-green-600 hover:bg-green-700 text-white shadow-md transition-all hover:scale-105" onClick={() => window.open(`https://wa.me/${details.whatsapp.replace(/\D/g, '')}`, '_blank')}>
                                         <Phone className="h-4 w-4" /> WhatsApp
                                     </Button>
                                 )}
                                 {details?.telegram && (
-                                    <Button variant="outline" size="sm" className="gap-2 border-blue-500/30 text-blue-500 hover:text-blue-600 hover:bg-blue-500/10" onClick={() => window.open(`https://t.me/${details.telegram.replace('@', '')}`, '_blank')}>
+                                    <Button size="sm" className="gap-2 bg-blue-500 hover:bg-blue-600 text-white shadow-md transition-all hover:scale-105" onClick={() => window.open(`https://t.me/${details.telegram.replace('@', '')}`, '_blank')}>
                                         <Send className="h-4 w-4" /> Telegram
                                     </Button>
                                 )}
                             </div>
                         </div>
-                        {reputation && (
-                            <div className="flex flex-col items-center justify-center bg-muted/30 p-4 rounded-xl border border-border">
-                                <div className="text-4xl font-bold text-primary">{reputation.overall_score || 'N/A'}</div>
-                                <div className="flex items-center text-yellow-500 mb-1">
-                                    {[1, 2, 3, 4, 5].map(s => <Star key={s} className={`h-4 w-4 ${s <= Math.round(reputation.overall_score) ? 'fill-current' : 'text-muted'}`} />)}
-                                </div>
-                                <span className="text-xs text-muted-foreground">{reputation.total_reviews} avaliações</span>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 {/* Reputação e Certificações */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

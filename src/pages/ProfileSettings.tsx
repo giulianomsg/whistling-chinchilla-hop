@@ -117,6 +117,7 @@ const ProfileSettings: React.FC = () => {
     fullName: '',
     phone: '',
     avatarUrl: '',
+    coverUrl: '', // Added coverUrl
     dataNascimento: '',
     nomePai: '',
     nomeMae: '',
@@ -132,6 +133,9 @@ const ProfileSettings: React.FC = () => {
     telegram: ''
   })
 
+  // State to track what we are uploading
+  const [uploadType, setUploadType] = useState<'avatar' | 'cover'>('avatar');
+
   // --- Estado da Anamnese Completa ---
   const [anamnesisForm, setAnamnesisForm] = useState(DEFAULT_ANAMNESIS)
   const [userRole, setUserRole] = useState<string>('')
@@ -142,7 +146,6 @@ const ProfileSettings: React.FC = () => {
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // --- Estados das Novas Abas (Cliente) ---
   const [progressPhotos, setProgressPhotos] = useState<any[]>([])
@@ -168,7 +171,6 @@ const ProfileSettings: React.FC = () => {
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false)
   const { strengthStats, loading: strengthLoading, overallLevel } = useStrengthData(user?.id)
 
-
   // --- EFEITO DE CARREGAMENTO INICIAL ---
   useEffect(() => {
     let mounted = true
@@ -188,6 +190,7 @@ const ProfileSettings: React.FC = () => {
             fullName: profile.full_name || '',
             phone: profile.phone || '',
             avatarUrl: profile.avatar_url || '',
+            coverUrl: '', // Default empty
             dataNascimento: profile.data_nascimento || '',
             nomePai: profile.nome_pai || '',
             nomeMae: profile.nome_mae || '',
@@ -205,6 +208,7 @@ const ProfileSettings: React.FC = () => {
             const { data: profData } = await supabase.from('professional_details').select('*').eq('profile_id', userId).maybeSingle()
             if (profData) {
               newFormData.bio = profData.bio || ''
+              newFormData.coverUrl = profData.cover_url || ''
 
               // Handle specialty as array or legacy string
               let loadedSpecialty = profData.specialty;
@@ -224,26 +228,17 @@ const ProfileSettings: React.FC = () => {
               newFormData.telegram = profData.telegram || ''
             }
           } else if (role === 'client') {
+            // ... existing client logic ...
             const { data: clientData } = await supabase.from('client_details').select('*').eq('profile_id', userId).maybeSingle()
             if (clientData) {
-              console.log('Dados do Cliente Carregados:', clientData)
               newFormData.goals = clientData.goals || ''
               newFormData.restrictions = clientData.health_restrictions || ''
               newFormData.whatsapp = clientData.whatsapp || ''
               newFormData.telegram = clientData.telegram || ''
-
               if (clientData.anamnesis_data) {
                 const rawData = typeof clientData.anamnesis_data === 'string' ? JSON.parse(clientData.anamnesis_data) : clientData.anamnesis_data
-                // Merge seguro
-                newAnamnesis = {
-                  ...DEFAULT_ANAMNESIS,
-                  ...rawData,
-                  diagnosed_conditions: rawData.diagnosed_conditions || [],
-                  symptoms: rawData.symptoms || [],
-                  work_activities: rawData.work_activities || []
-                }
+                newAnamnesis = { ...DEFAULT_ANAMNESIS, ...rawData, diagnosed_conditions: rawData.diagnosed_conditions || [], symptoms: rawData.symptoms || [], work_activities: rawData.work_activities || [] }
               }
-
               const { data: cPhotos } = await supabase.from('progress_photos').select('*').eq('client_id', userId).order('date', { ascending: false })
               const { data: cAssessments } = await supabase.from('biometric_data').select('*').eq('client_id', userId).order('date', { ascending: false })
               const { data: cHistory } = await supabase.from('workout_sessions').select(`*, workout:workouts(name)`).eq('client_id', userId).order('created_at', { ascending: false }).limit(20)
@@ -269,9 +264,71 @@ const ProfileSettings: React.FC = () => {
       }
       loadData()
     }
-
     return () => { mounted = false }
   }, [user?.id])
+
+  // ...
+
+  const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'cover') => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0]
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        setImageSrc(reader.result?.toString() || null)
+        setUploadType(type)
+        setIsCropDialogOpen(true)
+        setZoom(1)
+        setCrop({ x: 0, y: 0 })
+      })
+      reader.readAsDataURL(file)
+      event.target.value = ''
+    }
+  }
+
+  // ... 
+
+  const handleConfirmUpload = async () => {
+    if (!imageSrc || !croppedAreaPixels || !user) return
+    try {
+      setUploading(true)
+      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
+      const fileName = sanitizeFileName(uploadType === 'avatar' ? 'avatar.jpg' : 'cover.jpg')
+      // Use distinct path for cover if desired, but reusing avatar logic is fine if path differs
+      // For cover, we might want fewer restrictions, but cropping is good.
+      // Let's store covers in 'avatars' bucket under 'covers/' prefix or just root with name?
+      // User folders are good: user_id/avatar.jpg, user_id/cover.jpg
+
+      const filePath = `${user.id}/${fileName}`
+      const processedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' })
+
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, processedFile, { upsert: true })
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
+      const finalUrl = `${publicUrl}?t=${Date.now()}`
+
+      if (uploadType === 'avatar') {
+        await supabase.from('profiles').update({ avatar_url: finalUrl, updated_at: new Date().toISOString() }).eq('id', user.id)
+        setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
+        await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
+      } else {
+        // Update professional_details for cover
+        // Note: cover_url column must exist (we added it)
+        await supabase.from('professional_details').update({ cover_url: finalUrl, updated_at: new Date().toISOString() }).eq('profile_id', user.id)
+        setFormData(prev => ({ ...prev, coverUrl: finalUrl }))
+      }
+
+      setIsCropDialogOpen(false)
+      showSuccess(uploadType === 'avatar' ? 'Foto atualizada!' : 'Capa atualizada!')
+    } catch (error: any) {
+      showError('Erro ao salvar imagem.')
+      console.error(error)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  // ... existing handleSave ...
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -290,53 +347,9 @@ const ProfileSettings: React.FC = () => {
     })
   }
 
-  const onFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0]
-      const reader = new FileReader()
-      reader.addEventListener('load', () => {
-        setImageSrc(reader.result?.toString() || null)
-        setIsCropDialogOpen(true)
-        setZoom(1)
-        setCrop({ x: 0, y: 0 })
-      })
-      reader.readAsDataURL(file)
-      event.target.value = ''
-    }
-  }
-
   const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
-
-  const handleConfirmUpload = async () => {
-    if (!imageSrc || !croppedAreaPixels || !user) return
-    try {
-      setUploading(true)
-      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels)
-      const fileName = sanitizeFileName('avatar.jpg')
-      const filePath = `${user.id}/${fileName}`
-      const processedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' })
-
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, processedFile, { upsert: true })
-      if (uploadError) throw uploadError
-
-      const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
-      const finalUrl = `${publicUrl}?t=${Date.now()}`
-
-      await supabase.from('profiles').update({ avatar_url: finalUrl, updated_at: new Date().toISOString() }).eq('id', user.id)
-
-      setFormData(prev => ({ ...prev, avatarUrl: finalUrl }))
-      await supabase.auth.updateUser({ data: { avatar_url: finalUrl } })
-
-      setIsCropDialogOpen(false)
-      showSuccess('Foto atualizada!')
-    } catch (error: any) {
-      showError('Erro ao salvar foto.')
-    } finally {
-      setUploading(false)
-    }
-  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -368,11 +381,12 @@ const ProfileSettings: React.FC = () => {
         const { error: profError } = await supabase.from('professional_details').upsert({
           profile_id: user.id,
           bio: formData.bio,
-          specialty: formData.specialty as any, // Cast to any or adjust types if needed, Supabase client should handle array automatically if types are generated, but here we force it
+          specialty: formData.specialty as any,
           consultation_price: price,
           certifications: { raw_text: formData.certifications },
           whatsapp: formData.whatsapp,
           telegram: formData.telegram,
+          cover_url: formData.coverUrl,
           updated_at: new Date().toISOString()
         }, { onConflict: 'profile_id' })
 
@@ -401,7 +415,6 @@ const ProfileSettings: React.FC = () => {
     }
   }
 
-  // --- HANDLERS PARA FOTOS ---
   const handlePhotoUpload = async () => {
     if (!newPhoto.file || !user) return
     setUploading(true)
@@ -433,7 +446,6 @@ const ProfileSettings: React.FC = () => {
     } catch (e) { showError('Erro ao excluir') }
   }
 
-  // --- HANDLERS PARA AVALIAÇÕES ---
   const openEditAssessment = (assessment: any) => {
     setEditingAssessmentId(assessment.id)
     const measures = typeof assessment.measurements === 'string' ? JSON.parse(assessment.measurements) : assessment.measurements
@@ -496,7 +508,6 @@ const ProfileSettings: React.FC = () => {
     } catch (e) { showError('Erro ao excluir') }
   }
 
-  // --- HANDLERS PARA HISTÓRICO ---
   const formatDuration = (sec: number) => {
     const m = Math.floor(sec / 60)
     return m > 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`
@@ -517,8 +528,6 @@ const ProfileSettings: React.FC = () => {
     setHistoryLogsLoading(false)
   }
 
-  if (authLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
-
   const renderAvatar = () => {
     const src = formData.avatarUrl || ''
     return (
@@ -531,6 +540,80 @@ const ProfileSettings: React.FC = () => {
     )
   }
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const coverInputRef = useRef<HTMLInputElement>(null)
+
+  // ...
+
+  const renderPersonalTab = () => (
+    <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
+      <CardHeader>
+        <CardTitle className="text-foreground">Informações de Perfil</CardTitle>
+        <CardDescription className="text-muted-foreground">Personalize como você aparece na plataforma.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        {/* Visual Header Editor */}
+        <div className="relative mb-12 rounded-xl border border-border bg-muted overflow-visible">
+          {/* Cover Area */}
+          <div className="h-48 w-full relative overflow-hidden rounded-t-xl group">
+            <img
+              src={formData.coverUrl || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+              alt="Capa"
+              className="w-full h-full object-cover transition-opacity hover:opacity-90"
+            />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+              {(userRole === 'professional' || userRole === 'admin') && (
+                <>
+                  <input ref={coverInputRef} type="file" accept="image/*" onChange={(e) => onFileSelect(e, 'cover')} className="hidden" disabled={uploading} />
+                  <Button variant="secondary" size="sm" onClick={() => coverInputRef.current?.click()} className="gap-2">
+                    <Camera className="h-4 w-4" /> Alterar Capa
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Avatar Area - Overlapping */}
+          <div className="absolute -bottom-10 left-6 sm:left-10 flex items-end">
+            <div className="relative group">
+              <Avatar className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-card shadow-xl ring-2 ring-border">
+                <AvatarImage src={formData.avatarUrl || ''} className="object-cover" />
+                <AvatarFallback className="text-3xl font-bold bg-muted text-foreground">
+                  {formData.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                <Camera className="h-6 w-6 text-white" />
+              </div>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => onFileSelect(e, 'avatar')} className="hidden" disabled={uploading} />
+            </div>
+          </div>
+        </div>
+
+        {/* Form Fields - Pushed down by margin */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          <div><Label className="text-muted-foreground">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+          <div><Label className="text-muted-foreground">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-background border-border text-foreground pl-10" /></div></div>
+
+          {/* ... other personal fields ... */}
+          <div><Label className="text-muted-foreground">Data de Nascimento</Label><Input type="date" value={formData.dataNascimento} onChange={e => handleInputChange('dataNascimento', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+          <div><Label className="text-muted-foreground">CPF</Label><Input value={formData.cpf} onChange={e => handleInputChange('cpf', e.target.value)} className="bg-background border-border text-foreground mt-1.5" placeholder="000.000.000-00" /></div>
+
+          <div><Label className="text-muted-foreground">WhatsApp</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-green-500" /><Input value={formData.whatsapp} onChange={e => handleInputChange('whatsapp', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="(00) 00000-0000" /></div></div>
+          <div><Label className="text-muted-foreground">Telegram (Username)</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-blue-500" /><Input value={formData.telegram} onChange={e => handleInputChange('telegram', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="@usuario" /></div></div>
+
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div><Label className="text-muted-foreground">Nome do Pai</Label><Input value={formData.nomePai} onChange={e => handleInputChange('nomePai', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+            <div><Label className="text-muted-foreground">Nome da Mãe</Label><Input value={formData.nomeMae} onChange={e => handleInputChange('nomeMae', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+            <div><Label className="text-muted-foreground">Responsável Legal</Label><Input value={formData.responsavelLegal} onChange={e => handleInputChange('responsavelLegal', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
+          </div>
+        </div>
+        <div><Label className="text-muted-foreground">Email</Label><Input value={user?.email || ''} disabled className="bg-muted border-border text-muted-foreground mt-1.5 cursor-not-allowed" /></div>
+      </CardContent>
+    </Card>
+  )
+
+  // ... replace the value="personal" content with {renderPersonalTab()}
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -559,41 +642,7 @@ const ProfileSettings: React.FC = () => {
             </div>
 
             <TabsContent value="personal" className="mt-6 space-y-6">
-              <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-foreground">Informações Pessoais</CardTitle>
-                  <CardDescription className="text-muted-foreground">Dados visíveis na plataforma.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col md:flex-row gap-8 items-start">
-                  <div className="flex flex-col items-center gap-4">
-                    {renderAvatar()}
-                    <div>
-                      <input ref={fileInputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" disabled={uploading} />
-                      <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="bg-card border-border hover:bg-accent text-foreground gap-2">
-                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                        Alterar Foto
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex-1 w-full space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div><Label className="text-muted-foreground">Nome Completo</Label><Input value={formData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                      <div><Label className="text-muted-foreground">Telefone</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="bg-background border-border text-foreground pl-10" /></div></div>
-                      <div><Label className="text-muted-foreground">Data de Nascimento</Label><Input type="date" value={formData.dataNascimento} onChange={e => handleInputChange('dataNascimento', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                      <div><Label className="text-muted-foreground">CPF</Label><Input value={formData.cpf} onChange={e => handleInputChange('cpf', e.target.value)} className="bg-background border-border text-foreground mt-1.5" placeholder="000.000.000-00" /></div>
-                      <div><Label className="text-muted-foreground">WhatsApp</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-green-500" /><Input value={formData.whatsapp} onChange={e => handleInputChange('whatsapp', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="(00) 00000-0000" /></div></div>
-                      <div><Label className="text-muted-foreground">Telegram (Username)</Label><div className="relative mt-1.5"><Phone className="absolute left-3 top-3 h-4 w-4 text-blue-500" /><Input value={formData.telegram} onChange={e => handleInputChange('telegram', e.target.value)} className="bg-background border-border text-foreground pl-10" placeholder="@usuario" /></div></div>
-
-                      <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div><Label className="text-muted-foreground">Nome do Pai</Label><Input value={formData.nomePai} onChange={e => handleInputChange('nomePai', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                        <div><Label className="text-muted-foreground">Nome da Mãe</Label><Input value={formData.nomeMae} onChange={e => handleInputChange('nomeMae', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                        <div><Label className="text-muted-foreground">Responsável Legal</Label><Input value={formData.responsavelLegal} onChange={e => handleInputChange('responsavelLegal', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
-                      </div>
-                    </div>
-                    <div><Label className="text-muted-foreground">Email</Label><Input value={user?.email || ''} disabled className="bg-muted border-border text-muted-foreground mt-1.5 cursor-not-allowed" /></div>
-                  </div>
-                </CardContent>
-              </Card>
+              {renderPersonalTab()}
             </TabsContent>
 
             {(userRole === 'professional' || userRole === 'admin') && (
