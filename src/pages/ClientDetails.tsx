@@ -717,9 +717,36 @@ const ClientDetails: React.FC = () => {
               <TabsTrigger value="achievements" className="px-4 py-1.5 text-sm"><Trophy className="w-4 h-4 mr-2" /> Conquistas</TabsTrigger>
               <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
               <TabsTrigger value="agenda" className="px-4 py-1.5 text-sm"><Calendar className="w-4 h-4 mr-2" /> Agenda</TabsTrigger>
+              <TabsTrigger value="goals" className="px-4 py-1.5 text-sm"><Dumbbell className="w-4 h-4 mr-2" /> Metas</TabsTrigger>
               <TabsTrigger value="performance" className="px-4 py-1.5 text-sm"><TrendingUp className="w-4 h-4 mr-2" /> Performance</TabsTrigger>
             </TabsList>
           </div>
+
+          <TabsContent value="goals">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-card border-border h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Trophy className="h-5 w-5 text-yellow-500" /> Metas Principais</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted p-4 rounded-lg border border-border min-h-[100px] whitespace-pre-wrap">
+                    {clientDetails?.goals || "O aluno ainda não definiu suas metas e objetivos."}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><AlertCircle className="h-5 w-5 text-red-500" /> Restrições de Saúde</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted p-4 rounded-lg border border-border min-h-[100px] whitespace-pre-wrap">
+                    {clientDetails?.health_restrictions || "Nenhuma restrição de saúde informada."}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           <TabsContent value="performance">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -905,71 +932,66 @@ const ClientDetails: React.FC = () => {
             <AchievementsList />
           </TabsContent>
           <TabsContent value="dashboard" className="space-y-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 bg-card p-6 rounded-xl border border-border shadow-sm">
-              <Avatar className="h-24 w-24 border-4 border-background shadow-md">
-                <AvatarImage src={clientProfile?.avatar_url} />
-                <AvatarFallback className="text-2xl">{clientProfile?.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="space-y-1 flex-1">
-                <h2 className="text-2xl font-bold text-foreground">{clientProfile?.full_name}</h2>
-                <div className="flex flex-col gap-2 mt-2 text-muted-foreground text-sm">
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`mailto:${clientProfile?.email || ''}`}
-                      className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                      title="Enviar Email"
-                    >
-                      <Mail className="h-3 w-3" />
-                    </a>
-                    <span>{clientProfile?.email || 'Sem email'}</span>
+            {/* Reimagined Visual Header */}
+            <div className="relative rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-8">
+              {/* Cover Image */}
+              <div className="h-32 md:h-48 w-full bg-muted relative">
+                <img
+                  src={clientProfile?.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+                  alt="Capa"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              </div>
+
+              {/* Profile Info Overlay */}
+              <div className="px-6 pb-6 relative flex flex-col md:flex-row items-end md:items-end gap-6 -mt-12 md:-mt-16">
+                <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-card shadow-xl rounded-2xl">
+                  <AvatarImage src={clientProfile?.avatar_url} className="object-cover" />
+                  <AvatarFallback className="text-3xl font-bold bg-muted text-foreground">
+                    {clientProfile?.full_name?.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 space-y-2 pt-2 md:pt-0 mb-1">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground drop-shadow-md md:drop-shadow-none md:text-foreground mix-blend-difference md:mix-blend-normal text-white md:text-inherit">
+                      {clientProfile?.full_name}
+                    </h2>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                        Nível {currentLevel}
+                      </Badge>
+                      <Badge variant="outline" className="bg-background/50 backdrop-blur">
+                        {clientProfile?.objective || 'Sem objetivo principal'}
+                      </Badge>
+                    </div>
                   </div>
 
-                  {clientProfile?.phone && (
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={`tel:${clientProfile.phone.replace(/\D/g, '')}`}
-                        className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                        title="Ligar"
-                      >
-                        <Phone className="h-3 w-3" />
-                      </a>
-                      <span>{clientProfile.phone}</span>
+                  <div className="flex flex-wrap gap-3 text-sm text-muted-foreground items-center">
+                    <div className="flex items-center gap-2 bg-muted/50 px-2 py-1 rounded-full border border-border/50">
+                      <Mail className="h-3.5 w-3.5" />
+                      <span className="truncate max-w-[200px]" title={clientProfile?.email}>{clientProfile?.email || 'N/A'}</span>
                     </div>
-                  )}
-
-                  {clientProfile?.whatsapp && (
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-                        title="Abrir WhatsApp"
-                      >
-                        <i className="fa-brands fa-whatsapp text-sm" />
-                      </a>
-                      <span>{clientProfile.whatsapp}</span>
+                    {clientProfile?.phone && (
+                      <div className="flex items-center gap-2 bg-muted/50 px-2 py-1 rounded-full border border-border/50">
+                        <Phone className="h-3.5 w-3.5" />
+                        <span>{clientProfile.phone}</span>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      {clientProfile?.whatsapp && (
+                        <a href={`https://wa.me/${clientProfile.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-full bg-green-500/10 text-green-600 hover:bg-green-500/20 transition-colors" title="WhatsApp">
+                          <i className="fa-brands fa-whatsapp text-sm" />
+                        </a>
+                      )}
+                      {clientProfile?.telegram && (
+                        <a href={`https://t.me/${clientProfile.telegram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-full bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors" title="Telegram">
+                          <i className="fa-brands fa-telegram text-sm" />
+                        </a>
+                      )}
                     </div>
-                  )}
-
-                  {clientProfile?.telegram && (
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={`https://t.me/${clientProfile.telegram.replace('@', '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-                        title="Abrir Telegram"
-                      >
-                        <i className="fa-brands fa-telegram text-sm" />
-                      </a>
-                      <span>{clientProfile.telegram}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2 mt-3">
-                  <Badge variant="secondary">Nível {currentLevel}</Badge>
-                  <Badge variant="outline">{clientProfile?.objective || 'Sem objetivo definido'}</Badge>
+                  </div>
                 </div>
               </div>
             </div>
