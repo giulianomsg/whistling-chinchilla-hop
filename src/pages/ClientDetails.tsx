@@ -962,8 +962,8 @@ const ClientDetails: React.FC = () => {
                       <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
                         Nível {currentLevel}
                       </Badge>
-                      <Badge variant="outline" className="bg-background/50 backdrop-blur">
-                        {clientProfile?.objective || 'Sem objetivo principal'}
+                      <Badge variant="outline" className="bg-background/50 backdrop-blur max-w-[300px] truncate" title={clientDetails?.goals || 'Sem objetivo definido'}>
+                        {clientDetails?.goals || 'Sem objetivo definido'}
                       </Badge>
                     </div>
                   </div>

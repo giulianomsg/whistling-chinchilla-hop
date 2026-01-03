@@ -230,4 +230,4 @@ Requisitos do Sistema de Reputação:
 
 [x] - Corrigir visualização / edição do perfil do aluno, não existe um botão de upload da foto de capa do aluno.
 [] - Corrigir visualização dos detalhes do aluno no perfil do profissional, mostrar a aba metas e objetivos definidos pelo aluno e reimaginar a visualização da foto e dados do aluno no perfil do profissional, para mostrar também a foto de capa do aluno.
-
+[] - Reimagina a forma de visualização das abas dos perfis, mostre como abas de pastas em um arquivo, e quando não couber na tela mostre as abas restantes em uma nova linha abaixo da primeira.
