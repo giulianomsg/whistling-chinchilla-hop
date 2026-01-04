@@ -8,6 +8,7 @@ import { ChatProvider } from "@/contexts/ChatContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { Loader2 } from "lucide-react";
 import { Suspense, lazy } from "react";
+import { PremiumGuard } from "@/components/auth/PremiumGuard";
 
 // Lazy loading das páginas principais
 const Index = lazy(() => import("./pages/Index"));
@@ -213,7 +214,9 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
-                <ClientWorkout />
+                <PremiumGuard>
+                  <ClientWorkout />
+                </PremiumGuard>
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }
@@ -223,7 +226,9 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
-                <ClientMealPlan />
+                <PremiumGuard>
+                  <ClientMealPlan />
+                </PremiumGuard>
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }
@@ -243,7 +248,9 @@ const AppRoutes: React.FC = () => {
           element={
             profile?.role === 'client' ?
               <Suspense fallback={<PageLoader />}>
-                <ClientAgenda />
+                <PremiumGuard>
+                  <ClientAgenda />
+                </PremiumGuard>
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }
