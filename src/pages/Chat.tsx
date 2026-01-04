@@ -207,13 +207,17 @@ const Chat: React.FC = () => {
 
   useEffect(() => { fetchContacts() }, [user, profile])
 
-  // Handle Marketplace "Start Chat"
+  // Handle Marketplace "Start Chat" via state OR URL search param
   useEffect(() => {
     const handleStartChat = async () => {
+      // Check for state param (old way) or URL search param (new way)
+      const searchParams = new URLSearchParams(location.search)
+      const recipientId = searchParams.get('recipient')
       const state = location.state as { startChatWith?: string } | null
-      if (state?.startChatWith && user) {
-        const targetId = state.startChatWith
 
+      const targetId = state?.startChatWith || recipientId
+
+      if (targetId && user) {
         // 1. Check if already in contacts
         const existing = contacts.find(c => c.id === targetId)
         if (existing) {
@@ -241,8 +245,8 @@ const Chat: React.FC = () => {
             console.error("Error fetching target chat profile", e)
           }
         }
-        // Clear state so it doesn't persist on reload weirdly
-        window.history.replaceState({}, document.title)
+        // Clear state/url so it doesn't persist on reload weirdly
+        window.history.replaceState({}, document.title, location.pathname)
       }
     }
 
@@ -250,7 +254,7 @@ const Chat: React.FC = () => {
     if (!loading) {
       handleStartChat()
     }
-  }, [loading, location.state, user])
+  }, [loading, location.state, location.search, user])
 
   return (
     <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-2rem)] bg-background overflow-hidden rounded-lg border border-border shadow-2xl">
