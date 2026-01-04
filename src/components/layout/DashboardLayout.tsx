@@ -17,7 +17,11 @@ import {
   Settings,
   Calendar,
   ShieldCheck,
-  Search
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -37,6 +41,9 @@ const DashboardLayout: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+
+  const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed)
 
   const handleSignOut = async () => {
     await signOut()
@@ -115,8 +122,9 @@ const DashboardLayout: React.FC = () => {
             </span>
           )}
         </div>
-        <span className="font-medium">{item.label}</span>
-      </Link>
+
+        {!isSidebarCollapsed && <span className="font-medium animate-in fade-in duration-300">{item.label}</span>}
+      </Link >
     )
   }
 
@@ -125,7 +133,7 @@ const DashboardLayout: React.FC = () => {
     <div className="p-4 border-t border-border mt-auto">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="w-full flex items-center justify-between p-2 h-auto hover:bg-accent rounded-lg group">
+          <Button variant="ghost" className={`w-full flex items-center justify-between p-2 h-auto hover:bg-accent rounded-lg group ${isSidebarCollapsed ? 'justify-center' : ''}`}>
             <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9 border border-border">
                 <AvatarImage src={profile?.avatar_url || ''} />
@@ -133,14 +141,16 @@ const DashboardLayout: React.FC = () => {
                   {profile?.full_name?.[0]?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="text-left overflow-hidden">
-                <p className="text-sm font-medium text-foreground truncate w-28">{profile?.full_name || 'Usuário'}</p>
-                <p className="text-xs text-muted-foreground truncate capitalize">
-                  {profile?.role === 'admin' ? 'Administrador' : profile?.role === 'professional' ? 'Profissional' : 'Aluno'}
-                </p>
-              </div>
+              {!isSidebarCollapsed && (
+                <div className="text-left overflow-hidden animate-in fade-in duration-300">
+                  <p className="text-sm font-medium text-foreground truncate w-28">{profile?.full_name || 'Usuário'}</p>
+                  <p className="text-xs text-muted-foreground truncate capitalize">
+                    {profile?.role === 'admin' ? 'Administrador' : profile?.role === 'professional' ? 'Profissional' : 'Aluno'}
+                  </p>
+                </div>
+              )}
             </div>
-            <MoreVertical className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
+            {!isSidebarCollapsed && <MoreVertical className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 bg-popover border-border text-popover-foreground backdrop-blur-xl">
@@ -167,12 +177,22 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex w-64 flex-col fixed h-full border-r border-border bg-card/50 backdrop-blur-xl z-20">
-        <div className="p-6 flex items-center gap-2">
-          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-            <Dumbbell className="h-5 w-5 text-primary-foreground" />
+      <aside className={`hidden md:flex flex-col fixed h-full border-r border-border bg-card/50 backdrop-blur-xl z-20 transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
+        <div className={`p-6 flex items-center ${isSidebarCollapsed ? 'justify-center p-4' : 'justify-between'}`}>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+              <Dumbbell className="h-5 w-5 text-primary-foreground" />
+            </div>
+            {!isSidebarCollapsed && <span className="text-xl font-bold text-foreground tracking-tight animate-in fade-in duration-300">CapiFit<span className="text-primary">.</span></span>}
           </div>
-          <span className="text-xl font-bold text-foreground tracking-tight">CapiFit<span className="text-primary">.</span></span>
+
+        </div>
+
+        {/* Toggle Button Positioned relatively or absolutely */}
+        <div className="w-full flex justify-end px-2 mb-2">
+          <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-6 w-6 text-muted-foreground hover:text-foreground hidden md:flex">
+            {isSidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+          </Button>
         </div>
 
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
@@ -217,7 +237,7 @@ const DashboardLayout: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 md:pl-64 pt-16 md:pt-0 min-h-screen transition-all duration-300">
+      <main className={`flex-1 pt-16 md:pt-0 min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
         <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
           <div className="hidden md:flex justify-end p-4 absolute top-0 right-0 z-10 gap-2">
             <ModeToggle />
