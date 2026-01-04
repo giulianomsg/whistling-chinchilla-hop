@@ -103,7 +103,7 @@ const FoodLibrary: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Apple className="text-green-600 dark:text-green-400" /> Alimentos</h1>
           <Button onClick={openCreateDialog} className="bg-green-600 text-white hover:bg-green-500"><Plus className="mr-2 h-4 w-4" /> Novo</Button>
