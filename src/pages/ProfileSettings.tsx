@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { FolderTabs, FolderTabsContent, FolderTabsList, FolderTabsTrigger } from '@/components/ui/folder-tabs'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -623,31 +624,29 @@ const ProfileSettings: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-8">
-          <Tabs defaultValue="personal" className="w-full">
-            <div className="w-full overflow-x-auto pb-2">
-              <TabsList className="bg-muted/50 p-1 rounded-lg flex w-max h-auto gap-2">
-                <TabsTrigger value="personal" className="px-4">Pessoal</TabsTrigger>
-                {(userRole === 'professional' || userRole === 'admin') && <TabsTrigger value="professional" className="px-4">Profissional</TabsTrigger>}
-                {userRole === 'client' && (
-                  <>
-                    <TabsTrigger value="photos" className="px-4">Fotos</TabsTrigger>
-                    <TabsTrigger value="assessments" className="px-4">Avaliações</TabsTrigger>
-                    <TabsTrigger value="goals" className="px-4">Metas</TabsTrigger>
-                    <TabsTrigger value="anamnesis" className="px-4">Anamnese</TabsTrigger>
-                    <TabsTrigger value="history" className="px-4">Histórico</TabsTrigger>
-                    <TabsTrigger value="performance" className="px-4">Performance</TabsTrigger>
-                    <TabsTrigger value="achievements" className="px-4">Conquistas</TabsTrigger>
-                  </>
-                )}
-              </TabsList>
-            </div>
+          <FolderTabs defaultValue="personal" className="w-full">
+            <FolderTabsList className="bg-transparent p-0">
+              <FolderTabsTrigger value="personal">Pessoal</FolderTabsTrigger>
+              {(userRole === 'professional' || userRole === 'admin') && <FolderTabsTrigger value="professional">Profissional</FolderTabsTrigger>}
+              {userRole === 'client' && (
+                <>
+                  <FolderTabsTrigger value="photos">Fotos</FolderTabsTrigger>
+                  <FolderTabsTrigger value="assessments">Avaliações</FolderTabsTrigger>
+                  <FolderTabsTrigger value="goals">Metas</FolderTabsTrigger>
+                  <FolderTabsTrigger value="anamnesis">Anamnese</FolderTabsTrigger>
+                  <FolderTabsTrigger value="history">Histórico</FolderTabsTrigger>
+                  <FolderTabsTrigger value="performance">Performance</FolderTabsTrigger>
+                  <FolderTabsTrigger value="achievements">Conquistas</FolderTabsTrigger>
+                </>
+              )}
+            </FolderTabsList>
 
-            <TabsContent value="personal" className="mt-6 space-y-6">
+            <FolderTabsContent value="personal" className="mt-6 space-y-6">
               {renderPersonalTab()}
-            </TabsContent>
+            </FolderTabsContent>
 
             {(userRole === 'professional' || userRole === 'admin') && (
-              <TabsContent value="professional" className="mt-6 space-y-6">
+              <FolderTabsContent value="professional" className="mt-6 space-y-6">
                 <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-foreground">Dados Profissionais</CardTitle>
@@ -695,12 +694,12 @@ const ProfileSettings: React.FC = () => {
                     <div><Label className="text-muted-foreground">Certificações (CRN / CREF)</Label><Textarea value={formData.certifications} onChange={e => handleInputChange('certifications', e.target.value)} className="bg-background border-border text-foreground mt-1.5" /></div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </FolderTabsContent>
             )}
 
             {userRole === 'client' && (
               <>
-                <TabsContent value="photos" className="mt-6">
+                <FolderTabsContent value="photos" className="mt-6">
                   <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="text-foreground flex items-center gap-2"><Camera className="h-5 w-5 text-primary" /> Galeria de Progresso</CardTitle>
@@ -725,11 +724,11 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </FolderTabsContent>
 
 
 
-                <TabsContent value="assessments" className="mt-6">
+                <FolderTabsContent value="assessments" className="mt-6">
                   <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="text-foreground flex items-center gap-2"><Scale className="h-5 w-5 text-primary" /> Avaliações Físicas</CardTitle>
@@ -759,15 +758,15 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </FolderTabsContent>
 
 
 
-                <TabsContent value="goals" className="mt-6">
+                <FolderTabsContent value="goals" className="mt-6">
                   <GoalsManager clientId={user?.id} />
-                </TabsContent>
+                </FolderTabsContent>
 
-                <TabsContent value="history" className="mt-6">
+                <FolderTabsContent value="history" className="mt-6">
                   <Card className="bg-card border-border w-full">
                     <CardHeader className="p-6 border-b border-border">
                       <CardTitle className="text-foreground text-xl flex items-center gap-2">
@@ -807,11 +806,11 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </FolderTabsContent>
 
 
 
-                <TabsContent value="anamnesis" className="mt-6 space-y-6">
+                <FolderTabsContent value="anamnesis" className="mt-6 space-y-6">
                   <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                     <CardHeader>
                       <CardTitle className="text-foreground flex items-center gap-2"><Activity className="text-primary" /> Ficha de Anamnese</CardTitle>
@@ -925,11 +924,11 @@ const ProfileSettings: React.FC = () => {
 
                     </CardContent>
                   </Card>
-                </TabsContent>
+                </FolderTabsContent>
 
 
 
-                <TabsContent value="performance" className="mt-6">
+                <FolderTabsContent value="performance" className="mt-6">
                   <Card className="bg-card border-border">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-foreground"><Trophy className="h-5 w-5 text-yellow-500" /> Perfil de Força (Estimado)</CardTitle>
@@ -970,18 +969,18 @@ const ProfileSettings: React.FC = () => {
                   </Card>
                   {/* Seção de Analytics Detalhado */}
                   <AnalyticsDashboard clientId={user?.id} />
-                </TabsContent>
+                </FolderTabsContent>
 
 
 
-                <TabsContent value="achievements" className="mt-6">
+                <FolderTabsContent value="achievements" className="mt-6">
                   <AchievementsList />
-                </TabsContent>
+                </FolderTabsContent>
 
 
               </>
             )}
-          </Tabs>
+          </FolderTabs>
 
           <div className="flex justify-end pt-4 border-t border-border">
             <Button type="submit" disabled={loading} className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold px-8 min-w-[150px]">

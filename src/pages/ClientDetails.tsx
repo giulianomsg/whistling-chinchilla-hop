@@ -26,6 +26,7 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { isSameDay, isAfter, isBefore, startOfDay, format } from 'date-fns'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
+import { FolderTabs, FolderTabsContent, FolderTabsList, FolderTabsTrigger } from '@/components/ui/folder-tabs'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
@@ -707,25 +708,23 @@ const ClientDetails: React.FC = () => {
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-muted-foreground hover:text-foreground pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
         </div >
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 w-full" style={{ display: 'grid' }}>
-          <div className="w-full overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-            <TabsList className="bg-muted border border-border justify-start p-1 flex min-w-max h-10">
-              <TabsTrigger value="dashboard" className="px-4 py-1.5 text-sm"><LayoutDashboard className="w-4 h-4 mr-2" /> Visão Geral</TabsTrigger>
-              <TabsTrigger value="photos" className="px-4 py-1.5 text-sm"><Camera className="w-4 h-4 mr-2" /> Fotos</TabsTrigger>
-              <TabsTrigger value="anamnesis" className="px-4 py-1.5 text-sm"><FileText className="w-4 h-4 mr-2" /> Anamnese</TabsTrigger>
-              <TabsTrigger value="biometrics" className="px-4 py-1.5 text-sm"><Scale className="w-4 h-4 mr-2" /> Biometria</TabsTrigger>
-              <TabsTrigger value="history" className="px-4 py-1.5 text-sm"><Activity className="w-4 h-4 mr-2" /> Histórico</TabsTrigger>
-              <TabsTrigger value="workouts" className="px-4 py-1.5 text-sm">Treinos</TabsTrigger>
-              <TabsTrigger value="meal-plans" className="px-4 py-1.5 text-sm">Dietas</TabsTrigger>
-              <TabsTrigger value="achievements" className="px-4 py-1.5 text-sm"><Trophy className="w-4 h-4 mr-2" /> Conquistas</TabsTrigger>
-              <TabsTrigger value="info" className="px-4 py-1.5 text-sm">Info</TabsTrigger>
-              <TabsTrigger value="agenda" className="px-4 py-1.5 text-sm"><Calendar className="w-4 h-4 mr-2" /> Agenda</TabsTrigger>
-              <TabsTrigger value="goals" className="px-4 py-1.5 text-sm"><Dumbbell className="w-4 h-4 mr-2" /> Metas</TabsTrigger>
-              <TabsTrigger value="performance" className="px-4 py-1.5 text-sm"><TrendingUp className="w-4 h-4 mr-2" /> Performance</TabsTrigger>
-            </TabsList>
-          </div>
+        <FolderTabs value={activeTab} onValueChange={setActiveTab} className="space-y-0 w-full">
+          <FolderTabsList className="bg-transparent p-0 justify-start">
+            <FolderTabsTrigger value="dashboard"><LayoutDashboard className="w-4 h-4 mr-2" /> Visão Geral</FolderTabsTrigger>
+            <FolderTabsTrigger value="photos"><Camera className="w-4 h-4 mr-2" /> Fotos</FolderTabsTrigger>
+            <FolderTabsTrigger value="anamnesis"><FileText className="w-4 h-4 mr-2" /> Anamnese</FolderTabsTrigger>
+            <FolderTabsTrigger value="biometrics"><Scale className="w-4 h-4 mr-2" /> Biometria</FolderTabsTrigger>
+            <FolderTabsTrigger value="history"><Activity className="w-4 h-4 mr-2" /> Histórico</FolderTabsTrigger>
+            <FolderTabsTrigger value="workouts">Treinos</FolderTabsTrigger>
+            <FolderTabsTrigger value="meal-plans">Dietas</FolderTabsTrigger>
+            <FolderTabsTrigger value="achievements"><Trophy className="w-4 h-4 mr-2" /> Conquistas</FolderTabsTrigger>
+            <FolderTabsTrigger value="info">Info</FolderTabsTrigger>
+            <FolderTabsTrigger value="agenda"><Calendar className="w-4 h-4 mr-2" /> Agenda</FolderTabsTrigger>
+            <FolderTabsTrigger value="goals"><Dumbbell className="w-4 h-4 mr-2" /> Metas</FolderTabsTrigger>
+            <FolderTabsTrigger value="performance"><TrendingUp className="w-4 h-4 mr-2" /> Performance</FolderTabsTrigger>
+          </FolderTabsList>
 
-          <TabsContent value="goals">
+          <FolderTabsContent value="goals">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-card border-border h-full">
                 <CardHeader>
@@ -754,9 +753,9 @@ const ClientDetails: React.FC = () => {
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Target className="h-5 w-5 text-primary" /> Metas Específicas</h3>
               <GoalsManager clientId={id} />
             </div>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="performance">
+          <FolderTabsContent value="performance">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-card border-border md:col-span-2">
                 <CardHeader><CardTitle>Perfil de Força (Nível)</CardTitle></CardHeader>
@@ -811,8 +810,8 @@ const ClientDetails: React.FC = () => {
               </div>
 
             </div>
-          </TabsContent>
-          <TabsContent value="agenda">
+          </FolderTabsContent>
+          <FolderTabsContent value="agenda">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               {/* Calendar Column */}
               <div className="md:col-span-4">
@@ -935,11 +934,11 @@ const ClientDetails: React.FC = () => {
                 </Card>
               </div>
             </div>
-          </TabsContent>
-          <TabsContent value="achievements">
+          </FolderTabsContent>
+          <FolderTabsContent value="achievements">
             <AchievementsList />
-          </TabsContent>
-          <TabsContent value="dashboard" className="space-y-6">
+          </FolderTabsContent>
+          <FolderTabsContent value="dashboard" className="space-y-6">
             {/* Reimagined Visual Header */}
             <div className="relative rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-8">
               {/* Cover Image */}
@@ -1104,9 +1103,9 @@ const ClientDetails: React.FC = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="photos">
+          <FolderTabsContent value="photos">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2"><Camera className="h-5 w-5 text-primary" /> Galeria de Progresso</CardTitle>
@@ -1157,9 +1156,9 @@ const ClientDetails: React.FC = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="anamnesis">
+          <FolderTabsContent value="anamnesis">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Ficha de Anamnese</CardTitle>
@@ -1235,9 +1234,9 @@ const ClientDetails: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="biometrics">
+          <FolderTabsContent value="biometrics">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2"><Scale className="h-5 w-5 text-primary" /> Avaliações Físicas</CardTitle>
@@ -1310,9 +1309,9 @@ const ClientDetails: React.FC = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="history">
+          <FolderTabsContent value="history">
             <Card className="bg-card border-border w-full">
               <CardHeader className="p-6 border-b border-border">
                 <CardTitle className="text-foreground text-xl flex items-center gap-2">
@@ -1425,9 +1424,9 @@ const ClientDetails: React.FC = () => {
               </DialogContent>
             </Dialog>
 
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="workouts">
+          <FolderTabsContent value="workouts">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2"><Dumbbell className="h-5 w-5 text-primary" /> Treinos Atribuídos</CardTitle>
@@ -1459,8 +1458,8 @@ const ClientDetails: React.FC = () => {
             </Card>
 
 
-          </TabsContent>
-          <TabsContent value="meal-plans">
+          </FolderTabsContent>
+          <FolderTabsContent value="meal-plans">
             <Card className="bg-card border-border">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-foreground flex items-center gap-2"><Utensils className="h-5 w-5 text-primary" /> Dietas Atribuídas</CardTitle>
@@ -1512,9 +1511,9 @@ const ClientDetails: React.FC = () => {
                 <DialogFooter><Button onClick={handleAssignMealPlan} disabled={!selectedMealPlanId}>Confirmar</Button></DialogFooter>
               </DialogContent>
             </Dialog>
-          </TabsContent>
+          </FolderTabsContent>
 
-          <TabsContent value="info">
+          <FolderTabsContent value="info">
             <Card className="bg-card border-border">
               <CardHeader><CardTitle className="text-foreground">Informações Pessoais</CardTitle></CardHeader>
               <CardContent className="space-y-4">
@@ -1604,8 +1603,8 @@ const ClientDetails: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs >
+          </FolderTabsContent>
+        </FolderTabs>
 
 
 
