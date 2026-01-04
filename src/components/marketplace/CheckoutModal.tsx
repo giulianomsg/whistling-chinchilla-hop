@@ -31,12 +31,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ open, onClose, pla
 
         try {
             const result = await paymentService.processPayment({
-                studentId: user.id,
-                professionalId: professionalId,
                 planId: plan.id,
-                planName: plan.name,
-                price: Number(plan.price),
-                durationMonths: plan.duration_months
+                studentId: user.id,
+                paymentMethod: 'credit_card'
             });
 
             if (result.success) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useChat } from '@/contexts/ChatContext'
+import { supabase } from '@/integrations/supabase/client'
 import {
   LayoutDashboard,
   Users,
@@ -21,7 +22,8 @@ import {
   ChevronLeft,
   ChevronRight,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  AlertTriangle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -42,6 +44,15 @@ const DashboardLayout: React.FC = () => {
   const location = useLocation()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isSandbox, setIsSandbox] = useState(false)
+
+  React.useEffect(() => {
+    const checkSandbox = async () => {
+      const { data } = await supabase.from('platform_settings').select('payment_mode').maybeSingle();
+      if (data?.payment_mode === 'sandbox') setIsSandbox(true);
+    };
+    checkSandbox();
+  }, []);
 
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed)
 
@@ -243,6 +254,12 @@ const DashboardLayout: React.FC = () => {
 
       {/* Main Content */}
       <main className={`flex-1 pt-16 md:pt-0 min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
+        {isSandbox && (
+          <div className="w-full bg-yellow-400/20 border-b border-yellow-500/30 text-yellow-700 dark:text-yellow-400 px-4 py-1.5 text-xs font-bold flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            AMBIENTE DE TESTES (SANDBOX ATIVO) - NENHUMA COBRANÇA REAL SERÁ FEITA
+          </div>
+        )}
         <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
           <div className="hidden md:flex justify-end p-4 absolute top-0 right-0 z-10 gap-2">
             {/* ModeToggle moved to sidebar */}

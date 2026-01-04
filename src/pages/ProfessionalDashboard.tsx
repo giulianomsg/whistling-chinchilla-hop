@@ -15,6 +15,7 @@ import { ptBR } from 'date-fns/locale'
 import { ExpandableImage } from '@/components/ui/expandable-image'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlanManager } from "@/components/marketplace/PlanManager";
+import { FinancialSummary } from "@/components/analytics/FinancialSummary";
 
 interface RecentActivity {
   id: string
@@ -269,6 +270,7 @@ const ProfessionalDashboard: React.FC = () => {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="finance">Financeiro</TabsTrigger>
             <TabsTrigger value="plans">Planos e Preços</TabsTrigger>
           </TabsList>
 
@@ -367,6 +369,10 @@ const ProfessionalDashboard: React.FC = () => {
                 </Card>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="finance">
+            <FinancialSummary />
           </TabsContent>
 
           <TabsContent value="plans">
