@@ -641,12 +641,12 @@ const ProfileSettings: React.FC = () => {
               )}
             </FolderTabsList>
 
-            <FolderTabsContent value="personal" className="mt-6 space-y-6">
+            <FolderTabsContent value="personal" className="space-y-6">
               {renderPersonalTab()}
             </FolderTabsContent>
 
             {(userRole === 'professional' || userRole === 'admin') && (
-              <FolderTabsContent value="professional" className="mt-6 space-y-6">
+              <FolderTabsContent value="professional" className="space-y-6">
                 <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-foreground">Dados Profissionais</CardTitle>
@@ -699,7 +699,7 @@ const ProfileSettings: React.FC = () => {
 
             {userRole === 'client' && (
               <>
-                <FolderTabsContent value="photos" className="mt-6">
+                <FolderTabsContent value="photos">
                   <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="text-foreground flex items-center gap-2"><Camera className="h-5 w-5 text-primary" /> Galeria de Progresso</CardTitle>
@@ -728,7 +728,7 @@ const ProfileSettings: React.FC = () => {
 
 
 
-                <FolderTabsContent value="assessments" className="mt-6">
+                <FolderTabsContent value="assessments">
                   <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="text-foreground flex items-center gap-2"><Scale className="h-5 w-5 text-primary" /> Avaliações Físicas</CardTitle>
@@ -762,11 +762,11 @@ const ProfileSettings: React.FC = () => {
 
 
 
-                <FolderTabsContent value="goals" className="mt-6">
+                <FolderTabsContent value="goals">
                   <GoalsManager clientId={user?.id} />
                 </FolderTabsContent>
 
-                <FolderTabsContent value="history" className="mt-6">
+                <FolderTabsContent value="history">
                   <Card className="bg-card border-border w-full">
                     <CardHeader className="p-6 border-b border-border">
                       <CardTitle className="text-foreground text-xl flex items-center gap-2">
