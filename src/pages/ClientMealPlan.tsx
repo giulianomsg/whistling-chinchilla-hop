@@ -44,7 +44,7 @@ const ClientMealPlan: React.FC = () => {
   if (!clientMealPlan) {
     return (
       <div className="min-h-screen bg-background py-8">
-        <div className="max-w-4xl mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
+        <div className="w-full mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
           <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">Sem dieta ativa</h2>
           <p className="text-muted-foreground mb-6">Solicite um plano alimentar ao seu nutricionista.</p>
@@ -56,7 +56,7 @@ const ClientMealPlan: React.FC = () => {
   if (showDetailView) {
     return (
       <div className="min-h-screen bg-background py-8">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="w-full mx-auto px-4">
           <Button variant="outline" onClick={() => setShowDetailView(false)} className="mb-6 border-border text-muted-foreground hover:text-foreground hover:bg-accent">
             ← Voltar ao Resumo
           </Button>
@@ -68,7 +68,7 @@ const ClientMealPlan: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-green-500/10 rounded-lg"><Utensils className="h-6 w-6 text-green-500" /></div>

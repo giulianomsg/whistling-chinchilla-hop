@@ -68,7 +68,7 @@ const ClientHistory: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background py-8">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8 flex items-center gap-3">
                     <div className="p-3 bg-purple-500/10 rounded-lg"><History className="h-6 w-6 text-purple-500" /></div>
                     <div>

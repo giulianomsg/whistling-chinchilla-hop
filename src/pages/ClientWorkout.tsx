@@ -60,7 +60,7 @@ const ClientWorkout: React.FC = () => {
   if (!clientWorkout) {
     return (
       <div className="min-h-screen bg-background py-8">
-        <div className="max-w-4xl mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
+        <div className="w-full mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
           <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">Sem treino ativo</h2>
           <p className="text-muted-foreground mb-6">Solicite um plano ao seu profissional.</p>
@@ -72,7 +72,7 @@ const ClientWorkout: React.FC = () => {
   if (showDetailView) {
     return (
       <div className="min-h-screen bg-background py-8">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="w-full mx-auto px-4">
           <Button variant="outline" onClick={() => setShowDetailView(false)} className="mb-6 border-border text-muted-foreground hover:text-foreground hover:bg-accent">
             ← Voltar ao Resumo
           </Button>
@@ -84,7 +84,7 @@ const ClientWorkout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
