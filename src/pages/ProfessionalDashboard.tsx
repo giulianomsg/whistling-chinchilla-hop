@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
+import { ExpandableImage } from '@/components/ui/expandable-image'
 
 interface RecentActivity {
   id: string
@@ -39,6 +40,7 @@ const ProfessionalDashboard: React.FC = () => {
   const [rankedClients, setRankedClients] = useState<RankedClient[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [proDetails, setProDetails] = useState({ full_name: '', avatar_url: '', cover_url: '', specialty: 'Profissional' })
 
   const loadDashboardData = async (silent = false) => {
     if (!user) return
@@ -95,6 +97,29 @@ const ProfessionalDashboard: React.FC = () => {
         .slice(0, 5)
 
       setRankedClients(processedRanking)
+
+      setRankedClients(processedRanking)
+
+      // 4. Fetch Prof Details specifically (profile + details)
+      const { data: profData } = await supabase
+        .from('profiles')
+        .select(`
+            full_name, 
+            avatar_url,
+            professional_details(cover_url, specialty)
+        `)
+        .eq('id', user.id)
+        .single()
+
+      if (profData) {
+        const details = Array.isArray(profData.professional_details) ? profData.professional_details[0] : profData.professional_details
+        setProDetails({
+          full_name: profData.full_name || '',
+          avatar_url: profData.avatar_url || '',
+          cover_url: details?.cover_url || '',
+          specialty: details?.specialty || 'Profissional'
+        })
+      }
 
     } catch (error) { console.error(error) }
     finally { if (!silent) setPageLoading(false) }
@@ -160,14 +185,44 @@ const ProfessionalDashboard: React.FC = () => {
     <div className="min-h-screen bg-background py-8">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">Olá, {profile?.full_name || 'Profissional'}! 👋</h1>
-            <p className="mt-2 text-muted-foreground">Painel de controle em tempo real.</p>
+        {/* Header with Cover */}
+        <div className="mb-8 relative rounded-xl overflow-hidden shadow-2xl border border-border">
+          {/* Cover Image */}
+          <div className="h-48 w-full bg-muted relative">
+            <ExpandableImage
+              type="cover"
+              src={proDetails.cover_url}
+              alt="Capa do Perfil"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
           </div>
-          <div className="flex gap-2">
-            <Badge variant="secondary" className="bg-card text-foreground border-border">{format(new Date(), 'dd/MM/yyyy')}</Badge>
-            <Button variant="outline" size="sm" onClick={() => setRefreshKey(p => p + 1)} className="border-border text-muted-foreground hover:bg-accent"><RefreshCw className="h-4 w-4" /></Button>
+
+          {/* Content Overlay */}
+          <div className="relative px-6 pb-6 -mt-12 flex flex-col md:flex-row items-end md:items-center gap-6">
+            <div className="relative z-10">
+              <ExpandableImage
+                type="avatar"
+                src={proDetails.avatar_url}
+                alt={proDetails.full_name}
+                className="h-24 w-24 rounded-full border-4 border-background bg-background shadow-lg"
+                fallback={proDetails.full_name?.[0]}
+              />
+            </div>
+
+            <div className="flex-1 mb-2">
+              <h1 className="text-3xl font-bold text-foreground tracking-tight drop-shadow-md">Olá, {proDetails.full_name || 'Profissional'}! 👋</h1>
+              <p className="text-muted-foreground font-medium flex items-center gap-2">
+                {proDetails.specialty}
+                <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                Painel de Controle
+              </p>
+            </div>
+
+            <div className="mb-2 flex gap-2">
+              <Badge variant="secondary" className="bg-card/50 backdrop-blur-md text-foreground border-border px-3 py-1 text-sm shadow-sm">{format(new Date(), 'dd/MM/yyyy')}</Badge>
+              <Button variant="outline" size="sm" onClick={() => setRefreshKey(p => p + 1)} className="bg-card/50 backdrop-blur-md border-border text-foreground hover:bg-accent/80"><RefreshCw className="h-4 w-4" /></Button>
+            </div>
           </div>
         </div>
 

@@ -24,6 +24,8 @@ import { getRankTitle, getLevelProgress } from '@/utils/gamification'
 import { useStrengthData } from '@/hooks/useStrengthData'
 
 
+import { ExpandableImage } from '@/components/ui/expandable-image'
+
 interface ClientWorkout {
   id: string
   client_id: string
@@ -92,7 +94,7 @@ const ClientDashboard: React.FC = () => {
   const [recentSessions, setRecentSessions] = useState<WorkoutSession[]>([])
 
   // Estado local para XP (Dados frescos do banco)
-  const [xpStats, setXpStats] = useState({ current_xp: 0, level: 1 })
+  const [xpStats, setXpStats] = useState({ current_xp: 0, level: 1, full_name: '', avatar_url: '', cover_url: '' })
 
   const [pageLoading, setPageLoading] = useState(true)
   const { overallLevel, loading: strengthLoading } = useStrengthData(user?.id)
@@ -104,14 +106,24 @@ const ClientDashboard: React.FC = () => {
     try {
       const { data } = await supabase
         .from('profiles')
-        .select('current_xp, level')
+        .select(`
+            current_xp, 
+            level,
+            full_name,
+            avatar_url,
+            role,
+            client_details:client_details(cover_url)
+        `)
         .eq('id', user.id)
         .single()
 
       if (data) {
         setXpStats({
           current_xp: data.current_xp || 0,
-          level: data.level || 1
+          level: data.level || 1,
+          full_name: data.full_name,
+          avatar_url: data.avatar_url,
+          cover_url: data.client_details?.[0]?.cover_url
         })
       }
     } catch (e) { console.error('Erro ao buscar XP', e) }
@@ -215,12 +227,39 @@ const ClientDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">Olá, {user?.user_metadata?.full_name || 'Aluno'}! 💪</h1>
-            <p className="mt-2 text-muted-foreground">Este é o seu resumo de hoje.</p>
+        <div className="mb-8 relative rounded-xl overflow-hidden shadow-2xl border border-border">
+          {/* Cover Image */}
+          <div className="h-48 w-full bg-muted relative">
+            <ExpandableImage
+              type="cover"
+              src={xpStats.cover_url}
+              alt="Capa do Perfil"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
           </div>
-          <Badge variant="secondary" className="bg-card text-foreground border-border">{format(new Date(), 'EEEE, dd/MM/yyyy')}</Badge>
+
+          {/* Content Overlay */}
+          <div className="relative px-6 pb-6 -mt-12 flex flex-col md:flex-row items-end md:items-center gap-6">
+            <div className="relative z-10">
+              <ExpandableImage
+                type="avatar"
+                src={xpStats.avatar_url}
+                alt={xpStats.full_name}
+                className="h-24 w-24 rounded-full border-4 border-background bg-background shadow-lg"
+                fallback={xpStats.full_name?.[0]}
+              />
+            </div>
+
+            <div className="flex-1 mb-2">
+              <h1 className="text-3xl font-bold text-foreground tracking-tight drop-shadow-md">Olá, {xpStats.full_name || 'Aluno'}! 💪</h1>
+              <p className="text-muted-foreground font-medium">Bem-vindo ao seu painel.</p>
+            </div>
+
+            <div className="mb-2">
+              <Badge variant="secondary" className="bg-card/50 backdrop-blur-md text-foreground border-border px-4 py-1 text-sm shadow-sm">{format(new Date(), 'EEEE, dd/MM/yyyy')}</Badge>
+            </div>
+          </div>
         </div>
 
         {/* Seção de Gamificação */}
