@@ -13,6 +13,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Star, User, Phone, Award, Shield, MapPin, Calendar, MessageSquare, Send } from 'lucide-react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from 'recharts'
 import { showSuccess, showError } from '@/utils/toast'
+import { SubscriptionCard } from '@/components/marketplace/SubscriptionCard'
+import { CheckoutModal } from '@/components/marketplace/CheckoutModal'
+import { SubscriptionPlan } from '@/types/financial'
 
 const PublicProfile = () => {
     const { id } = useParams() // Professional ID
@@ -23,6 +26,9 @@ const PublicProfile = () => {
     const [reputation, setReputation] = useState<any>(null)
     const [reviews, setReviews] = useState<any[]>([])
     const [isReviewOpen, setIsReviewOpen] = useState(false)
+    const [plans, setPlans] = useState<SubscriptionPlan[]>([])
+    const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null)
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
     const [myReview, setMyReview] = useState({
         rating_punctuality: 5,
         rating_didactics: 5,
@@ -59,6 +65,16 @@ const PublicProfile = () => {
                 .order('created_at', { ascending: false })
 
             if (!revError) setReviews(revs || [])
+
+            // 5. Fetch Subscription Plans
+            const { data: plansData } = await supabase
+                .from('subscription_plans')
+                .select('*')
+                .eq('professional_id', id)
+                .eq('active', true)
+                .order('price', { ascending: true })
+
+            if (plansData) setPlans(plansData as SubscriptionPlan[])
 
         } catch (error: any) {
             console.error(error)
@@ -233,6 +249,35 @@ const PublicProfile = () => {
                     </Card>
                 </div>
 
+                {/* Planos de Consultoria (Marketplace) */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-foreground">
+                        <Award className="h-6 w-6 text-primary" /> Planos de Consultoria
+                    </h2>
+                    {plans.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {plans.map(plan => (
+                                <div key={plan.id} className="h-full">
+                                    <SubscriptionCard
+                                        plan={plan}
+                                        onSelect={(p) => {
+                                            setSelectedPlan(p)
+                                            setIsCheckoutOpen(true)
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <Card className="bg-muted/20 border-border border-dashed">
+                            <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+                                <Shield className="h-10 w-10 text-muted-foreground mb-3 opacity-50" />
+                                <p className="text-muted-foreground font-medium">Este profissional ainda não disponibilizou planos públicos.</p>
+                            </CardContent>
+                        </Card>
+                    )}
+                </section>
+
                 {/* Avaliações */}
                 <Card className="border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
@@ -321,6 +366,14 @@ const PublicProfile = () => {
                     </CardContent>
                 </Card>
             </div>
+            {selectedPlan && id && (
+                <CheckoutModal
+                    open={isCheckoutOpen}
+                    onClose={() => setIsCheckoutOpen(false)}
+                    plan={selectedPlan}
+                    professionalId={id}
+                />
+            )}
         </div>
     )
 }

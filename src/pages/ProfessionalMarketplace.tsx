@@ -83,8 +83,8 @@ const ProfessionalMarketplace: React.FC = () => {
 
     // Filter Logic
     const filteredProfessionals = professionals.filter(p => {
-        const matchesSearch = p.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.bio?.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchesSearch = (p.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+            (p.bio?.toLowerCase() || '').includes(searchTerm.toLowerCase())
         const matchesSpecialty = selectedSpecialty === 'all' || p.specialties?.includes(selectedSpecialty)
 
         return matchesSearch && matchesSpecialty
