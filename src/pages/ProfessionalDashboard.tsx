@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { ExpandableImage } from '@/components/ui/expandable-image'
 
 interface RecentActivity {
@@ -54,7 +55,7 @@ const ProfessionalDashboard: React.FC = () => {
   const [rankedClients, setRankedClients] = useState<RankedClient[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
-  const [proDetails, setProDetails] = useState({ full_name: '', avatar_url: '', cover_url: '', specialty: 'Profissional' })
+  const [proDetails, setProDetails] = useState({ full_name: '', avatar_url: '', cover_url: '', specialty: 'Profissional', city: '', state: '' })
 
   const loadDashboardData = async (silent = false) => {
     if (!user) return
@@ -119,6 +120,8 @@ const ProfessionalDashboard: React.FC = () => {
         .from('profiles')
         .select(`
             full_name, 
+            city,
+            state,
             avatar_url,
             professional_details(cover_url, specialty)
         `)
@@ -131,7 +134,9 @@ const ProfessionalDashboard: React.FC = () => {
           full_name: profData.full_name || '',
           avatar_url: profData.avatar_url || '',
           cover_url: details?.cover_url || '',
-          specialty: details?.specialty || 'Profissional'
+          specialty: details?.specialty || 'Profissional',
+          city: profData.city || '',
+          state: profData.state || ''
         })
       }
 
@@ -246,7 +251,12 @@ const ProfessionalDashboard: React.FC = () => {
             </div>
 
             <div className="mb-2 flex gap-2">
-              <Badge variant="secondary" className="bg-card/50 backdrop-blur-md text-foreground border-border px-3 py-1 text-sm shadow-sm">{format(new Date(), 'dd/MM/yyyy')}</Badge>
+              <Badge variant="secondary" className="bg-card/50 backdrop-blur-md text-foreground border-border px-3 py-1 text-sm shadow-sm hidden md:inline-flex">
+                {proDetails.city ? `${proDetails.city}${proDetails.state ? ` - ${proDetails.state}` : ''}, ` : ''}{format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+              </Badge>
+              <Badge variant="secondary" className="bg-card/50 backdrop-blur-md text-foreground border-border px-3 py-1 text-sm shadow-sm md:hidden">
+                {format(new Date(), 'dd/MM/yyyy')}
+              </Badge>
               <Button variant="outline" size="sm" onClick={() => setRefreshKey(p => p + 1)} className="bg-card/50 backdrop-blur-md border-border text-foreground hover:bg-accent/80"><RefreshCw className="h-4 w-4" /></Button>
             </div>
           </div>
