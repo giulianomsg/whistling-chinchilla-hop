@@ -32,6 +32,20 @@ interface RankedClient {
   level: number
 }
 
+const getSpecialtyLabel = (key: string) => {
+  const map: Record<string, string> = {
+    'personal_trainer': 'Personal Trainer',
+    'nutritionist': 'Nutricionista',
+    'sports_doctor': 'Médico do Esporte',
+    'physiotherapist': 'Fisioterapeuta',
+    'consultant': 'Consultor',
+    'coach': 'Treinador',
+    'clinic': 'Clínica',
+    'performance_coach': 'Coach de Performance'
+  }
+  return map[key] || key.replace(/_/g, ' ')
+}
+
 const ProfessionalDashboard: React.FC = () => {
   const navigate = useNavigate()
   const { user, profile, loading } = useAuth()
@@ -212,13 +226,21 @@ const ProfessionalDashboard: React.FC = () => {
 
             <div className="flex-1 mb-2">
               <h1 className="text-3xl font-bold text-foreground tracking-tight drop-shadow-md">Olá, {proDetails.full_name || 'Profissional'}! 👋</h1>
-              <div className="text-muted-foreground font-medium flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap gap-2 mt-2">
                 {proDetails.specialty && proDetails.specialty !== 'Profissional' ? (
                   Array.isArray(proDetails.specialty)
-                    ? proDetails.specialty.map((s: string) => <Badge key={s} className="bg-[#6e24dd] text-white hover:bg-[#5b1db5]">{s.replace(/_/g, ' ')}</Badge>)
-                    : <Badge className="bg-[#6e24dd] text-white hover:bg-[#5b1db5]">{proDetails.specialty.replace(/_/g, ' ')}</Badge>
+                    ? proDetails.specialty.map((s: string) => (
+                      <Badge key={s} className="bg-[#6e24dd] hover:bg-[#5b1db5] text-white border-0 px-3 py-1 text-xs font-medium">
+                        {getSpecialtyLabel(s)}
+                      </Badge>
+                    ))
+                    : (
+                      <Badge className="bg-[#6e24dd] hover:bg-[#5b1db5] text-white border-0 px-3 py-1 text-xs font-medium">
+                        {getSpecialtyLabel(proDetails.specialty)}
+                      </Badge>
+                    )
                 ) : (
-                  <span className="text-sm">Painel de Controle</span>
+                  <Badge variant="outline" className="text-muted-foreground border-border bg-background/50">Painel de Controle</Badge>
                 )}
               </div>
             </div>
@@ -241,7 +263,7 @@ const ProfessionalDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Lista de Atividades Recentes */}
           <div className="lg:col-span-2">
-            <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl">
+            <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl border-l-4 border-l-orange-500">
               <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-600 dark:text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
               <CardContent>
                 {recentActivities.length === 0 ? (
@@ -277,7 +299,7 @@ const ProfessionalDashboard: React.FC = () => {
 
           {/* RANKING DE ALUNOS (NOVA FUNCIONALIDADE) */}
           <div className="lg:col-span-1">
-            <Card className="bg-card border-border shadow-xl">
+            <Card className="bg-card border-border shadow-xl border-l-4 border-l-yellow-500">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400 animate-pulse" /> Ranking de XP
@@ -314,7 +336,7 @@ const ProfessionalDashboard: React.FC = () => {
             </Card>
 
             {/* Ações Rápidas */}
-            <Card className="bg-card/50 backdrop-blur-md border-border mt-6 shadow-xl">
+            <Card className="bg-card/50 backdrop-blur-md border-border mt-6 shadow-xl border-l-4 border-l-blue-500">
               <CardHeader><CardTitle className="text-foreground text-sm">Acesso Rápido</CardTitle></CardHeader>
               <CardContent className="space-y-2">
                 <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/clients')}><Users className="mr-2 h-4 w-4" /> Novo Aluno</Button>
