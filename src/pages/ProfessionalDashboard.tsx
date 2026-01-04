@@ -264,12 +264,7 @@ const ProfessionalDashboard: React.FC = () => {
           </div>
         </div>
 
-        import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-        import {PlanManager} from "@/components/marketplace/PlanManager";
 
-        // ... (existing imports)
-
-        // ... (inside ProfessionalDashboard component, after header)
 
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
