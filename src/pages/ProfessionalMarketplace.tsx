@@ -45,16 +45,25 @@ const ProfessionalMarketplace: React.FC = () => {
 
             if (viewError) throw viewError
 
-            // Fetch admin IDs to filter them out (since view doesn't allow filtering by role if column is missing)
-            const { data: admins } = await supabase
+            // Fetch admin IDs to identify potential exclusions
+            const { data: adminProfiles } = await supabase
                 .from('profiles')
-                .select('id')
+                .select('id, professional_details(id)')
                 .eq('role', 'admin')
 
-            const adminIds = new Set(admins?.map(a => a.id))
+            // Identify "Pure Admins" - those who have NO professional details
+            const pureAdminIds = new Set<string>()
+            adminProfiles?.forEach(admin => {
+                const details = admin.professional_details
+                // If details is null/undefined or an empty array, it's a pure admin
+                const hasDetails = Array.isArray(details) ? details.length > 0 : !!details
+                if (!hasDetails) {
+                    pureAdminIds.add(admin.id)
+                }
+            })
 
-            // Filter out admins
-            const filteredData = (viewData || []).filter(p => !adminIds.has(p.id))
+            // Filter out ONLY pure admins
+            const filteredData = (viewData || []).filter(p => !pureAdminIds.has(p.id))
 
             setProfessionals(filteredData)
 
