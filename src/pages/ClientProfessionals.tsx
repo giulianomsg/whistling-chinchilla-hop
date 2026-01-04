@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, User, Eye, Dumbbell, Utensils } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { showError } from '@/utils/toast'
+import { ExpandableImage } from '@/components/ui/expandable-image'
 
 const ClientProfessionals = () => {
     const { user } = useAuth()
@@ -96,9 +97,10 @@ const ClientProfessionals = () => {
                         <Card key={prof.id} className="border-border hover:border-primary/50 transition-all duration-300 overflow-hidden flex flex-col">
                             {/* Cover Image Area */}
                             <div className="h-28 w-full bg-muted relative">
-                                <img
-                                    src={prof.cover_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop'}
+                                <ExpandableImage
+                                    src={prof.cover_url} // already passing fallback inside component if null
                                     alt="Capa"
+                                    type="cover"
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black/10" />
@@ -107,10 +109,12 @@ const ClientProfessionals = () => {
                             {/* Content Area with overlapping avatar */}
                             <CardContent className="pt-0 relative flex-1 flex flex-col">
                                 <div className="-mt-10 mb-3 flex justify-between items-end">
-                                    <Avatar className="h-20 w-20 border-4 border-card bg-card shadow-sm">
-                                        <AvatarImage src={prof.avatar_url} className="object-cover" />
-                                        <AvatarFallback>{prof.full_name?.[0]}</AvatarFallback>
-                                    </Avatar>
+                                    <ExpandableImage
+                                        src={prof.avatar_url}
+                                        alt={prof.full_name}
+                                        type="avatar"
+                                        className="h-20 w-20 border-4 border-card bg-card shadow-sm"
+                                    />
                                 </div>
 
                                 <div className="mb-4">

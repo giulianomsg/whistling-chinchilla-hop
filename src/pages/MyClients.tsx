@@ -24,6 +24,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import { ExpandableImage } from '@/components/ui/expandable-image'
+
+
 const MyClients: React.FC = () => {
   const navigate = useNavigate()
   const { user, loading: authLoading } = useAuth()
@@ -50,7 +53,7 @@ const MyClients: React.FC = () => {
             client_meal_plans:client_meal_plans!client_id(id, status),
             other_links:client_professionals!client_id(
               professional:profiles!professional_id(
-                id, full_name, avatar_url,
+                id, full_name, avatar_url, role,
                 details:professional_details(specialty)
               )
             )
@@ -101,13 +104,17 @@ const MyClients: React.FC = () => {
     return (item.client?.full_name?.toLowerCase() || '').includes(term) || (item.client?.email?.toLowerCase() || '').includes(term)
   })
 
-  const translateSpecialty = (spec: string) => {
-    if (spec === 'personal_trainer') return 'Personal Trainer'
-    if (spec === 'nutritionist') return 'Nutricionista'
-    if (spec === 'sports_doctor') return 'Médico do Esporte'
-    if (spec === 'clinic') return 'Clínica / Estúdio'
-    if (spec === 'performance_coach') return 'Coach Performance'
-    return 'Profissional'
+  // Tradução de Especialidade (Simplificada)
+  const getSpecialtyLabel = (spec: string | any) => {
+    if (typeof spec !== 'string') return 'Profissional';
+    const map: Record<string, string> = {
+      'personal_trainer': 'Personal',
+      'nutritionist': 'Nutri',
+      'sports_doctor': 'Médico',
+      'performance_coach': 'Coach',
+      'clinic': 'Clínica'
+    };
+    return map[spec] || 'Prof.';
   }
 
   if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>
@@ -146,109 +153,133 @@ const MyClients: React.FC = () => {
         {filteredClients.length === 0 ? (
           <div className="text-center py-16 bg-card rounded-xl border border-border border-dashed"><h3 className="text-lg font-medium text-foreground">Nenhum aluno encontrado</h3></div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredClients.map((item) => {
               const client = item.client || {}
-
               const hasActiveWorkout = client.client_workouts?.some((w: any) => w.status === 'active')
               const hasActiveMealPlan = client.client_meal_plans?.some((m: any) => m.status === 'active')
 
-              // Filtra outros profissionais (exclui o usuário atual)
+              // Filter other professionals
               const otherProfessionals = client.other_links
                 ?.map((link: any) => link.professional)
                 .filter((p: any) => p && p.id !== user?.id) || []
 
-              const linkedDate = item.started_at ? format(new Date(item.started_at), "dd/MM/yyyy", { locale: ptBR }) : '--/--/----'
+              const linkedDate = item.started_at ? format(new Date(item.started_at), "d MMM, yyyy", { locale: ptBR }) : '--'
 
               return (
-                <Card key={item.id} className="bg-card backdrop-blur-md border-border hover:bg-accent/50 transition-all group flex flex-col h-full shadow-lg">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3 overflow-hidden">
-                        <Avatar className="border-2 border-border h-12 w-12 flex-shrink-0">
-                          <AvatarImage src={client.avatar_url || ''} />
-                          <AvatarFallback className="bg-muted text-primary font-bold">{client.full_name?.[0] || '?'}</AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0">
-                          <CardTitle className="text-base text-foreground truncate" title={client.full_name}>{client.full_name || 'Sem nome'}</CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="h-5 px-1.5 border-yellow-500/30 text-yellow-600 dark:text-yellow-400 flex items-center gap-1 text-[10px] whitespace-nowrap"><Trophy className="h-3 w-3" /> Lvl {client.level || 1}</Badge>
-                          </div>
-                        </div>
-                      </div>
-
+                <Card key={item.id} className="border-border hover:border-primary/50 transition-all duration-300 overflow-hidden flex flex-col group h-full shadow-lg bg-card">
+                  {/* Cover Image */}
+                  <div className="h-28 w-full bg-muted relative">
+                    <ExpandableImage
+                      src={null} // Clients don't have cover_url yet, using default inside component
+                      alt="Capa"
+                      type="cover"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
+                    <div className="absolute top-2 right-2">
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground -mr-2 h-8 w-8"><MoreVertical className="h-4 w-4" /></Button></DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-card border-border text-foreground z-50">
-                          <DropdownMenuItem onClick={() => navigate(`/app/clients/${client.id}`)} className="hover:bg-accent cursor-pointer"><Dumbbell className="mr-2 h-4 w-4" /> Detalhes & Treinos</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/app/chat`)} className="hover:bg-accent cursor-pointer"><Mail className="mr-2 h-4 w-4" /> Enviar Mensagem</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleRemoveClient(item.id)} className="text-destructive hover:bg-destructive/10 cursor-pointer"><UserX className="mr-2 h-4 w-4" /> Remover</DropdownMenuItem>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-white/80 hover:text-white hover:bg-white/20"><MoreVertical className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-card border-border z-50">
+                          <DropdownMenuItem onClick={() => handleRemoveClient(item.id)} className="text-destructive focus:text-destructive cursor-pointer"><UserX className="mr-2 h-4 w-4" /> Desvincular Aluno</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                  </CardHeader>
+                  </div>
 
-                  <CardContent className="flex-1 flex flex-col gap-4">
-                    {/* Dados de Vinculação */}
-                    <div className="space-y-1.5 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 flex-shrink-0" /><span className="truncate">{client.email}</span></div>
-                      <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5 flex-shrink-0" /><span className="truncate">Vinculado em: {linkedDate}</span></div>
-                    </div>
-
-                    {/* Badges de Status */}
-                    <div className="flex gap-2 flex-wrap">
-                      <Badge variant="secondary" className={`text-[10px] border whitespace-nowrap ${hasActiveWorkout ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' : 'bg-gray-500/10 text-gray-500 border-gray-500/20'}`}>
-                        <Dumbbell className="h-3 w-3 mr-1" /> {hasActiveWorkout ? 'Treino Ativo' : 'Sem Treino'}
-                      </Badge>
-                      <Badge variant="secondary" className={`text-[10px] border whitespace-nowrap ${hasActiveMealPlan ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' : 'bg-gray-500/10 text-gray-500 border-gray-500/20'}`}>
-                        <Utensils className="h-3 w-3 mr-1" /> {hasActiveMealPlan ? 'Dieta Ativa' : 'Sem Dieta'}
-                      </Badge>
-                    </div>
-
-                    {/* SEÇÃO EQUIPE MULTIDISCIPLINAR */}
-                    <div className="mt-auto pt-3 border-t border-border">
-                      <p className="text-[10px] text-muted-foreground mb-2 uppercase font-semibold tracking-wider flex items-center gap-1"><Users className="h-3 w-3" /> Equipe Multidisciplinar</p>
-
-                      {/* Renderização Condicional Inteligente */}
-                      {otherProfessionals.length > 0 ? (
-                        <TooltipProvider delayDuration={0}>
-                          <div className="flex -space-x-2 overflow-hidden pl-1 py-1">
-                            {otherProfessionals.map((prof: any) => (
-                              <Tooltip key={prof.id}>
-                                <TooltipTrigger asChild>
-                                  <div className="relative inline-block group/avatar">
-                                    <Avatar className="h-8 w-8 rounded-full ring-2 ring-background cursor-pointer border border-border hover:z-10 transition-transform hover:scale-110 bg-muted">
-                                      <AvatarImage src={prof.avatar_url || ''} />
-                                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px]">{prof.full_name?.[0] || 'P'}</AvatarFallback>
-                                    </Avatar>
-                                  </div>
-                                </TooltipTrigger>
-                                <TooltipContent className="bg-card border-border text-foreground text-xs z-50 shadow-xl p-2">
-                                  <p className="font-bold text-sm mb-0.5">{prof.full_name}</p>
-                                  <p className="text-primary text-xs flex items-center gap-1">
-                                    <Badge className="h-1.5 w-1.5 rounded-full bg-primary p-0 mr-1" />
-                                    {translateSpecialty(prof.details?.specialty)}
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            ))}
-                          </div>
-                        </TooltipProvider>
-                      ) : (
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground italic py-1">
-                          <Check className="h-3 w-3 text-muted-foreground" />
-                          <span>Gerenciado apenas por você.</span>
-                        </div>
+                  <CardContent className="pt-0 relative flex-1 flex flex-col px-5 pb-5">
+                    {/* Avatar overlapping */}
+                    <div className="-mt-12 mb-3 flex justify-between items-end">
+                      <ExpandableImage
+                        src={client.avatar_url}
+                        alt={client.full_name}
+                        type="avatar"
+                        className="h-24 w-24 border-4 border-card bg-card shadow-md rounded-full"
+                      />
+                      {client.level && (
+                        <Badge className="mb-1 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20 hover:bg-yellow-500/20 gap-1 hidden sm:flex">
+                          <Trophy className="h-3 w-3" /> Lvl {client.level}
+                        </Badge>
                       )}
                     </div>
 
-                    {/* Botão com a cor do seu print (Roxo/Primary) */}
-                    <Button
-                      onClick={() => navigate(`/app/clients/${client.id}`)}
-                      className="w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all shadow-lg shadow-primary/20"
-                    >
-                      Gerenciar Aluno
-                    </Button>
+                    {/* Profile Info */}
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-foreground leading-tight truncate" title={client.full_name}>{client.full_name || 'Aluno Sem Nome'}</h3>
+                      <p className="text-sm text-muted-foreground truncate">{client.email}</p>
+
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <Badge variant="secondary" className={`text-[10px] px-2 h-6 ${hasActiveWorkout ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' : 'opacity-50'}`}>
+                          <Dumbbell className="h-3 w-3 mr-1" /> {hasActiveWorkout ? 'Treino OK' : 'Sem Treino'}
+                        </Badge>
+                        <Badge variant="secondary" className={`text-[10px] px-2 h-6 ${hasActiveMealPlan ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' : 'opacity-50'}`}>
+                          <Utensils className="h-3 w-3 mr-1" /> {hasActiveMealPlan ? 'Dieta OK' : 'Sem Dieta'}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Equipe Multidisciplinar (Miniaturas) */}
+                    <div className="mt-auto pt-4 border-t border-border">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground mb-2 flex items-center gap-1">
+                        <Users className="h-3 w-3" /> Equipe ({otherProfessionals.length + 1})
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex -space-x-2 pl-1">
+                          {/* Self */}
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="relative z-20 hover:z-30 transition-all cursor-default">
+                                  <Avatar className="h-8 w-8 ring-2 ring-background border border-border">
+                                    <AvatarImage src={user?.user_metadata?.avatar_url} />
+                                    <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">EU</AvatarFallback>
+                                  </Avatar>
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent className="text-xs">Você</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+
+                          {/* Others */}
+                          {otherProfessionals.slice(0, 4).map((prof: any) => (
+                            <TooltipProvider key={prof.id}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="relative hover:z-30 transition-all">
+                                    <ExpandableImage
+                                      src={prof.avatar_url}
+                                      alt={prof.full_name}
+                                      type="avatar"
+                                      className="h-8 w-8 ring-2 ring-background border border-border rounded-full"
+                                    />
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent className="text-xs">
+                                  <div className="font-bold">{prof.full_name}</div>
+                                  <div className="text-[10px] opacity-80">{getSpecialtyLabel(prof.details?.specialty?.[0])}</div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ))}
+                          {otherProfessionals.length > 4 && (
+                            <div className="h-8 w-8 rounded-full bg-muted ring-2 ring-background flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+                              +{otherProfessionals.length - 4}
+                            </div>
+                          )}
+                        </div>
+
+                        <span className="text-[10px] text-muted-foreground ml-auto bg-muted/50 px-2 py-1 rounded-md">Desde {linkedDate}</span>
+                      </div>
+
+                      <Button
+                        onClick={() => navigate(`/app/clients/${client.id}`)}
+                        className="w-full mt-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 hover:shadow-md transition-all font-semibold"
+                      >
+                        Gerenciar Aluno
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               )
