@@ -48,7 +48,8 @@ const MyClients: React.FC = () => {
         .select(`
           id, status, started_at,
           client:profiles!client_id (
-            id, full_name, email, phone, avatar_url, cover_url, level,
+            id, full_name, email, phone, avatar_url, level,
+            details:client_details(cover_url),
             client_workouts:client_workouts!client_id(id, status),
             client_meal_plans:client_meal_plans!client_id(id, status),
             other_links:client_professionals!client_id(
@@ -171,7 +172,7 @@ const MyClients: React.FC = () => {
                   {/* Cover Image */}
                   <div className="h-28 w-full bg-muted relative">
                     <ExpandableImage
-                      src={client.cover_url}
+                      src={client.details?.cover_url || (Array.isArray(client.details) ? client.details[0]?.cover_url : null)}
                       alt="Capa"
                       type="cover"
                       className="w-full h-full object-cover"
