@@ -49,7 +49,7 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ professional
                     <Avatar className="h-24 w-24 border-4 border-card shadow-md">
                         <AvatarImage src={professional.avatar_url || undefined} alt={professional.full_name} className="object-cover" />
                         <AvatarFallback className="text-2xl font-bold bg-primary/10 text-primary">
-                            {professional.full_name.substring(0, 2).toUpperCase()}
+                            {professional.full_name ? professional.full_name.substring(0, 2).toUpperCase() : '?'}
                         </AvatarFallback>
                     </Avatar>
 
