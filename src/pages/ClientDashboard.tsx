@@ -123,7 +123,7 @@ const ClientDashboard: React.FC = () => {
           level: data.level || 1,
           full_name: data.full_name,
           avatar_url: data.avatar_url,
-          cover_url: data.client_details?.[0]?.cover_url
+          cover_url: (Array.isArray(data.client_details) ? data.client_details[0] : data.client_details)?.cover_url
         })
       }
     } catch (e) { console.error('Erro ao buscar XP', e) }
