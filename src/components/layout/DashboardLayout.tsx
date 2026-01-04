@@ -154,6 +154,11 @@ const DashboardLayout: React.FC = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 bg-popover border-border text-popover-foreground backdrop-blur-xl">
+          <div className="flex items-center justify-between px-2 py-1.5 text-sm font-semibold">
+            <span>Tema</span>
+            <ModeToggle />
+          </div>
+          <DropdownMenuSeparator className="bg-border" />
           <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-border" />
           <DropdownMenuItem onClick={() => navigate('/app/profile')} className="cursor-pointer hover:bg-accent focus:bg-accent focus:text-accent-foreground">
@@ -240,7 +245,7 @@ const DashboardLayout: React.FC = () => {
       <main className={`flex-1 pt-16 md:pt-0 min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
         <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
           <div className="hidden md:flex justify-end p-4 absolute top-0 right-0 z-10 gap-2">
-            <ModeToggle />
+            {/* ModeToggle moved to sidebar */}
           </div>
           <Outlet />
         </div>
