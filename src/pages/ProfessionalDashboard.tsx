@@ -212,11 +212,15 @@ const ProfessionalDashboard: React.FC = () => {
 
             <div className="flex-1 mb-2">
               <h1 className="text-3xl font-bold text-foreground tracking-tight drop-shadow-md">Olá, {proDetails.full_name || 'Profissional'}! 👋</h1>
-              <p className="text-muted-foreground font-medium flex items-center gap-2">
-                {proDetails.specialty}
-                <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                Painel de Controle
-              </p>
+              <div className="text-muted-foreground font-medium flex items-center gap-2 mt-1">
+                {proDetails.specialty && proDetails.specialty !== 'Profissional' ? (
+                  Array.isArray(proDetails.specialty)
+                    ? proDetails.specialty.map((s: string) => <Badge key={s} className="bg-[#6e24dd] text-white hover:bg-[#5b1db5]">{s.replace(/_/g, ' ')}</Badge>)
+                    : <Badge className="bg-[#6e24dd] text-white hover:bg-[#5b1db5]">{proDetails.specialty.replace(/_/g, ' ')}</Badge>
+                ) : (
+                  <span className="text-sm">Painel de Controle</span>
+                )}
+              </div>
             </div>
 
             <div className="mb-2 flex gap-2">
@@ -228,10 +232,10 @@ const ProfessionalDashboard: React.FC = () => {
 
         {/* Métricas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-600 dark:text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-primary"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-green-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-600 dark:text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-purple-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
+          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-orange-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
