@@ -13,6 +13,8 @@ import { supabase } from '@/integrations/supabase/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ExpandableImage } from '@/components/ui/expandable-image'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PlanManager } from "@/components/marketplace/PlanManager";
 
 interface RecentActivity {
   id: string
@@ -262,99 +264,128 @@ const ProfessionalDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Métricas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-primary"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-green-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-600 dark:text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-purple-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
-          <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-orange-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
-        </div>
+        import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+        import {PlanManager} from "@/components/marketplace/PlanManager";
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Lista de Atividades Recentes */}
-          <div className="lg:col-span-2">
-            <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl border-l-4 border-l-orange-500">
-              <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-600 dark:text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
-              <CardContent>
-                {recentActivities.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">Nenhuma atividade recente.</div>
-                ) : (
-                  <div className="space-y-3">
-                    {recentActivities.map((activity) => {
-                      const info = getStatusInfo(activity.status)
-                      return (
-                        <div key={activity.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card hover:bg-accent cursor-pointer transition-colors" onClick={() => navigate(`/app/clients/${activity.client_id}`)}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary"><User className="h-4 w-4" /></div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-foreground">{activity.client?.full_name || 'Aluno'}</span>
-                                <Badge className={`text-[10px] h-5 px-1 ${info.className}`}>{info.icon} <span className="ml-1">{info.text}</span></Badge>
+        // ... (existing imports)
+
+        // ... (inside ProfessionalDashboard component, after header)
+
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="plans">Planos e Preços</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-4">
+            {/* Métricas */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              {/* ... (Metrics Cards content) ... */}
+              <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-primary"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Total de Alunos</CardTitle><Users className="h-4 w-4 text-primary" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.totalClients}</div></CardContent></Card>
+              <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-green-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinos Ativos</CardTitle><Dumbbell className="h-4 w-4 text-green-600 dark:text-green-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeWorkouts}</div></CardContent></Card>
+              <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-purple-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Sessões Concluídas</CardTitle><CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.completedSessions}</div></CardContent></Card>
+              <Card className="bg-card/50 backdrop-blur-md border-border shadow-md border-l-4 border-l-orange-500"><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Treinando Agora</CardTitle><Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" /></CardHeader><CardContent><div className="text-2xl font-bold text-foreground">{metrics.activeSessions}</div></CardContent></Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Lista de Atividades Recentes */}
+              <div className="lg:col-span-2">
+                <Card className="bg-card/50 backdrop-blur-md border-border shadow-xl border-l-4 border-l-orange-500">
+                  <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Activity className="h-5 w-5 text-orange-600 dark:text-orange-400" /> Atividade Recente</CardTitle></CardHeader>
+                  <CardContent>
+                    {recentActivities.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">Nenhuma atividade recente.</div>
+                    ) : (
+                      <div className="space-y-3">
+                        {recentActivities.map((activity) => {
+                          const info = getStatusInfo(activity.status)
+                          return (
+                            <div key={activity.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card hover:bg-accent cursor-pointer transition-colors" onClick={() => navigate(`/app/clients/${activity.client_id}`)}>
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary"><User className="h-4 w-4" /></div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium text-foreground">{activity.client?.full_name || 'Aluno'}</span>
+                                    <Badge className={`text-[10px] h-5 px-1 ${info.className}`}>{info.icon} <span className="ml-1">{info.text}</span></Badge>
+                                  </div>
+                                  <div className="text-xs text-muted-foreground flex gap-3 mt-0.5">
+                                    <span><Dumbbell className="h-3 w-3 inline mr-1" />{activity.workout?.name}</span>
+                                    <span><Clock className="h-3 w-3 inline mr-1" />{formatDuration(activity.duration_seconds)}</span>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="text-xs text-muted-foreground flex gap-3 mt-0.5">
-                                <span><Dumbbell className="h-3 w-3 inline mr-1" />{activity.workout?.name}</span>
-                                <span><Clock className="h-3 w-3 inline mr-1" />{formatDuration(activity.duration_seconds)}</span>
+                              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* RANKING DE ALUNOS */}
+              <div className="lg:col-span-1">
+                <Card className="bg-card border-border shadow-xl border-l-4 border-l-yellow-500">
+                  <CardHeader>
+                    <CardTitle className="text-foreground flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400 animate-pulse" /> Ranking de XP
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {rankedClients.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">Sem dados de ranking.</div>
+                    ) : (
+                      <div className="space-y-4">
+                        {rankedClients.map((client, index) => (
+                          <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
+                            <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-muted-foreground">
+                              {index === 0 ? <Medal className="h-6 w-6 text-yellow-500 dark:text-yellow-400 mx-auto" /> :
+                                index === 1 ? <Medal className="h-6 w-6 text-slate-400 dark:text-gray-300 mx-auto" /> :
+                                  index === 2 ? <Medal className="h-6 w-6 text-amber-600 mx-auto" /> :
+                                    `#${index + 1}`}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center">
+                                <span className="font-medium text-foreground truncate">{client.full_name}</span>
+                                <span className="text-xs font-bold text-primary">{client.current_xp || 0} XP</span>
                               </div>
+                              <div className="w-full bg-muted h-1.5 rounded-full mt-1.5 overflow-hidden">
+                                <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-full" style={{ width: `${Math.min(100, ((client.current_xp % 1000) / 1000) * 100)}%` }}></div>
+                              </div>
+                              <p className="text-[10px] text-muted-foreground mt-1">Nível {client.level || 1}</p>
                             </div>
                           </div>
-                          <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* RANKING DE ALUNOS (NOVA FUNCIONALIDADE) */}
-          <div className="lg:col-span-1">
-            <Card className="bg-card border-border shadow-xl border-l-4 border-l-yellow-500">
-              <CardHeader>
-                <CardTitle className="text-foreground flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400 animate-pulse" /> Ranking de XP
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {rankedClients.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">Sem dados de ranking.</div>
-                ) : (
-                  <div className="space-y-4">
-                    {rankedClients.map((client, index) => (
-                      <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
-                        <div className="flex-shrink-0 w-8 text-center font-bold text-xl text-muted-foreground">
-                          {index === 0 ? <Medal className="h-6 w-6 text-yellow-500 dark:text-yellow-400 mx-auto" /> :
-                            index === 1 ? <Medal className="h-6 w-6 text-slate-400 dark:text-gray-300 mx-auto" /> :
-                              index === 2 ? <Medal className="h-6 w-6 text-amber-600 mx-auto" /> :
-                                `#${index + 1}`}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-foreground truncate">{client.full_name}</span>
-                            <span className="text-xs font-bold text-primary">{client.current_xp || 0} XP</span>
-                          </div>
-                          <div className="w-full bg-muted h-1.5 rounded-full mt-1.5 overflow-hidden">
-                            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-full" style={{ width: `${Math.min(100, ((client.current_xp % 1000) / 1000) * 100)}%` }}></div>
-                          </div>
-                          <p className="text-[10px] text-muted-foreground mt-1">Nível {client.level || 1}</p>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                    )}
+                  </CardContent>
+                </Card>
 
-            {/* Ações Rápidas */}
-            <Card className="bg-card/50 backdrop-blur-md border-border mt-6 shadow-xl border-l-4 border-l-blue-500">
-              <CardHeader><CardTitle className="text-foreground text-sm">Acesso Rápido</CardTitle></CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/clients')}><Users className="mr-2 h-4 w-4" /> Novo Aluno</Button>
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/planner')}><Dumbbell className="mr-2 h-4 w-4" /> Criar Treino</Button>
+                {/* Ações Rápidas */}
+                <Card className="bg-card/50 backdrop-blur-md border-border mt-6 shadow-xl border-l-4 border-l-blue-500">
+                  <CardHeader><CardTitle className="text-foreground text-sm">Acesso Rápido</CardTitle></CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/clients')}><Users className="mr-2 h-4 w-4" /> Novo Aluno</Button>
+                    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent" onClick={() => navigate('/app/planner')}><Dumbbell className="mr-2 h-4 w-4" /> Criar Treino</Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="plans">
+            <Card className="border-none shadow-none bg-transparent">
+              <CardHeader className="px-0">
+                <CardTitle>Gerenciar Planos e Preços</CardTitle>
+                <p className="text-muted-foreground">Configure os planos de assinatura disponíveis para seus alunos no marketplace.</p>
+              </CardHeader>
+              <CardContent className="px-0">
+                <PlanManager />
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

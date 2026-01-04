@@ -1,4 +1,63 @@
-import React, { useEffect, useState } from 'react'
+// Imports at top
+import { SubscriptionCard } from '@/components/marketplace/SubscriptionCard';
+import { CheckoutModal } from '@/components/marketplace/CheckoutModal';
+import { SubscriptionPlan } from '@/types/financial';
+
+// Inside component
+const [plans, setPlans] = useState<SubscriptionPlan[]>([])
+const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null)
+const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+
+// Inside fetchData
+// Fetch Plans
+const { data: plansData } = await supabase
+    .from('subscription_plans')
+    .select('*')
+    .eq('professional_id', profId)
+    .eq('active', true)
+    .order('price', { ascending: true })
+
+if (plansData) {
+    setPlans(plansData as SubscriptionPlan[])
+}
+
+// In Render (Left Column), after Certifications/Bio
+                    <section>
+                        <h2 className="text-xl font-bold mb-6">Planos de Consultoria</h2>
+                        {plans.length > 0 ? (
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {plans.map(plan => (
+                                    <div key={plan.id} className="h-full">
+                                        <SubscriptionCard 
+                                            plan={plan} 
+                                            onSelect={(p) => {
+                                                setSelectedPlan(p)
+                                                setIsCheckoutOpen(true)
+                                            }} 
+                                        />
+                                    </div>
+                                ))}
+                             </div>
+                        ) : (
+                            <p className="text-muted-foreground italic">Este profissional ainda não configurou planos públicos.</p>
+                        )}
+                    </section>
+                    
+                    <Separator />
+
+                    <section>
+                        <h2 className="text-xl font-bold mb-6">Avaliações e Feedback</h2>
+                        {/* ... existing reviews code ... */}
+
+// Late in Render (before closing div)
+            {selectedPlan && professional && (
+                <CheckoutModal 
+                    open={isCheckoutOpen} 
+                    onClose={() => setIsCheckoutOpen(false)} 
+                    plan={selectedPlan} 
+                    professionalId={professional.id} 
+                />
+            )}
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/integrations/supabase/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
