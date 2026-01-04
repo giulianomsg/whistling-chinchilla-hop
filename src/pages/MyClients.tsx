@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Label } from '@/components/ui/label'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 import {
-  Search, Plus, MoreVertical, Phone, Mail,
+  Search, Plus, MoreVertical, Phone, Mail, MessageCircle,
   Loader2, Dumbbell, UserX, User, Trophy, Calendar, Utensils, Users, Check
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -200,9 +200,23 @@ const MyClients: React.FC = () => {
                         className="h-24 w-24 border-4 border-card bg-card shadow-md rounded-full"
                       />
                       {client.level && (
-                        <Badge className="mb-1 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20 hover:bg-yellow-500/20 gap-1 hidden sm:flex">
-                          <Trophy className="h-3 w-3" /> Lvl {client.level}
-                        </Badge>
+                        <div className="flex gap-2 mb-1">
+                          <Button
+                            variant="default"
+                            size="icon"
+                            className="h-8 w-8 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/app/chat?recipient=${client.id}`)
+                            }}
+                            title="Enviar Mensagem"
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </Button>
+                          <Badge className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20 hover:bg-yellow-500/20 gap-1 hidden sm:flex items-center">
+                            <Trophy className="h-3 w-3" /> Lvl {client.level}
+                          </Badge>
+                        </div>
                       )}
                     </div>
 
