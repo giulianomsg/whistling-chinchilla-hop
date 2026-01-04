@@ -67,8 +67,8 @@ const ClientMealPlan: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background p-4 md:p-8 space-y-8">
+      <div>
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-green-500/10 rounded-lg"><Utensils className="h-6 w-6 text-green-500" /></div>

@@ -38,18 +38,29 @@ const ProfessionalMarketplace: React.FC = () => {
     const fetchProfessionals = async () => {
         setLoading(true)
         try {
-            const { data, error } = await supabase
+            // First fetch the professionals from view
+            const { data: viewData, error: viewError } = await supabase
                 .from('marketplace_professionals_view')
                 .select('*')
-                .neq('role', 'admin')
 
-            if (error) throw error
+            if (viewError) throw viewError
 
-            setProfessionals(data || [])
+            // Fetch admin IDs to filter them out (since view doesn't allow filtering by role if column is missing)
+            const { data: admins } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('role', 'admin')
 
-            // Extract unique specialties
+            const adminIds = new Set(admins?.map(a => a.id))
+
+            // Filter out admins
+            const filteredData = (viewData || []).filter(p => !adminIds.has(p.id))
+
+            setProfessionals(filteredData)
+
+            // Extract unique specialties from the filtered list
             const specs = new Set<string>()
-            data?.forEach(p => {
+            filteredData.forEach(p => {
                 p.specialties?.forEach((s: string) => specs.add(s))
             })
             setAllSpecialties(Array.from(specs).sort())
