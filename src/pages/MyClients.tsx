@@ -48,7 +48,7 @@ const MyClients: React.FC = () => {
         .select(`
           id, status, started_at,
           client:profiles!client_id (
-            id, full_name, email, phone, avatar_url, level,
+            id, full_name, email, phone, avatar_url, cover_url, level,
             client_workouts:client_workouts!client_id(id, status),
             client_meal_plans:client_meal_plans!client_id(id, status),
             other_links:client_professionals!client_id(
@@ -171,7 +171,7 @@ const MyClients: React.FC = () => {
                   {/* Cover Image */}
                   <div className="h-28 w-full bg-muted relative">
                     <ExpandableImage
-                      src={null} // Clients don't have cover_url yet, using default inside component
+                      src={client.cover_url}
                       alt="Capa"
                       type="cover"
                       className="w-full h-full object-cover"
