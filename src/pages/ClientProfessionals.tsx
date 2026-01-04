@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, User, Eye, Dumbbell, Utensils } from 'lucide-react'
+import { Loader2, User, Eye, Dumbbell, Utensils, MessageCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { showError } from '@/utils/toast'
 import { ExpandableImage } from '@/components/ui/expandable-image'
@@ -108,13 +108,25 @@ const ClientProfessionals = () => {
 
                             {/* Content Area with overlapping avatar */}
                             <CardContent className="pt-0 relative flex-1 flex flex-col">
-                                <div className="-mt-10 mb-3 flex justify-between items-end">
+                                <div className="-mt-10 mb-3 flex justify-between items-end relative z-10">
                                     <ExpandableImage
                                         src={prof.avatar_url}
                                         alt={prof.full_name}
                                         type="avatar"
                                         className="h-20 w-20 border-4 border-card bg-card shadow-sm"
                                     />
+                                    <Button
+                                        variant="default"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm absolute right-0 bottom-2"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/app/chat?recipient=${prof.id}`)
+                                        }}
+                                        title="Enviar Mensagem"
+                                    >
+                                        <MessageCircle className="h-4 w-4" />
+                                    </Button>
                                 </div>
 
                                 <div className="mb-4">
@@ -153,8 +165,9 @@ const ClientProfessionals = () => {
                         </Card>
                     ))}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }
 
