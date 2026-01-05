@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, User, CreditCard, Bell, Key } from 'lucide-react';
 
 // Sub-components
-import ProfileSettings from './ProfileSettings';
 import PaymentSettings from './admin/PaymentSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -13,6 +12,7 @@ export default function Settings() {
     const navigate = useNavigate();
     const { profile } = useAuth();
     const isAdmin = profile?.role === 'admin';
+    const defaultTab = isAdmin ? 'payments' : 'notifications';
 
     return (
         <div className="container mx-auto p-4 md:p-8 space-y-6 pb-20 animate-in fade-in zoom-in-95 duration-500">
@@ -26,16 +26,13 @@ export default function Settings() {
                         Configurações do Sistema
                     </h1>
                     <p className="text-muted-foreground">
-                        Gerencie suas preferências, perfil e assinaturas.
+                        Gerencie preferências e integrações.
                     </p>
                 </div>
             </div>
 
-            <Tabs defaultValue="profile" className="w-full space-y-6">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[600px] bg-muted/50 p-1">
-                    <TabsTrigger value="profile" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                        <User className="h-4 w-4" /> Perfil
-                    </TabsTrigger>
+            <Tabs defaultValue={defaultTab} className="w-full space-y-6">
+                <TabsList className="grid w-full grid-cols-2 lg:w-[400px] bg-muted/50 p-1">
 
                     {isAdmin && (
                         <TabsTrigger value="payments" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
@@ -54,11 +51,6 @@ export default function Settings() {
                     )}
                 </TabsList>
 
-                <TabsContent value="profile" className="outline-none">
-                    <div className="mt-2">
-                        <ProfileSettings isEmbedded={true} />
-                    </div>
-                </TabsContent>
 
                 {isAdmin && (
                     <TabsContent value="payments" className="outline-none">
@@ -94,6 +86,6 @@ export default function Settings() {
                     </TabsContent>
                 )}
             </Tabs>
-        </div>
+        </div >
     );
 }

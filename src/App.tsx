@@ -96,8 +96,16 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Redirects for legacy routes to keep links working via the new Settings hub */}
-        <Route path="profile" element={<Navigate to="/app/settings" replace />} />
+        {/* Profile Separate Route */}
+        <Route
+          path="profile"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ProfileSettings />
+            </Suspense>
+          }
+        />
+
         {/* Note: PaymentSettings is strictly Admin, assuming Settings handles access control internally via Tabs logic */}
         <Route path="admin/payment-settings" element={<Navigate to="/app/settings?tab=payments" replace />} />
 
