@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS public.payment_gateway_configs (
     provider TEXT NOT NULL UNIQUE CHECK (provider IN ('stripe')),
     is_active BOOLEAN NOT NULL DEFAULT false,
     publishable_key TEXT,
-    secret_key TEXT,
-    webhook_secret TEXT,
+    secret_key TEXT, -- Must be TEXT to store Base64 string
+    webhook_secret TEXT, -- Must be TEXT to store Base64 string
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS public.payment_gateway_configs (
 ALTER TABLE public.payment_gateway_configs ENABLE ROW LEVEL SECURITY;
 
 -- 4. Policies
--- Drop existing policies to avoid conflicts if re-running
 DROP POLICY IF EXISTS "Authenticated users can read config" ON public.payment_gateway_configs;
 DROP POLICY IF EXISTS "Admins can manage config" ON public.payment_gateway_configs;
 
@@ -37,6 +36,9 @@ USING (
 );
 
 -- 5. RPC Function to Upsert Keys securely
+-- Drop first to handle any signature changes or stuck states
+DROP FUNCTION IF EXISTS public.upsert_payment_config(text, text, text, text);
+
 CREATE OR REPLACE FUNCTION public.upsert_payment_config(
     p_provider TEXT,
     p_publishable_key TEXT,
@@ -60,7 +62,7 @@ BEGIN
         RETURN jsonb_build_object('success', false, 'message', 'Unauthorized');
     END IF;
 
-    -- Update or Insert
+    -- Upsert with Base64 Encoding for Text compatibility
     INSERT INTO public.payment_gateway_configs (
         provider, 
         is_active, 
@@ -72,8 +74,9 @@ BEGIN
         p_provider,
         v_active,
         p_publishable_key,
-        pgp_sym_encrypt(p_secret_key, v_enc_key),
-        pgp_sym_encrypt(p_webhook_secret, v_enc_key),
+        -- FIX: Encode bytea result from encrypt to base64 text
+        encode(pgp_sym_encrypt(p_secret_key, v_enc_key), 'base64'),
+        encode(pgp_sym_encrypt(p_webhook_secret, v_enc_key), 'base64'),
         NOW()
     )
     ON CONFLICT (provider)
@@ -88,7 +91,13 @@ BEGIN
 END;
 $$;
 
--- 6. RPC Helper to Decrypt (Optional, but good for completeness)
+-- Grant Execute permissions to ensure visibility
+GRANT EXECUTE ON FUNCTION public.upsert_payment_config(text, text, text, text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.upsert_payment_config(text, text, text, text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.upsert_payment_config(text, text, text, text) TO postgres;
+GRANT EXECUTE ON FUNCTION public.upsert_payment_config(text, text, text, text) TO anon;
+
+-- 6. Helper RPC to Decrypt (Updated for Base64)
 CREATE OR REPLACE FUNCTION public.get_decrypted_payment_config(p_provider TEXT)
 RETURNS TABLE (
     provider TEXT,
@@ -103,14 +112,7 @@ AS $$
 DECLARE
     v_enc_key TEXT := 'capifit_financial_master_key_2026_secured';
 BEGIN
-    -- Security check: Only admins or service role should theoretically call this directly, 
-    -- but for Edge Functions usage, we might rely on the caller being authorized via RLS or Service Key.
-    -- For safety, let's restrict to Admin for direct RPC calls.
-    IF NOT EXISTS (
-        SELECT 1 FROM public.profiles
-        WHERE id = auth.uid() AND role = 'admin'
-    ) THEN
-        -- Return empty or error? Empty for safety.
+    IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin') THEN
         RETURN;
     END IF;
 
@@ -118,9 +120,12 @@ BEGIN
     SELECT 
         cfg.provider,
         cfg.publishable_key,
-        pgp_sym_decrypt(cfg.secret_key::bytea, v_enc_key) as secret_key,
-        pgp_sym_decrypt(cfg.webhook_secret::bytea, v_enc_key) as webhook_secret
+        -- FIX: Decode base64 text to bytea before decrypting
+        pgp_sym_decrypt(decode(cfg.secret_key, 'base64'), v_enc_key) as secret_key,
+        pgp_sym_decrypt(decode(cfg.webhook_secret, 'base64'), v_enc_key) as webhook_secret
     FROM public.payment_gateway_configs cfg
     WHERE cfg.provider = p_provider;
 END;
 $$;
+
+GRANT EXECUTE ON FUNCTION public.get_decrypted_payment_config(text) TO authenticated;
