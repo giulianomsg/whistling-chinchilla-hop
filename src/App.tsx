@@ -34,6 +34,12 @@ const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // 
 const AdminUsers = lazy(() => import("./pages/AdminUsers")); // Nova Página Admin Users
 const ProfessionalMarketplace = lazy(() => import("./pages/ProfessionalMarketplace"));
 const ProfessionalDetails = lazy(() => import("./pages/ProfessionalDetails"));
+// Financial
+const AdminFinancialDashboard = lazy(() => import("./pages/admin/AdminFinancialDashboard"));
+const PaymentSettings = lazy(() => import("./pages/admin/PaymentSettings"));
+const ProfessionalFinance = lazy(() => import("./pages/ProfessionalFinance"));
+const ClientBillingHistory = lazy(() => import("./pages/ClientBillingHistory"));
+const CheckoutSuccess = lazy(() => import("./pages/checkout/Success"));
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
@@ -285,6 +291,62 @@ const AppRoutes: React.FC = () => {
                 <ProfessionalDetails />
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
+          }
+        />
+
+        {/* Financeiro: Admin */}
+        <Route
+          path="admin/financial"
+          element={
+            profile?.role === 'admin' ?
+              <Suspense fallback={<PageLoader />}>
+                <AdminFinancialDashboard />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+        <Route
+          path="admin/payment-settings"
+          element={
+            profile?.role === 'admin' ?
+              <Suspense fallback={<PageLoader />}>
+                <PaymentSettings />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+
+        {/* Financeiro: Profissional */}
+        <Route
+          path="finance"
+          element={
+            (profile?.role === 'professional' || profile?.role === 'admin') ?
+              <Suspense fallback={<PageLoader />}>
+                <ProfessionalFinance />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+
+        {/* Financeiro: Cliente */}
+        <Route
+          path="billing"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ClientBillingHistory />
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+
+        {/* Checkout Success (Public/Auth) */}
+        <Route
+          path="checkout/success"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <CheckoutSuccess />
+            </Suspense>
           }
         />
       </Route>

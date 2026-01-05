@@ -30,18 +30,29 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ open, onClose, pla
         setLoading(true);
 
         try {
+            // Define return URLs
+            const successUrl = `${window.location.origin}/app/checkout/success`;
+            const cancelUrl = window.location.href;
+
             const result = await paymentService.processPayment({
                 planId: plan.id,
-                studentId: user.id,
-                paymentMethod: 'credit_card'
+                successUrl: successUrl,
+                cancelUrl: cancelUrl
             });
 
             if (result.success) {
+                // Check for Stripe Redirect
+                if (result.action === 'redirect' && result.url) {
+                    console.log("Redirecionando para Stripe:", result.url);
+                    window.location.href = result.url;
+                    return;
+                }
+
+                // Sandbox / Immediate Success
                 toast.success("Assinatura realizada com sucesso!", {
                     description: `Você agora tem acesso ao plano ${plan.name}.`
                 });
                 onClose();
-                // Redirect to dashboard or refresh logic
                 navigate('/app/dashboard');
             } else {
                 toast.error("Falha no pagamento", {
@@ -54,6 +65,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ open, onClose, pla
                 description: "Ocorreu um erro ao processar sua assinatura."
             });
         } finally {
+            // Only stop loading if we didn't redirect (redirect unmounts page eventually)
+            // But good to stop it just in case logic continues
             setLoading(false);
         }
     };
