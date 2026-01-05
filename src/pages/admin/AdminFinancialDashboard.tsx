@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, TrendingUp, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, TrendingUp, DollarSign, ArrowLeft } from 'lucide-react';
 import {
     BarChart,
     Bar,
@@ -24,6 +26,7 @@ import {
 } from "@/components/ui/select"
 
 export default function AdminFinancialDashboard() {
+    const navigate = useNavigate();
     const [gatewayFilter, setGatewayFilter] = useState<'all' | 'stripe' | 'sandbox'>('all');
 
     const { data: transactions, isLoading } = useQuery({
@@ -95,11 +98,16 @@ export default function AdminFinancialDashboard() {
     return (
         <div className="container mx-auto p-6 space-y-8 animate-fade-in pb-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                        Dashboard Financeiro
-                    </h1>
-                    <p className="text-muted-foreground">Visão geral das transações da plataforma.</p>
+                <div className="flex items-center gap-4">
+                    <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0">
+                        <ArrowLeft className="h-5 w-5" />
+                    </Button>
+                    <div>
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                            Dashboard Financeiro
+                        </h1>
+                        <p className="text-muted-foreground">Visão geral das transações da plataforma.</p>
+                    </div>
                 </div>
 
                 <Select value={gatewayFilter} onValueChange={(val: any) => setGatewayFilter(val)}>

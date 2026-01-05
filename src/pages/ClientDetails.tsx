@@ -705,9 +705,19 @@ const ClientDetails: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-4 md:py-8 w-full overflow-x-hidden">
       <div className="w-full px-4 md:px-8">
-        <div className="mb-6">
-          <Button variant="ghost" onClick={() => navigate('/app/clients')} className="text-muted-foreground hover:text-foreground pl-0 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
-        </div >
+        <div className="flex items-center gap-4 mb-6">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/app/clients')} className="shrink-0">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              {clientProfile?.full_name || 'Detalhes do Aluno'}
+            </h1>
+            <p className="text-muted-foreground">
+              Gerencie treinos, dietas e evolução.
+            </p>
+          </div>
+        </div>
         <FolderTabs value={activeTab} onValueChange={setActiveTab} className="space-y-0 w-full">
           <FolderTabsList className="bg-transparent p-0 justify-start">
             <FolderTabsTrigger value="dashboard"><LayoutDashboard className="w-4 h-4 mr-2" /> Visão Geral</FolderTabsTrigger>

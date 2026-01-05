@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Cropper from 'react-easy-crop'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
@@ -17,7 +18,7 @@ import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy } from 'lucide-react'
+import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy, ArrowLeft } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
@@ -113,6 +114,7 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false }) => {
+  const navigate = useNavigate()
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -623,9 +625,19 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
     <div className={`min-h-screen bg-background ${isEmbedded ? '' : 'py-8'}`}>
       <div className={`w-full mx-auto ${isEmbedded ? '' : 'px-4 sm:px-6 lg:px-8'}`}>
         {!isEmbedded && (
-          <h1 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3">
-            <User className="text-primary" /> Configurações de Perfil
-          </h1>
+          <div className="flex items-center gap-4 mb-8">
+            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent flex items-center gap-3">
+                Configurações de Perfil
+              </h1>
+              <p className="text-muted-foreground">
+                Gerencie suas informações pessoais e profissionais.
+              </p>
+            </div>
+          </div>
         )}
 
         <form onSubmit={handleSave} className="space-y-8">
