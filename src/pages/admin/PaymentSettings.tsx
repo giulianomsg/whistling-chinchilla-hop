@@ -104,11 +104,14 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
             }
 
             // Call secure RPC
-            const { data, error } = await supabase.rpc('upsert_payment_config', {
-                p_provider: 'stripe',
-                p_publishable_key: stripeSecrets.publishable,
-                p_secret_key: stripeSecrets.secret,
-                p_webhook_secret: stripeSecrets.webhook
+            // Call secure RPC v2 (JSONB payload)
+            const { data, error } = await supabase.rpc('upsert_payment_config_v2', {
+                payload: {
+                    provider: 'stripe',
+                    publishable_key: stripeSecrets.publishable,
+                    secret_key: stripeSecrets.secret,
+                    webhook_secret: stripeSecrets.webhook
+                }
             });
 
             if (error) throw error;
