@@ -32,7 +32,7 @@ export default function Settings() {
             </div>
 
             <Tabs defaultValue={defaultTab} className="w-full space-y-6">
-                <TabsList className="grid w-full grid-cols-2 lg:w-[400px] bg-muted/50 p-1">
+                <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-3 lg:w-[600px]' : 'grid-cols-1 lg:w-[200px]'} bg-muted/50 p-1`}>
 
                     {isAdmin && (
                         <TabsTrigger value="payments" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
