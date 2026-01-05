@@ -108,7 +108,11 @@ const DEFAULT_ANAMNESIS = {
   activity_level: 'sedentary'
 }
 
-const ProfileSettings: React.FC = () => {
+interface ProfileSettingsProps {
+  isEmbedded?: boolean;
+}
+
+const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false }) => {
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -615,13 +619,14 @@ const ProfileSettings: React.FC = () => {
     </Card>
   )
 
-  // ... replace the value="personal" content with {renderPersonalTab()}
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3">
-          <User className="text-primary" /> Configurações de Perfil
-        </h1>
+    <div className={`min-h-screen bg-background ${isEmbedded ? '' : 'py-8'}`}>
+      <div className={`w-full mx-auto ${isEmbedded ? '' : 'px-4 sm:px-6 lg:px-8'}`}>
+        {!isEmbedded && (
+          <h1 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3">
+            <User className="text-primary" /> Configurações de Perfil
+          </h1>
+        )}
 
         <form onSubmit={handleSave} className="space-y-8">
           <FolderTabs defaultValue="personal" className="w-full">

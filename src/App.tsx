@@ -28,10 +28,10 @@ const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
 const ClientDetails = lazy(() => import("./pages/ClientDetails"));
 const Chat = lazy(() => import("./pages/Chat"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
-const ClientAgenda = lazy(() => import("./pages/ClientAgenda")); // Nova Página Agenda
-const ClientProfessionals = lazy(() => import("./pages/ClientProfessionals")); // Nova Página Meus Profissionais
-const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda")); // Nova Página Agenda Global
-const AdminUsers = lazy(() => import("./pages/AdminUsers")); // Nova Página Admin Users
+const ClientAgenda = lazy(() => import("./pages/ClientAgenda"));
+const ClientProfessionals = lazy(() => import("./pages/ClientProfessionals"));
+const ProfessionalAgenda = lazy(() => import("./pages/ProfessionalAgenda"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const ProfessionalMarketplace = lazy(() => import("./pages/ProfessionalMarketplace"));
 const ProfessionalDetails = lazy(() => import("./pages/ProfessionalDetails"));
 // Financial
@@ -40,6 +40,7 @@ const PaymentSettings = lazy(() => import("./pages/admin/PaymentSettings"));
 const ProfessionalFinance = lazy(() => import("./pages/ProfessionalFinance"));
 const ClientBillingHistory = lazy(() => import("./pages/ClientBillingHistory"));
 const CheckoutSuccess = lazy(() => import("./pages/checkout/Success"));
+const Settings = lazy(() => import("./pages/Settings")); // New Settings Page
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
@@ -85,6 +86,22 @@ const AppRoutes: React.FC = () => {
         {/* Dashboard principal - redireciona baseado no role */}
         <Route index element={<Navigate to="/app/dashboard" replace />} />
 
+        {/* Unified Settings Route */}
+        <Route
+          path="settings"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <Settings />
+            </Suspense>
+          }
+        />
+
+        {/* Redirects for legacy routes to keep links working via the new Settings hub */}
+        <Route path="profile" element={<Navigate to="/app/settings" replace />} />
+        {/* Note: PaymentSettings is strictly Admin, assuming Settings handles access control internally via Tabs logic */}
+        <Route path="admin/payment-settings" element={<Navigate to="/app/settings?tab=payments" replace />} />
+
+
         {/* Dashboard unificado baseado no role */}
         <Route
           path="dashboard"
@@ -99,17 +116,7 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Rota de Perfil (Acessível a todos) */}
-        <Route
-          path="profile"
-          element={
-            <Suspense fallback={<PageLoader />}>
-              <ProfileSettings />
-            </Suspense>
-          }
-        />
-
-        {/* Perfil Público (Reputação) */}
+        {/* Perfil Público (Reputação) - Mantém separado pois é visualização externa */}
         <Route
           path="profile/public/:id"
           element={
@@ -305,16 +312,7 @@ const AppRoutes: React.FC = () => {
               <Navigate to="/app/dashboard" replace />
           }
         />
-        <Route
-          path="admin/payment-settings"
-          element={
-            profile?.role === 'admin' ?
-              <Suspense fallback={<PageLoader />}>
-                <PaymentSettings />
-              </Suspense> :
-              <Navigate to="/app/dashboard" replace />
-          }
-        />
+        {/* Payment Settings already redirected to /settings */}
 
         {/* Financeiro: Profissional */}
         <Route

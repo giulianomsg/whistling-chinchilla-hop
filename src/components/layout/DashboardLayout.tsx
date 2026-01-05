@@ -172,13 +172,13 @@ const DashboardLayout: React.FC = () => {
           <DropdownMenuSeparator className="bg-border" />
           <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-border" />
-          <DropdownMenuItem onClick={() => navigate('/app/profile')} className="cursor-pointer hover:bg-accent focus:bg-accent focus:text-accent-foreground">
+          <DropdownMenuItem onClick={() => navigate('/app/settings')} className="cursor-pointer hover:bg-accent focus:bg-accent focus:text-accent-foreground">
             <User className="mr-2 h-4 w-4" />
             <span>Editar Perfil</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate('/app/settings')} disabled className="cursor-pointer hover:bg-accent text-muted-foreground">
+          <DropdownMenuItem onClick={() => navigate('/app/settings')} className="cursor-pointer hover:bg-accent focus:bg-accent focus:text-accent-foreground">
             <Settings className="mr-2 h-4 w-4" />
-            <span>Configurações (Breve)</span>
+            <span>Configurações</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="bg-border" />
           <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive">

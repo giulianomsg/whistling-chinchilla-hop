@@ -9,7 +9,11 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { ShieldCheck, CreditCard, Lock, AlertTriangle } from 'lucide-react';
 
-export default function PaymentSettings() {
+interface PaymentSettingsProps {
+    isEmbedded?: boolean;
+}
+
+export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsProps) {
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const [stripeSecrets, setStripeSecrets] = useState({
@@ -130,12 +134,14 @@ export default function PaymentSettings() {
 
     return (
         <div className="container mx-auto p-6 space-y-8 animate-fade-in pb-20">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                    Infraestrutura Financeira
-                </h1>
-                <p className="text-muted-foreground">Gerencie gateways, chaves de API e modo de operação (Sandbox vs Produção).</p>
-            </div>
+            {!isEmbedded && (
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                        Infraestrutura Financeira
+                    </h1>
+                    <p className="text-muted-foreground">Gerencie gateways, chaves de API e modo de operação (Sandbox vs Produção).</p>
+                </div>
+            )}
 
             {/* Global Switch */}
             <Card className="border-l-4 border-l-primary shadow-sm">
