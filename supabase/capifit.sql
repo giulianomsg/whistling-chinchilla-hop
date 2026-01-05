@@ -2,9 +2,9 @@
 -- PostgreSQL database cluster dump
 --
 
--- Started on 2026-01-04 17:34:24
+-- Started on 2026-01-05 00:00:01
 
-\restrict iJT5cfJRZ6wqsKGlyOMZ9tMUezwdV67yqUr2CkzMUEZgAmJcqCzEgBz00qDuWnK
+\restrict dm13WqMdQboSlL15JP5N6tHwl6RNu6op8jxSxRPKllkNtJAfiqAvjFiIto8yQ6Z
 
 SET default_transaction_read_only = off;
 
@@ -130,7 +130,7 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 
 
 
-\unrestrict iJT5cfJRZ6wqsKGlyOMZ9tMUezwdV67yqUr2CkzMUEZgAmJcqCzEgBz00qDuWnK
+\unrestrict dm13WqMdQboSlL15JP5N6tHwl6RNu6op8jxSxRPKllkNtJAfiqAvjFiIto8yQ6Z
 
 --
 -- Databases
@@ -146,12 +146,12 @@ GRANT supabase_realtime_admin TO postgres WITH INHERIT TRUE GRANTED BY supabase_
 -- PostgreSQL database dump
 --
 
-\restrict tnOQpgxRjBRdypCdLZ3yCwYYIkac7X0m54uoxcqhNmRaq6fhnnFUgfvsyfctaEC
+\restrict zt0hvvYm65L1yzaPtj99YVpKTjbS9cX3ZMVT5M0YtvVGmm1eD3qYcn20jTmhjT0
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2026-01-04 17:34:32
+-- Started on 2026-01-05 00:00:08
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -165,13 +165,13 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
--- Completed on 2026-01-04 17:34:48
+-- Completed on 2026-01-05 00:00:25
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict tnOQpgxRjBRdypCdLZ3yCwYYIkac7X0m54uoxcqhNmRaq6fhnnFUgfvsyfctaEC
+\unrestrict zt0hvvYm65L1yzaPtj99YVpKTjbS9cX3ZMVT5M0YtvVGmm1eD3qYcn20jTmhjT0
 
 --
 -- Database "postgres" dump
@@ -183,12 +183,12 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
-\restrict fgan7SC6fEwnuJRpAKqOCrOqQxs9GMZolU3PMzWMjlDn7Y0Zwg5W07npnaVLqby
+\restrict Hk3KXE5EzP7Lw03rquYSNMvfUlcktwCKEr1TBQV2woEqjKgQpfffqMR0kPgnTQw
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.0
 
--- Started on 2026-01-04 17:34:48
+-- Started on 2026-01-05 00:00:25
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -291,7 +291,7 @@ CREATE EXTENSION IF NOT EXISTS pg_graphql WITH SCHEMA graphql;
 
 
 --
--- TOC entry 5004 (class 0 OID 0)
+-- TOC entry 5085 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: EXTENSION pg_graphql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -308,7 +308,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA extensions;
 
 
 --
--- TOC entry 5005 (class 0 OID 0)
+-- TOC entry 5086 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: 
 --
@@ -325,7 +325,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA extensions;
 
 
 --
--- TOC entry 5006 (class 0 OID 0)
+-- TOC entry 5087 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
 --
@@ -342,7 +342,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 
 
 --
--- TOC entry 5007 (class 0 OID 0)
+-- TOC entry 5088 (class 0 OID 0)
 -- Dependencies: 4
 -- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
@@ -359,7 +359,7 @@ CREATE EXTENSION IF NOT EXISTS supabase_vault WITH SCHEMA vault;
 
 
 --
--- TOC entry 5008 (class 0 OID 0)
+-- TOC entry 5089 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: EXTENSION supabase_vault; Type: COMMENT; Schema: -; Owner: 
 --
@@ -376,7 +376,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
 
 
 --
--- TOC entry 5009 (class 0 OID 0)
+-- TOC entry 5090 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
 --
@@ -385,7 +385,7 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
--- TOC entry 1276 (class 1247 OID 16784)
+-- TOC entry 1286 (class 1247 OID 16784)
 -- Name: aal_level; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -399,7 +399,7 @@ CREATE TYPE auth.aal_level AS ENUM (
 ALTER TYPE auth.aal_level OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1300 (class 1247 OID 16925)
+-- TOC entry 1310 (class 1247 OID 16925)
 -- Name: code_challenge_method; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -412,7 +412,7 @@ CREATE TYPE auth.code_challenge_method AS ENUM (
 ALTER TYPE auth.code_challenge_method OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1273 (class 1247 OID 16778)
+-- TOC entry 1283 (class 1247 OID 16778)
 -- Name: factor_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -425,7 +425,7 @@ CREATE TYPE auth.factor_status AS ENUM (
 ALTER TYPE auth.factor_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1270 (class 1247 OID 16773)
+-- TOC entry 1280 (class 1247 OID 16773)
 -- Name: factor_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -439,7 +439,7 @@ CREATE TYPE auth.factor_type AS ENUM (
 ALTER TYPE auth.factor_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1318 (class 1247 OID 17028)
+-- TOC entry 1328 (class 1247 OID 17028)
 -- Name: oauth_authorization_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -454,7 +454,7 @@ CREATE TYPE auth.oauth_authorization_status AS ENUM (
 ALTER TYPE auth.oauth_authorization_status OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1330 (class 1247 OID 17101)
+-- TOC entry 1340 (class 1247 OID 17101)
 -- Name: oauth_client_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -467,7 +467,7 @@ CREATE TYPE auth.oauth_client_type AS ENUM (
 ALTER TYPE auth.oauth_client_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1312 (class 1247 OID 17006)
+-- TOC entry 1322 (class 1247 OID 17006)
 -- Name: oauth_registration_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -480,7 +480,7 @@ CREATE TYPE auth.oauth_registration_type AS ENUM (
 ALTER TYPE auth.oauth_registration_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1321 (class 1247 OID 17038)
+-- TOC entry 1331 (class 1247 OID 17038)
 -- Name: oauth_response_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -492,7 +492,7 @@ CREATE TYPE auth.oauth_response_type AS ENUM (
 ALTER TYPE auth.oauth_response_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1306 (class 1247 OID 16967)
+-- TOC entry 1316 (class 1247 OID 16967)
 -- Name: one_time_token_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -509,7 +509,51 @@ CREATE TYPE auth.one_time_token_type AS ENUM (
 ALTER TYPE auth.one_time_token_type OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 1363 (class 1247 OID 17312)
+-- TOC entry 1489 (class 1247 OID 76015)
+-- Name: payment_provider_type; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.payment_provider_type AS ENUM (
+    'stripe',
+    'mercadopago',
+    'pagseguro',
+    'sandbox'
+);
+
+
+ALTER TYPE public.payment_provider_type OWNER TO postgres;
+
+--
+-- TOC entry 1483 (class 1247 OID 75968)
+-- Name: subscription_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.subscription_status AS ENUM (
+    'active',
+    'expired',
+    'cancelled',
+    'payment_failed'
+);
+
+
+ALTER TYPE public.subscription_status OWNER TO postgres;
+
+--
+-- TOC entry 1477 (class 1247 OID 75940)
+-- Name: transaction_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.transaction_status AS ENUM (
+    'pending',
+    'paid',
+    'failed'
+);
+
+
+ALTER TYPE public.transaction_status OWNER TO postgres;
+
+--
+-- TOC entry 1373 (class 1247 OID 17312)
 -- Name: action; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -525,7 +569,7 @@ CREATE TYPE realtime.action AS ENUM (
 ALTER TYPE realtime.action OWNER TO supabase_admin;
 
 --
--- TOC entry 1354 (class 1247 OID 17272)
+-- TOC entry 1364 (class 1247 OID 17272)
 -- Name: equality_op; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -543,7 +587,7 @@ CREATE TYPE realtime.equality_op AS ENUM (
 ALTER TYPE realtime.equality_op OWNER TO supabase_admin;
 
 --
--- TOC entry 1357 (class 1247 OID 17287)
+-- TOC entry 1367 (class 1247 OID 17287)
 -- Name: user_defined_filter; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -557,7 +601,7 @@ CREATE TYPE realtime.user_defined_filter AS (
 ALTER TYPE realtime.user_defined_filter OWNER TO supabase_admin;
 
 --
--- TOC entry 1369 (class 1247 OID 17358)
+-- TOC entry 1379 (class 1247 OID 17358)
 -- Name: wal_column; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -574,7 +618,7 @@ CREATE TYPE realtime.wal_column AS (
 ALTER TYPE realtime.wal_column OWNER TO supabase_admin;
 
 --
--- TOC entry 1366 (class 1247 OID 17325)
+-- TOC entry 1376 (class 1247 OID 17325)
 -- Name: wal_rls; Type: TYPE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -589,7 +633,7 @@ CREATE TYPE realtime.wal_rls AS (
 ALTER TYPE realtime.wal_rls OWNER TO supabase_admin;
 
 --
--- TOC entry 1348 (class 1247 OID 17241)
+-- TOC entry 1358 (class 1247 OID 17241)
 -- Name: buckettype; Type: TYPE; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -603,7 +647,7 @@ CREATE TYPE storage.buckettype AS ENUM (
 ALTER TYPE storage.buckettype OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 494 (class 1255 OID 16540)
+-- TOC entry 502 (class 1255 OID 16540)
 -- Name: email(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -621,8 +665,8 @@ $$;
 ALTER FUNCTION auth.email() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5012 (class 0 OID 0)
--- Dependencies: 494
+-- TOC entry 5093 (class 0 OID 0)
+-- Dependencies: 502
 -- Name: FUNCTION email(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -630,7 +674,7 @@ COMMENT ON FUNCTION auth.email() IS 'Deprecated. Use auth.jwt() -> ''email'' ins
 
 
 --
--- TOC entry 503 (class 1255 OID 16755)
+-- TOC entry 511 (class 1255 OID 16755)
 -- Name: jwt(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -648,7 +692,7 @@ $$;
 ALTER FUNCTION auth.jwt() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 436 (class 1255 OID 16539)
+-- TOC entry 441 (class 1255 OID 16539)
 -- Name: role(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -666,8 +710,8 @@ $$;
 ALTER FUNCTION auth.role() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5015 (class 0 OID 0)
--- Dependencies: 436
+-- TOC entry 5096 (class 0 OID 0)
+-- Dependencies: 441
 -- Name: FUNCTION role(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -675,7 +719,7 @@ COMMENT ON FUNCTION auth.role() IS 'Deprecated. Use auth.jwt() -> ''role'' inste
 
 
 --
--- TOC entry 460 (class 1255 OID 16538)
+-- TOC entry 466 (class 1255 OID 16538)
 -- Name: uid(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -693,8 +737,8 @@ $$;
 ALTER FUNCTION auth.uid() OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5017 (class 0 OID 0)
--- Dependencies: 460
+-- TOC entry 5098 (class 0 OID 0)
+-- Dependencies: 466
 -- Name: FUNCTION uid(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -702,7 +746,7 @@ COMMENT ON FUNCTION auth.uid() IS 'Deprecated. Use auth.jwt() -> ''sub'' instead
 
 
 --
--- TOC entry 542 (class 1255 OID 16597)
+-- TOC entry 551 (class 1255 OID 16597)
 -- Name: grant_pg_cron_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -742,8 +786,8 @@ $$;
 ALTER FUNCTION extensions.grant_pg_cron_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 5037 (class 0 OID 0)
--- Dependencies: 542
+-- TOC entry 5118 (class 0 OID 0)
+-- Dependencies: 551
 -- Name: FUNCTION grant_pg_cron_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -751,7 +795,7 @@ COMMENT ON FUNCTION extensions.grant_pg_cron_access() IS 'Grants access to pg_cr
 
 
 --
--- TOC entry 519 (class 1255 OID 16618)
+-- TOC entry 527 (class 1255 OID 16618)
 -- Name: grant_pg_graphql_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -812,8 +856,8 @@ $_$;
 ALTER FUNCTION extensions.grant_pg_graphql_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 5039 (class 0 OID 0)
--- Dependencies: 519
+-- TOC entry 5120 (class 0 OID 0)
+-- Dependencies: 527
 -- Name: FUNCTION grant_pg_graphql_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -821,7 +865,7 @@ COMMENT ON FUNCTION extensions.grant_pg_graphql_access() IS 'Grants access to pg
 
 
 --
--- TOC entry 482 (class 1255 OID 16599)
+-- TOC entry 489 (class 1255 OID 16599)
 -- Name: grant_pg_net_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -875,8 +919,8 @@ $$;
 ALTER FUNCTION extensions.grant_pg_net_access() OWNER TO supabase_admin;
 
 --
--- TOC entry 5041 (class 0 OID 0)
--- Dependencies: 482
+-- TOC entry 5122 (class 0 OID 0)
+-- Dependencies: 489
 -- Name: FUNCTION grant_pg_net_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -884,7 +928,7 @@ COMMENT ON FUNCTION extensions.grant_pg_net_access() IS 'Grants access to pg_net
 
 
 --
--- TOC entry 429 (class 1255 OID 16609)
+-- TOC entry 434 (class 1255 OID 16609)
 -- Name: pgrst_ddl_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -920,7 +964,7 @@ END; $$;
 ALTER FUNCTION extensions.pgrst_ddl_watch() OWNER TO supabase_admin;
 
 --
--- TOC entry 566 (class 1255 OID 16610)
+-- TOC entry 575 (class 1255 OID 16610)
 -- Name: pgrst_drop_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -954,7 +998,7 @@ END; $$;
 ALTER FUNCTION extensions.pgrst_drop_watch() OWNER TO supabase_admin;
 
 --
--- TOC entry 443 (class 1255 OID 16620)
+-- TOC entry 448 (class 1255 OID 16620)
 -- Name: set_graphql_placeholder(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
 --
 
@@ -1014,8 +1058,8 @@ $_$;
 ALTER FUNCTION extensions.set_graphql_placeholder() OWNER TO supabase_admin;
 
 --
--- TOC entry 5079 (class 0 OID 0)
--- Dependencies: 443
+-- TOC entry 5160 (class 0 OID 0)
+-- Dependencies: 448
 -- Name: FUNCTION set_graphql_placeholder(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
 --
 
@@ -1023,7 +1067,7 @@ COMMENT ON FUNCTION extensions.set_graphql_placeholder() IS 'Reintroduces placeh
 
 
 --
--- TOC entry 496 (class 1255 OID 16387)
+-- TOC entry 504 (class 1255 OID 16387)
 -- Name: get_auth(text); Type: FUNCTION; Schema: pgbouncer; Owner: supabase_admin
 --
 
@@ -1050,7 +1094,65 @@ CREATE FUNCTION pgbouncer.get_auth(p_usename text) RETURNS TABLE(username text, 
 ALTER FUNCTION pgbouncer.get_auth(p_usename text) OWNER TO supabase_admin;
 
 --
--- TOC entry 558 (class 1255 OID 48655)
+-- TOC entry 433 (class 1255 OID 76068)
+-- Name: admin_save_payment_config(text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) RETURNS jsonb
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    v_enc_key TEXT := 'capifit_financial_master_key_2026_secured'; -- In production, use Vault
+BEGIN
+    -- 1. STRICT Security Check: Must be Admin
+    IF NOT EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = auth.uid() AND role = 'admin'
+    ) THEN
+        PERFORM set_config('response.status', '403', true);
+        RETURN jsonb_build_object('success', false, 'message', 'Acesso negado: Requer privilégios de Administrador.');
+    END IF;
+
+    -- 2. Validation
+    IF p_provider IS NULL OR p_publishable_key IS NULL THEN
+         RETURN jsonb_build_object('success', false, 'message', 'Dados incompletos.');
+    END IF;
+
+    -- 3. Upsert with Encryption
+    -- We use encode(..., 'base64') to safely store the binary encrypted data in a TEXT column
+    INSERT INTO public.payment_gateway_configs (
+        provider, 
+        is_active, 
+        publishable_key, 
+        secret_key, 
+        webhook_secret, 
+        updated_at
+    ) VALUES (
+        p_provider,
+        true,
+        p_publishable_key,
+        encode(pgp_sym_encrypt(p_secret_key, v_enc_key), 'base64'),
+        encode(pgp_sym_encrypt(p_webhook_secret, v_enc_key), 'base64'),
+        NOW()
+    )
+    ON CONFLICT (provider)
+    DO UPDATE SET
+        is_active = true,
+        publishable_key = EXCLUDED.publishable_key,
+        secret_key = EXCLUDED.secret_key,
+        webhook_secret = EXCLUDED.webhook_secret,
+        updated_at = NOW();
+
+    RETURN jsonb_build_object('success', true, 'message', 'Configurações salvas e criptografadas com sucesso.');
+END;
+$$;
+
+
+ALTER FUNCTION public.admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) OWNER TO postgres;
+
+--
+-- TOC entry 567 (class 1255 OID 48655)
 -- Name: admin_update_user_role(uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1097,7 +1199,7 @@ $$;
 ALTER FUNCTION public.admin_update_user_role(target_user_id uuid, new_role text) OWNER TO postgres;
 
 --
--- TOC entry 516 (class 1255 OID 29913)
+-- TOC entry 524 (class 1255 OID 29913)
 -- Name: calculate_capipoints(integer, text, integer, numeric); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1141,7 +1243,7 @@ $$;
 ALTER FUNCTION public.calculate_capipoints(duration_seconds integer, activity_type text, calories integer, distance_meters numeric) OWNER TO postgres;
 
 --
--- TOC entry 437 (class 1255 OID 29914)
+-- TOC entry 442 (class 1255 OID 29914)
 -- Name: calculate_final_xp(numeric, numeric, timestamp with time zone, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1185,7 +1287,7 @@ $$;
 ALTER FUNCTION public.calculate_final_xp(base_cp numeric, trust_score numeric, workout_date timestamp with time zone, activity_type text) OWNER TO postgres;
 
 --
--- TOC entry 569 (class 1255 OID 29940)
+-- TOC entry 578 (class 1255 OID 29940)
 -- Name: calculate_level(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1204,7 +1306,7 @@ $$;
 ALTER FUNCTION public.calculate_level(xp integer) OWNER TO postgres;
 
 --
--- TOC entry 467 (class 1255 OID 20159)
+-- TOC entry 473 (class 1255 OID 20159)
 -- Name: calculate_session_duration(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1225,7 +1327,7 @@ $$;
 ALTER FUNCTION public.calculate_session_duration() OWNER TO postgres;
 
 --
--- TOC entry 518 (class 1255 OID 45931)
+-- TOC entry 526 (class 1255 OID 45931)
 -- Name: check_professional_availability(uuid, timestamp with time zone, integer, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1257,7 +1359,7 @@ $$;
 ALTER FUNCTION public.check_professional_availability(p_professional_id uuid, p_start_time timestamp with time zone, p_duration_minutes integer, p_exclude_schedule_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 510 (class 1255 OID 52083)
+-- TOC entry 518 (class 1255 OID 52083)
 -- Name: cleanup_abandoned_sessions(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1280,7 +1382,7 @@ $$;
 ALTER FUNCTION public.cleanup_abandoned_sessions() OWNER TO postgres;
 
 --
--- TOC entry 458 (class 1255 OID 17869)
+-- TOC entry 464 (class 1255 OID 17869)
 -- Name: client_has_professional_access(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1301,7 +1403,7 @@ $$;
 ALTER FUNCTION public.client_has_professional_access(professional_uuid uuid) OWNER TO postgres;
 
 --
--- TOC entry 567 (class 1255 OID 22754)
+-- TOC entry 576 (class 1255 OID 22754)
 -- Name: count_total_unread_messages(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1323,7 +1425,7 @@ $$;
 ALTER FUNCTION public.count_total_unread_messages(user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 581 (class 1255 OID 22615)
+-- TOC entry 590 (class 1255 OID 22615)
 -- Name: count_unread_messages(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1345,7 +1447,7 @@ $$;
 ALTER FUNCTION public.count_unread_messages(user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 489 (class 1255 OID 19663)
+-- TOC entry 496 (class 1255 OID 19663)
 -- Name: find_client_by_email(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1385,7 +1487,7 @@ $$;
 ALTER FUNCTION public.find_client_by_email(client_email text) OWNER TO postgres;
 
 --
--- TOC entry 601 (class 1255 OID 48654)
+-- TOC entry 611 (class 1255 OID 48654)
 -- Name: get_all_users(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1422,7 +1524,7 @@ $$;
 ALTER FUNCTION public.get_all_users() OWNER TO postgres;
 
 --
--- TOC entry 433 (class 1255 OID 22611)
+-- TOC entry 438 (class 1255 OID 22611)
 -- Name: get_conversation(uuid, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1443,7 +1545,7 @@ $$;
 ALTER FUNCTION public.get_conversation(user_id uuid, other_user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 453 (class 1255 OID 26400)
+-- TOC entry 459 (class 1255 OID 26400)
 -- Name: get_conversation(uuid, uuid, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1468,7 +1570,38 @@ $$;
 ALTER FUNCTION public.get_conversation(user1_id uuid, user2_id uuid, limit_count integer, offset_count integer) OWNER TO postgres;
 
 --
--- TOC entry 475 (class 1255 OID 48698)
+-- TOC entry 535 (class 1255 OID 76058)
+-- Name: get_decrypted_payment_config(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.get_decrypted_payment_config(p_provider text) RETURNS TABLE(provider text, publishable_key text, secret_key text, webhook_secret text)
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    v_enc_key TEXT := 'capifit_financial_master_key_2026_secured';
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin') THEN
+        RETURN;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        cfg.provider,
+        cfg.publishable_key,
+        -- FIX: Decode base64 text to bytea before decrypting
+        pgp_sym_decrypt(decode(cfg.secret_key, 'base64'), v_enc_key) as secret_key,
+        pgp_sym_decrypt(decode(cfg.webhook_secret, 'base64'), v_enc_key) as webhook_secret
+    FROM public.payment_gateway_configs cfg
+    WHERE cfg.provider = p_provider;
+END;
+$$;
+
+
+ALTER FUNCTION public.get_decrypted_payment_config(p_provider text) OWNER TO postgres;
+
+--
+-- TOC entry 481 (class 1255 OID 48698)
 -- Name: get_linked_clients(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1493,7 +1626,7 @@ $$;
 ALTER FUNCTION public.get_linked_clients(prof_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 613 (class 1255 OID 48466)
+-- TOC entry 623 (class 1255 OID 48466)
 -- Name: get_professional_reputation(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1518,7 +1651,7 @@ $$;
 ALTER FUNCTION public.get_professional_reputation(prof_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 609 (class 1255 OID 65610)
+-- TOC entry 619 (class 1255 OID 65610)
 -- Name: get_professional_reviews_details(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1548,7 +1681,23 @@ $$;
 ALTER FUNCTION public.get_professional_reviews_details(prof_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 450 (class 1255 OID 29941)
+-- TOC entry 609 (class 1255 OID 76069)
+-- Name: get_public_payment_config(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.get_public_payment_config(p_provider text) RETURNS TABLE(publishable_key text)
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT publishable_key 
+  FROM public.payment_gateway_configs 
+  WHERE provider = p_provider AND is_active = true;
+$$;
+
+
+ALTER FUNCTION public.get_public_payment_config(p_provider text) OWNER TO postgres;
+
+--
+-- TOC entry 456 (class 1255 OID 29941)
 -- Name: get_rank_title(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1570,7 +1719,7 @@ $$;
 ALTER FUNCTION public.get_rank_title(level integer) OWNER TO postgres;
 
 --
--- TOC entry 435 (class 1255 OID 18126)
+-- TOC entry 440 (class 1255 OID 18126)
 -- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1609,7 +1758,7 @@ $$;
 ALTER FUNCTION public.handle_new_user() OWNER TO postgres;
 
 --
--- TOC entry 490 (class 1255 OID 22416)
+-- TOC entry 497 (class 1255 OID 22416)
 -- Name: handle_notifications_updated_at(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1626,7 +1775,7 @@ $$;
 ALTER FUNCTION public.handle_notifications_updated_at() OWNER TO postgres;
 
 --
--- TOC entry 557 (class 1255 OID 17853)
+-- TOC entry 566 (class 1255 OID 17853)
 -- Name: handle_updated_at(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1643,7 +1792,7 @@ $$;
 ALTER FUNCTION public.handle_updated_at() OWNER TO postgres;
 
 --
--- TOC entry 468 (class 1255 OID 17865)
+-- TOC entry 474 (class 1255 OID 17865)
 -- Name: is_admin(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1662,7 +1811,7 @@ $$;
 ALTER FUNCTION public.is_admin() OWNER TO postgres;
 
 --
--- TOC entry 444 (class 1255 OID 17867)
+-- TOC entry 449 (class 1255 OID 17867)
 -- Name: is_client(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1681,7 +1830,7 @@ $$;
 ALTER FUNCTION public.is_client() OWNER TO postgres;
 
 --
--- TOC entry 483 (class 1255 OID 17866)
+-- TOC entry 490 (class 1255 OID 17866)
 -- Name: is_professional(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1700,7 +1849,7 @@ $$;
 ALTER FUNCTION public.is_professional() OWNER TO postgres;
 
 --
--- TOC entry 464 (class 1255 OID 22482)
+-- TOC entry 470 (class 1255 OID 22482)
 -- Name: link_client_and_update_profile(uuid, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1769,8 +1918,8 @@ $$;
 ALTER FUNCTION public.link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text) OWNER TO postgres;
 
 --
--- TOC entry 5134 (class 0 OID 0)
--- Dependencies: 464
+-- TOC entry 5218 (class 0 OID 0)
+-- Dependencies: 470
 -- Name: FUNCTION link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text); Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -1780,7 +1929,7 @@ Retorna: UUID do vínculo criado.';
 
 
 --
--- TOC entry 500 (class 1255 OID 73600)
+-- TOC entry 508 (class 1255 OID 73600)
 -- Name: link_client_via_email(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1822,7 +1971,7 @@ $$;
 ALTER FUNCTION public.link_client_via_email(client_email text) OWNER TO postgres;
 
 --
--- TOC entry 595 (class 1255 OID 24997)
+-- TOC entry 604 (class 1255 OID 24997)
 -- Name: mark_conversation_as_read(uuid, uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1850,7 +1999,131 @@ $$;
 ALTER FUNCTION public.mark_conversation_as_read(current_user_id uuid, other_user_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 521 (class 1255 OID 22483)
+-- TOC entry 483 (class 1255 OID 76006)
+-- Name: process_subscription_payment(uuid, uuid, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text) RETURNS jsonb
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+DECLARE
+    v_plan RECORD;
+    v_transaction_id UUID;
+    v_platform_fee NUMERIC;
+    v_prof_net NUMERIC;
+    v_expires_at TIMESTAMPTZ;
+    v_is_sandbox BOOLEAN;
+    v_payment_mode TEXT;
+    v_platform_fee_percent_val NUMERIC;
+    v_platform_fee_ratio NUMERIC;
+BEGIN
+    -- 1. Carregar Configurações Globais
+    SELECT payment_mode, platform_fee_percentage 
+    INTO v_payment_mode, v_platform_fee_percent_val
+    FROM public.platform_settings 
+    LIMIT 1;
+
+    -- Define Sandbox
+    v_is_sandbox := (v_payment_mode = 'sandbox');
+    -- Fallback para taxa se nulo
+    IF v_platform_fee_percent_val IS NULL THEN 
+        v_platform_fee_percent_val := 10.0; 
+    END IF;
+    
+    -- Converter porcentagem (Ex: 10) para razão (0.10)
+    v_platform_fee_ratio := v_platform_fee_percent_val / 100.0;
+
+    -- 2. Buscar/Validar Plano
+    SELECT * INTO v_plan FROM public.subscription_plans WHERE id = p_plan_id;
+    
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('success', false, 'message', 'Plano não encontrado');
+    END IF;
+
+    IF NOT v_plan.active THEN
+        RETURN jsonb_build_object('success', false, 'message', 'Este plano não está mais ativo');
+    END IF;
+
+    -- 3. Calcular Valores Financeiros
+    v_platform_fee := v_plan.price * v_platform_fee_ratio;
+    v_prof_net := v_plan.price - v_platform_fee;
+
+    -- 4. Calcular Expiração
+    v_expires_at := NOW() + (v_plan.duration_months || ' months')::INTERVAL;
+
+    -- 5. Registrar Transação (ATOMIC START)
+    -- Verifica se as colunas existem na financial_transactions (caso o migration anterior tenha falhado parcialmente)
+    -- (Assumindo que o migration anterior rodou, mas para robustez, o insert segue o padrão esperado)
+    INSERT INTO public.financial_transactions (
+        student_id,
+        professional_id,
+        plan_snapshot,
+        amount_gross,
+        platform_fee,
+        professional_net,
+        status,
+        gateway_id,
+        payment_method,
+        is_sandbox
+    ) VALUES (
+        p_student_id,
+        v_plan.professional_id,
+        jsonb_build_object(
+            'id', v_plan.id,
+            'name', v_plan.name,
+            'duration_months', v_plan.duration_months,
+            'price', v_plan.price
+        ),
+        v_plan.price,
+        v_platform_fee,
+        v_prof_net,
+        'paid', 
+        CASE WHEN v_is_sandbox THEN 'sand_' || md5(random()::text || clock_timestamp()::text) 
+             ELSE 'prod_' || md5(random()::text || clock_timestamp()::text) END,
+        p_payment_method,
+        v_is_sandbox
+    ) RETURNING id INTO v_transaction_id;
+
+    -- 6. Atualizar Vínculo (UPSERT seguro com constraint)
+    INSERT INTO public.client_professionals (
+        client_id,
+        professional_id,
+        current_plan_id,
+        status,
+        expires_at,
+        auto_renew
+    ) VALUES (
+        p_student_id,
+        v_plan.professional_id,
+        p_plan_id,
+        'active',
+        v_expires_at,
+        false
+    )
+    ON CONFLICT (client_id, professional_id) 
+    DO UPDATE SET
+        current_plan_id = EXCLUDED.current_plan_id,
+        status = 'active',
+        expires_at = v_expires_at,
+        updated_at = NOW(); -- Agora seguro pois garantimos a coluna acima
+    
+    -- Retorno
+    RETURN jsonb_build_object(
+        'success', true, 
+        'transaction_id', v_transaction_id,
+        'message', CASE WHEN v_is_sandbox THEN 'Pagamento processado (Sandbox)' ELSE 'Pagamento realizado com sucesso' END
+    );
+
+EXCEPTION WHEN OTHERS THEN
+    RETURN jsonb_build_object('success', false, 'message', 'Erro interno: ' || SQLERRM);
+END;
+$$;
+
+
+ALTER FUNCTION public.process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text) OWNER TO postgres;
+
+--
+-- TOC entry 529 (class 1255 OID 22483)
 -- Name: professional_can_link_client(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1889,8 +2162,8 @@ $$;
 ALTER FUNCTION public.professional_can_link_client(p_client_id uuid) OWNER TO postgres;
 
 --
--- TOC entry 5138 (class 0 OID 0)
--- Dependencies: 521
+-- TOC entry 5223 (class 0 OID 0)
+-- Dependencies: 529
 -- Name: FUNCTION professional_can_link_client(p_client_id uuid); Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -1899,7 +2172,7 @@ Retorna TRUE se pode vincular, FALSE caso contrário.';
 
 
 --
--- TOC entry 561 (class 1255 OID 17868)
+-- TOC entry 570 (class 1255 OID 17868)
 -- Name: professional_has_client_access(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1920,7 +2193,7 @@ $$;
 ALTER FUNCTION public.professional_has_client_access(client_uuid uuid) OWNER TO postgres;
 
 --
--- TOC entry 551 (class 1255 OID 29915)
+-- TOC entry 560 (class 1255 OID 29915)
 -- Name: trigger_calculate_xp(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1964,7 +2237,7 @@ $$;
 ALTER FUNCTION public.trigger_calculate_xp() OWNER TO postgres;
 
 --
--- TOC entry 546 (class 1255 OID 29942)
+-- TOC entry 555 (class 1255 OID 29942)
 -- Name: trigger_update_level(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1981,7 +2254,121 @@ $$;
 ALTER FUNCTION public.trigger_update_level() OWNER TO postgres;
 
 --
--- TOC entry 438 (class 1255 OID 17351)
+-- TOC entry 499 (class 1255 OID 76063)
+-- Name: upsert_payment_config(text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) RETURNS jsonb
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    v_enc_key TEXT := 'capifit_financial_master_key_2026_secured';
+    v_active BOOLEAN := true;
+BEGIN
+    -- Authorization Check
+    IF NOT EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = auth.uid() AND role = 'admin'
+    ) THEN
+        RETURN jsonb_build_object('success', false, 'message', 'Unauthorized');
+    END IF;
+
+    -- Upsert with Base64 Encoding for Text compatibility
+    INSERT INTO public.payment_gateway_configs (
+        provider, 
+        is_active, 
+        publishable_key, 
+        secret_key, 
+        webhook_secret, 
+        updated_at
+    ) VALUES (
+        p_provider,
+        v_active,
+        p_publishable_key,
+        -- FIX: Encode bytea result from encrypt to base64 text
+        encode(pgp_sym_encrypt(p_secret_key, v_enc_key), 'base64'),
+        encode(pgp_sym_encrypt(p_webhook_secret, v_enc_key), 'base64'),
+        NOW()
+    )
+    ON CONFLICT (provider)
+    DO UPDATE SET
+        is_active = v_active,
+        publishable_key = EXCLUDED.publishable_key,
+        secret_key = EXCLUDED.secret_key,
+        webhook_secret = EXCLUDED.webhook_secret,
+        updated_at = NOW();
+
+    RETURN jsonb_build_object('success', true, 'message', 'Configuração salva com segurança.');
+END;
+$$;
+
+
+ALTER FUNCTION public.upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) OWNER TO postgres;
+
+--
+-- TOC entry 455 (class 1255 OID 76066)
+-- Name: upsert_payment_config_v2(jsonb); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.upsert_payment_config_v2(payload jsonb) RETURNS jsonb
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    v_enc_key TEXT := 'capifit_financial_master_key_2026_secured';
+    v_provider TEXT;
+    v_publishable_key TEXT;
+    v_secret_key TEXT;
+    v_webhook_secret TEXT;
+BEGIN
+    -- Extract values from JSONB
+    v_provider := payload->>'provider';
+    v_publishable_key := payload->>'publishable_key';
+    v_secret_key := payload->>'secret_key';
+    v_webhook_secret := payload->>'webhook_secret';
+
+    -- Authorization Check
+    IF NOT EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = auth.uid() AND role = 'admin'
+    ) THEN
+        RETURN jsonb_build_object('success', false, 'message', 'Unauthorized');
+    END IF;
+
+    -- Upsert
+    INSERT INTO public.payment_gateway_configs (
+        provider, 
+        is_active, 
+        publishable_key, 
+        secret_key, 
+        webhook_secret, 
+        updated_at
+    ) VALUES (
+        v_provider,
+        true,
+        v_publishable_key,
+        encode(pgp_sym_encrypt(v_secret_key, v_enc_key), 'base64'),
+        encode(pgp_sym_encrypt(v_webhook_secret, v_enc_key), 'base64'),
+        NOW()
+    )
+    ON CONFLICT (provider)
+    DO UPDATE SET
+        is_active = true,
+        publishable_key = EXCLUDED.publishable_key,
+        secret_key = EXCLUDED.secret_key,
+        webhook_secret = EXCLUDED.webhook_secret,
+        updated_at = NOW();
+
+    RETURN jsonb_build_object('success', true, 'message', 'Configuração salva com segurança (v2).');
+END;
+$$;
+
+
+ALTER FUNCTION public.upsert_payment_config_v2(payload jsonb) OWNER TO postgres;
+
+--
+-- TOC entry 443 (class 1255 OID 17351)
 -- Name: apply_rls(jsonb, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2289,7 +2676,7 @@ $$;
 ALTER FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) OWNER TO supabase_admin;
 
 --
--- TOC entry 608 (class 1255 OID 17431)
+-- TOC entry 618 (class 1255 OID 17431)
 -- Name: broadcast_changes(text, text, text, text, text, record, record, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2321,7 +2708,7 @@ $$;
 ALTER FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text) OWNER TO supabase_admin;
 
 --
--- TOC entry 511 (class 1255 OID 17363)
+-- TOC entry 519 (class 1255 OID 17363)
 -- Name: build_prepared_statement_sql(text, regclass, realtime.wal_column[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2357,7 +2744,7 @@ CREATE FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name te
 ALTER FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) OWNER TO supabase_admin;
 
 --
--- TOC entry 454 (class 1255 OID 17309)
+-- TOC entry 460 (class 1255 OID 17309)
 -- Name: cast(text, regtype); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2376,7 +2763,7 @@ CREATE FUNCTION realtime."cast"(val text, type_ regtype) RETURNS jsonb
 ALTER FUNCTION realtime."cast"(val text, type_ regtype) OWNER TO supabase_admin;
 
 --
--- TOC entry 497 (class 1255 OID 17304)
+-- TOC entry 505 (class 1255 OID 17304)
 -- Name: check_equality_op(realtime.equality_op, regtype, text, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2418,7 +2805,7 @@ CREATE FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtyp
 ALTER FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) OWNER TO supabase_admin;
 
 --
--- TOC entry 564 (class 1255 OID 17359)
+-- TOC entry 573 (class 1255 OID 17359)
 -- Name: is_visible_through_filters(realtime.wal_column[], realtime.user_defined_filter[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2457,7 +2844,7 @@ CREATE FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[
 ALTER FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) OWNER TO supabase_admin;
 
 --
--- TOC entry 588 (class 1255 OID 17370)
+-- TOC entry 597 (class 1255 OID 17370)
 -- Name: list_changes(name, name, integer, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2526,7 +2913,7 @@ CREATE FUNCTION realtime.list_changes(publication name, slot_name name, max_chan
 ALTER FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) OWNER TO supabase_admin;
 
 --
--- TOC entry 577 (class 1255 OID 17303)
+-- TOC entry 586 (class 1255 OID 17303)
 -- Name: quote_wal2json(regclass); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2567,7 +2954,7 @@ CREATE FUNCTION realtime.quote_wal2json(entity regclass) RETURNS text
 ALTER FUNCTION realtime.quote_wal2json(entity regclass) OWNER TO supabase_admin;
 
 --
--- TOC entry 466 (class 1255 OID 17430)
+-- TOC entry 472 (class 1255 OID 17430)
 -- Name: send(jsonb, text, text, boolean); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2607,7 +2994,7 @@ $$;
 ALTER FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean) OWNER TO supabase_admin;
 
 --
--- TOC entry 525 (class 1255 OID 17301)
+-- TOC entry 533 (class 1255 OID 17301)
 -- Name: subscription_check_filters(); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2684,7 +3071,7 @@ CREATE FUNCTION realtime.subscription_check_filters() RETURNS trigger
 ALTER FUNCTION realtime.subscription_check_filters() OWNER TO supabase_admin;
 
 --
--- TOC entry 531 (class 1255 OID 17340)
+-- TOC entry 540 (class 1255 OID 17340)
 -- Name: to_regrole(text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
 
@@ -2696,7 +3083,7 @@ CREATE FUNCTION realtime.to_regrole(role_name text) RETURNS regrole
 ALTER FUNCTION realtime.to_regrole(role_name text) OWNER TO supabase_admin;
 
 --
--- TOC entry 505 (class 1255 OID 17423)
+-- TOC entry 513 (class 1255 OID 17423)
 -- Name: topic(); Type: FUNCTION; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -2710,7 +3097,7 @@ $$;
 ALTER FUNCTION realtime.topic() OWNER TO supabase_realtime_admin;
 
 --
--- TOC entry 528 (class 1255 OID 17214)
+-- TOC entry 537 (class 1255 OID 17214)
 -- Name: add_prefixes(text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2733,7 +3120,7 @@ $$;
 ALTER FUNCTION storage.add_prefixes(_bucket_id text, _name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 545 (class 1255 OID 17140)
+-- TOC entry 554 (class 1255 OID 17140)
 -- Name: can_insert_object(text, text, uuid, jsonb); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2753,7 +3140,7 @@ $$;
 ALTER FUNCTION storage.can_insert_object(bucketid text, name text, owner uuid, metadata jsonb) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 504 (class 1255 OID 17259)
+-- TOC entry 512 (class 1255 OID 17259)
 -- Name: delete_leaf_prefixes(text[], text[]); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2821,7 +3208,7 @@ $$;
 ALTER FUNCTION storage.delete_leaf_prefixes(bucket_ids text[], names text[]) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 456 (class 1255 OID 17215)
+-- TOC entry 462 (class 1255 OID 17215)
 -- Name: delete_prefix(text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2860,7 +3247,7 @@ $$;
 ALTER FUNCTION storage.delete_prefix(_bucket_id text, _name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 501 (class 1255 OID 17218)
+-- TOC entry 509 (class 1255 OID 17218)
 -- Name: delete_prefix_hierarchy_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2884,7 +3271,7 @@ $$;
 ALTER FUNCTION storage.delete_prefix_hierarchy_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 530 (class 1255 OID 17238)
+-- TOC entry 539 (class 1255 OID 17238)
 -- Name: enforce_bucket_name_length(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2903,7 +3290,7 @@ $$;
 ALTER FUNCTION storage.enforce_bucket_name_length() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 576 (class 1255 OID 17114)
+-- TOC entry 585 (class 1255 OID 17114)
 -- Name: extension(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2924,7 +3311,7 @@ $$;
 ALTER FUNCTION storage.extension(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 507 (class 1255 OID 17113)
+-- TOC entry 515 (class 1255 OID 17113)
 -- Name: filename(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2943,7 +3330,7 @@ $$;
 ALTER FUNCTION storage.filename(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 465 (class 1255 OID 17112)
+-- TOC entry 471 (class 1255 OID 17112)
 -- Name: foldername(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2964,7 +3351,7 @@ $$;
 ALTER FUNCTION storage.foldername(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 512 (class 1255 OID 17196)
+-- TOC entry 520 (class 1255 OID 17196)
 -- Name: get_level(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2978,7 +3365,7 @@ $$;
 ALTER FUNCTION storage.get_level(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 543 (class 1255 OID 17212)
+-- TOC entry 552 (class 1255 OID 17212)
 -- Name: get_prefix(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -2997,7 +3384,7 @@ $_$;
 ALTER FUNCTION storage.get_prefix(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 555 (class 1255 OID 17213)
+-- TOC entry 564 (class 1255 OID 17213)
 -- Name: get_prefixes(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3027,7 +3414,7 @@ $$;
 ALTER FUNCTION storage.get_prefixes(name text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 575 (class 1255 OID 17236)
+-- TOC entry 584 (class 1255 OID 17236)
 -- Name: get_size_by_bucket(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3046,7 +3433,7 @@ $$;
 ALTER FUNCTION storage.get_size_by_bucket() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 578 (class 1255 OID 17179)
+-- TOC entry 587 (class 1255 OID 17179)
 -- Name: list_multipart_uploads_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3095,7 +3482,7 @@ $_$;
 ALTER FUNCTION storage.list_multipart_uploads_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, next_key_token text, next_upload_token text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 600 (class 1255 OID 17142)
+-- TOC entry 610 (class 1255 OID 17142)
 -- Name: list_objects_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3142,7 +3529,7 @@ $_$;
 ALTER FUNCTION storage.list_objects_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, start_after text, next_token text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 513 (class 1255 OID 17258)
+-- TOC entry 521 (class 1255 OID 17258)
 -- Name: lock_top_prefixes(text[], text[]); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3169,7 +3556,7 @@ $$;
 ALTER FUNCTION storage.lock_top_prefixes(bucket_ids text[], names text[]) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 448 (class 1255 OID 17260)
+-- TOC entry 453 (class 1255 OID 17260)
 -- Name: objects_delete_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3203,7 +3590,7 @@ $$;
 ALTER FUNCTION storage.objects_delete_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 509 (class 1255 OID 17217)
+-- TOC entry 517 (class 1255 OID 17217)
 -- Name: objects_insert_prefix_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3222,7 +3609,7 @@ $$;
 ALTER FUNCTION storage.objects_insert_prefix_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 434 (class 1255 OID 17261)
+-- TOC entry 439 (class 1255 OID 17261)
 -- Name: objects_update_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3317,7 +3704,7 @@ $$;
 ALTER FUNCTION storage.objects_update_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 585 (class 1255 OID 17266)
+-- TOC entry 594 (class 1255 OID 17266)
 -- Name: objects_update_level_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3338,7 +3725,7 @@ $$;
 ALTER FUNCTION storage.objects_update_level_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 522 (class 1255 OID 17237)
+-- TOC entry 530 (class 1255 OID 17237)
 -- Name: objects_update_prefix_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3383,7 +3770,7 @@ $$;
 ALTER FUNCTION storage.objects_update_prefix_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 535 (class 1255 OID 17195)
+-- TOC entry 544 (class 1255 OID 17195)
 -- Name: operation(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3399,7 +3786,7 @@ $$;
 ALTER FUNCTION storage.operation() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 533 (class 1255 OID 17262)
+-- TOC entry 542 (class 1255 OID 17262)
 -- Name: prefixes_delete_cleanup(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3433,7 +3820,7 @@ $$;
 ALTER FUNCTION storage.prefixes_delete_cleanup() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 484 (class 1255 OID 17216)
+-- TOC entry 491 (class 1255 OID 17216)
 -- Name: prefixes_insert_trigger(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3450,7 +3837,7 @@ $$;
 ALTER FUNCTION storage.prefixes_insert_trigger() OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 534 (class 1255 OID 17129)
+-- TOC entry 543 (class 1255 OID 17129)
 -- Name: search(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3477,7 +3864,7 @@ $$;
 ALTER FUNCTION storage.search(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 579 (class 1255 OID 17234)
+-- TOC entry 588 (class 1255 OID 17234)
 -- Name: search_legacy_v1(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3549,7 +3936,7 @@ $_$;
 ALTER FUNCTION storage.search_legacy_v1(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 485 (class 1255 OID 17233)
+-- TOC entry 492 (class 1255 OID 17233)
 -- Name: search_v1_optimised(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3620,7 +4007,7 @@ $_$;
 ALTER FUNCTION storage.search_v1_optimised(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 572 (class 1255 OID 17257)
+-- TOC entry 581 (class 1255 OID 17257)
 -- Name: search_v2(text, text, integer, integer, text, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3719,7 +4106,7 @@ $_$;
 ALTER FUNCTION storage.search_v2(prefix text, bucket_name text, limits integer, levels integer, start_after text, sort_order text, sort_column text, sort_column_after text) OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 541 (class 1255 OID 17130)
+-- TOC entry 550 (class 1255 OID 17130)
 -- Name: update_updated_at_column(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -3756,7 +4143,7 @@ CREATE TABLE auth.audit_log_entries (
 ALTER TABLE auth.audit_log_entries OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5158 (class 0 OID 0)
+-- TOC entry 5245 (class 0 OID 0)
 -- Dependencies: 353
 -- Name: TABLE audit_log_entries; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3788,7 +4175,7 @@ CREATE TABLE auth.flow_state (
 ALTER TABLE auth.flow_state OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5160 (class 0 OID 0)
+-- TOC entry 5247 (class 0 OID 0)
 -- Dependencies: 370
 -- Name: TABLE flow_state; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3817,7 +4204,7 @@ CREATE TABLE auth.identities (
 ALTER TABLE auth.identities OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5162 (class 0 OID 0)
+-- TOC entry 5249 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: TABLE identities; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3826,7 +4213,7 @@ COMMENT ON TABLE auth.identities IS 'Auth: Stores identities associated to a use
 
 
 --
--- TOC entry 5163 (class 0 OID 0)
+-- TOC entry 5250 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: COLUMN identities.email; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3851,7 +4238,7 @@ CREATE TABLE auth.instances (
 ALTER TABLE auth.instances OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5165 (class 0 OID 0)
+-- TOC entry 5252 (class 0 OID 0)
 -- Dependencies: 352
 -- Name: TABLE instances; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3876,7 +4263,7 @@ CREATE TABLE auth.mfa_amr_claims (
 ALTER TABLE auth.mfa_amr_claims OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5167 (class 0 OID 0)
+-- TOC entry 5254 (class 0 OID 0)
 -- Dependencies: 365
 -- Name: TABLE mfa_amr_claims; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3903,7 +4290,7 @@ CREATE TABLE auth.mfa_challenges (
 ALTER TABLE auth.mfa_challenges OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5169 (class 0 OID 0)
+-- TOC entry 5256 (class 0 OID 0)
 -- Dependencies: 364
 -- Name: TABLE mfa_challenges; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3936,7 +4323,7 @@ CREATE TABLE auth.mfa_factors (
 ALTER TABLE auth.mfa_factors OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5171 (class 0 OID 0)
+-- TOC entry 5258 (class 0 OID 0)
 -- Dependencies: 363
 -- Name: TABLE mfa_factors; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -3945,7 +4332,7 @@ COMMENT ON TABLE auth.mfa_factors IS 'auth: stores metadata about factors';
 
 
 --
--- TOC entry 5172 (class 0 OID 0)
+-- TOC entry 5259 (class 0 OID 0)
 -- Dependencies: 363
 -- Name: COLUMN mfa_factors.last_webauthn_challenge_data; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4005,7 +4392,7 @@ CREATE TABLE auth.oauth_client_states (
 ALTER TABLE auth.oauth_client_states OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5175 (class 0 OID 0)
+-- TOC entry 5262 (class 0 OID 0)
 -- Dependencies: 415
 -- Name: TABLE oauth_client_states; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4099,7 +4486,7 @@ CREATE TABLE auth.refresh_tokens (
 ALTER TABLE auth.refresh_tokens OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5180 (class 0 OID 0)
+-- TOC entry 5267 (class 0 OID 0)
 -- Dependencies: 351
 -- Name: TABLE refresh_tokens; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4123,7 +4510,7 @@ CREATE SEQUENCE auth.refresh_tokens_id_seq
 ALTER SEQUENCE auth.refresh_tokens_id_seq OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5182 (class 0 OID 0)
+-- TOC entry 5269 (class 0 OID 0)
 -- Dependencies: 350
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4155,7 +4542,7 @@ CREATE TABLE auth.saml_providers (
 ALTER TABLE auth.saml_providers OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5184 (class 0 OID 0)
+-- TOC entry 5271 (class 0 OID 0)
 -- Dependencies: 368
 -- Name: TABLE saml_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4184,7 +4571,7 @@ CREATE TABLE auth.saml_relay_states (
 ALTER TABLE auth.saml_relay_states OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5186 (class 0 OID 0)
+-- TOC entry 5273 (class 0 OID 0)
 -- Dependencies: 369
 -- Name: TABLE saml_relay_states; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4205,7 +4592,7 @@ CREATE TABLE auth.schema_migrations (
 ALTER TABLE auth.schema_migrations OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5188 (class 0 OID 0)
+-- TOC entry 5275 (class 0 OID 0)
 -- Dependencies: 354
 -- Name: TABLE schema_migrations; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4241,7 +4628,7 @@ CREATE TABLE auth.sessions (
 ALTER TABLE auth.sessions OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5190 (class 0 OID 0)
+-- TOC entry 5277 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: TABLE sessions; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4250,7 +4637,7 @@ COMMENT ON TABLE auth.sessions IS 'Auth: Stores session data associated to a use
 
 
 --
--- TOC entry 5191 (class 0 OID 0)
+-- TOC entry 5278 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: COLUMN sessions.not_after; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4259,7 +4646,7 @@ COMMENT ON COLUMN auth.sessions.not_after IS 'Auth: Not after is a nullable colu
 
 
 --
--- TOC entry 5192 (class 0 OID 0)
+-- TOC entry 5279 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: COLUMN sessions.refresh_token_hmac_key; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4268,7 +4655,7 @@ COMMENT ON COLUMN auth.sessions.refresh_token_hmac_key IS 'Holds a HMAC-SHA256 k
 
 
 --
--- TOC entry 5193 (class 0 OID 0)
+-- TOC entry 5280 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: COLUMN sessions.refresh_token_counter; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4294,7 +4681,7 @@ CREATE TABLE auth.sso_domains (
 ALTER TABLE auth.sso_domains OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5195 (class 0 OID 0)
+-- TOC entry 5282 (class 0 OID 0)
 -- Dependencies: 367
 -- Name: TABLE sso_domains; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4320,7 +4707,7 @@ CREATE TABLE auth.sso_providers (
 ALTER TABLE auth.sso_providers OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5197 (class 0 OID 0)
+-- TOC entry 5284 (class 0 OID 0)
 -- Dependencies: 366
 -- Name: TABLE sso_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4329,7 +4716,7 @@ COMMENT ON TABLE auth.sso_providers IS 'Auth: Manages SSO identity provider info
 
 
 --
--- TOC entry 5198 (class 0 OID 0)
+-- TOC entry 5285 (class 0 OID 0)
 -- Dependencies: 366
 -- Name: COLUMN sso_providers.resource_id; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4385,7 +4772,7 @@ CREATE TABLE auth.users (
 ALTER TABLE auth.users OWNER TO supabase_auth_admin;
 
 --
--- TOC entry 5200 (class 0 OID 0)
+-- TOC entry 5287 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: TABLE users; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4394,7 +4781,7 @@ COMMENT ON TABLE auth.users IS 'Auth: Stores user login data within a secure sch
 
 
 --
--- TOC entry 5201 (class 0 OID 0)
+-- TOC entry 5288 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: COLUMN users.is_sso_user; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
@@ -4549,7 +4936,12 @@ CREATE TABLE public.client_professionals (
     started_at timestamp with time zone DEFAULT now() NOT NULL,
     ended_at timestamp with time zone,
     notes text,
-    CONSTRAINT client_professionals_status_check CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text, 'paused'::text])))
+    current_plan_id uuid,
+    expires_at timestamp with time zone,
+    auto_renew boolean DEFAULT false,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    CONSTRAINT client_professionals_status_check CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text, 'paused'::text, 'expired'::text, 'cancelled'::text, 'payment_failed'::text])))
 );
 
 
@@ -4606,13 +4998,36 @@ CREATE TABLE public.exercises_library (
 ALTER TABLE public.exercises_library OWNER TO postgres;
 
 --
--- TOC entry 5213 (class 0 OID 0)
+-- TOC entry 5300 (class 0 OID 0)
 -- Dependencies: 390
 -- Name: COLUMN exercises_library.base_type; Type: COMMENT; Schema: public; Owner: postgres
 --
 
 COMMENT ON COLUMN public.exercises_library.base_type IS 'Canonical Powerlifting movement type (squat, bench, deadlift, overhead) for strength calculations';
 
+
+--
+-- TOC entry 429 (class 1259 OID 75947)
+-- Name: financial_transactions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.financial_transactions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    student_id uuid,
+    professional_id uuid,
+    plan_snapshot jsonb NOT NULL,
+    amount_gross numeric NOT NULL,
+    platform_fee numeric NOT NULL,
+    professional_net numeric NOT NULL,
+    status public.transaction_status DEFAULT 'pending'::public.transaction_status,
+    gateway_id text,
+    created_at timestamp with time zone DEFAULT now(),
+    payment_method text DEFAULT 'credit_card'::text,
+    is_sandbox boolean DEFAULT false
+);
+
+
+ALTER TABLE public.financial_transactions OWNER TO postgres;
 
 --
 -- TOC entry 395 (class 1259 OID 17618)
@@ -4854,6 +5269,41 @@ CREATE TABLE public.meal_plans (
 ALTER TABLE public.meal_plans OWNER TO postgres;
 
 --
+-- TOC entry 431 (class 1259 OID 76041)
+-- Name: payment_gateway_configs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.payment_gateway_configs (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    provider text NOT NULL,
+    is_active boolean DEFAULT false NOT NULL,
+    publishable_key text,
+    secret_key text,
+    webhook_secret text,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    CONSTRAINT payment_gateway_configs_provider_check CHECK ((provider = 'stripe'::text))
+);
+
+
+ALTER TABLE public.payment_gateway_configs OWNER TO postgres;
+
+--
+-- TOC entry 430 (class 1259 OID 75983)
+-- Name: platform_settings; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.platform_settings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    payment_mode text DEFAULT 'sandbox'::text,
+    platform_fee_percentage numeric DEFAULT 10.0,
+    created_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.platform_settings OWNER TO postgres;
+
+--
 -- TOC entry 407 (class 1259 OID 22388)
 -- Name: professional_notifications; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -4959,6 +5409,25 @@ CREATE TABLE public.scheduled_workouts (
 
 
 ALTER TABLE public.scheduled_workouts OWNER TO postgres;
+
+--
+-- TOC entry 428 (class 1259 OID 75923)
+-- Name: subscription_plans; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subscription_plans (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    professional_id uuid NOT NULL,
+    name text NOT NULL,
+    price numeric NOT NULL,
+    duration_months integer NOT NULL,
+    active boolean DEFAULT true,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.subscription_plans OWNER TO postgres;
 
 --
 -- TOC entry 423 (class 1259 OID 73586)
@@ -5406,7 +5875,7 @@ CREATE TABLE storage.buckets (
 ALTER TABLE storage.buckets OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 5249 (class 0 OID 0)
+-- TOC entry 5340 (class 0 OID 0)
 -- Dependencies: 355
 -- Name: COLUMN buckets.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
 --
@@ -5487,7 +5956,7 @@ CREATE TABLE storage.objects (
 ALTER TABLE storage.objects OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 5253 (class 0 OID 0)
+-- TOC entry 5344 (class 0 OID 0)
 -- Dependencies: 356
 -- Name: COLUMN objects.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
 --
@@ -5573,7 +6042,7 @@ CREATE TABLE storage.vector_indexes (
 ALTER TABLE storage.vector_indexes OWNER TO supabase_storage_admin;
 
 --
--- TOC entry 3907 (class 0 OID 0)
+-- TOC entry 3938 (class 0 OID 0)
 -- Name: messages_2026_01_01; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5581,7 +6050,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_01
 
 
 --
--- TOC entry 3908 (class 0 OID 0)
+-- TOC entry 3939 (class 0 OID 0)
 -- Name: messages_2026_01_02; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5589,7 +6058,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_02
 
 
 --
--- TOC entry 3909 (class 0 OID 0)
+-- TOC entry 3940 (class 0 OID 0)
 -- Name: messages_2026_01_03; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5597,7 +6066,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_03
 
 
 --
--- TOC entry 3910 (class 0 OID 0)
+-- TOC entry 3941 (class 0 OID 0)
 -- Name: messages_2026_01_04; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5605,7 +6074,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_04
 
 
 --
--- TOC entry 3911 (class 0 OID 0)
+-- TOC entry 3942 (class 0 OID 0)
 -- Name: messages_2026_01_05; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5613,7 +6082,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_05
 
 
 --
--- TOC entry 3912 (class 0 OID 0)
+-- TOC entry 3943 (class 0 OID 0)
 -- Name: messages_2026_01_06; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5621,7 +6090,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_06
 
 
 --
--- TOC entry 3913 (class 0 OID 0)
+-- TOC entry 3944 (class 0 OID 0)
 -- Name: messages_2026_01_07; Type: TABLE ATTACH; Schema: realtime; Owner: supabase_admin
 --
 
@@ -5629,7 +6098,7 @@ ALTER TABLE ONLY realtime.messages ATTACH PARTITION realtime.messages_2026_01_07
 
 
 --
--- TOC entry 3923 (class 2604 OID 16510)
+-- TOC entry 3954 (class 2604 OID 16510)
 -- Name: refresh_tokens id; Type: DEFAULT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -5637,7 +6106,7 @@ ALTER TABLE ONLY auth.refresh_tokens ALTER COLUMN id SET DEFAULT nextval('auth.r
 
 
 --
--- TOC entry 4927 (class 0 OID 16525)
+-- TOC entry 5004 (class 0 OID 16525)
 -- Dependencies: 353
 -- Data for Name: audit_log_entries; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7212,10 +7681,44 @@ INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '44db4a57-3fee-4dea-99d1-f94f8632ac9d', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-04 19:40:24.336136+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9e9b317f-d223-4521-8b3b-d6757b4ac584', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 20:19:00.508237+00', '');
 INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '2d0e9a2f-6612-4e69-9ee2-c85f05d41378', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 20:19:00.509852+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9190b290-defa-4093-aaab-eacdb907fb63', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 20:40:01.103651+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '81eb3c93-257f-4432-bf84-0fa7c1212f7e', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 20:40:01.104926+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '783cc39b-9b15-40ae-9530-3fd433868e2e', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 21:18:04.678217+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '786971a7-e20b-4a80-8c8f-6df34b44b2eb', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 21:18:04.679358+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '74503aca-f688-4922-ac6b-bd1ba493f762', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 21:38:39.864349+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '27fe8d40-9c5d-41b5-b1f7-36c68e8f9f42', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 21:38:39.865888+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1fafb801-f497-4615-a8bc-14d1d77a24ee', '{"action":"user_modified","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-01-04 22:05:53.989681+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '6b3fb742-fe30-44ed-934d-1f4bdab3edbd', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 22:17:01.797142+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8781dfc3-7b7d-4c20-92f4-e7164267b33c', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 22:17:01.798478+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd184cf97-9104-446c-a61a-095680c5fd84', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 22:38:00.721681+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7569e267-5adf-497d-b1a5-96f8001ad8fd', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 22:38:00.722741+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd65f238e-0400-440b-986d-1511ee2bfa9f', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 23:17:00.564211+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd4b0076a-5bbb-40d7-b487-ae887215ed3b', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 23:17:00.566731+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3882787e-0478-4439-95f4-83cf76197b12', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 23:37:01.426717+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '65754cc6-41db-4a20-b3b3-c40189a6599b', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-04 23:37:01.428013+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '29932c0d-7523-4870-94d4-ef07ecc784ca', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 00:17:00.771551+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'b50cf1be-e92f-4750-923a-293d42f5b998', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 00:17:00.773112+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '1b50aad1-5a8d-43d5-87c6-f96313a14735', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 00:36:51.785185+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '9aedf73c-9f78-40a7-b716-a591029a7322', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 00:36:51.786389+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '5885d81f-a55e-4830-8d55-41e28f093002', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 01:17:00.89694+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '38e1f85e-2c7e-4a66-9dbd-247fe3f8962f', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 01:17:00.898125+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f9ce471e-6558-43a6-b223-490e6ce80e16', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-01-05 01:29:16.631011+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'db62846b-6c2e-4296-88b2-9944f1a4f5db', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-05 01:29:23.132065+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '59204480-e25c-4ac2-8f0c-811937b6c023', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2026-01-05 01:29:35.522001+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '8e3b4263-e588-444d-a40a-e97fef157ec4', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-05 01:29:44.338516+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3053c07b-a187-48b1-9317-cafa314b996d', '{"action":"token_refreshed","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 02:17:00.772033+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '3e5ecc91-a044-4ea6-b071-0eb5e171efde', '{"action":"token_revoked","actor_id":"d4bf3f19-fede-4f47-b084-2d2406a7dad0","actor_name":"Giuliano Moretti Santos Garcia","actor_username":"giulianomsg@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 02:17:00.773402+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'd8901589-ee73-487f-ae4a-9faec36e5782', '{"action":"token_refreshed","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 02:29:01.566552+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '7dee88bb-4c51-4cf8-82b2-af2b4bbb16ff', '{"action":"token_revoked","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-01-05 02:29:01.567695+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'a3d0c8a7-1ffd-4b59-8d25-12d0d8432db3', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-05 02:57:08.352012+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '21c9d22c-f7e0-41db-aabb-a06ceee79962', '{"action":"logout","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-01-05 02:57:57.673083+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'f21970e6-63da-4776-87ae-33a563d32add', '{"action":"login","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-05 02:58:00.874644+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', 'baafc9b0-2362-4099-a0d2-0bdafd0a80de', '{"action":"logout","actor_id":"c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4","actor_username":"admin@capifit.com","actor_via_sso":false,"log_type":"account"}', '2026-01-05 02:58:38.798458+00', '');
+INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000', '85836dad-2826-4aeb-8448-4a7cb894a163', '{"action":"login","actor_id":"8ca7cccb-0707-4d95-8f97-25488223b8fd","actor_name":"Gilberto Souza","actor_username":"betosouza615@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-01-05 02:58:46.597275+00', '');
 
 
 --
--- TOC entry 4941 (class 0 OID 16929)
+-- TOC entry 5018 (class 0 OID 16929)
 -- Dependencies: 370
 -- Data for Name: flow_state; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7223,7 +7726,7 @@ INSERT INTO auth.audit_log_entries VALUES ('00000000-0000-0000-0000-000000000000
 
 
 --
--- TOC entry 4932 (class 0 OID 16727)
+-- TOC entry 5009 (class 0 OID 16727)
 -- Dependencies: 361
 -- Data for Name: identities; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7238,7 +7741,7 @@ INSERT INTO auth.identities VALUES ('d4bf3f19-fede-4f47-b084-2d2406a7dad0', 'd4b
 
 
 --
--- TOC entry 4926 (class 0 OID 16518)
+-- TOC entry 5003 (class 0 OID 16518)
 -- Dependencies: 352
 -- Data for Name: instances; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7246,7 +7749,7 @@ INSERT INTO auth.identities VALUES ('d4bf3f19-fede-4f47-b084-2d2406a7dad0', 'd4b
 
 
 --
--- TOC entry 4936 (class 0 OID 16816)
+-- TOC entry 5013 (class 0 OID 16816)
 -- Dependencies: 365
 -- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7256,11 +7759,11 @@ INSERT INTO auth.mfa_amr_claims VALUES ('6b979192-3546-4a4d-be86-e2768e6a5dcc', 
 INSERT INTO auth.mfa_amr_claims VALUES ('4659e5ea-92d0-4acc-9745-ed36100da930', '2026-01-03 02:31:05.248367+00', '2026-01-03 02:31:05.248367+00', 'password', '40001487-601e-483d-9528-1e584f44a69e');
 INSERT INTO auth.mfa_amr_claims VALUES ('d3fb3e20-19fa-45b9-990b-3544b20d5632', '2026-01-03 02:51:00.988818+00', '2026-01-03 02:51:00.988818+00', 'password', 'a1726f21-ecce-43aa-8cf5-244632bb1bea');
 INSERT INTO auth.mfa_amr_claims VALUES ('f9d12b84-4359-44cc-84e9-3e67da4a5552', '2026-01-04 17:34:16.705012+00', '2026-01-04 17:34:16.705012+00', 'password', '548da58e-2097-4791-ab25-d98841484f91');
-INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', '2026-01-04 19:40:24.340408+00', '2026-01-04 19:40:24.340408+00', 'password', '8ed2216e-11a6-4f75-9526-dedc92e0e569');
+INSERT INTO auth.mfa_amr_claims VALUES ('cbf2a569-7978-4bde-a50c-d5018e05faa0', '2026-01-05 02:58:46.600672+00', '2026-01-05 02:58:46.600672+00', 'password', 'f71fffd0-aa79-43f5-9ea1-d8361e47e074');
 
 
 --
--- TOC entry 4935 (class 0 OID 16804)
+-- TOC entry 5012 (class 0 OID 16804)
 -- Dependencies: 364
 -- Data for Name: mfa_challenges; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7268,7 +7771,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4934 (class 0 OID 16791)
+-- TOC entry 5011 (class 0 OID 16791)
 -- Dependencies: 363
 -- Data for Name: mfa_factors; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7276,7 +7779,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4944 (class 0 OID 17041)
+-- TOC entry 5021 (class 0 OID 17041)
 -- Dependencies: 373
 -- Data for Name: oauth_authorizations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7284,7 +7787,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4982 (class 0 OID 49843)
+-- TOC entry 5059 (class 0 OID 49843)
 -- Dependencies: 415
 -- Data for Name: oauth_client_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7292,7 +7795,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4943 (class 0 OID 17011)
+-- TOC entry 5020 (class 0 OID 17011)
 -- Dependencies: 372
 -- Data for Name: oauth_clients; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7300,7 +7803,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4945 (class 0 OID 17074)
+-- TOC entry 5022 (class 0 OID 17074)
 -- Dependencies: 374
 -- Data for Name: oauth_consents; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7308,7 +7811,7 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4942 (class 0 OID 16979)
+-- TOC entry 5019 (class 0 OID 16979)
 -- Dependencies: 371
 -- Data for Name: one_time_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7316,11 +7819,12 @@ INSERT INTO auth.mfa_amr_claims VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', 
 
 
 --
--- TOC entry 4925 (class 0 OID 16507)
+-- TOC entry 5002 (class 0 OID 16507)
 -- Dependencies: 351
 -- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1382, 'kdjl5dzaebxy', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-05 02:17:00.77528+00', '2026-01-05 02:17:00.77528+00', 'lkfdhj7roly2', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1331, '7tee2gtqllcq', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 03:27:59.565131+00', '2026-01-04 04:26:59.569489+00', 'vru6hmggf6wo', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1276, '7lzrzh4qdgsz', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-03 02:30:46.965853+00', '2026-01-03 02:30:46.965853+00', NULL, '6b979192-3546-4a4d-be86-e2768e6a5dcc');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1277, 'oykmmpixb36p', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-03 02:31:05.247043+00', '2026-01-03 02:31:05.247043+00', NULL, '4659e5ea-92d0-4acc-9745-ed36100da930');
@@ -7336,10 +7840,12 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1357, 'ocw2ftkosxju', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 15:20:00.439811+00', '2026-01-04 16:20:00.765194+00', 'v4gbdlgqic4r', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1316, 'nzib3d6fyl6f', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 20:33:59.118642+00', '2026-01-03 21:32:59.809993+00', 'bbq5ye7dn5nw', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1363, '7ezgnmjoybp5', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 17:34:16.703244+00', '2026-01-04 18:32:48.027529+00', NULL, 'f9d12b84-4359-44cc-84e9-3e67da4a5552');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1369, 's57efybdvcjz', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-04 20:19:00.511757+00', '2026-01-04 20:19:00.511757+00', 'v7qwmznk4tid', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1369, 's57efybdvcjz', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 20:19:00.511757+00', '2026-01-04 21:18:04.680055+00', 'v7qwmznk4tid', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1325, 'bhmr7yzlxyuz', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 00:29:59.939645+00', '2026-01-04 01:29:00.103065+00', 'ciltwof7wl3y', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1375, 'g6cmzvgn4do2', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 23:17:00.568545+00', '2026-01-05 00:17:00.773911+00', 'f4cz4dsqj2qc', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1269, 'bahxzxg4ywi2', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 00:38:30.018944+00', '2026-01-03 01:37:58.36294+00', NULL, 'da463ab7-c46e-4631-bb18-6fd8f5eab34e');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1274, '63cyekyiofwz', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-03 01:37:58.363893+00', '2026-01-03 01:37:58.363893+00', 'bahxzxg4ywi2', 'da463ab7-c46e-4631-bb18-6fd8f5eab34e');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1379, 'lkfdhj7roly2', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-05 01:17:00.899771+00', '2026-01-05 02:17:00.774241+00', 'x3ctjdrarjuw', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1278, '654emascdo3q', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 02:51:00.986402+00', '2026-01-03 03:50:10.508863+00', NULL, 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1337, 'xo2nqpz4jkc6', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 05:25:59.666217+00', '2026-01-04 06:25:00.139783+00', 'dxwxgs4d3jwv', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1287, 'vg5csjcueg3p', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 06:47:59.025457+00', '2026-01-03 07:46:59.129564+00', 'r4wxd4vmpag6', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
@@ -7355,8 +7861,10 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1367, 'v7qwmznk4tid', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 19:20:00.564263+00', '2026-01-04 20:19:00.510737+00', 'uqkvp3mxuqij', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1320, '5j4jqn6cqhpp', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 22:31:59.830257+00', '2026-01-03 23:30:59.897795+00', 'a6miryjdyoxe', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1323, 'ciltwof7wl3y', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 23:30:59.898574+00', '2026-01-04 00:29:59.938775+00', '5j4jqn6cqhpp', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1373, 'f4cz4dsqj2qc', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 22:17:01.800482+00', '2026-01-04 23:17:00.567563+00', 'iryaasjqzm2g', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1329, 'vru6hmggf6wo', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 02:28:00.629211+00', '2026-01-04 03:27:59.564272+00', 'bk55ftlaljcg', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1335, 'dxwxgs4d3jwv', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 04:26:59.570313+00', '2026-01-04 05:25:59.665469+00', '7tee2gtqllcq', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1386, 'sjweza52wav7', '8ca7cccb-0707-4d95-8f97-25488223b8fd', false, '2026-01-05 02:58:46.599318+00', '2026-01-05 02:58:46.599318+00', NULL, 'cbf2a569-7978-4bde-a50c-d5018e05faa0');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1282, 'z3cjhucep54j', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 04:49:58.900089+00', '2026-01-03 05:48:59.286541+00', 'mghdstpz77mn', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1341, 'avi3prffwhny', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 07:24:59.74436+00', '2026-01-04 08:23:59.747559+00', 'aw727k2zvaki', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1285, 'r4wxd4vmpag6', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 05:48:59.287414+00', '2026-01-03 06:47:59.024702+00', 'z3cjhucep54j', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
@@ -7367,14 +7875,15 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1303, 'n5tqmhbcgxu3', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 14:39:59.480294+00', '2026-01-03 15:38:59.572297+00', '4v7aqxjeuspi', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1359, 'zfffy6p6ulqr', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 16:20:00.76618+00', '2026-01-04 17:20:00.492519+00', 'ocw2ftkosxju', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1365, '4mii44tpwash', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', false, '2026-01-04 18:32:48.02844+00', '2026-01-04 18:32:48.02844+00', '7ezgnmjoybp5', 'f9d12b84-4359-44cc-84e9-3e67da4a5552');
-INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1368, 'jia5dhhu7rp5', '8ca7cccb-0707-4d95-8f97-25488223b8fd', false, '2026-01-04 19:40:24.33834+00', '2026-01-04 19:40:24.33834+00', NULL, '7e42fa18-0687-49b7-9724-08899040fbe7');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1312, 'zs47kzk7jz26', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 18:35:59.618454+00', '2026-01-03 19:34:59.697103+00', '6ljm3utdtlj7', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1371, 'iryaasjqzm2g', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 21:18:04.680812+00', '2026-01-04 22:17:01.799363+00', 's57efybdvcjz', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1318, 'a6miryjdyoxe', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-03 21:32:59.810922+00', '2026-01-03 22:31:59.82944+00', 'nzib3d6fyl6f', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
+INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1377, 'x3ctjdrarjuw', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-05 00:17:00.774988+00', '2026-01-05 01:17:00.898845+00', 'g6cmzvgn4do2', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 1327, 'bk55ftlaljcg', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', true, '2026-01-04 01:29:00.105273+00', '2026-01-04 02:28:00.628349+00', 'bhmr7yzlxyuz', 'd3fb3e20-19fa-45b9-990b-3544b20d5632');
 
 
 --
--- TOC entry 4939 (class 0 OID 16858)
+-- TOC entry 5016 (class 0 OID 16858)
 -- Dependencies: 368
 -- Data for Name: saml_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7382,7 +7891,7 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 
 
 --
--- TOC entry 4940 (class 0 OID 16876)
+-- TOC entry 5017 (class 0 OID 16876)
 -- Dependencies: 369
 -- Data for Name: saml_relay_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7390,7 +7899,7 @@ INSERT INTO auth.refresh_tokens VALUES ('00000000-0000-0000-0000-000000000000', 
 
 
 --
--- TOC entry 4928 (class 0 OID 16533)
+-- TOC entry 5005 (class 0 OID 16533)
 -- Dependencies: 354
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7470,21 +7979,21 @@ INSERT INTO auth.schema_migrations VALUES ('20251201000000');
 
 
 --
--- TOC entry 4933 (class 0 OID 16757)
+-- TOC entry 5010 (class 0 OID 16757)
 -- Dependencies: 362
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
 INSERT INTO auth.sessions VALUES ('f9d12b84-4359-44cc-84e9-3e67da4a5552', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-04 17:34:16.702156+00', '2026-01-04 18:32:48.031678+00', NULL, 'aal1', NULL, '2026-01-04 18:32:48.03158', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('7e42fa18-0687-49b7-9724-08899040fbe7', '8ca7cccb-0707-4d95-8f97-25488223b8fd', '2026-01-04 19:40:24.337122+00', '2026-01-04 19:40:24.337122+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO auth.sessions VALUES ('d3fb3e20-19fa-45b9-990b-3544b20d5632', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-03 02:51:00.984801+00', '2026-01-04 20:19:00.515084+00', NULL, 'aal1', NULL, '2026-01-04 20:19:00.514971', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('d3fb3e20-19fa-45b9-990b-3544b20d5632', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-03 02:51:00.984801+00', '2026-01-05 02:17:00.779306+00', NULL, 'aal1', NULL, '2026-01-05 02:17:00.779169', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO auth.sessions VALUES ('cbf2a569-7978-4bde-a50c-d5018e05faa0', '8ca7cccb-0707-4d95-8f97-25488223b8fd', '2026-01-05 02:58:46.598391+00', '2026-01-05 02:58:46.598391+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO auth.sessions VALUES ('da463ab7-c46e-4631-bb18-6fd8f5eab34e', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-03 00:38:30.013429+00', '2026-01-03 01:37:58.366904+00', NULL, 'aal1', NULL, '2026-01-03 01:37:58.366789', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO auth.sessions VALUES ('6b979192-3546-4a4d-be86-e2768e6a5dcc', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-03 02:30:46.964184+00', '2026-01-03 02:30:46.964184+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO auth.sessions VALUES ('4659e5ea-92d0-4acc-9745-ed36100da930', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '2026-01-03 02:31:05.246242+00', '2026-01-03 02:31:05.246242+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '177.63.209.204', NULL, NULL, NULL, NULL, NULL);
 
 
 --
--- TOC entry 4938 (class 0 OID 16843)
+-- TOC entry 5015 (class 0 OID 16843)
 -- Dependencies: 367
 -- Data for Name: sso_domains; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7492,7 +8001,7 @@ INSERT INTO auth.sessions VALUES ('4659e5ea-92d0-4acc-9745-ed36100da930', 'd4bf3
 
 
 --
--- TOC entry 4937 (class 0 OID 16834)
+-- TOC entry 5014 (class 0 OID 16834)
 -- Dependencies: 366
 -- Data for Name: sso_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
@@ -7500,22 +8009,26 @@ INSERT INTO auth.sessions VALUES ('4659e5ea-92d0-4acc-9745-ed36100da930', 'd4bf3
 
 
 --
--- TOC entry 4923 (class 0 OID 16495)
+-- TOC entry 5000 (class 0 OID 16495)
 -- Dependencies: 349
 -- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'f2bb6acc-835a-414c-8856-836415b23896', 'authenticated', 'authenticated', 'profissional@capifit.com', '$2a$10$dk.qa.nLD7wm3wkqohwtMeYT1Qt1jW.ublImwK5/gVPVc4lFw3MJ2', '2025-11-16 22:09:35.759426+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-01-03 01:20:46.759184+00', '{"provider": "email", "providers": ["email"]}', '{"role": "professional", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg", "email_verified": true}', NULL, '2025-11-16 22:09:35.744308+00', '2026-01-03 01:20:46.761565+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'authenticated', 'authenticated', 'admin@capifit.com', '$2a$10$MZ6JN.1Cid87Ze/ntbc/cubpoNEYiaC77VBvw8etFf0ecZqQkdq2a', '2025-11-16 22:10:09.629885+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-01-04 03:53:26.147511+00', '{"provider": "email", "providers": ["email"]}', '{"role": "admin", "email_verified": true}', NULL, '2025-11-16 22:10:09.626622+00', '2026-01-04 03:53:26.150923+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '8a8f1b6c-6659-4384-b8eb-e87b06280981', 'authenticated', 'authenticated', 'contato@capifit.app.br', '$2a$10$g9o8MTp1TTpRywxntCPdSO6WvD9hPyUf/j.ZWx1JFdNBQLPb.356C', '2025-12-12 17:36:12.226946+00', NULL, '', '2025-12-12 17:34:34.184305+00', '', NULL, '', '', NULL, '2025-12-12 17:36:12.234753+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "8a8f1b6c-6659-4384-b8eb-e87b06280981", "role": "professional", "email": "contato@capifit.app.br", "full_name": "Contato CapiFit. App", "email_verified": true, "phone_verified": false}', NULL, '2025-12-12 17:34:34.139693+00', '2025-12-12 17:36:12.251207+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'authenticated', 'authenticated', 'betosouza615@gmail.com', '$2a$10$kpZytMllwKsjJd.wC8c4IemCEcfNzLjeN1S4y2nDFlI3xK/UeIQd.', '2025-12-12 01:36:42.631329+00', NULL, '', '2025-12-12 01:35:21.642658+00', '', NULL, '', '', NULL, '2026-01-04 19:40:24.337021+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "admin", "email": "betosouza615@gmail.com", "phone": "(17) 99919-4431", "full_name": "Gilberto Souza", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826", "email_verified": true, "phone_verified": false}', NULL, '2025-12-12 01:35:21.557995+00', '2026-01-04 19:40:24.339661+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
-INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', 'authenticated', 'authenticated', 'giulianomsg@gmail.com', '$2a$10$OCPI9dj7NdQvRlLvPtX1UuvTOxoLqaw04Ne4QA2OB1xn7RxBw1cWK', '2025-12-23 15:09:03.266016+00', NULL, '', '2025-12-23 15:08:41.653975+00', '', NULL, '', '', NULL, '2026-01-04 17:34:16.701999+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "d4bf3f19-fede-4f47-b084-2d2406a7dad0", "role": "client", "email": "giulianomsg@gmail.com", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/d4bf3f19-fede-4f47-b084-2d2406a7dad0/avatar-1767413514738.jpg?t=1767413516368", "email_verified": true, "phone_verified": false}', NULL, '2025-12-23 15:08:41.613721+00', '2026-01-04 20:19:00.513201+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES (NULL, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'authenticated', 'authenticated', 'prof@capifit.com', 'placeholder_hash_pwd', '2026-01-04 21:09:41.39142+00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, NULL, NULL, NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES (NULL, 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'authenticated', 'authenticated', 'student_free@capifit.com', 'placeholder_hash_pwd', '2026-01-04 21:09:41.39142+00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, NULL, NULL, NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES (NULL, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'authenticated', 'authenticated', 'student_expired@capifit.com', 'placeholder_hash_pwd', '2026-01-04 21:09:41.39142+00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, NULL, NULL, NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES (NULL, 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'authenticated', 'authenticated', 'student_active@capifit.com', 'placeholder_hash_pwd', '2026-01-04 21:09:41.39142+00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, NULL, NULL, NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'authenticated', 'authenticated', 'admin@capifit.com', '$2a$10$MZ6JN.1Cid87Ze/ntbc/cubpoNEYiaC77VBvw8etFf0ecZqQkdq2a', '2025-11-16 22:10:09.629885+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-01-05 02:58:00.875436+00', '{"provider": "email", "providers": ["email"]}', '{"role": "admin", "email_verified": true}', NULL, '2025-11-16 22:10:09.626622+00', '2026-01-05 02:58:00.878571+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', 'authenticated', 'authenticated', 'giulianomsg@gmail.com', '$2a$10$OCPI9dj7NdQvRlLvPtX1UuvTOxoLqaw04Ne4QA2OB1xn7RxBw1cWK', '2025-12-23 15:09:03.266016+00', NULL, '', '2025-12-23 15:08:41.653975+00', '', NULL, '', '', NULL, '2026-01-04 17:34:16.701999+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "d4bf3f19-fede-4f47-b084-2d2406a7dad0", "role": "client", "email": "giulianomsg@gmail.com", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/d4bf3f19-fede-4f47-b084-2d2406a7dad0/avatar-1767413514738.jpg?t=1767413516368", "email_verified": true, "phone_verified": false}', NULL, '2025-12-23 15:08:41.613721+00', '2026-01-05 02:17:00.777096+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
+INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'authenticated', 'authenticated', 'betosouza615@gmail.com', '$2a$10$kpZytMllwKsjJd.wC8c4IemCEcfNzLjeN1S4y2nDFlI3xK/UeIQd.', '2025-12-12 01:36:42.631329+00', NULL, '', '2025-12-12 01:35:21.642658+00', '', NULL, '', '', NULL, '2026-01-05 02:58:46.59823+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "admin", "email": "betosouza615@gmail.com", "phone": "(17) 99919-4431", "full_name": "Gilberto Souza", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826", "email_verified": true, "phone_verified": false}', NULL, '2025-12-12 01:35:21.557995+00', '2026-01-05 02:58:46.600298+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'authenticated', 'authenticated', 'cliente1@capifit.com', '$2a$10$RSBXDZVWHGGH.3hUsUjMde1XkU3ufrE2Gpp2EFvd8yMjN4TKNe8DS', '2025-11-26 20:31:24.801059+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-12-27 01:05:48.380191+00', '{"provider": "email", "providers": ["email"]}', '{"phone": "(17) 3236-6250", "full_name": "Vinicius Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462", "email_verified": true}', NULL, '2025-11-26 20:31:24.783033+00', '2026-01-03 00:21:58.708952+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 INSERT INTO auth.users VALUES ('00000000-0000-0000-0000-000000000000', '7171a1a8-524b-4cee-9040-886c74afe93f', 'authenticated', 'authenticated', 'cliente@capifit.com', '$2a$10$jE025Etdhl6forKhm4vtKOjVSH7WmlQ2MSAF1M196DXtkcVspFxI.', '2025-11-26 19:46:42.713604+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-26 19:46:42.693884+00', '2025-11-26 19:46:42.715755+00', NULL, NULL, '', '', NULL, DEFAULT, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
--- TOC entry 4978 (class 0 OID 29858)
+-- TOC entry 5055 (class 0 OID 29858)
 -- Dependencies: 411
 -- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7527,7 +8040,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4971 (class 0 OID 17790)
+-- TOC entry 5048 (class 0 OID 17790)
 -- Dependencies: 404
 -- Data for Name: appointments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7535,7 +8048,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4970 (class 0 OID 17774)
+-- TOC entry 5047 (class 0 OID 17774)
 -- Dependencies: 403
 -- Data for Name: biometric_data; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7543,7 +8056,7 @@ INSERT INTO public.achievements VALUES ('74800002-4630-445e-bc45-2bf8dab8bf9b', 
 
 
 --
--- TOC entry 4972 (class 0 OID 17813)
+-- TOC entry 5049 (class 0 OID 17813)
 -- Dependencies: 405
 -- Data for Name: chat_messages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7614,7 +8127,7 @@ INSERT INTO public.chat_messages VALUES ('a9836a72-a790-4444-993f-64925951190a',
 
 
 --
--- TOC entry 4955 (class 0 OID 17482)
+-- TOC entry 5032 (class 0 OID 17482)
 -- Dependencies: 388
 -- Data for Name: client_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7624,7 +8137,7 @@ INSERT INTO public.client_details VALUES ('d4bf3f19-fede-4f47-b084-2d2406a7dad0'
 
 
 --
--- TOC entry 4967 (class 0 OID 17708)
+-- TOC entry 5044 (class 0 OID 17708)
 -- Dependencies: 400
 -- Data for Name: client_meal_plans; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7633,18 +8146,20 @@ INSERT INTO public.client_meal_plans VALUES ('7c942acc-c8a7-496a-b450-243b254229
 
 
 --
--- TOC entry 4956 (class 0 OID 17496)
+-- TOC entry 5033 (class 0 OID 17496)
 -- Dependencies: 389
 -- Data for Name: client_professionals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client_professionals VALUES ('c1f5351e-9f2d-4330-86fe-d58a92e22300', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'active', '2025-11-26 20:31:46.338+00', NULL, NULL);
-INSERT INTO public.client_professionals VALUES ('5c98e098-a43a-4939-8918-5f7b3344aa2f', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', 'f2bb6acc-835a-414c-8856-836415b23896', 'inactive', '2025-12-27 12:15:57.011+00', NULL, NULL);
-INSERT INTO public.client_professionals VALUES ('b053ea99-f216-43ca-9205-024e2b4773ab', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'active', '2026-01-03 01:13:53.151229+00', NULL, NULL);
+INSERT INTO public.client_professionals VALUES ('c1f5351e-9f2d-4330-86fe-d58a92e22300', 'bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'f2bb6acc-835a-414c-8856-836415b23896', 'active', '2025-11-26 20:31:46.338+00', NULL, NULL, NULL, NULL, false, '2026-01-04 23:20:07.017+00', '2026-01-04 23:20:07.017+00');
+INSERT INTO public.client_professionals VALUES ('5c98e098-a43a-4939-8918-5f7b3344aa2f', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', 'f2bb6acc-835a-414c-8856-836415b23896', 'inactive', '2025-12-27 12:15:57.011+00', NULL, NULL, NULL, NULL, false, '2026-01-04 23:20:07.017+00', '2026-01-04 23:20:07.017+00');
+INSERT INTO public.client_professionals VALUES ('d7556e6b-4103-4385-8d87-c3dcaeb4b3b4', 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'expired', '2026-01-04 21:09:41.39142+00', NULL, NULL, '11111111-1111-1111-1111-111111111111', '2026-01-03 21:09:41.39142+00', false, '2026-01-04 23:20:07.017+00', '2026-01-04 23:20:07.017+00');
+INSERT INTO public.client_professionals VALUES ('3944fc8b-1bcc-4d7c-ad72-cb571c500047', 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'active', '2026-01-04 21:09:41.39142+00', NULL, NULL, '22222222-2222-2222-2222-222222222222', '2026-02-03 21:09:41.39142+00', true, '2026-01-04 23:20:07.017+00', '2026-01-04 23:20:07.017+00');
+INSERT INTO public.client_professionals VALUES ('b053ea99-f216-43ca-9205-024e2b4773ab', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'active', '2026-01-03 01:13:53.151229+00', NULL, NULL, '34ce2941-ced1-417f-9bda-666abde0e312', '2027-01-05 00:48:24.325741+00', false, '2026-01-04 23:20:07.017+00', '2026-01-05 00:48:24.325741+00');
 
 
 --
--- TOC entry 4960 (class 0 OID 17571)
+-- TOC entry 5037 (class 0 OID 17571)
 -- Dependencies: 393
 -- Data for Name: client_workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7653,7 +8168,7 @@ INSERT INTO public.client_workouts VALUES ('e73be18a-f3cc-4864-b6ac-782c81e82803
 
 
 --
--- TOC entry 4957 (class 0 OID 17519)
+-- TOC entry 5034 (class 0 OID 17519)
 -- Dependencies: 390
 -- Data for Name: exercises_library; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7664,7 +8179,17 @@ Controlar a descida.', '{"Peito e Ombros"}', '{Barra}', 'beginner', '', 'https:/
 
 
 --
--- TOC entry 4962 (class 0 OID 17618)
+-- TOC entry 5071 (class 0 OID 75947)
+-- Dependencies: 429
+-- Data for Name: financial_transactions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.financial_transactions VALUES ('8fcf27f3-4b79-4d7f-b120-3e5c3e471b11', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '8ca7cccb-0707-4d95-8f97-25488223b8fd', '{"id": "34ce2941-ced1-417f-9bda-666abde0e312", "name": "Anual", "price": 1560, "duration_months": 12}', 1560, 156.00000000000000000000, 1404.00000000000000000000, 'paid', 'sand_25c0a52a8071df29a6d2f194a4f22591', '2026-01-04 23:23:57.571104+00', 'credit_card', true);
+INSERT INTO public.financial_transactions VALUES ('ed61ef90-c14f-4998-95b0-7c35f4371573', 'd4bf3f19-fede-4f47-b084-2d2406a7dad0', '8ca7cccb-0707-4d95-8f97-25488223b8fd', '{"id": "34ce2941-ced1-417f-9bda-666abde0e312", "name": "Anual", "price": 1560, "duration_months": 12}', 1560, 156.00000000000000000000, 1404.00000000000000000000, 'paid', 'sand_50742b121b1a0d19fc63be74c3332999', '2026-01-05 00:48:24.325741+00', 'sandbox_simulated', true);
+
+
+--
+-- TOC entry 5039 (class 0 OID 17618)
 -- Dependencies: 395
 -- Data for Name: foods_library; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7676,7 +8201,7 @@ INSERT INTO public.foods_library VALUES ('9740cf9a-eff9-4114-849c-9dc06181a89d',
 
 
 --
--- TOC entry 4968 (class 0 OID 17735)
+-- TOC entry 5045 (class 0 OID 17735)
 -- Dependencies: 401
 -- Data for Name: meal_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7684,7 +8209,7 @@ INSERT INTO public.foods_library VALUES ('9740cf9a-eff9-4114-849c-9dc06181a89d',
 
 
 --
--- TOC entry 4966 (class 0 OID 17684)
+-- TOC entry 5043 (class 0 OID 17684)
 -- Dependencies: 399
 -- Data for Name: meal_plan_items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7692,7 +8217,7 @@ INSERT INTO public.foods_library VALUES ('9740cf9a-eff9-4114-849c-9dc06181a89d',
 
 
 --
--- TOC entry 4965 (class 0 OID 17668)
+-- TOC entry 5042 (class 0 OID 17668)
 -- Dependencies: 398
 -- Data for Name: meal_plans; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7701,17 +8226,34 @@ INSERT INTO public.meal_plans VALUES ('abc28005-3841-4e16-a20d-77496f245e47', 'P
 
 
 --
--- TOC entry 4954 (class 0 OID 17466)
+-- TOC entry 5073 (class 0 OID 76041)
+-- Dependencies: 431
+-- Data for Name: payment_gateway_configs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 5072 (class 0 OID 75983)
+-- Dependencies: 430
+-- Data for Name: platform_settings; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.platform_settings VALUES ('3c897e9f-a078-479f-8d98-ab9f9f8a4924', 'sandbox', 10.0, '2026-01-04 23:20:07.017+00');
+
+
+--
+-- TOC entry 5031 (class 0 OID 17466)
 -- Dependencies: 387
 -- Data for Name: professional_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.professional_details VALUES ('f2bb6acc-835a-414c-8856-836415b23896', '{personal_trainer}', 'profissional com experiência comprovada de tantos anos.', '{"raw_text": "Certificação 12312312123"}', 100.00, NULL, true, '2025-11-22 19:09:25.500172+00', '2025-12-26 18:02:13.234395+00', '(17) 98803-1873', '@giulianomor', NULL);
-INSERT INTO public.professional_details VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', '{personal_trainer,nutritionist,performance_coach}', '', '{"raw_text": ""}', 350.50, NULL, true, '2026-01-03 01:59:36.218778+00', '2026-01-03 17:06:49.245481+00', '', '', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/cover-1767411719657.jpg?t=1767411720357');
+INSERT INTO public.professional_details VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', '{personal_trainer,nutritionist,performance_coach}', '', '{"raw_text": ""}', 200.00, NULL, true, '2026-01-03 01:59:36.218778+00', '2026-01-04 22:05:54.526627+00', '', '', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/cover-1767411719657.jpg?t=1767411720357');
 
 
 --
--- TOC entry 4974 (class 0 OID 22388)
+-- TOC entry 5051 (class 0 OID 22388)
 -- Dependencies: 407
 -- Data for Name: professional_notifications; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7719,7 +8261,7 @@ INSERT INTO public.professional_details VALUES ('8ca7cccb-0707-4d95-8f97-2548822
 
 
 --
--- TOC entry 4981 (class 0 OID 48437)
+-- TOC entry 5058 (class 0 OID 48437)
 -- Dependencies: 414
 -- Data for Name: professional_reviews; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7728,22 +8270,26 @@ INSERT INTO public.professional_reviews VALUES ('1add4194-7de3-4074-b8fe-371bcd5
 
 
 --
--- TOC entry 4953 (class 0 OID 17451)
+-- TOC entry 5030 (class 0 OID 17451)
 -- Dependencies: 386
 -- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.profiles VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', 'betosouza615@gmail.com', 'Gilberto Souza', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826', '(17) 99919-4431', 'admin', '2025-12-12 01:35:21.55761+00', '2026-01-03 17:06:48.350707+00', 0, 1, '1979-08-04', '21643465805', NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'prof@capifit.com', NULL, NULL, NULL, 'professional', '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('bf547c35-e240-45db-bdb1-5a1fc4bc8081', 'cliente1@capifit.com', 'Vinicius Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/bf547c35-e240-45db-bdb1-5a1fc4bc8081/avatar-1764189260243.jpg?t=1764189261462', '(17) 3236-6250', 'client', '2025-11-26 20:31:24.782035+00', '2025-12-25 19:00:44.226688+00', 2785, 5, '2006-12-15', '287.025.358-31', 'Giuliano Moretti Santos Garcia', 'Amanda Garcia', NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('d4bf3f19-fede-4f47-b084-2d2406a7dad0', 'giulianomsg@gmail.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/d4bf3f19-fede-4f47-b084-2d2406a7dad0/avatar-1767413514738.jpg?t=1767413516368', '(17) 98803-1873', 'client', '2025-12-23 15:08:41.612718+00', '2026-01-03 20:50:08.729539+00', 0, 1, '1979-08-04', '28702535831', 'José Garcia dos Santos', 'Maria Ivone Santos Garcia', NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('f2bb6acc-835a-414c-8856-836415b23896', 'profissional@capifit.com', 'Giuliano Moretti Santos Garcia', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/f2bb6acc-835a-414c-8856-836415b23896/avatar-1763839953050.jpg', '(17) 98803-1873', 'professional', '2025-11-16 22:09:35.743201+00', '2025-12-26 18:02:12.660421+00', 0, 1, '1979-08-04', '287.025.358-31', 'José Garcia dos Santos', 'Maria Ivone Santos Garcia', NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('c7db0656-d6ed-41f7-a1f3-b59cfc0ff2b4', 'admin@capifit.com', 'Administrador', NULL, NULL, 'admin', '2025-11-16 22:10:09.626227+00', '2025-12-12 03:34:57.181409+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('8a8f1b6c-6659-4384-b8eb-e87b06280981', 'contato@capifit.app.br', NULL, NULL, NULL, 'client', '2025-12-12 17:34:34.139357+00', '2025-12-12 17:34:34.139357+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'student_free@capifit.com', NULL, NULL, NULL, 'client', '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'student_expired@capifit.com', NULL, NULL, NULL, 'client', '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.profiles VALUES ('7171a1a8-524b-4cee-9040-886c74afe93f', 'cliente@capifit.com', NULL, NULL, NULL, 'client', '2025-11-26 19:46:42.693554+00', '2025-11-26 19:46:42.693554+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'student_active@capifit.com', NULL, NULL, NULL, 'client', '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00', 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.profiles VALUES ('8ca7cccb-0707-4d95-8f97-25488223b8fd', 'betosouza615@gmail.com', 'Gilberto Souza', 'https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826', '(17) 99919-4431', 'admin', '2025-12-12 01:35:21.55761+00', '2026-01-04 22:05:53.63156+00', 0, 1, '1979-08-04', '21643465805', NULL, NULL, NULL, NULL, '{}', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
--- TOC entry 4969 (class 0 OID 17760)
+-- TOC entry 5046 (class 0 OID 17760)
 -- Dependencies: 402
 -- Data for Name: progress_photos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7752,7 +8298,7 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4964 (class 0 OID 17650)
+-- TOC entry 5041 (class 0 OID 17650)
 -- Dependencies: 397
 -- Data for Name: recipe_ingredients; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7760,7 +8306,7 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4963 (class 0 OID 17634)
+-- TOC entry 5040 (class 0 OID 17634)
 -- Dependencies: 396
 -- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7768,7 +8314,7 @@ INSERT INTO public.progress_photos VALUES ('fdef4612-c137-4d22-87ac-2f4db0983e56
 
 
 --
--- TOC entry 4980 (class 0 OID 45802)
+-- TOC entry 5057 (class 0 OID 45802)
 -- Dependencies: 413
 -- Data for Name: scheduled_workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7777,7 +8323,21 @@ INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5
 
 
 --
--- TOC entry 4990 (class 0 OID 73586)
+-- TOC entry 5070 (class 0 OID 75923)
+-- Dependencies: 428
+-- Data for Name: subscription_plans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.subscription_plans VALUES ('11111111-1111-1111-1111-111111111111', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Mensal', 99.90, 1, true, '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00');
+INSERT INTO public.subscription_plans VALUES ('22222222-2222-2222-2222-222222222222', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Trimestral', 269.90, 3, true, '2026-01-04 21:09:41.39142+00', '2026-01-04 21:09:41.39142+00');
+INSERT INTO public.subscription_plans VALUES ('bfba6963-5f95-42c9-9292-3c572d4d870c', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'Mensal', 200, 1, true, '2026-01-04 21:38:23.222846+00', '2026-01-04 22:03:38.233+00');
+INSERT INTO public.subscription_plans VALUES ('3865c4af-b7a5-49f9-90d9-18f76b7c59f1', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'Trimestral', 540, 3, true, '2026-01-04 21:38:23.222846+00', '2026-01-04 22:03:38.233+00');
+INSERT INTO public.subscription_plans VALUES ('374302c0-5ae2-478f-9760-4eb8408028ae', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'Semestral', 960, 6, true, '2026-01-04 21:38:23.222846+00', '2026-01-04 22:03:38.233+00');
+INSERT INTO public.subscription_plans VALUES ('34ce2941-ced1-417f-9bda-666abde0e312', '8ca7cccb-0707-4d95-8f97-25488223b8fd', 'Anual', 1560, 12, true, '2026-01-04 21:38:23.222846+00', '2026-01-04 22:03:38.233+00');
+
+
+--
+-- TOC entry 5067 (class 0 OID 73586)
 -- Dependencies: 423
 -- Data for Name: taco; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7785,7 +8345,7 @@ INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5
 
 
 --
--- TOC entry 4979 (class 0 OID 29871)
+-- TOC entry 5056 (class 0 OID 29871)
 -- Dependencies: 412
 -- Data for Name: user_achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7793,7 +8353,7 @@ INSERT INTO public.scheduled_workouts VALUES ('da2c237d-f524-46d0-a911-5132508e5
 
 
 --
--- TOC entry 4984 (class 0 OID 66837)
+-- TOC entry 5061 (class 0 OID 66837)
 -- Dependencies: 417
 -- Data for Name: user_favorite_foods; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7802,7 +8362,7 @@ INSERT INTO public.user_favorite_foods VALUES ('263c1217-cda7-4539-8e19-f90b9ee2
 
 
 --
--- TOC entry 4983 (class 0 OID 65577)
+-- TOC entry 5060 (class 0 OID 65577)
 -- Dependencies: 416
 -- Data for Name: user_goals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7812,7 +8372,7 @@ INSERT INTO public.user_goals VALUES ('c0753b8f-0b9b-4e7b-99f5-44c9e768df34', 'd
 
 
 --
--- TOC entry 4977 (class 0 OID 28702)
+-- TOC entry 5054 (class 0 OID 28702)
 -- Dependencies: 410
 -- Data for Name: workout_execution_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7832,7 +8392,7 @@ INSERT INTO public.workout_execution_logs VALUES ('5cd35725-b56c-490a-b190-5a450
 
 
 --
--- TOC entry 4959 (class 0 OID 17553)
+-- TOC entry 5036 (class 0 OID 17553)
 -- Dependencies: 392
 -- Data for Name: workout_exercises; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7842,7 +8402,7 @@ INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c15
 
 
 --
--- TOC entry 4961 (class 0 OID 17598)
+-- TOC entry 5038 (class 0 OID 17598)
 -- Dependencies: 394
 -- Data for Name: workout_logs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7850,7 +8410,7 @@ INSERT INTO public.workout_exercises VALUES ('9d9d40fd-8b25-46d6-8d5a-4cd0937c15
 
 
 --
--- TOC entry 4973 (class 0 OID 20118)
+-- TOC entry 5050 (class 0 OID 20118)
 -- Dependencies: 406
 -- Data for Name: workout_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7868,7 +8428,7 @@ INSERT INTO public.workout_sessions VALUES ('c1492d07-94ee-413e-832f-897785dabdf
 
 
 --
--- TOC entry 4958 (class 0 OID 17536)
+-- TOC entry 5035 (class 0 OID 17536)
 -- Dependencies: 391
 -- Data for Name: workouts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -7877,7 +8437,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4985 (class 0 OID 69091)
+-- TOC entry 5062 (class 0 OID 69091)
 -- Dependencies: 418
 -- Data for Name: messages_2026_01_01; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7885,7 +8445,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4986 (class 0 OID 70206)
+-- TOC entry 5063 (class 0 OID 70206)
 -- Dependencies: 419
 -- Data for Name: messages_2026_01_02; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7893,7 +8453,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4987 (class 0 OID 70218)
+-- TOC entry 5064 (class 0 OID 70218)
 -- Dependencies: 420
 -- Data for Name: messages_2026_01_03; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7901,7 +8461,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4988 (class 0 OID 71346)
+-- TOC entry 5065 (class 0 OID 71346)
 -- Dependencies: 421
 -- Data for Name: messages_2026_01_04; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7909,7 +8469,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4989 (class 0 OID 73565)
+-- TOC entry 5066 (class 0 OID 73565)
 -- Dependencies: 422
 -- Data for Name: messages_2026_01_05; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7917,7 +8477,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4991 (class 0 OID 73614)
+-- TOC entry 5068 (class 0 OID 73614)
 -- Dependencies: 425
 -- Data for Name: messages_2026_01_06; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7925,7 +8485,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4992 (class 0 OID 74748)
+-- TOC entry 5069 (class 0 OID 74748)
 -- Dependencies: 427
 -- Data for Name: messages_2026_01_07; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -7933,7 +8493,7 @@ INSERT INTO public.workouts VALUES ('03e89f3e-8752-4333-996b-a00717743216', 'Tre
 
 
 --
--- TOC entry 4949 (class 0 OID 17225)
+-- TOC entry 5026 (class 0 OID 17225)
 -- Dependencies: 378
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
@@ -8006,17 +8566,16 @@ INSERT INTO realtime.schema_migrations VALUES (20251103001201, '2025-11-16 15:24
 
 
 --
--- TOC entry 4952 (class 0 OID 17289)
+-- TOC entry 5029 (class 0 OID 17289)
 -- Dependencies: 382
 -- Data for Name: subscription; Type: TABLE DATA; Schema: realtime; Owner: supabase_admin
 --
 
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (3416, '79e3e0c8-e9a9-11f0-a9f1-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1767555624}], "aud": "authenticated", "exp": 1767559224, "iat": 1767555624, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "authenticated", "email": "betosouza615@gmail.com", "phone": "", "session_id": "7e42fa18-0687-49b7-9724-08899040fbe7", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "admin", "email": "betosouza615@gmail.com", "phone": "(17) 99919-4431", "full_name": "Gilberto Souza", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826", "email_verified": true, "phone_verified": false}}', DEFAULT, '2026-01-04 20:10:55.260371');
-INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (3418, '8de27d3e-e9ac-11f0-b164-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1767408660}], "aud": "authenticated", "exp": 1767561540, "iat": 1767557940, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "d4bf3f19-fede-4f47-b084-2d2406a7dad0", "role": "authenticated", "email": "giulianomsg@gmail.com", "phone": "", "session_id": "d3fb3e20-19fa-45b9-990b-3544b20d5632", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"sub": "d4bf3f19-fede-4f47-b084-2d2406a7dad0", "role": "client", "email": "giulianomsg@gmail.com", "phone": "(17) 98803-1873", "full_name": "Giuliano Moretti Santos Garcia", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/d4bf3f19-fede-4f47-b084-2d2406a7dad0/avatar-1767413514738.jpg?t=1767413516368", "email_verified": true, "phone_verified": false}}', DEFAULT, '2026-01-04 20:32:57.295771');
+INSERT INTO realtime.subscription OVERRIDING SYSTEM VALUE VALUES (3482, '8a3d9836-e9e2-11f0-ad12-0a58a9feac02', 'public.chat_messages', '{}', '{"aal": "aal1", "amr": [{"method": "password", "timestamp": 1767581926}], "aud": "authenticated", "exp": 1767585526, "iat": 1767581926, "iss": "https://mhjvgxukttoalvwntmyp.supabase.co/auth/v1", "sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "authenticated", "email": "betosouza615@gmail.com", "phone": "", "session_id": "cbf2a569-7978-4bde-a50c-d5018e05faa0", "app_metadata": {"provider": "email", "providers": ["email"]}, "is_anonymous": false, "user_metadata": {"sub": "8ca7cccb-0707-4d95-8f97-25488223b8fd", "role": "admin", "email": "betosouza615@gmail.com", "phone": "(17) 99919-4431", "full_name": "Gilberto Souza", "avatar_url": "https://mhjvgxukttoalvwntmyp.supabase.co/storage/v1/object/public/avatars/8ca7cccb-0707-4d95-8f97-25488223b8fd/avatar-1767403173142.jpg?t=1767403174826", "email_verified": true, "phone_verified": false}}', DEFAULT, '2026-01-05 02:59:24.0065');
 
 
 --
--- TOC entry 4929 (class 0 OID 16546)
+-- TOC entry 5006 (class 0 OID 16546)
 -- Dependencies: 355
 -- Data for Name: buckets; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8027,7 +8586,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4950 (class 0 OID 17246)
+-- TOC entry 5027 (class 0 OID 17246)
 -- Dependencies: 379
 -- Data for Name: buckets_analytics; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8035,7 +8594,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4975 (class 0 OID 22419)
+-- TOC entry 5052 (class 0 OID 22419)
 -- Dependencies: 408
 -- Data for Name: buckets_vectors; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8043,7 +8602,7 @@ INSERT INTO storage.buckets VALUES ('progress-photos', 'progress-photos', NULL, 
 
 
 --
--- TOC entry 4931 (class 0 OID 16588)
+-- TOC entry 5008 (class 0 OID 16588)
 -- Dependencies: 357
 -- Data for Name: migrations; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8101,7 +8660,7 @@ INSERT INTO storage.migrations VALUES (49, 'buckets-objects-grants-postgres', '0
 
 
 --
--- TOC entry 4930 (class 0 OID 16561)
+-- TOC entry 5007 (class 0 OID 16561)
 -- Dependencies: 356
 -- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8123,7 +8682,7 @@ INSERT INTO storage.objects VALUES ('2a48d4fb-e3cd-447a-9408-f19c0e8a73c8', 'ava
 
 
 --
--- TOC entry 4948 (class 0 OID 17197)
+-- TOC entry 5025 (class 0 OID 17197)
 -- Dependencies: 377
 -- Data for Name: prefixes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8138,7 +8697,7 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'd4bf3f19-fede-4f47-b084-2d2406a
 
 
 --
--- TOC entry 4946 (class 0 OID 17144)
+-- TOC entry 5023 (class 0 OID 17144)
 -- Dependencies: 375
 -- Data for Name: s3_multipart_uploads; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8146,7 +8705,7 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'd4bf3f19-fede-4f47-b084-2d2406a
 
 
 --
--- TOC entry 4947 (class 0 OID 17158)
+-- TOC entry 5024 (class 0 OID 17158)
 -- Dependencies: 376
 -- Data for Name: s3_multipart_uploads_parts; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8154,7 +8713,7 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'd4bf3f19-fede-4f47-b084-2d2406a
 
 
 --
--- TOC entry 4976 (class 0 OID 22429)
+-- TOC entry 5053 (class 0 OID 22429)
 -- Dependencies: 409
 -- Data for Name: vector_indexes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
@@ -8162,7 +8721,7 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'd4bf3f19-fede-4f47-b084-2d2406a
 
 
 --
--- TOC entry 3906 (class 0 OID 16658)
+-- TOC entry 3937 (class 0 OID 16658)
 -- Dependencies: 358
 -- Data for Name: secrets; Type: TABLE DATA; Schema: vault; Owner: supabase_admin
 --
@@ -8170,25 +8729,25 @@ INSERT INTO storage.prefixes VALUES ('avatars', 'd4bf3f19-fede-4f47-b084-2d2406a
 
 
 --
--- TOC entry 5261 (class 0 OID 0)
+-- TOC entry 5352 (class 0 OID 0)
 -- Dependencies: 350
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 1369, true);
+SELECT pg_catalog.setval('auth.refresh_tokens_id_seq', 1386, true);
 
 
 --
--- TOC entry 5262 (class 0 OID 0)
+-- TOC entry 5353 (class 0 OID 0)
 -- Dependencies: 381
 -- Name: subscription_id_seq; Type: SEQUENCE SET; Schema: realtime; Owner: supabase_admin
 --
 
-SELECT pg_catalog.setval('realtime.subscription_id_seq', 3418, true);
+SELECT pg_catalog.setval('realtime.subscription_id_seq', 3482, true);
 
 
 --
--- TOC entry 4247 (class 2606 OID 16829)
+-- TOC entry 4299 (class 2606 OID 16829)
 -- Name: mfa_amr_claims amr_id_pk; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8197,7 +8756,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4201 (class 2606 OID 16531)
+-- TOC entry 4253 (class 2606 OID 16531)
 -- Name: audit_log_entries audit_log_entries_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8206,7 +8765,7 @@ ALTER TABLE ONLY auth.audit_log_entries
 
 
 --
--- TOC entry 4270 (class 2606 OID 16935)
+-- TOC entry 4322 (class 2606 OID 16935)
 -- Name: flow_state flow_state_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8215,7 +8774,7 @@ ALTER TABLE ONLY auth.flow_state
 
 
 --
--- TOC entry 4225 (class 2606 OID 16953)
+-- TOC entry 4277 (class 2606 OID 16953)
 -- Name: identities identities_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8224,7 +8783,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4227 (class 2606 OID 16963)
+-- TOC entry 4279 (class 2606 OID 16963)
 -- Name: identities identities_provider_id_provider_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8233,7 +8792,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4199 (class 2606 OID 16524)
+-- TOC entry 4251 (class 2606 OID 16524)
 -- Name: instances instances_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8242,7 +8801,7 @@ ALTER TABLE ONLY auth.instances
 
 
 --
--- TOC entry 4249 (class 2606 OID 16822)
+-- TOC entry 4301 (class 2606 OID 16822)
 -- Name: mfa_amr_claims mfa_amr_claims_session_id_authentication_method_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8251,7 +8810,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4245 (class 2606 OID 16810)
+-- TOC entry 4297 (class 2606 OID 16810)
 -- Name: mfa_challenges mfa_challenges_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8260,7 +8819,7 @@ ALTER TABLE ONLY auth.mfa_challenges
 
 
 --
--- TOC entry 4237 (class 2606 OID 17003)
+-- TOC entry 4289 (class 2606 OID 17003)
 -- Name: mfa_factors mfa_factors_last_challenged_at_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8269,7 +8828,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4239 (class 2606 OID 16797)
+-- TOC entry 4291 (class 2606 OID 16797)
 -- Name: mfa_factors mfa_factors_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8278,7 +8837,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4283 (class 2606 OID 17062)
+-- TOC entry 4335 (class 2606 OID 17062)
 -- Name: oauth_authorizations oauth_authorizations_authorization_code_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8287,7 +8846,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4285 (class 2606 OID 17060)
+-- TOC entry 4337 (class 2606 OID 17060)
 -- Name: oauth_authorizations oauth_authorizations_authorization_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8296,7 +8855,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4287 (class 2606 OID 17058)
+-- TOC entry 4339 (class 2606 OID 17058)
 -- Name: oauth_authorizations oauth_authorizations_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8305,7 +8864,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4422 (class 2606 OID 49849)
+-- TOC entry 4474 (class 2606 OID 49849)
 -- Name: oauth_client_states oauth_client_states_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8314,7 +8873,7 @@ ALTER TABLE ONLY auth.oauth_client_states
 
 
 --
--- TOC entry 4280 (class 2606 OID 17022)
+-- TOC entry 4332 (class 2606 OID 17022)
 -- Name: oauth_clients oauth_clients_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8323,7 +8882,7 @@ ALTER TABLE ONLY auth.oauth_clients
 
 
 --
--- TOC entry 4291 (class 2606 OID 17084)
+-- TOC entry 4343 (class 2606 OID 17084)
 -- Name: oauth_consents oauth_consents_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8332,7 +8891,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4293 (class 2606 OID 17086)
+-- TOC entry 4345 (class 2606 OID 17086)
 -- Name: oauth_consents oauth_consents_user_client_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8341,7 +8900,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4274 (class 2606 OID 16988)
+-- TOC entry 4326 (class 2606 OID 16988)
 -- Name: one_time_tokens one_time_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8350,7 +8909,7 @@ ALTER TABLE ONLY auth.one_time_tokens
 
 
 --
--- TOC entry 4193 (class 2606 OID 16514)
+-- TOC entry 4245 (class 2606 OID 16514)
 -- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8359,7 +8918,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4196 (class 2606 OID 16740)
+-- TOC entry 4248 (class 2606 OID 16740)
 -- Name: refresh_tokens refresh_tokens_token_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8368,7 +8927,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4259 (class 2606 OID 16869)
+-- TOC entry 4311 (class 2606 OID 16869)
 -- Name: saml_providers saml_providers_entity_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8377,7 +8936,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4261 (class 2606 OID 16867)
+-- TOC entry 4313 (class 2606 OID 16867)
 -- Name: saml_providers saml_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8386,7 +8945,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4266 (class 2606 OID 16883)
+-- TOC entry 4318 (class 2606 OID 16883)
 -- Name: saml_relay_states saml_relay_states_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8395,7 +8954,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4204 (class 2606 OID 16537)
+-- TOC entry 4256 (class 2606 OID 16537)
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8404,7 +8963,7 @@ ALTER TABLE ONLY auth.schema_migrations
 
 
 --
--- TOC entry 4232 (class 2606 OID 16761)
+-- TOC entry 4284 (class 2606 OID 16761)
 -- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8413,7 +8972,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4256 (class 2606 OID 16850)
+-- TOC entry 4308 (class 2606 OID 16850)
 -- Name: sso_domains sso_domains_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8422,7 +8981,7 @@ ALTER TABLE ONLY auth.sso_domains
 
 
 --
--- TOC entry 4251 (class 2606 OID 16841)
+-- TOC entry 4303 (class 2606 OID 16841)
 -- Name: sso_providers sso_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8431,7 +8990,7 @@ ALTER TABLE ONLY auth.sso_providers
 
 
 --
--- TOC entry 4186 (class 2606 OID 16923)
+-- TOC entry 4238 (class 2606 OID 16923)
 -- Name: users users_phone_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8440,7 +8999,7 @@ ALTER TABLE ONLY auth.users
 
 
 --
--- TOC entry 4188 (class 2606 OID 16501)
+-- TOC entry 4240 (class 2606 OID 16501)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8449,7 +9008,7 @@ ALTER TABLE ONLY auth.users
 
 
 --
--- TOC entry 4401 (class 2606 OID 29870)
+-- TOC entry 4453 (class 2606 OID 29870)
 -- Name: achievements achievements_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8458,7 +9017,7 @@ ALTER TABLE ONLY public.achievements
 
 
 --
--- TOC entry 4403 (class 2606 OID 29868)
+-- TOC entry 4455 (class 2606 OID 29868)
 -- Name: achievements achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8467,7 +9026,7 @@ ALTER TABLE ONLY public.achievements
 
 
 --
--- TOC entry 4375 (class 2606 OID 17802)
+-- TOC entry 4427 (class 2606 OID 17802)
 -- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8476,7 +9035,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4370 (class 2606 OID 17784)
+-- TOC entry 4422 (class 2606 OID 17784)
 -- Name: biometric_data biometric_data_client_id_date_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8485,7 +9044,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4372 (class 2606 OID 17782)
+-- TOC entry 4424 (class 2606 OID 17782)
 -- Name: biometric_data biometric_data_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8494,7 +9053,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4379 (class 2606 OID 17824)
+-- TOC entry 4431 (class 2606 OID 17824)
 -- Name: chat_messages chat_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8503,7 +9062,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4321 (class 2606 OID 17490)
+-- TOC entry 4373 (class 2606 OID 17490)
 -- Name: client_details client_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8512,7 +9071,7 @@ ALTER TABLE ONLY public.client_details
 
 
 --
--- TOC entry 4360 (class 2606 OID 17719)
+-- TOC entry 4412 (class 2606 OID 17719)
 -- Name: client_meal_plans client_meal_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8521,7 +9080,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4323 (class 2606 OID 17508)
+-- TOC entry 4375 (class 2606 OID 76010)
 -- Name: client_professionals client_professionals_client_id_professional_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8530,7 +9089,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4325 (class 2606 OID 17506)
+-- TOC entry 4377 (class 2606 OID 17506)
 -- Name: client_professionals client_professionals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8539,7 +9098,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4337 (class 2606 OID 17582)
+-- TOC entry 4389 (class 2606 OID 17582)
 -- Name: client_workouts client_workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8548,7 +9107,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4329 (class 2606 OID 17530)
+-- TOC entry 4381 (class 2606 OID 17530)
 -- Name: exercises_library exercises_library_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8557,7 +9116,16 @@ ALTER TABLE ONLY public.exercises_library
 
 
 --
--- TOC entry 4343 (class 2606 OID 65713)
+-- TOC entry 4509 (class 2606 OID 75956)
+-- Name: financial_transactions financial_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.financial_transactions
+    ADD CONSTRAINT financial_transactions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4395 (class 2606 OID 65713)
 -- Name: foods_library foods_library_external_fatsecret_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8566,7 +9134,7 @@ ALTER TABLE ONLY public.foods_library
 
 
 --
--- TOC entry 4345 (class 2606 OID 17628)
+-- TOC entry 4397 (class 2606 OID 17628)
 -- Name: foods_library foods_library_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8575,7 +9143,7 @@ ALTER TABLE ONLY public.foods_library
 
 
 --
--- TOC entry 4365 (class 2606 OID 17744)
+-- TOC entry 4417 (class 2606 OID 17744)
 -- Name: meal_logs meal_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8584,7 +9152,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4358 (class 2606 OID 17692)
+-- TOC entry 4410 (class 2606 OID 17692)
 -- Name: meal_plan_items meal_plan_items_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8593,7 +9161,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4355 (class 2606 OID 17678)
+-- TOC entry 4407 (class 2606 OID 17678)
 -- Name: meal_plans meal_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8602,7 +9170,34 @@ ALTER TABLE ONLY public.meal_plans
 
 
 --
--- TOC entry 4319 (class 2606 OID 17476)
+-- TOC entry 4513 (class 2606 OID 76052)
+-- Name: payment_gateway_configs payment_gateway_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_gateway_configs
+    ADD CONSTRAINT payment_gateway_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4515 (class 2606 OID 76054)
+-- Name: payment_gateway_configs payment_gateway_configs_provider_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_gateway_configs
+    ADD CONSTRAINT payment_gateway_configs_provider_key UNIQUE (provider);
+
+
+--
+-- TOC entry 4511 (class 2606 OID 75993)
+-- Name: platform_settings platform_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.platform_settings
+    ADD CONSTRAINT platform_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4371 (class 2606 OID 17476)
 -- Name: professional_details professional_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8611,7 +9206,7 @@ ALTER TABLE ONLY public.professional_details
 
 
 --
--- TOC entry 4392 (class 2606 OID 22397)
+-- TOC entry 4444 (class 2606 OID 22397)
 -- Name: professional_notifications professional_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8620,7 +9215,7 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4417 (class 2606 OID 48450)
+-- TOC entry 4469 (class 2606 OID 48450)
 -- Name: professional_reviews professional_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8629,7 +9224,7 @@ ALTER TABLE ONLY public.professional_reviews
 
 
 --
--- TOC entry 4419 (class 2606 OID 48452)
+-- TOC entry 4471 (class 2606 OID 48452)
 -- Name: professional_reviews professional_reviews_professional_id_client_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8638,7 +9233,7 @@ ALTER TABLE ONLY public.professional_reviews
 
 
 --
--- TOC entry 4317 (class 2606 OID 17460)
+-- TOC entry 4369 (class 2606 OID 17460)
 -- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8647,7 +9242,7 @@ ALTER TABLE ONLY public.profiles
 
 
 --
--- TOC entry 4368 (class 2606 OID 17768)
+-- TOC entry 4420 (class 2606 OID 17768)
 -- Name: progress_photos progress_photos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8656,7 +9251,7 @@ ALTER TABLE ONLY public.progress_photos
 
 
 --
--- TOC entry 4352 (class 2606 OID 17657)
+-- TOC entry 4404 (class 2606 OID 17657)
 -- Name: recipe_ingredients recipe_ingredients_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8665,7 +9260,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4350 (class 2606 OID 17644)
+-- TOC entry 4402 (class 2606 OID 17644)
 -- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8674,7 +9269,7 @@ ALTER TABLE ONLY public.recipes
 
 
 --
--- TOC entry 4414 (class 2606 OID 45813)
+-- TOC entry 4466 (class 2606 OID 45813)
 -- Name: scheduled_workouts scheduled_workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8683,7 +9278,16 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4447 (class 2606 OID 73593)
+-- TOC entry 4507 (class 2606 OID 75933)
+-- Name: subscription_plans subscription_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subscription_plans
+    ADD CONSTRAINT subscription_plans_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4499 (class 2606 OID 73593)
 -- Name: taco taco_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8692,7 +9296,7 @@ ALTER TABLE ONLY public.taco
 
 
 --
--- TOC entry 4405 (class 2606 OID 29877)
+-- TOC entry 4457 (class 2606 OID 29877)
 -- Name: user_achievements user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8701,7 +9305,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4407 (class 2606 OID 29879)
+-- TOC entry 4459 (class 2606 OID 29879)
 -- Name: user_achievements user_achievements_user_id_achievement_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8710,7 +9314,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4428 (class 2606 OID 66843)
+-- TOC entry 4480 (class 2606 OID 66843)
 -- Name: user_favorite_foods user_favorite_foods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8719,7 +9323,7 @@ ALTER TABLE ONLY public.user_favorite_foods
 
 
 --
--- TOC entry 4430 (class 2606 OID 66845)
+-- TOC entry 4482 (class 2606 OID 66845)
 -- Name: user_favorite_foods user_favorite_foods_user_id_food_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8728,7 +9332,7 @@ ALTER TABLE ONLY public.user_favorite_foods
 
 
 --
--- TOC entry 4424 (class 2606 OID 65588)
+-- TOC entry 4476 (class 2606 OID 65588)
 -- Name: user_goals user_goals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8737,7 +9341,7 @@ ALTER TABLE ONLY public.user_goals
 
 
 --
--- TOC entry 4399 (class 2606 OID 28710)
+-- TOC entry 4451 (class 2606 OID 28710)
 -- Name: workout_execution_logs workout_execution_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8746,7 +9350,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4335 (class 2606 OID 17560)
+-- TOC entry 4387 (class 2606 OID 17560)
 -- Name: workout_exercises workout_exercises_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8755,7 +9359,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4341 (class 2606 OID 17607)
+-- TOC entry 4393 (class 2606 OID 17607)
 -- Name: workout_logs workout_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8764,7 +9368,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4386 (class 2606 OID 20130)
+-- TOC entry 4438 (class 2606 OID 20130)
 -- Name: workout_sessions workout_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8773,7 +9377,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4332 (class 2606 OID 17547)
+-- TOC entry 4384 (class 2606 OID 17547)
 -- Name: workouts workouts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8782,7 +9386,7 @@ ALTER TABLE ONLY public.workouts
 
 
 --
--- TOC entry 4314 (class 2606 OID 17448)
+-- TOC entry 4366 (class 2606 OID 17448)
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -8791,7 +9395,7 @@ ALTER TABLE ONLY realtime.messages
 
 
 --
--- TOC entry 4433 (class 2606 OID 69099)
+-- TOC entry 4485 (class 2606 OID 69099)
 -- Name: messages_2026_01_01 messages_2026_01_01_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8800,7 +9404,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_01
 
 
 --
--- TOC entry 4436 (class 2606 OID 70214)
+-- TOC entry 4488 (class 2606 OID 70214)
 -- Name: messages_2026_01_02 messages_2026_01_02_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8809,7 +9413,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_02
 
 
 --
--- TOC entry 4439 (class 2606 OID 70226)
+-- TOC entry 4491 (class 2606 OID 70226)
 -- Name: messages_2026_01_03 messages_2026_01_03_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8818,7 +9422,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_03
 
 
 --
--- TOC entry 4442 (class 2606 OID 71354)
+-- TOC entry 4494 (class 2606 OID 71354)
 -- Name: messages_2026_01_04 messages_2026_01_04_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8827,7 +9431,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_04
 
 
 --
--- TOC entry 4445 (class 2606 OID 73573)
+-- TOC entry 4497 (class 2606 OID 73573)
 -- Name: messages_2026_01_05 messages_2026_01_05_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8836,7 +9440,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_05
 
 
 --
--- TOC entry 4450 (class 2606 OID 73622)
+-- TOC entry 4502 (class 2606 OID 73622)
 -- Name: messages_2026_01_06 messages_2026_01_06_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8845,7 +9449,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_06
 
 
 --
--- TOC entry 4453 (class 2606 OID 74756)
+-- TOC entry 4505 (class 2606 OID 74756)
 -- Name: messages_2026_01_07 messages_2026_01_07_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8854,7 +9458,7 @@ ALTER TABLE ONLY realtime.messages_2026_01_07
 
 
 --
--- TOC entry 4310 (class 2606 OID 17297)
+-- TOC entry 4362 (class 2606 OID 17297)
 -- Name: subscription pk_subscription; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8863,7 +9467,7 @@ ALTER TABLE ONLY realtime.subscription
 
 
 --
--- TOC entry 4304 (class 2606 OID 17229)
+-- TOC entry 4356 (class 2606 OID 17229)
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
 --
 
@@ -8872,7 +9476,7 @@ ALTER TABLE ONLY realtime.schema_migrations
 
 
 --
--- TOC entry 4306 (class 2606 OID 22452)
+-- TOC entry 4358 (class 2606 OID 22452)
 -- Name: buckets_analytics buckets_analytics_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8881,7 +9485,7 @@ ALTER TABLE ONLY storage.buckets_analytics
 
 
 --
--- TOC entry 4207 (class 2606 OID 16554)
+-- TOC entry 4259 (class 2606 OID 16554)
 -- Name: buckets buckets_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8890,7 +9494,7 @@ ALTER TABLE ONLY storage.buckets
 
 
 --
--- TOC entry 4394 (class 2606 OID 22428)
+-- TOC entry 4446 (class 2606 OID 22428)
 -- Name: buckets_vectors buckets_vectors_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8899,7 +9503,7 @@ ALTER TABLE ONLY storage.buckets_vectors
 
 
 --
--- TOC entry 4217 (class 2606 OID 16595)
+-- TOC entry 4269 (class 2606 OID 16595)
 -- Name: migrations migrations_name_key; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8908,7 +9512,7 @@ ALTER TABLE ONLY storage.migrations
 
 
 --
--- TOC entry 4219 (class 2606 OID 16593)
+-- TOC entry 4271 (class 2606 OID 16593)
 -- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8917,7 +9521,7 @@ ALTER TABLE ONLY storage.migrations
 
 
 --
--- TOC entry 4215 (class 2606 OID 16571)
+-- TOC entry 4267 (class 2606 OID 16571)
 -- Name: objects objects_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8926,7 +9530,7 @@ ALTER TABLE ONLY storage.objects
 
 
 --
--- TOC entry 4302 (class 2606 OID 17206)
+-- TOC entry 4354 (class 2606 OID 17206)
 -- Name: prefixes prefixes_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8935,7 +9539,7 @@ ALTER TABLE ONLY storage.prefixes
 
 
 --
--- TOC entry 4299 (class 2606 OID 17167)
+-- TOC entry 4351 (class 2606 OID 17167)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8944,7 +9548,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4297 (class 2606 OID 17152)
+-- TOC entry 4349 (class 2606 OID 17152)
 -- Name: s3_multipart_uploads s3_multipart_uploads_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8953,7 +9557,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads
 
 
 --
--- TOC entry 4397 (class 2606 OID 22438)
+-- TOC entry 4449 (class 2606 OID 22438)
 -- Name: vector_indexes vector_indexes_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -8962,7 +9566,7 @@ ALTER TABLE ONLY storage.vector_indexes
 
 
 --
--- TOC entry 4202 (class 1259 OID 16532)
+-- TOC entry 4254 (class 1259 OID 16532)
 -- Name: audit_logs_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8970,7 +9574,7 @@ CREATE INDEX audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (i
 
 
 --
--- TOC entry 4176 (class 1259 OID 16750)
+-- TOC entry 4228 (class 1259 OID 16750)
 -- Name: confirmation_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8978,7 +9582,7 @@ CREATE UNIQUE INDEX confirmation_token_idx ON auth.users USING btree (confirmati
 
 
 --
--- TOC entry 4177 (class 1259 OID 16752)
+-- TOC entry 4229 (class 1259 OID 16752)
 -- Name: email_change_token_current_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8986,7 +9590,7 @@ CREATE UNIQUE INDEX email_change_token_current_idx ON auth.users USING btree (em
 
 
 --
--- TOC entry 4178 (class 1259 OID 16753)
+-- TOC entry 4230 (class 1259 OID 16753)
 -- Name: email_change_token_new_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -8994,7 +9598,7 @@ CREATE UNIQUE INDEX email_change_token_new_idx ON auth.users USING btree (email_
 
 
 --
--- TOC entry 4235 (class 1259 OID 16831)
+-- TOC entry 4287 (class 1259 OID 16831)
 -- Name: factor_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9002,7 +9606,7 @@ CREATE INDEX factor_id_created_at_idx ON auth.mfa_factors USING btree (user_id, 
 
 
 --
--- TOC entry 4268 (class 1259 OID 16939)
+-- TOC entry 4320 (class 1259 OID 16939)
 -- Name: flow_state_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9010,7 +9614,7 @@ CREATE INDEX flow_state_created_at_idx ON auth.flow_state USING btree (created_a
 
 
 --
--- TOC entry 4223 (class 1259 OID 16919)
+-- TOC entry 4275 (class 1259 OID 16919)
 -- Name: identities_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9018,8 +9622,8 @@ CREATE INDEX identities_email_idx ON auth.identities USING btree (email text_pat
 
 
 --
--- TOC entry 5263 (class 0 OID 0)
--- Dependencies: 4223
+-- TOC entry 5354 (class 0 OID 0)
+-- Dependencies: 4275
 -- Name: INDEX identities_email_idx; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9027,7 +9631,7 @@ COMMENT ON INDEX auth.identities_email_idx IS 'Auth: Ensures indexed queries on 
 
 
 --
--- TOC entry 4228 (class 1259 OID 16747)
+-- TOC entry 4280 (class 1259 OID 16747)
 -- Name: identities_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9035,7 +9639,7 @@ CREATE INDEX identities_user_id_idx ON auth.identities USING btree (user_id);
 
 
 --
--- TOC entry 4271 (class 1259 OID 16936)
+-- TOC entry 4323 (class 1259 OID 16936)
 -- Name: idx_auth_code; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9043,7 +9647,7 @@ CREATE INDEX idx_auth_code ON auth.flow_state USING btree (auth_code);
 
 
 --
--- TOC entry 4420 (class 1259 OID 49850)
+-- TOC entry 4472 (class 1259 OID 49850)
 -- Name: idx_oauth_client_states_created_at; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9051,7 +9655,7 @@ CREATE INDEX idx_oauth_client_states_created_at ON auth.oauth_client_states USIN
 
 
 --
--- TOC entry 4272 (class 1259 OID 16937)
+-- TOC entry 4324 (class 1259 OID 16937)
 -- Name: idx_user_id_auth_method; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9059,7 +9663,7 @@ CREATE INDEX idx_user_id_auth_method ON auth.flow_state USING btree (user_id, au
 
 
 --
--- TOC entry 4243 (class 1259 OID 16942)
+-- TOC entry 4295 (class 1259 OID 16942)
 -- Name: mfa_challenge_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9067,7 +9671,7 @@ CREATE INDEX mfa_challenge_created_at_idx ON auth.mfa_challenges USING btree (cr
 
 
 --
--- TOC entry 4240 (class 1259 OID 16803)
+-- TOC entry 4292 (class 1259 OID 16803)
 -- Name: mfa_factors_user_friendly_name_unique; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9075,7 +9679,7 @@ CREATE UNIQUE INDEX mfa_factors_user_friendly_name_unique ON auth.mfa_factors US
 
 
 --
--- TOC entry 4241 (class 1259 OID 16948)
+-- TOC entry 4293 (class 1259 OID 16948)
 -- Name: mfa_factors_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9083,7 +9687,7 @@ CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id);
 
 
 --
--- TOC entry 4281 (class 1259 OID 17073)
+-- TOC entry 4333 (class 1259 OID 17073)
 -- Name: oauth_auth_pending_exp_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9091,7 +9695,7 @@ CREATE INDEX oauth_auth_pending_exp_idx ON auth.oauth_authorizations USING btree
 
 
 --
--- TOC entry 4278 (class 1259 OID 17026)
+-- TOC entry 4330 (class 1259 OID 17026)
 -- Name: oauth_clients_deleted_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9099,7 +9703,7 @@ CREATE INDEX oauth_clients_deleted_at_idx ON auth.oauth_clients USING btree (del
 
 
 --
--- TOC entry 4288 (class 1259 OID 17099)
+-- TOC entry 4340 (class 1259 OID 17099)
 -- Name: oauth_consents_active_client_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9107,7 +9711,7 @@ CREATE INDEX oauth_consents_active_client_idx ON auth.oauth_consents USING btree
 
 
 --
--- TOC entry 4289 (class 1259 OID 17097)
+-- TOC entry 4341 (class 1259 OID 17097)
 -- Name: oauth_consents_active_user_client_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9115,7 +9719,7 @@ CREATE INDEX oauth_consents_active_user_client_idx ON auth.oauth_consents USING 
 
 
 --
--- TOC entry 4294 (class 1259 OID 17098)
+-- TOC entry 4346 (class 1259 OID 17098)
 -- Name: oauth_consents_user_order_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9123,7 +9727,7 @@ CREATE INDEX oauth_consents_user_order_idx ON auth.oauth_consents USING btree (u
 
 
 --
--- TOC entry 4275 (class 1259 OID 16995)
+-- TOC entry 4327 (class 1259 OID 16995)
 -- Name: one_time_tokens_relates_to_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9131,7 +9735,7 @@ CREATE INDEX one_time_tokens_relates_to_hash_idx ON auth.one_time_tokens USING h
 
 
 --
--- TOC entry 4276 (class 1259 OID 16994)
+-- TOC entry 4328 (class 1259 OID 16994)
 -- Name: one_time_tokens_token_hash_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9139,7 +9743,7 @@ CREATE INDEX one_time_tokens_token_hash_hash_idx ON auth.one_time_tokens USING h
 
 
 --
--- TOC entry 4277 (class 1259 OID 16996)
+-- TOC entry 4329 (class 1259 OID 16996)
 -- Name: one_time_tokens_user_id_token_type_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9147,7 +9751,7 @@ CREATE UNIQUE INDEX one_time_tokens_user_id_token_type_key ON auth.one_time_toke
 
 
 --
--- TOC entry 4179 (class 1259 OID 16754)
+-- TOC entry 4231 (class 1259 OID 16754)
 -- Name: reauthentication_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9155,7 +9759,7 @@ CREATE UNIQUE INDEX reauthentication_token_idx ON auth.users USING btree (reauth
 
 
 --
--- TOC entry 4180 (class 1259 OID 16751)
+-- TOC entry 4232 (class 1259 OID 16751)
 -- Name: recovery_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9163,7 +9767,7 @@ CREATE UNIQUE INDEX recovery_token_idx ON auth.users USING btree (recovery_token
 
 
 --
--- TOC entry 4189 (class 1259 OID 16515)
+-- TOC entry 4241 (class 1259 OID 16515)
 -- Name: refresh_tokens_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9171,7 +9775,7 @@ CREATE INDEX refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (
 
 
 --
--- TOC entry 4190 (class 1259 OID 16516)
+-- TOC entry 4242 (class 1259 OID 16516)
 -- Name: refresh_tokens_instance_id_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9179,7 +9783,7 @@ CREATE INDEX refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING
 
 
 --
--- TOC entry 4191 (class 1259 OID 16746)
+-- TOC entry 4243 (class 1259 OID 16746)
 -- Name: refresh_tokens_parent_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9187,7 +9791,7 @@ CREATE INDEX refresh_tokens_parent_idx ON auth.refresh_tokens USING btree (paren
 
 
 --
--- TOC entry 4194 (class 1259 OID 16833)
+-- TOC entry 4246 (class 1259 OID 16833)
 -- Name: refresh_tokens_session_id_revoked_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9195,7 +9799,7 @@ CREATE INDEX refresh_tokens_session_id_revoked_idx ON auth.refresh_tokens USING 
 
 
 --
--- TOC entry 4197 (class 1259 OID 16938)
+-- TOC entry 4249 (class 1259 OID 16938)
 -- Name: refresh_tokens_updated_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9203,7 +9807,7 @@ CREATE INDEX refresh_tokens_updated_at_idx ON auth.refresh_tokens USING btree (u
 
 
 --
--- TOC entry 4262 (class 1259 OID 16875)
+-- TOC entry 4314 (class 1259 OID 16875)
 -- Name: saml_providers_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9211,7 +9815,7 @@ CREATE INDEX saml_providers_sso_provider_id_idx ON auth.saml_providers USING btr
 
 
 --
--- TOC entry 4263 (class 1259 OID 16940)
+-- TOC entry 4315 (class 1259 OID 16940)
 -- Name: saml_relay_states_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9219,7 +9823,7 @@ CREATE INDEX saml_relay_states_created_at_idx ON auth.saml_relay_states USING bt
 
 
 --
--- TOC entry 4264 (class 1259 OID 16890)
+-- TOC entry 4316 (class 1259 OID 16890)
 -- Name: saml_relay_states_for_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9227,7 +9831,7 @@ CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btr
 
 
 --
--- TOC entry 4267 (class 1259 OID 16889)
+-- TOC entry 4319 (class 1259 OID 16889)
 -- Name: saml_relay_states_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9235,7 +9839,7 @@ CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USI
 
 
 --
--- TOC entry 4229 (class 1259 OID 16941)
+-- TOC entry 4281 (class 1259 OID 16941)
 -- Name: sessions_not_after_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9243,7 +9847,7 @@ CREATE INDEX sessions_not_after_idx ON auth.sessions USING btree (not_after DESC
 
 
 --
--- TOC entry 4230 (class 1259 OID 17111)
+-- TOC entry 4282 (class 1259 OID 17111)
 -- Name: sessions_oauth_client_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9251,7 +9855,7 @@ CREATE INDEX sessions_oauth_client_id_idx ON auth.sessions USING btree (oauth_cl
 
 
 --
--- TOC entry 4233 (class 1259 OID 16832)
+-- TOC entry 4285 (class 1259 OID 16832)
 -- Name: sessions_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9259,7 +9863,7 @@ CREATE INDEX sessions_user_id_idx ON auth.sessions USING btree (user_id);
 
 
 --
--- TOC entry 4254 (class 1259 OID 16857)
+-- TOC entry 4306 (class 1259 OID 16857)
 -- Name: sso_domains_domain_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9267,7 +9871,7 @@ CREATE UNIQUE INDEX sso_domains_domain_idx ON auth.sso_domains USING btree (lowe
 
 
 --
--- TOC entry 4257 (class 1259 OID 16856)
+-- TOC entry 4309 (class 1259 OID 16856)
 -- Name: sso_domains_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9275,7 +9879,7 @@ CREATE INDEX sso_domains_sso_provider_id_idx ON auth.sso_domains USING btree (ss
 
 
 --
--- TOC entry 4252 (class 1259 OID 16842)
+-- TOC entry 4304 (class 1259 OID 16842)
 -- Name: sso_providers_resource_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9283,7 +9887,7 @@ CREATE UNIQUE INDEX sso_providers_resource_id_idx ON auth.sso_providers USING bt
 
 
 --
--- TOC entry 4253 (class 1259 OID 17004)
+-- TOC entry 4305 (class 1259 OID 17004)
 -- Name: sso_providers_resource_id_pattern_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9291,7 +9895,7 @@ CREATE INDEX sso_providers_resource_id_pattern_idx ON auth.sso_providers USING b
 
 
 --
--- TOC entry 4242 (class 1259 OID 17001)
+-- TOC entry 4294 (class 1259 OID 17001)
 -- Name: unique_phone_factor_per_user; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9299,7 +9903,7 @@ CREATE UNIQUE INDEX unique_phone_factor_per_user ON auth.mfa_factors USING btree
 
 
 --
--- TOC entry 4234 (class 1259 OID 16830)
+-- TOC entry 4286 (class 1259 OID 16830)
 -- Name: user_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9307,7 +9911,7 @@ CREATE INDEX user_id_created_at_idx ON auth.sessions USING btree (user_id, creat
 
 
 --
--- TOC entry 4181 (class 1259 OID 16910)
+-- TOC entry 4233 (class 1259 OID 16910)
 -- Name: users_email_partial_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9315,8 +9919,8 @@ CREATE UNIQUE INDEX users_email_partial_key ON auth.users USING btree (email) WH
 
 
 --
--- TOC entry 5264 (class 0 OID 0)
--- Dependencies: 4181
+-- TOC entry 5355 (class 0 OID 0)
+-- Dependencies: 4233
 -- Name: INDEX users_email_partial_key; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9324,7 +9928,7 @@ COMMENT ON INDEX auth.users_email_partial_key IS 'Auth: A partial unique index t
 
 
 --
--- TOC entry 4182 (class 1259 OID 16748)
+-- TOC entry 4234 (class 1259 OID 16748)
 -- Name: users_instance_id_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9332,7 +9936,7 @@ CREATE INDEX users_instance_id_email_idx ON auth.users USING btree (instance_id,
 
 
 --
--- TOC entry 4183 (class 1259 OID 16505)
+-- TOC entry 4235 (class 1259 OID 16505)
 -- Name: users_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9340,7 +9944,7 @@ CREATE INDEX users_instance_id_idx ON auth.users USING btree (instance_id);
 
 
 --
--- TOC entry 4184 (class 1259 OID 16965)
+-- TOC entry 4236 (class 1259 OID 16965)
 -- Name: users_is_anonymous_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9348,7 +9952,7 @@ CREATE INDEX users_is_anonymous_idx ON auth.users USING btree (is_anonymous);
 
 
 --
--- TOC entry 4376 (class 1259 OID 17850)
+-- TOC entry 4428 (class 1259 OID 17850)
 -- Name: idx_appointments_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9356,7 +9960,7 @@ CREATE INDEX idx_appointments_client ON public.appointments USING btree (client_
 
 
 --
--- TOC entry 4377 (class 1259 OID 17849)
+-- TOC entry 4429 (class 1259 OID 17849)
 -- Name: idx_appointments_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9364,7 +9968,7 @@ CREATE INDEX idx_appointments_professional ON public.appointments USING btree (p
 
 
 --
--- TOC entry 4373 (class 1259 OID 17848)
+-- TOC entry 4425 (class 1259 OID 17848)
 -- Name: idx_biometric_data_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9372,7 +9976,7 @@ CREATE INDEX idx_biometric_data_client ON public.biometric_data USING btree (cli
 
 
 --
--- TOC entry 4380 (class 1259 OID 17852)
+-- TOC entry 4432 (class 1259 OID 17852)
 -- Name: idx_chat_messages_receiver; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9380,7 +9984,7 @@ CREATE INDEX idx_chat_messages_receiver ON public.chat_messages USING btree (rec
 
 
 --
--- TOC entry 4381 (class 1259 OID 17851)
+-- TOC entry 4433 (class 1259 OID 17851)
 -- Name: idx_chat_messages_sender; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9388,7 +9992,7 @@ CREATE INDEX idx_chat_messages_sender ON public.chat_messages USING btree (sende
 
 
 --
--- TOC entry 4361 (class 1259 OID 17844)
+-- TOC entry 4413 (class 1259 OID 17844)
 -- Name: idx_client_meal_plans_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9396,7 +10000,7 @@ CREATE INDEX idx_client_meal_plans_client ON public.client_meal_plans USING btre
 
 
 --
--- TOC entry 4326 (class 1259 OID 17836)
+-- TOC entry 4378 (class 1259 OID 17836)
 -- Name: idx_client_professionals_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9404,7 +10008,7 @@ CREATE INDEX idx_client_professionals_client ON public.client_professionals USIN
 
 
 --
--- TOC entry 4327 (class 1259 OID 17837)
+-- TOC entry 4379 (class 1259 OID 17837)
 -- Name: idx_client_professionals_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9412,7 +10016,7 @@ CREATE INDEX idx_client_professionals_professional ON public.client_professional
 
 
 --
--- TOC entry 4338 (class 1259 OID 17840)
+-- TOC entry 4390 (class 1259 OID 17840)
 -- Name: idx_client_workouts_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9420,7 +10024,7 @@ CREATE INDEX idx_client_workouts_client ON public.client_workouts USING btree (c
 
 
 --
--- TOC entry 4346 (class 1259 OID 65717)
+-- TOC entry 4398 (class 1259 OID 65717)
 -- Name: idx_foods_library_created_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9428,7 +10032,7 @@ CREATE INDEX idx_foods_library_created_by ON public.foods_library USING btree (c
 
 
 --
--- TOC entry 4347 (class 1259 OID 65716)
+-- TOC entry 4399 (class 1259 OID 65716)
 -- Name: idx_foods_library_external_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9436,7 +10040,7 @@ CREATE INDEX idx_foods_library_external_id ON public.foods_library USING btree (
 
 
 --
--- TOC entry 4348 (class 1259 OID 65715)
+-- TOC entry 4400 (class 1259 OID 65715)
 -- Name: idx_foods_library_name_trgm; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9444,7 +10048,7 @@ CREATE INDEX idx_foods_library_name_trgm ON public.foods_library USING gin (name
 
 
 --
--- TOC entry 4362 (class 1259 OID 17845)
+-- TOC entry 4414 (class 1259 OID 17845)
 -- Name: idx_meal_logs_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9452,7 +10056,7 @@ CREATE INDEX idx_meal_logs_client ON public.meal_logs USING btree (client_id);
 
 
 --
--- TOC entry 4363 (class 1259 OID 17846)
+-- TOC entry 4415 (class 1259 OID 17846)
 -- Name: idx_meal_logs_logged_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9460,7 +10064,7 @@ CREATE INDEX idx_meal_logs_logged_at ON public.meal_logs USING btree (logged_at)
 
 
 --
--- TOC entry 4356 (class 1259 OID 17843)
+-- TOC entry 4408 (class 1259 OID 17843)
 -- Name: idx_meal_plan_items_plan; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9468,7 +10072,7 @@ CREATE INDEX idx_meal_plan_items_plan ON public.meal_plan_items USING btree (mea
 
 
 --
--- TOC entry 4353 (class 1259 OID 17842)
+-- TOC entry 4405 (class 1259 OID 17842)
 -- Name: idx_meal_plans_nutritionist; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9476,7 +10080,7 @@ CREATE INDEX idx_meal_plans_nutritionist ON public.meal_plans USING btree (nutri
 
 
 --
--- TOC entry 4387 (class 1259 OID 22413)
+-- TOC entry 4439 (class 1259 OID 22413)
 -- Name: idx_professional_notifications_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9484,7 +10088,7 @@ CREATE INDEX idx_professional_notifications_client_id ON public.professional_not
 
 
 --
--- TOC entry 4388 (class 1259 OID 22414)
+-- TOC entry 4440 (class 1259 OID 22414)
 -- Name: idx_professional_notifications_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9492,7 +10096,7 @@ CREATE INDEX idx_professional_notifications_created_at ON public.professional_no
 
 
 --
--- TOC entry 4389 (class 1259 OID 22412)
+-- TOC entry 4441 (class 1259 OID 22412)
 -- Name: idx_professional_notifications_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9500,7 +10104,7 @@ CREATE INDEX idx_professional_notifications_professional_id ON public.profession
 
 
 --
--- TOC entry 4390 (class 1259 OID 22415)
+-- TOC entry 4442 (class 1259 OID 22415)
 -- Name: idx_professional_notifications_read; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9508,7 +10112,7 @@ CREATE INDEX idx_professional_notifications_read ON public.professional_notifica
 
 
 --
--- TOC entry 4415 (class 1259 OID 65604)
+-- TOC entry 4467 (class 1259 OID 65604)
 -- Name: idx_professional_reviews_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9516,7 +10120,7 @@ CREATE INDEX idx_professional_reviews_professional_id ON public.professional_rev
 
 
 --
--- TOC entry 4315 (class 1259 OID 17835)
+-- TOC entry 4367 (class 1259 OID 17835)
 -- Name: idx_profiles_role; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9524,7 +10128,7 @@ CREATE INDEX idx_profiles_role ON public.profiles USING btree (role);
 
 
 --
--- TOC entry 4366 (class 1259 OID 17847)
+-- TOC entry 4418 (class 1259 OID 17847)
 -- Name: idx_progress_photos_client; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9532,7 +10136,7 @@ CREATE INDEX idx_progress_photos_client ON public.progress_photos USING btree (c
 
 
 --
--- TOC entry 4408 (class 1259 OID 47251)
+-- TOC entry 4460 (class 1259 OID 47251)
 -- Name: idx_scheduled_workouts_cancelled_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9540,7 +10144,7 @@ CREATE INDEX idx_scheduled_workouts_cancelled_by ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4409 (class 1259 OID 45824)
+-- TOC entry 4461 (class 1259 OID 45824)
 -- Name: idx_scheduled_workouts_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9548,7 +10152,7 @@ CREATE INDEX idx_scheduled_workouts_client_id ON public.scheduled_workouts USING
 
 
 --
--- TOC entry 4410 (class 1259 OID 47250)
+-- TOC entry 4462 (class 1259 OID 47250)
 -- Name: idx_scheduled_workouts_confirmed_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9556,7 +10160,7 @@ CREATE INDEX idx_scheduled_workouts_confirmed_by ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4411 (class 1259 OID 45930)
+-- TOC entry 4463 (class 1259 OID 45930)
 -- Name: idx_scheduled_workouts_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9564,7 +10168,7 @@ CREATE INDEX idx_scheduled_workouts_professional_id ON public.scheduled_workouts
 
 
 --
--- TOC entry 4412 (class 1259 OID 45825)
+-- TOC entry 4464 (class 1259 OID 45825)
 -- Name: idx_scheduled_workouts_scheduled_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9572,7 +10176,7 @@ CREATE INDEX idx_scheduled_workouts_scheduled_at ON public.scheduled_workouts US
 
 
 --
--- TOC entry 4425 (class 1259 OID 66860)
+-- TOC entry 4477 (class 1259 OID 66860)
 -- Name: idx_user_favorite_foods_food; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9580,7 +10184,7 @@ CREATE INDEX idx_user_favorite_foods_food ON public.user_favorite_foods USING bt
 
 
 --
--- TOC entry 4426 (class 1259 OID 66859)
+-- TOC entry 4478 (class 1259 OID 66859)
 -- Name: idx_user_favorite_foods_user; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9588,7 +10192,7 @@ CREATE INDEX idx_user_favorite_foods_user ON public.user_favorite_foods USING bt
 
 
 --
--- TOC entry 4333 (class 1259 OID 17839)
+-- TOC entry 4385 (class 1259 OID 17839)
 -- Name: idx_workout_exercises_workout; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9596,7 +10200,7 @@ CREATE INDEX idx_workout_exercises_workout ON public.workout_exercises USING btr
 
 
 --
--- TOC entry 4339 (class 1259 OID 17841)
+-- TOC entry 4391 (class 1259 OID 17841)
 -- Name: idx_workout_logs_client_workout; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9604,7 +10208,7 @@ CREATE INDEX idx_workout_logs_client_workout ON public.workout_logs USING btree 
 
 
 --
--- TOC entry 4382 (class 1259 OID 20151)
+-- TOC entry 4434 (class 1259 OID 20151)
 -- Name: idx_workout_sessions_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9612,7 +10216,7 @@ CREATE INDEX idx_workout_sessions_client_id ON public.workout_sessions USING btr
 
 
 --
--- TOC entry 4383 (class 1259 OID 20153)
+-- TOC entry 4435 (class 1259 OID 20153)
 -- Name: idx_workout_sessions_client_workout_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9620,7 +10224,7 @@ CREATE INDEX idx_workout_sessions_client_workout_id ON public.workout_sessions U
 
 
 --
--- TOC entry 4384 (class 1259 OID 20152)
+-- TOC entry 4436 (class 1259 OID 20152)
 -- Name: idx_workout_sessions_professional_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9628,7 +10232,7 @@ CREATE INDEX idx_workout_sessions_professional_id ON public.workout_sessions USI
 
 
 --
--- TOC entry 4330 (class 1259 OID 17838)
+-- TOC entry 4382 (class 1259 OID 17838)
 -- Name: idx_workouts_professional; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -9636,7 +10240,7 @@ CREATE INDEX idx_workouts_professional ON public.workouts USING btree (professio
 
 
 --
--- TOC entry 4308 (class 1259 OID 17449)
+-- TOC entry 4360 (class 1259 OID 17449)
 -- Name: ix_realtime_subscription_entity; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9644,7 +10248,7 @@ CREATE INDEX ix_realtime_subscription_entity ON realtime.subscription USING btre
 
 
 --
--- TOC entry 4312 (class 1259 OID 17450)
+-- TOC entry 4364 (class 1259 OID 17450)
 -- Name: messages_inserted_at_topic_index; Type: INDEX; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9652,7 +10256,7 @@ CREATE INDEX messages_inserted_at_topic_index ON ONLY realtime.messages USING bt
 
 
 --
--- TOC entry 4431 (class 1259 OID 69100)
+-- TOC entry 4483 (class 1259 OID 69100)
 -- Name: messages_2026_01_01_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9660,7 +10264,7 @@ CREATE INDEX messages_2026_01_01_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4434 (class 1259 OID 70215)
+-- TOC entry 4486 (class 1259 OID 70215)
 -- Name: messages_2026_01_02_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9668,7 +10272,7 @@ CREATE INDEX messages_2026_01_02_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4437 (class 1259 OID 70227)
+-- TOC entry 4489 (class 1259 OID 70227)
 -- Name: messages_2026_01_03_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9676,7 +10280,7 @@ CREATE INDEX messages_2026_01_03_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4440 (class 1259 OID 71355)
+-- TOC entry 4492 (class 1259 OID 71355)
 -- Name: messages_2026_01_04_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9684,7 +10288,7 @@ CREATE INDEX messages_2026_01_04_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4443 (class 1259 OID 73574)
+-- TOC entry 4495 (class 1259 OID 73574)
 -- Name: messages_2026_01_05_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9692,7 +10296,7 @@ CREATE INDEX messages_2026_01_05_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4448 (class 1259 OID 73623)
+-- TOC entry 4500 (class 1259 OID 73623)
 -- Name: messages_2026_01_06_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9700,7 +10304,7 @@ CREATE INDEX messages_2026_01_06_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4451 (class 1259 OID 74757)
+-- TOC entry 4503 (class 1259 OID 74757)
 -- Name: messages_2026_01_07_inserted_at_topic_idx; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9708,7 +10312,7 @@ CREATE INDEX messages_2026_01_07_inserted_at_topic_idx ON realtime.messages_2026
 
 
 --
--- TOC entry 4311 (class 1259 OID 17350)
+-- TOC entry 4363 (class 1259 OID 17350)
 -- Name: subscription_subscription_id_entity_filters_key; Type: INDEX; Schema: realtime; Owner: supabase_admin
 --
 
@@ -9716,7 +10320,7 @@ CREATE UNIQUE INDEX subscription_subscription_id_entity_filters_key ON realtime.
 
 
 --
--- TOC entry 4205 (class 1259 OID 16560)
+-- TOC entry 4257 (class 1259 OID 16560)
 -- Name: bname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9724,7 +10328,7 @@ CREATE UNIQUE INDEX bname ON storage.buckets USING btree (name);
 
 
 --
--- TOC entry 4208 (class 1259 OID 16582)
+-- TOC entry 4260 (class 1259 OID 16582)
 -- Name: bucketid_objname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9732,7 +10336,7 @@ CREATE UNIQUE INDEX bucketid_objname ON storage.objects USING btree (bucket_id, 
 
 
 --
--- TOC entry 4307 (class 1259 OID 22453)
+-- TOC entry 4359 (class 1259 OID 22453)
 -- Name: buckets_analytics_unique_name_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9740,7 +10344,7 @@ CREATE UNIQUE INDEX buckets_analytics_unique_name_idx ON storage.buckets_analyti
 
 
 --
--- TOC entry 4295 (class 1259 OID 17178)
+-- TOC entry 4347 (class 1259 OID 17178)
 -- Name: idx_multipart_uploads_list; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9748,7 +10352,7 @@ CREATE INDEX idx_multipart_uploads_list ON storage.s3_multipart_uploads USING bt
 
 
 --
--- TOC entry 4209 (class 1259 OID 17224)
+-- TOC entry 4261 (class 1259 OID 17224)
 -- Name: idx_name_bucket_level_unique; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9756,7 +10360,7 @@ CREATE UNIQUE INDEX idx_name_bucket_level_unique ON storage.objects USING btree 
 
 
 --
--- TOC entry 4210 (class 1259 OID 17143)
+-- TOC entry 4262 (class 1259 OID 17143)
 -- Name: idx_objects_bucket_id_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9764,7 +10368,7 @@ CREATE INDEX idx_objects_bucket_id_name ON storage.objects USING btree (bucket_i
 
 
 --
--- TOC entry 4211 (class 1259 OID 17231)
+-- TOC entry 4263 (class 1259 OID 17231)
 -- Name: idx_objects_lower_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9772,7 +10376,7 @@ CREATE INDEX idx_objects_lower_name ON storage.objects USING btree ((path_tokens
 
 
 --
--- TOC entry 4300 (class 1259 OID 17232)
+-- TOC entry 4352 (class 1259 OID 17232)
 -- Name: idx_prefixes_lower_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9780,7 +10384,7 @@ CREATE INDEX idx_prefixes_lower_name ON storage.prefixes USING btree (bucket_id,
 
 
 --
--- TOC entry 4212 (class 1259 OID 16583)
+-- TOC entry 4264 (class 1259 OID 16583)
 -- Name: name_prefix_search; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9788,7 +10392,7 @@ CREATE INDEX name_prefix_search ON storage.objects USING btree (name text_patter
 
 
 --
--- TOC entry 4213 (class 1259 OID 17230)
+-- TOC entry 4265 (class 1259 OID 17230)
 -- Name: objects_bucket_id_level_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9796,7 +10400,7 @@ CREATE UNIQUE INDEX objects_bucket_id_level_idx ON storage.objects USING btree (
 
 
 --
--- TOC entry 4395 (class 1259 OID 22444)
+-- TOC entry 4447 (class 1259 OID 22444)
 -- Name: vector_indexes_name_bucket_id_idx; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -9804,7 +10408,7 @@ CREATE UNIQUE INDEX vector_indexes_name_bucket_id_idx ON storage.vector_indexes 
 
 
 --
--- TOC entry 4454 (class 0 OID 0)
+-- TOC entry 4516 (class 0 OID 0)
 -- Name: messages_2026_01_01_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9812,7 +10416,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4455 (class 0 OID 0)
+-- TOC entry 4517 (class 0 OID 0)
 -- Name: messages_2026_01_01_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9820,7 +10424,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_01
 
 
 --
--- TOC entry 4456 (class 0 OID 0)
+-- TOC entry 4518 (class 0 OID 0)
 -- Name: messages_2026_01_02_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9828,7 +10432,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4457 (class 0 OID 0)
+-- TOC entry 4519 (class 0 OID 0)
 -- Name: messages_2026_01_02_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9836,7 +10440,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_02
 
 
 --
--- TOC entry 4458 (class 0 OID 0)
+-- TOC entry 4520 (class 0 OID 0)
 -- Name: messages_2026_01_03_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9844,7 +10448,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4459 (class 0 OID 0)
+-- TOC entry 4521 (class 0 OID 0)
 -- Name: messages_2026_01_03_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9852,7 +10456,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_03
 
 
 --
--- TOC entry 4460 (class 0 OID 0)
+-- TOC entry 4522 (class 0 OID 0)
 -- Name: messages_2026_01_04_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9860,7 +10464,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4461 (class 0 OID 0)
+-- TOC entry 4523 (class 0 OID 0)
 -- Name: messages_2026_01_04_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9868,7 +10472,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_04
 
 
 --
--- TOC entry 4462 (class 0 OID 0)
+-- TOC entry 4524 (class 0 OID 0)
 -- Name: messages_2026_01_05_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9876,7 +10480,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4463 (class 0 OID 0)
+-- TOC entry 4525 (class 0 OID 0)
 -- Name: messages_2026_01_05_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9884,7 +10488,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_05
 
 
 --
--- TOC entry 4464 (class 0 OID 0)
+-- TOC entry 4526 (class 0 OID 0)
 -- Name: messages_2026_01_06_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9892,7 +10496,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4465 (class 0 OID 0)
+-- TOC entry 4527 (class 0 OID 0)
 -- Name: messages_2026_01_06_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9900,7 +10504,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_06
 
 
 --
--- TOC entry 4466 (class 0 OID 0)
+-- TOC entry 4528 (class 0 OID 0)
 -- Name: messages_2026_01_07_inserted_at_topic_idx; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9908,7 +10512,7 @@ ALTER INDEX realtime.messages_inserted_at_topic_index ATTACH PARTITION realtime.
 
 
 --
--- TOC entry 4467 (class 0 OID 0)
+-- TOC entry 4529 (class 0 OID 0)
 -- Name: messages_2026_01_07_pkey; Type: INDEX ATTACH; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -9916,7 +10520,7 @@ ALTER INDEX realtime.messages_pkey ATTACH PARTITION realtime.messages_2026_01_07
 
 
 --
--- TOC entry 4546 (class 2620 OID 18128)
+-- TOC entry 4612 (class 2620 OID 18128)
 -- Name: users on_auth_user_created; Type: TRIGGER; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -9924,7 +10528,7 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 
 --
--- TOC entry 4567 (class 2620 OID 20160)
+-- TOC entry 4633 (class 2620 OID 20160)
 -- Name: workout_sessions calculate_workout_session_duration; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9932,7 +10536,7 @@ CREATE TRIGGER calculate_workout_session_duration BEFORE UPDATE ON public.workou
 
 
 --
--- TOC entry 4566 (class 2620 OID 17862)
+-- TOC entry 4632 (class 2620 OID 17862)
 -- Name: appointments handle_appointments_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9940,7 +10544,7 @@ CREATE TRIGGER handle_appointments_updated_at BEFORE UPDATE ON public.appointmen
 
 
 --
--- TOC entry 4558 (class 2620 OID 17856)
+-- TOC entry 4624 (class 2620 OID 17856)
 -- Name: client_details handle_client_details_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9948,7 +10552,7 @@ CREATE TRIGGER handle_client_details_updated_at BEFORE UPDATE ON public.client_d
 
 
 --
--- TOC entry 4565 (class 2620 OID 17864)
+-- TOC entry 4631 (class 2620 OID 17864)
 -- Name: client_meal_plans handle_client_meal_plans_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9956,7 +10560,7 @@ CREATE TRIGGER handle_client_meal_plans_updated_at BEFORE UPDATE ON public.clien
 
 
 --
--- TOC entry 4561 (class 2620 OID 17863)
+-- TOC entry 4627 (class 2620 OID 17863)
 -- Name: client_workouts handle_client_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9964,7 +10568,7 @@ CREATE TRIGGER handle_client_workouts_updated_at BEFORE UPDATE ON public.client_
 
 
 --
--- TOC entry 4559 (class 2620 OID 17857)
+-- TOC entry 4625 (class 2620 OID 17857)
 -- Name: exercises_library handle_exercises_library_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9972,7 +10576,7 @@ CREATE TRIGGER handle_exercises_library_updated_at BEFORE UPDATE ON public.exerc
 
 
 --
--- TOC entry 4562 (class 2620 OID 17861)
+-- TOC entry 4628 (class 2620 OID 17861)
 -- Name: foods_library handle_foods_library_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9980,7 +10584,7 @@ CREATE TRIGGER handle_foods_library_updated_at BEFORE UPDATE ON public.foods_lib
 
 
 --
--- TOC entry 4564 (class 2620 OID 17859)
+-- TOC entry 4630 (class 2620 OID 17859)
 -- Name: meal_plans handle_meal_plans_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9988,7 +10592,7 @@ CREATE TRIGGER handle_meal_plans_updated_at BEFORE UPDATE ON public.meal_plans F
 
 
 --
--- TOC entry 4570 (class 2620 OID 22417)
+-- TOC entry 4636 (class 2620 OID 22417)
 -- Name: professional_notifications handle_notifications_created_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -9996,7 +10600,7 @@ CREATE TRIGGER handle_notifications_created_at BEFORE INSERT ON public.professio
 
 
 --
--- TOC entry 4557 (class 2620 OID 17855)
+-- TOC entry 4623 (class 2620 OID 17855)
 -- Name: professional_details handle_professional_details_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10004,7 +10608,7 @@ CREATE TRIGGER handle_professional_details_updated_at BEFORE UPDATE ON public.pr
 
 
 --
--- TOC entry 4555 (class 2620 OID 17854)
+-- TOC entry 4621 (class 2620 OID 17854)
 -- Name: profiles handle_profiles_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10012,7 +10616,7 @@ CREATE TRIGGER handle_profiles_updated_at BEFORE UPDATE ON public.profiles FOR E
 
 
 --
--- TOC entry 4563 (class 2620 OID 17860)
+-- TOC entry 4629 (class 2620 OID 17860)
 -- Name: recipes handle_recipes_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10020,7 +10624,7 @@ CREATE TRIGGER handle_recipes_updated_at BEFORE UPDATE ON public.recipes FOR EAC
 
 
 --
--- TOC entry 4571 (class 2620 OID 45831)
+-- TOC entry 4637 (class 2620 OID 45831)
 -- Name: scheduled_workouts handle_scheduled_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10028,7 +10632,7 @@ CREATE TRIGGER handle_scheduled_workouts_updated_at BEFORE UPDATE ON public.sche
 
 
 --
--- TOC entry 4568 (class 2620 OID 20154)
+-- TOC entry 4634 (class 2620 OID 20154)
 -- Name: workout_sessions handle_workout_sessions_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10036,7 +10640,7 @@ CREATE TRIGGER handle_workout_sessions_updated_at BEFORE UPDATE ON public.workou
 
 
 --
--- TOC entry 4560 (class 2620 OID 17858)
+-- TOC entry 4626 (class 2620 OID 17858)
 -- Name: workouts handle_workouts_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10044,7 +10648,7 @@ CREATE TRIGGER handle_workouts_updated_at BEFORE UPDATE ON public.workouts FOR E
 
 
 --
--- TOC entry 4569 (class 2620 OID 29916)
+-- TOC entry 4635 (class 2620 OID 29916)
 -- Name: workout_sessions set_workout_xp; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10052,7 +10656,7 @@ CREATE TRIGGER set_workout_xp BEFORE INSERT OR UPDATE ON public.workout_sessions
 
 
 --
--- TOC entry 4556 (class 2620 OID 29943)
+-- TOC entry 4622 (class 2620 OID 29943)
 -- Name: profiles update_profile_level; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -10060,7 +10664,7 @@ CREATE TRIGGER update_profile_level BEFORE INSERT OR UPDATE OF current_xp ON pub
 
 
 --
--- TOC entry 4554 (class 2620 OID 17302)
+-- TOC entry 4620 (class 2620 OID 17302)
 -- Name: subscription tr_check_filters; Type: TRIGGER; Schema: realtime; Owner: supabase_admin
 --
 
@@ -10068,7 +10672,7 @@ CREATE TRIGGER tr_check_filters BEFORE INSERT OR UPDATE ON realtime.subscription
 
 
 --
--- TOC entry 4547 (class 2620 OID 17239)
+-- TOC entry 4613 (class 2620 OID 17239)
 -- Name: buckets enforce_bucket_name_length_trigger; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10076,7 +10680,7 @@ CREATE TRIGGER enforce_bucket_name_length_trigger BEFORE INSERT OR UPDATE OF nam
 
 
 --
--- TOC entry 4548 (class 2620 OID 17269)
+-- TOC entry 4614 (class 2620 OID 17269)
 -- Name: objects objects_delete_delete_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10084,7 +10688,7 @@ CREATE TRIGGER objects_delete_delete_prefix AFTER DELETE ON storage.objects FOR 
 
 
 --
--- TOC entry 4549 (class 2620 OID 17220)
+-- TOC entry 4615 (class 2620 OID 17220)
 -- Name: objects objects_insert_create_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10092,7 +10696,7 @@ CREATE TRIGGER objects_insert_create_prefix BEFORE INSERT ON storage.objects FOR
 
 
 --
--- TOC entry 4550 (class 2620 OID 17268)
+-- TOC entry 4616 (class 2620 OID 17268)
 -- Name: objects objects_update_create_prefix; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10100,7 +10704,7 @@ CREATE TRIGGER objects_update_create_prefix BEFORE UPDATE ON storage.objects FOR
 
 
 --
--- TOC entry 4552 (class 2620 OID 17235)
+-- TOC entry 4618 (class 2620 OID 17235)
 -- Name: prefixes prefixes_create_hierarchy; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10108,7 +10712,7 @@ CREATE TRIGGER prefixes_create_hierarchy BEFORE INSERT ON storage.prefixes FOR E
 
 
 --
--- TOC entry 4553 (class 2620 OID 17270)
+-- TOC entry 4619 (class 2620 OID 17270)
 -- Name: prefixes prefixes_delete_hierarchy; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10116,7 +10720,7 @@ CREATE TRIGGER prefixes_delete_hierarchy AFTER DELETE ON storage.prefixes FOR EA
 
 
 --
--- TOC entry 4551 (class 2620 OID 17131)
+-- TOC entry 4617 (class 2620 OID 17131)
 -- Name: objects update_objects_updated_at; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10124,7 +10728,7 @@ CREATE TRIGGER update_objects_updated_at BEFORE UPDATE ON storage.objects FOR EA
 
 
 --
--- TOC entry 4470 (class 2606 OID 16734)
+-- TOC entry 4532 (class 2606 OID 16734)
 -- Name: identities identities_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10133,7 +10737,7 @@ ALTER TABLE ONLY auth.identities
 
 
 --
--- TOC entry 4475 (class 2606 OID 16823)
+-- TOC entry 4537 (class 2606 OID 16823)
 -- Name: mfa_amr_claims mfa_amr_claims_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10142,7 +10746,7 @@ ALTER TABLE ONLY auth.mfa_amr_claims
 
 
 --
--- TOC entry 4474 (class 2606 OID 16811)
+-- TOC entry 4536 (class 2606 OID 16811)
 -- Name: mfa_challenges mfa_challenges_auth_factor_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10151,7 +10755,7 @@ ALTER TABLE ONLY auth.mfa_challenges
 
 
 --
--- TOC entry 4473 (class 2606 OID 16798)
+-- TOC entry 4535 (class 2606 OID 16798)
 -- Name: mfa_factors mfa_factors_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10160,7 +10764,7 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
--- TOC entry 4481 (class 2606 OID 17063)
+-- TOC entry 4543 (class 2606 OID 17063)
 -- Name: oauth_authorizations oauth_authorizations_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10169,7 +10773,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4482 (class 2606 OID 17068)
+-- TOC entry 4544 (class 2606 OID 17068)
 -- Name: oauth_authorizations oauth_authorizations_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10178,7 +10782,7 @@ ALTER TABLE ONLY auth.oauth_authorizations
 
 
 --
--- TOC entry 4483 (class 2606 OID 17092)
+-- TOC entry 4545 (class 2606 OID 17092)
 -- Name: oauth_consents oauth_consents_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10187,7 +10791,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4484 (class 2606 OID 17087)
+-- TOC entry 4546 (class 2606 OID 17087)
 -- Name: oauth_consents oauth_consents_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10196,7 +10800,7 @@ ALTER TABLE ONLY auth.oauth_consents
 
 
 --
--- TOC entry 4480 (class 2606 OID 16989)
+-- TOC entry 4542 (class 2606 OID 16989)
 -- Name: one_time_tokens one_time_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10205,7 +10809,7 @@ ALTER TABLE ONLY auth.one_time_tokens
 
 
 --
--- TOC entry 4468 (class 2606 OID 16767)
+-- TOC entry 4530 (class 2606 OID 16767)
 -- Name: refresh_tokens refresh_tokens_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10214,7 +10818,7 @@ ALTER TABLE ONLY auth.refresh_tokens
 
 
 --
--- TOC entry 4477 (class 2606 OID 16870)
+-- TOC entry 4539 (class 2606 OID 16870)
 -- Name: saml_providers saml_providers_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10223,7 +10827,7 @@ ALTER TABLE ONLY auth.saml_providers
 
 
 --
--- TOC entry 4478 (class 2606 OID 16943)
+-- TOC entry 4540 (class 2606 OID 16943)
 -- Name: saml_relay_states saml_relay_states_flow_state_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10232,7 +10836,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4479 (class 2606 OID 16884)
+-- TOC entry 4541 (class 2606 OID 16884)
 -- Name: saml_relay_states saml_relay_states_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10241,7 +10845,7 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 
 --
--- TOC entry 4471 (class 2606 OID 17106)
+-- TOC entry 4533 (class 2606 OID 17106)
 -- Name: sessions sessions_oauth_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10250,7 +10854,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4472 (class 2606 OID 16762)
+-- TOC entry 4534 (class 2606 OID 16762)
 -- Name: sessions sessions_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10259,7 +10863,7 @@ ALTER TABLE ONLY auth.sessions
 
 
 --
--- TOC entry 4476 (class 2606 OID 16851)
+-- TOC entry 4538 (class 2606 OID 16851)
 -- Name: sso_domains sso_domains_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -10268,7 +10872,34 @@ ALTER TABLE ONLY auth.sso_domains
 
 
 --
--- TOC entry 4519 (class 2606 OID 17808)
+-- TOC entry 4554 (class 2606 OID 75978)
+-- Name: client_professionals client_professionals_current_plan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client_professionals
+    ADD CONSTRAINT client_professionals_current_plan_id_fkey FOREIGN KEY (current_plan_id) REFERENCES public.subscription_plans(id);
+
+
+--
+-- TOC entry 4610 (class 2606 OID 75962)
+-- Name: financial_transactions financial_transactions_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.financial_transactions
+    ADD CONSTRAINT financial_transactions_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.profiles(id);
+
+
+--
+-- TOC entry 4611 (class 2606 OID 75957)
+-- Name: financial_transactions financial_transactions_student_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.financial_transactions
+    ADD CONSTRAINT financial_transactions_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.profiles(id);
+
+
+--
+-- TOC entry 4582 (class 2606 OID 17808)
 -- Name: appointments fk_appointment_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10277,7 +10908,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4520 (class 2606 OID 17803)
+-- TOC entry 4583 (class 2606 OID 17803)
 -- Name: appointments fk_appointment_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10286,7 +10917,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 4518 (class 2606 OID 17785)
+-- TOC entry 4581 (class 2606 OID 17785)
 -- Name: biometric_data fk_biometric_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10295,7 +10926,7 @@ ALTER TABLE ONLY public.biometric_data
 
 
 --
--- TOC entry 4521 (class 2606 OID 17830)
+-- TOC entry 4584 (class 2606 OID 17830)
 -- Name: chat_messages fk_chat_receiver; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10304,7 +10935,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4522 (class 2606 OID 17825)
+-- TOC entry 4585 (class 2606 OID 17825)
 -- Name: chat_messages fk_chat_sender; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10313,7 +10944,7 @@ ALTER TABLE ONLY public.chat_messages
 
 
 --
--- TOC entry 4492 (class 2606 OID 17509)
+-- TOC entry 4555 (class 2606 OID 17509)
 -- Name: client_professionals fk_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10322,7 +10953,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4511 (class 2606 OID 17720)
+-- TOC entry 4574 (class 2606 OID 17720)
 -- Name: client_meal_plans fk_client_meal_plan_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10331,7 +10962,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4512 (class 2606 OID 17730)
+-- TOC entry 4575 (class 2606 OID 17730)
 -- Name: client_meal_plans fk_client_meal_plan_nutritionist; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10340,7 +10971,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4513 (class 2606 OID 17725)
+-- TOC entry 4576 (class 2606 OID 17725)
 -- Name: client_meal_plans fk_client_meal_plan_plan; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10349,7 +10980,7 @@ ALTER TABLE ONLY public.client_meal_plans
 
 
 --
--- TOC entry 4491 (class 2606 OID 17491)
+-- TOC entry 4553 (class 2606 OID 17491)
 -- Name: client_details fk_client_profile; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10358,7 +10989,7 @@ ALTER TABLE ONLY public.client_details
 
 
 --
--- TOC entry 4498 (class 2606 OID 17583)
+-- TOC entry 4561 (class 2606 OID 17583)
 -- Name: client_workouts fk_client_workout_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10367,7 +10998,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4499 (class 2606 OID 17593)
+-- TOC entry 4562 (class 2606 OID 17593)
 -- Name: client_workouts fk_client_workout_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10376,7 +11007,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4500 (class 2606 OID 17588)
+-- TOC entry 4563 (class 2606 OID 17588)
 -- Name: client_workouts fk_client_workout_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10385,7 +11016,7 @@ ALTER TABLE ONLY public.client_workouts
 
 
 --
--- TOC entry 4494 (class 2606 OID 17531)
+-- TOC entry 4557 (class 2606 OID 17531)
 -- Name: exercises_library fk_exercise_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10394,7 +11025,7 @@ ALTER TABLE ONLY public.exercises_library
 
 
 --
--- TOC entry 4503 (class 2606 OID 17629)
+-- TOC entry 4566 (class 2606 OID 17629)
 -- Name: foods_library fk_food_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10403,7 +11034,7 @@ ALTER TABLE ONLY public.foods_library
 
 
 --
--- TOC entry 4508 (class 2606 OID 17698)
+-- TOC entry 4571 (class 2606 OID 17698)
 -- Name: meal_plan_items fk_meal_item_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10412,7 +11043,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4509 (class 2606 OID 17693)
+-- TOC entry 4572 (class 2606 OID 17693)
 -- Name: meal_plan_items fk_meal_item_plan; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10421,7 +11052,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4510 (class 2606 OID 17703)
+-- TOC entry 4573 (class 2606 OID 17703)
 -- Name: meal_plan_items fk_meal_item_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10430,7 +11061,7 @@ ALTER TABLE ONLY public.meal_plan_items
 
 
 --
--- TOC entry 4514 (class 2606 OID 17745)
+-- TOC entry 4577 (class 2606 OID 17745)
 -- Name: meal_logs fk_meal_log_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10439,7 +11070,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4515 (class 2606 OID 17750)
+-- TOC entry 4578 (class 2606 OID 17750)
 -- Name: meal_logs fk_meal_log_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10448,7 +11079,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4516 (class 2606 OID 17755)
+-- TOC entry 4579 (class 2606 OID 17755)
 -- Name: meal_logs fk_meal_log_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10457,7 +11088,7 @@ ALTER TABLE ONLY public.meal_logs
 
 
 --
--- TOC entry 4507 (class 2606 OID 17679)
+-- TOC entry 4570 (class 2606 OID 17679)
 -- Name: meal_plans fk_meal_plan_nutritionist; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10466,7 +11097,7 @@ ALTER TABLE ONLY public.meal_plans
 
 
 --
--- TOC entry 4493 (class 2606 OID 17514)
+-- TOC entry 4556 (class 2606 OID 17514)
 -- Name: client_professionals fk_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10475,7 +11106,7 @@ ALTER TABLE ONLY public.client_professionals
 
 
 --
--- TOC entry 4490 (class 2606 OID 17477)
+-- TOC entry 4552 (class 2606 OID 17477)
 -- Name: professional_details fk_professional_profile; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10484,7 +11115,7 @@ ALTER TABLE ONLY public.professional_details
 
 
 --
--- TOC entry 4489 (class 2606 OID 17461)
+-- TOC entry 4551 (class 2606 OID 17461)
 -- Name: profiles fk_profile_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10493,7 +11124,7 @@ ALTER TABLE ONLY public.profiles
 
 
 --
--- TOC entry 4517 (class 2606 OID 17769)
+-- TOC entry 4580 (class 2606 OID 17769)
 -- Name: progress_photos fk_progress_photo_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10502,7 +11133,7 @@ ALTER TABLE ONLY public.progress_photos
 
 
 --
--- TOC entry 4504 (class 2606 OID 17645)
+-- TOC entry 4567 (class 2606 OID 17645)
 -- Name: recipes fk_recipe_creator; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10511,7 +11142,7 @@ ALTER TABLE ONLY public.recipes
 
 
 --
--- TOC entry 4505 (class 2606 OID 17663)
+-- TOC entry 4568 (class 2606 OID 17663)
 -- Name: recipe_ingredients fk_recipe_ingredient_food; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10520,7 +11151,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4506 (class 2606 OID 17658)
+-- TOC entry 4569 (class 2606 OID 17658)
 -- Name: recipe_ingredients fk_recipe_ingredient_recipe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10529,7 +11160,7 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
--- TOC entry 4496 (class 2606 OID 17566)
+-- TOC entry 4559 (class 2606 OID 17566)
 -- Name: workout_exercises fk_workout_exercise_exercise; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10538,7 +11169,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4497 (class 2606 OID 17561)
+-- TOC entry 4560 (class 2606 OID 17561)
 -- Name: workout_exercises fk_workout_exercise_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10547,7 +11178,7 @@ ALTER TABLE ONLY public.workout_exercises
 
 
 --
--- TOC entry 4501 (class 2606 OID 17608)
+-- TOC entry 4564 (class 2606 OID 17608)
 -- Name: workout_logs fk_workout_log_client_workout; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10556,7 +11187,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4502 (class 2606 OID 17613)
+-- TOC entry 4565 (class 2606 OID 17613)
 -- Name: workout_logs fk_workout_log_exercise; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10565,7 +11196,7 @@ ALTER TABLE ONLY public.workout_logs
 
 
 --
--- TOC entry 4495 (class 2606 OID 17548)
+-- TOC entry 4558 (class 2606 OID 17548)
 -- Name: workouts fk_workout_professional; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10574,7 +11205,7 @@ ALTER TABLE ONLY public.workouts
 
 
 --
--- TOC entry 4527 (class 2606 OID 22403)
+-- TOC entry 4590 (class 2606 OID 22403)
 -- Name: professional_notifications professional_notifications_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10583,7 +11214,7 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4528 (class 2606 OID 22398)
+-- TOC entry 4591 (class 2606 OID 22398)
 -- Name: professional_notifications professional_notifications_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10592,7 +11223,7 @@ ALTER TABLE ONLY public.professional_notifications
 
 
 --
--- TOC entry 4541 (class 2606 OID 48458)
+-- TOC entry 4604 (class 2606 OID 48458)
 -- Name: professional_reviews professional_reviews_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10601,7 +11232,7 @@ ALTER TABLE ONLY public.professional_reviews
 
 
 --
--- TOC entry 4542 (class 2606 OID 48453)
+-- TOC entry 4605 (class 2606 OID 48453)
 -- Name: professional_reviews professional_reviews_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10610,7 +11241,7 @@ ALTER TABLE ONLY public.professional_reviews
 
 
 --
--- TOC entry 4535 (class 2606 OID 47245)
+-- TOC entry 4598 (class 2606 OID 47245)
 -- Name: scheduled_workouts scheduled_workouts_cancelled_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10619,7 +11250,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4536 (class 2606 OID 45814)
+-- TOC entry 4599 (class 2606 OID 45814)
 -- Name: scheduled_workouts scheduled_workouts_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10628,7 +11259,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4537 (class 2606 OID 47240)
+-- TOC entry 4600 (class 2606 OID 47240)
 -- Name: scheduled_workouts scheduled_workouts_confirmed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10637,7 +11268,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4538 (class 2606 OID 45854)
+-- TOC entry 4601 (class 2606 OID 45854)
 -- Name: scheduled_workouts scheduled_workouts_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10646,7 +11277,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4539 (class 2606 OID 45925)
+-- TOC entry 4602 (class 2606 OID 45925)
 -- Name: scheduled_workouts scheduled_workouts_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10655,7 +11286,7 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4540 (class 2606 OID 45819)
+-- TOC entry 4603 (class 2606 OID 45819)
 -- Name: scheduled_workouts scheduled_workouts_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10664,7 +11295,16 @@ ALTER TABLE ONLY public.scheduled_workouts
 
 
 --
--- TOC entry 4533 (class 2606 OID 29885)
+-- TOC entry 4609 (class 2606 OID 75934)
+-- Name: subscription_plans subscription_plans_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subscription_plans
+    ADD CONSTRAINT subscription_plans_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.profiles(id);
+
+
+--
+-- TOC entry 4596 (class 2606 OID 29885)
 -- Name: user_achievements user_achievements_achievement_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10673,7 +11313,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4534 (class 2606 OID 29880)
+-- TOC entry 4597 (class 2606 OID 29880)
 -- Name: user_achievements user_achievements_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10682,7 +11322,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 4544 (class 2606 OID 66851)
+-- TOC entry 4607 (class 2606 OID 66851)
 -- Name: user_favorite_foods user_favorite_foods_food_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10691,7 +11331,7 @@ ALTER TABLE ONLY public.user_favorite_foods
 
 
 --
--- TOC entry 4545 (class 2606 OID 66846)
+-- TOC entry 4608 (class 2606 OID 66846)
 -- Name: user_favorite_foods user_favorite_foods_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10700,7 +11340,7 @@ ALTER TABLE ONLY public.user_favorite_foods
 
 
 --
--- TOC entry 4543 (class 2606 OID 65589)
+-- TOC entry 4606 (class 2606 OID 65589)
 -- Name: user_goals user_goals_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10709,7 +11349,7 @@ ALTER TABLE ONLY public.user_goals
 
 
 --
--- TOC entry 4530 (class 2606 OID 28716)
+-- TOC entry 4593 (class 2606 OID 28716)
 -- Name: workout_execution_logs workout_execution_logs_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10718,7 +11358,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4531 (class 2606 OID 28721)
+-- TOC entry 4594 (class 2606 OID 28721)
 -- Name: workout_execution_logs workout_execution_logs_workout_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10727,7 +11367,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4532 (class 2606 OID 28711)
+-- TOC entry 4595 (class 2606 OID 28711)
 -- Name: workout_execution_logs workout_execution_logs_workout_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10736,7 +11376,7 @@ ALTER TABLE ONLY public.workout_execution_logs
 
 
 --
--- TOC entry 4523 (class 2606 OID 20131)
+-- TOC entry 4586 (class 2606 OID 20131)
 -- Name: workout_sessions workout_sessions_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10745,7 +11385,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4524 (class 2606 OID 20146)
+-- TOC entry 4587 (class 2606 OID 20146)
 -- Name: workout_sessions workout_sessions_client_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10754,7 +11394,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4525 (class 2606 OID 20136)
+-- TOC entry 4588 (class 2606 OID 20136)
 -- Name: workout_sessions workout_sessions_professional_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10763,7 +11403,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4526 (class 2606 OID 20141)
+-- TOC entry 4589 (class 2606 OID 20141)
 -- Name: workout_sessions workout_sessions_workout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -10772,7 +11412,7 @@ ALTER TABLE ONLY public.workout_sessions
 
 
 --
--- TOC entry 4469 (class 2606 OID 16572)
+-- TOC entry 4531 (class 2606 OID 16572)
 -- Name: objects objects_bucketId_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10781,7 +11421,7 @@ ALTER TABLE ONLY storage.objects
 
 
 --
--- TOC entry 4488 (class 2606 OID 17207)
+-- TOC entry 4550 (class 2606 OID 17207)
 -- Name: prefixes prefixes_bucketId_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10790,7 +11430,7 @@ ALTER TABLE ONLY storage.prefixes
 
 
 --
--- TOC entry 4485 (class 2606 OID 17153)
+-- TOC entry 4547 (class 2606 OID 17153)
 -- Name: s3_multipart_uploads s3_multipart_uploads_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10799,7 +11439,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads
 
 
 --
--- TOC entry 4486 (class 2606 OID 17173)
+-- TOC entry 4548 (class 2606 OID 17173)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10808,7 +11448,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4487 (class 2606 OID 17168)
+-- TOC entry 4549 (class 2606 OID 17168)
 -- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_upload_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10817,7 +11457,7 @@ ALTER TABLE ONLY storage.s3_multipart_uploads_parts
 
 
 --
--- TOC entry 4529 (class 2606 OID 22439)
+-- TOC entry 4592 (class 2606 OID 22439)
 -- Name: vector_indexes vector_indexes_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -10826,7 +11466,7 @@ ALTER TABLE ONLY storage.vector_indexes
 
 
 --
--- TOC entry 4725 (class 0 OID 16525)
+-- TOC entry 4791 (class 0 OID 16525)
 -- Dependencies: 353
 -- Name: audit_log_entries; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10834,7 +11474,7 @@ ALTER TABLE ONLY storage.vector_indexes
 ALTER TABLE auth.audit_log_entries ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4739 (class 0 OID 16929)
+-- TOC entry 4805 (class 0 OID 16929)
 -- Dependencies: 370
 -- Name: flow_state; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10842,7 +11482,7 @@ ALTER TABLE auth.audit_log_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.flow_state ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4730 (class 0 OID 16727)
+-- TOC entry 4796 (class 0 OID 16727)
 -- Dependencies: 361
 -- Name: identities; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10850,7 +11490,7 @@ ALTER TABLE auth.flow_state ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.identities ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4724 (class 0 OID 16518)
+-- TOC entry 4790 (class 0 OID 16518)
 -- Dependencies: 352
 -- Name: instances; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10858,7 +11498,7 @@ ALTER TABLE auth.identities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.instances ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4734 (class 0 OID 16816)
+-- TOC entry 4800 (class 0 OID 16816)
 -- Dependencies: 365
 -- Name: mfa_amr_claims; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10866,7 +11506,7 @@ ALTER TABLE auth.instances ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_amr_claims ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4733 (class 0 OID 16804)
+-- TOC entry 4799 (class 0 OID 16804)
 -- Dependencies: 364
 -- Name: mfa_challenges; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10874,7 +11514,7 @@ ALTER TABLE auth.mfa_amr_claims ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_challenges ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4732 (class 0 OID 16791)
+-- TOC entry 4798 (class 0 OID 16791)
 -- Dependencies: 363
 -- Name: mfa_factors; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10882,7 +11522,7 @@ ALTER TABLE auth.mfa_challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.mfa_factors ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4740 (class 0 OID 16979)
+-- TOC entry 4806 (class 0 OID 16979)
 -- Dependencies: 371
 -- Name: one_time_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10890,7 +11530,7 @@ ALTER TABLE auth.mfa_factors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.one_time_tokens ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4723 (class 0 OID 16507)
+-- TOC entry 4789 (class 0 OID 16507)
 -- Dependencies: 351
 -- Name: refresh_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10898,7 +11538,7 @@ ALTER TABLE auth.one_time_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.refresh_tokens ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4737 (class 0 OID 16858)
+-- TOC entry 4803 (class 0 OID 16858)
 -- Dependencies: 368
 -- Name: saml_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10906,7 +11546,7 @@ ALTER TABLE auth.refresh_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.saml_providers ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4738 (class 0 OID 16876)
+-- TOC entry 4804 (class 0 OID 16876)
 -- Dependencies: 369
 -- Name: saml_relay_states; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10914,7 +11554,7 @@ ALTER TABLE auth.saml_providers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.saml_relay_states ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4726 (class 0 OID 16533)
+-- TOC entry 4792 (class 0 OID 16533)
 -- Dependencies: 354
 -- Name: schema_migrations; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10922,7 +11562,7 @@ ALTER TABLE auth.saml_relay_states ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.schema_migrations ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4731 (class 0 OID 16757)
+-- TOC entry 4797 (class 0 OID 16757)
 -- Dependencies: 362
 -- Name: sessions; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10930,7 +11570,7 @@ ALTER TABLE auth.schema_migrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sessions ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4736 (class 0 OID 16843)
+-- TOC entry 4802 (class 0 OID 16843)
 -- Dependencies: 367
 -- Name: sso_domains; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10938,7 +11578,7 @@ ALTER TABLE auth.sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sso_domains ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4735 (class 0 OID 16834)
+-- TOC entry 4801 (class 0 OID 16834)
 -- Dependencies: 366
 -- Name: sso_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10946,7 +11586,7 @@ ALTER TABLE auth.sso_domains ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.sso_providers ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4722 (class 0 OID 16495)
+-- TOC entry 4788 (class 0 OID 16495)
 -- Dependencies: 349
 -- Name: users; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
 --
@@ -10954,7 +11594,27 @@ ALTER TABLE auth.sso_providers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4888 (class 3256 OID 74740)
+-- TOC entry 4864 (class 3256 OID 76012)
+-- Name: platform_settings Admin write access for platform_settings; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Admin write access for platform_settings" ON public.platform_settings USING ((EXISTS ( SELECT 1
+   FROM public.profiles
+  WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text)))));
+
+
+--
+-- TOC entry 4868 (class 3256 OID 76067)
+-- Name: payment_gateway_configs Admins Full Access; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Admins Full Access" ON public.payment_gateway_configs TO authenticated USING ((EXISTS ( SELECT 1
+   FROM public.profiles
+  WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text)))));
+
+
+--
+-- TOC entry 4961 (class 3256 OID 74740)
 -- Name: client_details Admins can view all client_details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10964,7 +11624,7 @@ CREATE POLICY "Admins can view all client_details" ON public.client_details FOR 
 
 
 --
--- TOC entry 4904 (class 3256 OID 74747)
+-- TOC entry 4977 (class 3256 OID 74747)
 -- Name: user_goals Admins can view all goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10974,7 +11634,23 @@ CREATE POLICY "Admins can view all goals" ON public.user_goals FOR SELECT USING 
 
 
 --
--- TOC entry 4814 (class 3256 OID 26243)
+-- TOC entry 4993 (class 3256 OID 76001)
+-- Name: subscription_plans Anyone can view active plans; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Anyone can view active plans" ON public.subscription_plans FOR SELECT USING ((active = true));
+
+
+--
+-- TOC entry 4995 (class 3256 OID 76003)
+-- Name: platform_settings Anyone can view platform settings; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Anyone can view platform settings" ON public.platform_settings FOR SELECT USING (true);
+
+
+--
+-- TOC entry 4887 (class 3256 OID 26243)
 -- Name: professional_details Anyone can view professional details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10982,7 +11658,7 @@ CREATE POLICY "Anyone can view professional details" ON public.professional_deta
 
 
 --
--- TOC entry 4813 (class 3256 OID 26242)
+-- TOC entry 4886 (class 3256 OID 26242)
 -- Name: profiles Authenticated users can view profiles; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -10990,7 +11666,7 @@ CREATE POLICY "Authenticated users can view profiles" ON public.profiles FOR SEL
 
 
 --
--- TOC entry 4890 (class 3256 OID 26423)
+-- TOC entry 4963 (class 3256 OID 26423)
 -- Name: biometric_data Biometrics Insert Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11000,7 +11676,7 @@ CREATE POLICY "Biometrics Insert Policy" ON public.biometric_data FOR INSERT TO 
 
 
 --
--- TOC entry 4891 (class 3256 OID 26424)
+-- TOC entry 4964 (class 3256 OID 26424)
 -- Name: biometric_data Biometrics Modify Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11010,7 +11686,7 @@ CREATE POLICY "Biometrics Modify Policy" ON public.biometric_data TO authenticat
 
 
 --
--- TOC entry 4805 (class 3256 OID 26422)
+-- TOC entry 4878 (class 3256 OID 26422)
 -- Name: biometric_data Biometrics Select Policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11020,7 +11696,7 @@ CREATE POLICY "Biometrics Select Policy" ON public.biometric_data FOR SELECT TO 
 
 
 --
--- TOC entry 4912 (class 3256 OID 48464)
+-- TOC entry 4985 (class 3256 OID 48464)
 -- Name: professional_reviews Clients can review; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11028,7 +11704,7 @@ CREATE POLICY "Clients can review" ON public.professional_reviews FOR INSERT WIT
 
 
 --
--- TOC entry 4915 (class 3256 OID 48465)
+-- TOC entry 4988 (class 3256 OID 48465)
 -- Name: professional_reviews Clients can update own review; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11036,7 +11712,7 @@ CREATE POLICY "Clients can update own review" ON public.professional_reviews FOR
 
 
 --
--- TOC entry 4816 (class 3256 OID 29890)
+-- TOC entry 4889 (class 3256 OID 29890)
 -- Name: achievements Everyone can view achievements; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11044,7 +11720,7 @@ CREATE POLICY "Everyone can view achievements" ON public.achievements FOR SELECT
 
 
 --
--- TOC entry 4801 (class 3256 OID 26373)
+-- TOC entry 4874 (class 3256 OID 26373)
 -- Name: chat_messages Insert Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11052,7 +11728,7 @@ CREATE POLICY "Insert Messages Logic" ON public.chat_messages FOR INSERT TO auth
 
 
 --
--- TOC entry 4786 (class 3256 OID 26269)
+-- TOC entry 4856 (class 3256 OID 26269)
 -- Name: client_details Insert client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11062,7 +11738,7 @@ CREATE POLICY "Insert client details logic" ON public.client_details FOR INSERT 
 
 
 --
--- TOC entry 4847 (class 3256 OID 73627)
+-- TOC entry 4920 (class 3256 OID 73627)
 -- Name: professional_details Professional details are viewable by everyone; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11070,7 +11746,7 @@ CREATE POLICY "Professional details are viewable by everyone" ON public.professi
 
 
 --
--- TOC entry 4903 (class 3256 OID 74746)
+-- TOC entry 4976 (class 3256 OID 74746)
 -- Name: user_goals Professionals can delete linked client goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11080,7 +11756,7 @@ CREATE POLICY "Professionals can delete linked client goals" ON public.user_goal
 
 
 --
--- TOC entry 4895 (class 3256 OID 74744)
+-- TOC entry 4968 (class 3256 OID 74744)
 -- Name: user_goals Professionals can insert linked client goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11090,7 +11766,15 @@ CREATE POLICY "Professionals can insert linked client goals" ON public.user_goal
 
 
 --
--- TOC entry 4902 (class 3256 OID 74745)
+-- TOC entry 4992 (class 3256 OID 76000)
+-- Name: subscription_plans Professionals can manage own plans; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Professionals can manage own plans" ON public.subscription_plans USING ((auth.uid() = professional_id));
+
+
+--
+-- TOC entry 4975 (class 3256 OID 74745)
 -- Name: user_goals Professionals can update linked client goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11100,7 +11784,7 @@ CREATE POLICY "Professionals can update linked client goals" ON public.user_goal
 
 
 --
--- TOC entry 4792 (class 3256 OID 65598)
+-- TOC entry 4862 (class 3256 OID 65598)
 -- Name: user_goals Professionals can view client goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11110,7 +11794,7 @@ CREATE POLICY "Professionals can view client goals" ON public.user_goals FOR SEL
 
 
 --
--- TOC entry 4901 (class 3256 OID 28728)
+-- TOC entry 4974 (class 3256 OID 28728)
 -- Name: workout_execution_logs Professionals can view execution logs of their clients; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11120,7 +11804,7 @@ CREATE POLICY "Professionals can view execution logs of their clients" ON public
 
 
 --
--- TOC entry 4872 (class 3256 OID 74739)
+-- TOC entry 4945 (class 3256 OID 74739)
 -- Name: client_details Professionals can view linked client details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11130,7 +11814,7 @@ CREATE POLICY "Professionals can view linked client details" ON public.client_de
 
 
 --
--- TOC entry 4894 (class 3256 OID 74743)
+-- TOC entry 4967 (class 3256 OID 74743)
 -- Name: user_goals Professionals can view linked client goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11140,7 +11824,7 @@ CREATE POLICY "Professionals can view linked client goals" ON public.user_goals 
 
 
 --
--- TOC entry 4898 (class 3256 OID 27553)
+-- TOC entry 4971 (class 3256 OID 27553)
 -- Name: progress_photos Progress Photos Delete; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11150,7 +11834,7 @@ CREATE POLICY "Progress Photos Delete" ON public.progress_photos FOR DELETE TO a
 
 
 --
--- TOC entry 4897 (class 3256 OID 27552)
+-- TOC entry 4970 (class 3256 OID 27552)
 -- Name: progress_photos Progress Photos Insert; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11160,7 +11844,7 @@ CREATE POLICY "Progress Photos Insert" ON public.progress_photos FOR INSERT TO a
 
 
 --
--- TOC entry 4896 (class 3256 OID 27551)
+-- TOC entry 4969 (class 3256 OID 27551)
 -- Name: progress_photos Progress Photos Select; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11170,7 +11854,7 @@ CREATE POLICY "Progress Photos Select" ON public.progress_photos FOR SELECT TO a
 
 
 --
--- TOC entry 4837 (class 3256 OID 73594)
+-- TOC entry 4910 (class 3256 OID 73594)
 -- Name: taco Public Read TACO; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11178,7 +11862,15 @@ CREATE POLICY "Public Read TACO" ON public.taco FOR SELECT USING (true);
 
 
 --
--- TOC entry 4911 (class 3256 OID 48463)
+-- TOC entry 4863 (class 3256 OID 76011)
+-- Name: platform_settings Public read access for platform_settings; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Public read access for platform_settings" ON public.platform_settings FOR SELECT USING (true);
+
+
+--
+-- TOC entry 4984 (class 3256 OID 48463)
 -- Name: professional_reviews Reviews are public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11186,7 +11878,7 @@ CREATE POLICY "Reviews are public" ON public.professional_reviews FOR SELECT USI
 
 
 --
--- TOC entry 4802 (class 3256 OID 26374)
+-- TOC entry 4875 (class 3256 OID 26374)
 -- Name: chat_messages Update Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11194,7 +11886,7 @@ CREATE POLICY "Update Messages Logic" ON public.chat_messages FOR UPDATE TO auth
 
 
 --
--- TOC entry 4846 (class 3256 OID 26268)
+-- TOC entry 4919 (class 3256 OID 26268)
 -- Name: client_details Update client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11204,7 +11896,7 @@ CREATE POLICY "Update client details logic" ON public.client_details FOR UPDATE 
 
 
 --
--- TOC entry 4917 (class 3256 OID 52126)
+-- TOC entry 4990 (class 3256 OID 52126)
 -- Name: workout_execution_logs Users can delete their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11214,7 +11906,7 @@ CREATE POLICY "Users can delete their own execution logs" ON public.workout_exec
 
 
 --
--- TOC entry 4795 (class 3256 OID 66858)
+-- TOC entry 4867 (class 3256 OID 66858)
 -- Name: user_favorite_foods Users can delete their own favorites; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11222,7 +11914,7 @@ CREATE POLICY "Users can delete their own favorites" ON public.user_favorite_foo
 
 
 --
--- TOC entry 4790 (class 3256 OID 65597)
+-- TOC entry 4860 (class 3256 OID 65597)
 -- Name: user_goals Users can delete their own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11230,7 +11922,7 @@ CREATE POLICY "Users can delete their own goals" ON public.user_goals FOR DELETE
 
 
 --
--- TOC entry 4855 (class 3256 OID 74738)
+-- TOC entry 4928 (class 3256 OID 74738)
 -- Name: client_details Users can insert own client_details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11238,7 +11930,7 @@ CREATE POLICY "Users can insert own client_details" ON public.client_details FOR
 
 
 --
--- TOC entry 4900 (class 3256 OID 28727)
+-- TOC entry 4973 (class 3256 OID 28727)
 -- Name: workout_execution_logs Users can insert their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11248,7 +11940,7 @@ CREATE POLICY "Users can insert their own execution logs" ON public.workout_exec
 
 
 --
--- TOC entry 4794 (class 3256 OID 66857)
+-- TOC entry 4866 (class 3256 OID 66857)
 -- Name: user_favorite_foods Users can insert their own favorites; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11256,7 +11948,7 @@ CREATE POLICY "Users can insert their own favorites" ON public.user_favorite_foo
 
 
 --
--- TOC entry 4788 (class 3256 OID 65595)
+-- TOC entry 4858 (class 3256 OID 65595)
 -- Name: user_goals Users can insert their own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11264,7 +11956,7 @@ CREATE POLICY "Users can insert their own goals" ON public.user_goals FOR INSERT
 
 
 --
--- TOC entry 4893 (class 3256 OID 74742)
+-- TOC entry 4966 (class 3256 OID 74742)
 -- Name: user_goals Users can manage own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11272,7 +11964,7 @@ CREATE POLICY "Users can manage own goals" ON public.user_goals USING ((auth.uid
 
 
 --
--- TOC entry 4854 (class 3256 OID 74737)
+-- TOC entry 4927 (class 3256 OID 74737)
 -- Name: client_details Users can update own client_details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11280,7 +11972,7 @@ CREATE POLICY "Users can update own client_details" ON public.client_details FOR
 
 
 --
--- TOC entry 4889 (class 3256 OID 26190)
+-- TOC entry 4962 (class 3256 OID 26190)
 -- Name: profiles Users can update own profile; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11288,7 +11980,7 @@ CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING
 
 
 --
--- TOC entry 4918 (class 3256 OID 52127)
+-- TOC entry 4991 (class 3256 OID 52127)
 -- Name: workout_execution_logs Users can update their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11300,7 +11992,7 @@ CREATE POLICY "Users can update their own execution logs" ON public.workout_exec
 
 
 --
--- TOC entry 4789 (class 3256 OID 65596)
+-- TOC entry 4859 (class 3256 OID 65596)
 -- Name: user_goals Users can update their own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11308,7 +12000,7 @@ CREATE POLICY "Users can update their own goals" ON public.user_goals FOR UPDATE
 
 
 --
--- TOC entry 4817 (class 3256 OID 29891)
+-- TOC entry 4890 (class 3256 OID 29891)
 -- Name: user_achievements Users can view own achievements; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11316,7 +12008,7 @@ CREATE POLICY "Users can view own achievements" ON public.user_achievements FOR 
 
 
 --
--- TOC entry 4853 (class 3256 OID 74736)
+-- TOC entry 4926 (class 3256 OID 74736)
 -- Name: client_details Users can view own client_details; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11324,7 +12016,7 @@ CREATE POLICY "Users can view own client_details" ON public.client_details FOR S
 
 
 --
--- TOC entry 4892 (class 3256 OID 74741)
+-- TOC entry 4965 (class 3256 OID 74741)
 -- Name: user_goals Users can view own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11332,7 +12024,7 @@ CREATE POLICY "Users can view own goals" ON public.user_goals FOR SELECT USING (
 
 
 --
--- TOC entry 4899 (class 3256 OID 28726)
+-- TOC entry 4972 (class 3256 OID 28726)
 -- Name: workout_execution_logs Users can view their own execution logs; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11342,7 +12034,7 @@ CREATE POLICY "Users can view their own execution logs" ON public.workout_execut
 
 
 --
--- TOC entry 4793 (class 3256 OID 66856)
+-- TOC entry 4865 (class 3256 OID 66856)
 -- Name: user_favorite_foods Users can view their own favorites; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11350,7 +12042,7 @@ CREATE POLICY "Users can view their own favorites" ON public.user_favorite_foods
 
 
 --
--- TOC entry 4778 (class 3256 OID 65594)
+-- TOC entry 4848 (class 3256 OID 65594)
 -- Name: user_goals Users can view their own goals; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11358,7 +12050,15 @@ CREATE POLICY "Users can view their own goals" ON public.user_goals FOR SELECT U
 
 
 --
--- TOC entry 4800 (class 3256 OID 26372)
+-- TOC entry 4994 (class 3256 OID 76002)
+-- Name: financial_transactions Users view own transactions; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Users view own transactions" ON public.financial_transactions FOR SELECT USING (((auth.uid() = student_id) OR (auth.uid() = professional_id)));
+
+
+--
+-- TOC entry 4873 (class 3256 OID 26372)
 -- Name: chat_messages View Messages Logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11366,7 +12066,7 @@ CREATE POLICY "View Messages Logic" ON public.chat_messages FOR SELECT TO authen
 
 
 --
--- TOC entry 4815 (class 3256 OID 26244)
+-- TOC entry 4888 (class 3256 OID 26244)
 -- Name: client_details View client details logic; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11376,7 +12076,7 @@ CREATE POLICY "View client details logic" ON public.client_details FOR SELECT TO
 
 
 --
--- TOC entry 4771 (class 0 OID 29858)
+-- TOC entry 4837 (class 0 OID 29858)
 -- Dependencies: 411
 -- Name: achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11384,7 +12084,7 @@ CREATE POLICY "View client details logic" ON public.client_details FOR SELECT TO
 ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4764 (class 0 OID 17790)
+-- TOC entry 4830 (class 0 OID 17790)
 -- Dependencies: 404
 -- Name: appointments; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11392,7 +12092,7 @@ ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4887 (class 3256 OID 18093)
+-- TOC entry 4960 (class 3256 OID 18093)
 -- Name: appointments appointments_delete_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11400,7 +12100,7 @@ CREATE POLICY appointments_delete_participants ON public.appointments FOR DELETE
 
 
 --
--- TOC entry 4885 (class 3256 OID 18091)
+-- TOC entry 4958 (class 3256 OID 18091)
 -- Name: appointments appointments_insert_with_active_link; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11408,7 +12108,7 @@ CREATE POLICY appointments_insert_with_active_link ON public.appointments FOR IN
 
 
 --
--- TOC entry 4798 (class 3256 OID 18090)
+-- TOC entry 4871 (class 3256 OID 18090)
 -- Name: appointments appointments_select_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11416,7 +12116,7 @@ CREATE POLICY appointments_select_participants ON public.appointments FOR SELECT
 
 
 --
--- TOC entry 4886 (class 3256 OID 18092)
+-- TOC entry 4959 (class 3256 OID 18092)
 -- Name: appointments appointments_update_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11424,7 +12124,7 @@ CREATE POLICY appointments_update_participants ON public.appointments FOR UPDATE
 
 
 --
--- TOC entry 4763 (class 0 OID 17774)
+-- TOC entry 4829 (class 0 OID 17774)
 -- Dependencies: 403
 -- Name: biometric_data; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11432,7 +12132,7 @@ CREATE POLICY appointments_update_participants ON public.appointments FOR UPDATE
 ALTER TABLE public.biometric_data ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4765 (class 0 OID 17813)
+-- TOC entry 4831 (class 0 OID 17813)
 -- Dependencies: 405
 -- Name: chat_messages; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11440,7 +12140,7 @@ ALTER TABLE public.biometric_data ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4748 (class 0 OID 17482)
+-- TOC entry 4814 (class 0 OID 17482)
 -- Dependencies: 388
 -- Name: client_details; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11448,7 +12148,7 @@ ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.client_details ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4818 (class 3256 OID 18029)
+-- TOC entry 4891 (class 3256 OID 18029)
 -- Name: client_details client_details_delete_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11456,7 +12156,7 @@ CREATE POLICY client_details_delete_own ON public.client_details FOR DELETE USIN
 
 
 --
--- TOC entry 4760 (class 0 OID 17708)
+-- TOC entry 4826 (class 0 OID 17708)
 -- Dependencies: 400
 -- Name: client_meal_plans; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11464,7 +12164,7 @@ CREATE POLICY client_details_delete_own ON public.client_details FOR DELETE USIN
 ALTER TABLE public.client_meal_plans ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4883 (class 3256 OID 18077)
+-- TOC entry 4956 (class 3256 OID 18077)
 -- Name: client_meal_plans client_meal_plans_delete_assigning_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11472,7 +12172,7 @@ CREATE POLICY client_meal_plans_delete_assigning_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4881 (class 3256 OID 18075)
+-- TOC entry 4954 (class 3256 OID 18075)
 -- Name: client_meal_plans client_meal_plans_insert_nutritionist_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11480,7 +12180,7 @@ CREATE POLICY client_meal_plans_insert_nutritionist_only ON public.client_meal_p
 
 
 --
--- TOC entry 4880 (class 3256 OID 18074)
+-- TOC entry 4953 (class 3256 OID 18074)
 -- Name: client_meal_plans client_meal_plans_select_client_or_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11488,7 +12188,7 @@ CREATE POLICY client_meal_plans_select_client_or_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4882 (class 3256 OID 18076)
+-- TOC entry 4955 (class 3256 OID 18076)
 -- Name: client_meal_plans client_meal_plans_update_assigning_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11496,7 +12196,7 @@ CREATE POLICY client_meal_plans_update_assigning_nutritionist ON public.client_m
 
 
 --
--- TOC entry 4749 (class 0 OID 17496)
+-- TOC entry 4815 (class 0 OID 17496)
 -- Dependencies: 389
 -- Name: client_professionals; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11504,7 +12204,7 @@ CREATE POLICY client_meal_plans_update_assigning_nutritionist ON public.client_m
 ALTER TABLE public.client_professionals ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4822 (class 3256 OID 18033)
+-- TOC entry 4895 (class 3256 OID 18033)
 -- Name: client_professionals client_professionals_delete_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11512,7 +12212,7 @@ CREATE POLICY client_professionals_delete_professional_only ON public.client_pro
 
 
 --
--- TOC entry 4820 (class 3256 OID 18031)
+-- TOC entry 4893 (class 3256 OID 18031)
 -- Name: client_professionals client_professionals_insert_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11520,7 +12220,7 @@ CREATE POLICY client_professionals_insert_participants ON public.client_professi
 
 
 --
--- TOC entry 4819 (class 3256 OID 18030)
+-- TOC entry 4892 (class 3256 OID 18030)
 -- Name: client_professionals client_professionals_select_participants; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11528,7 +12228,7 @@ CREATE POLICY client_professionals_select_participants ON public.client_professi
 
 
 --
--- TOC entry 4821 (class 3256 OID 18032)
+-- TOC entry 4894 (class 3256 OID 18032)
 -- Name: client_professionals client_professionals_update_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11536,7 +12236,7 @@ CREATE POLICY client_professionals_update_professional_only ON public.client_pro
 
 
 --
--- TOC entry 4811 (class 3256 OID 22710)
+-- TOC entry 4884 (class 3256 OID 22710)
 -- Name: client_professionals client_view_own_link; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11544,7 +12244,7 @@ CREATE POLICY client_view_own_link ON public.client_professionals FOR SELECT USI
 
 
 --
--- TOC entry 4753 (class 0 OID 17571)
+-- TOC entry 4819 (class 0 OID 17571)
 -- Dependencies: 393
 -- Name: client_workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11552,7 +12252,7 @@ CREATE POLICY client_view_own_link ON public.client_professionals FOR SELECT USI
 ALTER TABLE public.client_workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4782 (class 3256 OID 19767)
+-- TOC entry 4852 (class 3256 OID 19767)
 -- Name: client_workouts client_workouts_delete_assigning_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11560,7 +12260,7 @@ CREATE POLICY client_workouts_delete_assigning_professional ON public.client_wor
 
 
 --
--- TOC entry 4780 (class 3256 OID 19765)
+-- TOC entry 4850 (class 3256 OID 19765)
 -- Name: client_workouts client_workouts_insert_professional_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11568,7 +12268,7 @@ CREATE POLICY client_workouts_insert_professional_only ON public.client_workouts
 
 
 --
--- TOC entry 4779 (class 3256 OID 19764)
+-- TOC entry 4849 (class 3256 OID 19764)
 -- Name: client_workouts client_workouts_select_client_or_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11576,7 +12276,7 @@ CREATE POLICY client_workouts_select_client_or_professional ON public.client_wor
 
 
 --
--- TOC entry 4781 (class 3256 OID 19766)
+-- TOC entry 4851 (class 3256 OID 19766)
 -- Name: client_workouts client_workouts_update_assigning_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11584,7 +12284,7 @@ CREATE POLICY client_workouts_update_assigning_professional ON public.client_wor
 
 
 --
--- TOC entry 4916 (class 3256 OID 48676)
+-- TOC entry 4989 (class 3256 OID 48676)
 -- Name: profiles everyone_can_view_admins; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11592,7 +12292,7 @@ CREATE POLICY everyone_can_view_admins ON public.profiles FOR SELECT USING ((rol
 
 
 --
--- TOC entry 4750 (class 0 OID 17519)
+-- TOC entry 4816 (class 0 OID 17519)
 -- Dependencies: 390
 -- Name: exercises_library; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11600,7 +12300,7 @@ CREATE POLICY everyone_can_view_admins ON public.profiles FOR SELECT USING ((rol
 ALTER TABLE public.exercises_library ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4826 (class 3256 OID 18037)
+-- TOC entry 4899 (class 3256 OID 18037)
 -- Name: exercises_library exercises_library_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11608,7 +12308,7 @@ CREATE POLICY exercises_library_delete_creator ON public.exercises_library FOR D
 
 
 --
--- TOC entry 4824 (class 3256 OID 18035)
+-- TOC entry 4897 (class 3256 OID 18035)
 -- Name: exercises_library exercises_library_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11616,7 +12316,7 @@ CREATE POLICY exercises_library_insert_professionals_only ON public.exercises_li
 
 
 --
--- TOC entry 4823 (class 3256 OID 18034)
+-- TOC entry 4896 (class 3256 OID 18034)
 -- Name: exercises_library exercises_library_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11624,7 +12324,7 @@ CREATE POLICY exercises_library_select_own_or_public ON public.exercises_library
 
 
 --
--- TOC entry 4825 (class 3256 OID 18036)
+-- TOC entry 4898 (class 3256 OID 18036)
 -- Name: exercises_library exercises_library_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11632,7 +12332,15 @@ CREATE POLICY exercises_library_update_creator ON public.exercises_library FOR U
 
 
 --
--- TOC entry 4755 (class 0 OID 17618)
+-- TOC entry 4845 (class 0 OID 75947)
+-- Dependencies: 429
+-- Name: financial_transactions; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.financial_transactions ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 4821 (class 0 OID 17618)
 -- Dependencies: 395
 -- Name: foods_library; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11640,7 +12348,7 @@ CREATE POLICY exercises_library_update_creator ON public.exercises_library FOR U
 ALTER TABLE public.foods_library ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4863 (class 3256 OID 18057)
+-- TOC entry 4936 (class 3256 OID 18057)
 -- Name: foods_library foods_library_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11648,7 +12356,7 @@ CREATE POLICY foods_library_delete_creator ON public.foods_library FOR DELETE US
 
 
 --
--- TOC entry 4861 (class 3256 OID 18055)
+-- TOC entry 4934 (class 3256 OID 18055)
 -- Name: foods_library foods_library_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11656,7 +12364,7 @@ CREATE POLICY foods_library_insert_professionals_only ON public.foods_library FO
 
 
 --
--- TOC entry 4860 (class 3256 OID 18054)
+-- TOC entry 4933 (class 3256 OID 18054)
 -- Name: foods_library foods_library_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11664,7 +12372,7 @@ CREATE POLICY foods_library_select_own_or_public ON public.foods_library FOR SEL
 
 
 --
--- TOC entry 4862 (class 3256 OID 18056)
+-- TOC entry 4935 (class 3256 OID 18056)
 -- Name: foods_library foods_library_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11672,7 +12380,7 @@ CREATE POLICY foods_library_update_creator ON public.foods_library FOR UPDATE US
 
 
 --
--- TOC entry 4761 (class 0 OID 17735)
+-- TOC entry 4827 (class 0 OID 17735)
 -- Dependencies: 401
 -- Name: meal_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11680,7 +12388,7 @@ CREATE POLICY foods_library_update_creator ON public.foods_library FOR UPDATE US
 ALTER TABLE public.meal_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4797 (class 3256 OID 18081)
+-- TOC entry 4870 (class 3256 OID 18081)
 -- Name: meal_logs meal_logs_delete_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11688,7 +12396,7 @@ CREATE POLICY meal_logs_delete_client_only ON public.meal_logs FOR DELETE USING 
 
 
 --
--- TOC entry 4884 (class 3256 OID 18079)
+-- TOC entry 4957 (class 3256 OID 18079)
 -- Name: meal_logs meal_logs_insert_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11696,7 +12404,7 @@ CREATE POLICY meal_logs_insert_client_only ON public.meal_logs FOR INSERT WITH C
 
 
 --
--- TOC entry 4876 (class 3256 OID 18078)
+-- TOC entry 4949 (class 3256 OID 18078)
 -- Name: meal_logs meal_logs_select_client_or_linked_nutritionist; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11704,7 +12412,7 @@ CREATE POLICY meal_logs_select_client_or_linked_nutritionist ON public.meal_logs
 
 
 --
--- TOC entry 4796 (class 3256 OID 18080)
+-- TOC entry 4869 (class 3256 OID 18080)
 -- Name: meal_logs meal_logs_update_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11712,7 +12420,7 @@ CREATE POLICY meal_logs_update_client_only ON public.meal_logs FOR UPDATE USING 
 
 
 --
--- TOC entry 4759 (class 0 OID 17684)
+-- TOC entry 4825 (class 0 OID 17684)
 -- Dependencies: 399
 -- Name: meal_plan_items; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11720,7 +12428,7 @@ CREATE POLICY meal_logs_update_client_only ON public.meal_logs FOR UPDATE USING 
 ALTER TABLE public.meal_plan_items ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4879 (class 3256 OID 18073)
+-- TOC entry 4952 (class 3256 OID 18073)
 -- Name: meal_plan_items meal_plan_items_delete_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11730,7 +12438,7 @@ CREATE POLICY meal_plan_items_delete_plan_owner ON public.meal_plan_items FOR DE
 
 
 --
--- TOC entry 4877 (class 3256 OID 18071)
+-- TOC entry 4950 (class 3256 OID 18071)
 -- Name: meal_plan_items meal_plan_items_insert_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11740,7 +12448,7 @@ CREATE POLICY meal_plan_items_insert_plan_owner ON public.meal_plan_items FOR IN
 
 
 --
--- TOC entry 4810 (class 3256 OID 20117)
+-- TOC entry 4883 (class 3256 OID 20117)
 -- Name: meal_plan_items meal_plan_items_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11752,7 +12460,7 @@ CREATE POLICY meal_plan_items_select_policy ON public.meal_plan_items FOR SELECT
 
 
 --
--- TOC entry 4878 (class 3256 OID 18072)
+-- TOC entry 4951 (class 3256 OID 18072)
 -- Name: meal_plan_items meal_plan_items_update_plan_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11762,7 +12470,7 @@ CREATE POLICY meal_plan_items_update_plan_owner ON public.meal_plan_items FOR UP
 
 
 --
--- TOC entry 4758 (class 0 OID 17668)
+-- TOC entry 4824 (class 0 OID 17668)
 -- Dependencies: 398
 -- Name: meal_plans; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11770,7 +12478,7 @@ CREATE POLICY meal_plan_items_update_plan_owner ON public.meal_plan_items FOR UP
 ALTER TABLE public.meal_plans ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4875 (class 3256 OID 18069)
+-- TOC entry 4948 (class 3256 OID 18069)
 -- Name: meal_plans meal_plans_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11778,7 +12486,7 @@ CREATE POLICY meal_plans_delete_creator ON public.meal_plans FOR DELETE USING ((
 
 
 --
--- TOC entry 4873 (class 3256 OID 18067)
+-- TOC entry 4946 (class 3256 OID 18067)
 -- Name: meal_plans meal_plans_insert_nutritionists_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11786,7 +12494,7 @@ CREATE POLICY meal_plans_insert_nutritionists_only ON public.meal_plans FOR INSE
 
 
 --
--- TOC entry 4791 (class 3256 OID 20094)
+-- TOC entry 4861 (class 3256 OID 20094)
 -- Name: meal_plans meal_plans_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11796,7 +12504,7 @@ CREATE POLICY meal_plans_select_policy ON public.meal_plans FOR SELECT USING (((
 
 
 --
--- TOC entry 4874 (class 3256 OID 18068)
+-- TOC entry 4947 (class 3256 OID 18068)
 -- Name: meal_plans meal_plans_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11804,7 +12512,23 @@ CREATE POLICY meal_plans_update_creator ON public.meal_plans FOR UPDATE USING ((
 
 
 --
--- TOC entry 4841 (class 3256 OID 22411)
+-- TOC entry 4847 (class 0 OID 76041)
+-- Dependencies: 431
+-- Name: payment_gateway_configs; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.payment_gateway_configs ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 4846 (class 0 OID 75983)
+-- Dependencies: 430
+-- Name: platform_settings; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 4914 (class 3256 OID 22411)
 -- Name: professional_notifications prof_delete_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11812,7 +12536,7 @@ CREATE POLICY prof_delete_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4839 (class 3256 OID 22409)
+-- TOC entry 4912 (class 3256 OID 22409)
 -- Name: professional_notifications prof_insert_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11820,7 +12544,7 @@ CREATE POLICY prof_insert_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4840 (class 3256 OID 22410)
+-- TOC entry 4913 (class 3256 OID 22410)
 -- Name: professional_notifications prof_update_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11828,7 +12552,7 @@ CREATE POLICY prof_update_own_notifications ON public.professional_notifications
 
 
 --
--- TOC entry 4838 (class 3256 OID 22408)
+-- TOC entry 4911 (class 3256 OID 22408)
 -- Name: professional_notifications prof_view_own_notifications; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11836,7 +12560,7 @@ CREATE POLICY prof_view_own_notifications ON public.professional_notifications F
 
 
 --
--- TOC entry 4747 (class 0 OID 17466)
+-- TOC entry 4813 (class 0 OID 17466)
 -- Dependencies: 387
 -- Name: professional_details; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11844,7 +12568,7 @@ CREATE POLICY prof_view_own_notifications ON public.professional_notifications F
 ALTER TABLE public.professional_details ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4852 (class 3256 OID 18025)
+-- TOC entry 4925 (class 3256 OID 18025)
 -- Name: professional_details professional_details_delete_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11852,7 +12576,7 @@ CREATE POLICY professional_details_delete_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4850 (class 3256 OID 18023)
+-- TOC entry 4923 (class 3256 OID 18023)
 -- Name: professional_details professional_details_insert_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11860,7 +12584,7 @@ CREATE POLICY professional_details_insert_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4851 (class 3256 OID 18024)
+-- TOC entry 4924 (class 3256 OID 18024)
 -- Name: professional_details professional_details_update_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11868,7 +12592,7 @@ CREATE POLICY professional_details_update_own ON public.professional_details FOR
 
 
 --
--- TOC entry 4767 (class 0 OID 22388)
+-- TOC entry 4833 (class 0 OID 22388)
 -- Dependencies: 407
 -- Name: professional_notifications; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11876,7 +12600,7 @@ CREATE POLICY professional_details_update_own ON public.professional_details FOR
 ALTER TABLE public.professional_notifications ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4774 (class 0 OID 48437)
+-- TOC entry 4840 (class 0 OID 48437)
 -- Dependencies: 414
 -- Name: professional_reviews; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11884,7 +12608,7 @@ ALTER TABLE public.professional_notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.professional_reviews ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4746 (class 0 OID 17451)
+-- TOC entry 4812 (class 0 OID 17451)
 -- Dependencies: 386
 -- Name: profiles; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11892,7 +12616,7 @@ ALTER TABLE public.professional_reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4849 (class 3256 OID 18021)
+-- TOC entry 4922 (class 3256 OID 18021)
 -- Name: profiles profiles_delete_admin_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11900,7 +12624,7 @@ CREATE POLICY profiles_delete_admin_only ON public.profiles FOR DELETE USING (pu
 
 
 --
--- TOC entry 4809 (class 3256 OID 19603)
+-- TOC entry 4882 (class 3256 OID 19603)
 -- Name: profiles profiles_delete_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11908,7 +12632,7 @@ CREATE POLICY profiles_delete_policy ON public.profiles FOR DELETE TO authentica
 
 
 --
--- TOC entry 4848 (class 3256 OID 18019)
+-- TOC entry 4921 (class 3256 OID 18019)
 -- Name: profiles profiles_insert_admin_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11916,7 +12640,7 @@ CREATE POLICY profiles_insert_admin_only ON public.profiles FOR INSERT WITH CHEC
 
 
 --
--- TOC entry 4808 (class 3256 OID 19601)
+-- TOC entry 4881 (class 3256 OID 19601)
 -- Name: profiles profiles_insert_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11924,7 +12648,7 @@ CREATE POLICY profiles_insert_policy ON public.profiles FOR INSERT TO authentica
 
 
 --
--- TOC entry 4812 (class 3256 OID 22711)
+-- TOC entry 4885 (class 3256 OID 22711)
 -- Name: profiles profiles_view_linked_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11934,7 +12658,7 @@ CREATE POLICY profiles_view_linked_professional ON public.profiles FOR SELECT US
 
 
 --
--- TOC entry 4762 (class 0 OID 17760)
+-- TOC entry 4828 (class 0 OID 17760)
 -- Dependencies: 402
 -- Name: progress_photos; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11942,7 +12666,7 @@ CREATE POLICY profiles_view_linked_professional ON public.profiles FOR SELECT US
 ALTER TABLE public.progress_photos ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4757 (class 0 OID 17650)
+-- TOC entry 4823 (class 0 OID 17650)
 -- Dependencies: 397
 -- Name: recipe_ingredients; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11950,7 +12674,7 @@ ALTER TABLE public.progress_photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.recipe_ingredients ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4871 (class 3256 OID 18065)
+-- TOC entry 4944 (class 3256 OID 18065)
 -- Name: recipe_ingredients recipe_ingredients_delete_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11960,7 +12684,7 @@ CREATE POLICY recipe_ingredients_delete_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4869 (class 3256 OID 18063)
+-- TOC entry 4942 (class 3256 OID 18063)
 -- Name: recipe_ingredients recipe_ingredients_insert_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11970,7 +12694,7 @@ CREATE POLICY recipe_ingredients_insert_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4868 (class 3256 OID 18062)
+-- TOC entry 4941 (class 3256 OID 18062)
 -- Name: recipe_ingredients recipe_ingredients_select_via_recipe; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11980,7 +12704,7 @@ CREATE POLICY recipe_ingredients_select_via_recipe ON public.recipe_ingredients 
 
 
 --
--- TOC entry 4870 (class 3256 OID 18064)
+-- TOC entry 4943 (class 3256 OID 18064)
 -- Name: recipe_ingredients recipe_ingredients_update_recipe_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -11990,7 +12714,7 @@ CREATE POLICY recipe_ingredients_update_recipe_owner ON public.recipe_ingredient
 
 
 --
--- TOC entry 4756 (class 0 OID 17634)
+-- TOC entry 4822 (class 0 OID 17634)
 -- Dependencies: 396
 -- Name: recipes; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -11998,7 +12722,7 @@ CREATE POLICY recipe_ingredients_update_recipe_owner ON public.recipe_ingredient
 ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4867 (class 3256 OID 18061)
+-- TOC entry 4940 (class 3256 OID 18061)
 -- Name: recipes recipes_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12006,7 +12730,7 @@ CREATE POLICY recipes_delete_creator ON public.recipes FOR DELETE USING ((create
 
 
 --
--- TOC entry 4865 (class 3256 OID 18059)
+-- TOC entry 4938 (class 3256 OID 18059)
 -- Name: recipes recipes_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12014,7 +12738,7 @@ CREATE POLICY recipes_insert_professionals_only ON public.recipes FOR INSERT WIT
 
 
 --
--- TOC entry 4864 (class 3256 OID 18058)
+-- TOC entry 4937 (class 3256 OID 18058)
 -- Name: recipes recipes_select_own_or_public; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12022,7 +12746,7 @@ CREATE POLICY recipes_select_own_or_public ON public.recipes FOR SELECT USING ((
 
 
 --
--- TOC entry 4866 (class 3256 OID 18060)
+-- TOC entry 4939 (class 3256 OID 18060)
 -- Name: recipes recipes_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12030,7 +12754,7 @@ CREATE POLICY recipes_update_creator ON public.recipes FOR UPDATE USING ((create
 
 
 --
--- TOC entry 4773 (class 0 OID 45802)
+-- TOC entry 4839 (class 0 OID 45802)
 -- Dependencies: 413
 -- Name: scheduled_workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12038,7 +12762,7 @@ CREATE POLICY recipes_update_creator ON public.recipes FOR UPDATE USING ((create
 ALTER TABLE public.scheduled_workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4908 (class 3256 OID 45829)
+-- TOC entry 4981 (class 3256 OID 45829)
 -- Name: scheduled_workouts scheduled_workouts_delete_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12046,7 +12770,7 @@ CREATE POLICY scheduled_workouts_delete_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4914 (class 3256 OID 47272)
+-- TOC entry 4987 (class 3256 OID 47272)
 -- Name: scheduled_workouts scheduled_workouts_delete_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12056,7 +12780,7 @@ CREATE POLICY scheduled_workouts_delete_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4906 (class 3256 OID 45827)
+-- TOC entry 4979 (class 3256 OID 45827)
 -- Name: scheduled_workouts scheduled_workouts_insert_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12064,7 +12788,7 @@ CREATE POLICY scheduled_workouts_insert_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4913 (class 3256 OID 47218)
+-- TOC entry 4986 (class 3256 OID 47218)
 -- Name: scheduled_workouts scheduled_workouts_insert_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12074,7 +12798,7 @@ CREATE POLICY scheduled_workouts_insert_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4905 (class 3256 OID 45826)
+-- TOC entry 4978 (class 3256 OID 45826)
 -- Name: scheduled_workouts scheduled_workouts_select_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12082,7 +12806,7 @@ CREATE POLICY scheduled_workouts_select_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4909 (class 3256 OID 45830)
+-- TOC entry 4982 (class 3256 OID 45830)
 -- Name: scheduled_workouts scheduled_workouts_select_professional_view; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12092,7 +12816,7 @@ CREATE POLICY scheduled_workouts_select_professional_view ON public.scheduled_wo
 
 
 --
--- TOC entry 4907 (class 3256 OID 45828)
+-- TOC entry 4980 (class 3256 OID 45828)
 -- Name: scheduled_workouts scheduled_workouts_update_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12100,7 +12824,7 @@ CREATE POLICY scheduled_workouts_update_client_own ON public.scheduled_workouts 
 
 
 --
--- TOC entry 4910 (class 3256 OID 47197)
+-- TOC entry 4983 (class 3256 OID 47197)
 -- Name: scheduled_workouts scheduled_workouts_update_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12110,7 +12834,15 @@ CREATE POLICY scheduled_workouts_update_professional ON public.scheduled_workout
 
 
 --
--- TOC entry 4777 (class 0 OID 73586)
+-- TOC entry 4844 (class 0 OID 75923)
+-- Dependencies: 428
+-- Name: subscription_plans; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.subscription_plans ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 4843 (class 0 OID 73586)
 -- Dependencies: 423
 -- Name: taco; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12118,7 +12850,7 @@ CREATE POLICY scheduled_workouts_update_professional ON public.scheduled_workout
 ALTER TABLE public.taco ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4772 (class 0 OID 29871)
+-- TOC entry 4838 (class 0 OID 29871)
 -- Dependencies: 412
 -- Name: user_achievements; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12126,7 +12858,7 @@ ALTER TABLE public.taco ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4776 (class 0 OID 66837)
+-- TOC entry 4842 (class 0 OID 66837)
 -- Dependencies: 417
 -- Name: user_favorite_foods; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12134,7 +12866,7 @@ ALTER TABLE public.user_achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_favorite_foods ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4775 (class 0 OID 65577)
+-- TOC entry 4841 (class 0 OID 65577)
 -- Dependencies: 416
 -- Name: user_goals; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12142,7 +12874,7 @@ ALTER TABLE public.user_favorite_foods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_goals ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4770 (class 0 OID 28702)
+-- TOC entry 4836 (class 0 OID 28702)
 -- Dependencies: 410
 -- Name: workout_execution_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12150,7 +12882,7 @@ ALTER TABLE public.user_goals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.workout_execution_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4752 (class 0 OID 17553)
+-- TOC entry 4818 (class 0 OID 17553)
 -- Dependencies: 392
 -- Name: workout_exercises; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12158,7 +12890,7 @@ ALTER TABLE public.workout_execution_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.workout_exercises ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4836 (class 3256 OID 18045)
+-- TOC entry 4909 (class 3256 OID 18045)
 -- Name: workout_exercises workout_exercises_delete_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12168,7 +12900,7 @@ CREATE POLICY workout_exercises_delete_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4834 (class 3256 OID 18043)
+-- TOC entry 4907 (class 3256 OID 18043)
 -- Name: workout_exercises workout_exercises_insert_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12178,7 +12910,7 @@ CREATE POLICY workout_exercises_insert_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4799 (class 3256 OID 20116)
+-- TOC entry 4872 (class 3256 OID 20116)
 -- Name: workout_exercises workout_exercises_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12190,7 +12922,7 @@ CREATE POLICY workout_exercises_select_policy ON public.workout_exercises FOR SE
 
 
 --
--- TOC entry 4835 (class 3256 OID 18044)
+-- TOC entry 4908 (class 3256 OID 18044)
 -- Name: workout_exercises workout_exercises_update_workout_owner; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12200,7 +12932,7 @@ CREATE POLICY workout_exercises_update_workout_owner ON public.workout_exercises
 
 
 --
--- TOC entry 4754 (class 0 OID 17598)
+-- TOC entry 4820 (class 0 OID 17598)
 -- Dependencies: 394
 -- Name: workout_logs; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12208,7 +12940,7 @@ CREATE POLICY workout_exercises_update_workout_owner ON public.workout_exercises
 ALTER TABLE public.workout_logs ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4859 (class 3256 OID 18053)
+-- TOC entry 4932 (class 3256 OID 18053)
 -- Name: workout_logs workout_logs_delete_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12218,7 +12950,7 @@ CREATE POLICY workout_logs_delete_client_only ON public.workout_logs FOR DELETE 
 
 
 --
--- TOC entry 4857 (class 3256 OID 18051)
+-- TOC entry 4930 (class 3256 OID 18051)
 -- Name: workout_logs workout_logs_insert_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12228,7 +12960,7 @@ CREATE POLICY workout_logs_insert_client_only ON public.workout_logs FOR INSERT 
 
 
 --
--- TOC entry 4856 (class 3256 OID 18050)
+-- TOC entry 4929 (class 3256 OID 18050)
 -- Name: workout_logs workout_logs_select_client_or_linked_professional; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12238,7 +12970,7 @@ CREATE POLICY workout_logs_select_client_or_linked_professional ON public.workou
 
 
 --
--- TOC entry 4858 (class 3256 OID 18052)
+-- TOC entry 4931 (class 3256 OID 18052)
 -- Name: workout_logs workout_logs_update_client_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12248,7 +12980,7 @@ CREATE POLICY workout_logs_update_client_only ON public.workout_logs FOR UPDATE 
 
 
 --
--- TOC entry 4766 (class 0 OID 20118)
+-- TOC entry 4832 (class 0 OID 20118)
 -- Dependencies: 406
 -- Name: workout_sessions; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12256,7 +12988,7 @@ CREATE POLICY workout_logs_update_client_only ON public.workout_logs FOR UPDATE 
 ALTER TABLE public.workout_sessions ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4832 (class 3256 OID 20158)
+-- TOC entry 4905 (class 3256 OID 20158)
 -- Name: workout_sessions workout_sessions_delete_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12264,7 +12996,7 @@ CREATE POLICY workout_sessions_delete_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4829 (class 3256 OID 20155)
+-- TOC entry 4902 (class 3256 OID 20155)
 -- Name: workout_sessions workout_sessions_insert_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12272,7 +13004,7 @@ CREATE POLICY workout_sessions_insert_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4830 (class 3256 OID 20156)
+-- TOC entry 4903 (class 3256 OID 20156)
 -- Name: workout_sessions workout_sessions_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12280,7 +13012,7 @@ CREATE POLICY workout_sessions_select_policy ON public.workout_sessions FOR SELE
 
 
 --
--- TOC entry 4831 (class 3256 OID 20157)
+-- TOC entry 4904 (class 3256 OID 20157)
 -- Name: workout_sessions workout_sessions_update_client_own; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12288,7 +13020,7 @@ CREATE POLICY workout_sessions_update_client_own ON public.workout_sessions FOR 
 
 
 --
--- TOC entry 4751 (class 0 OID 17536)
+-- TOC entry 4817 (class 0 OID 17536)
 -- Dependencies: 391
 -- Name: workouts; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -12296,7 +13028,7 @@ CREATE POLICY workout_sessions_update_client_own ON public.workout_sessions FOR 
 ALTER TABLE public.workouts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4833 (class 3256 OID 18041)
+-- TOC entry 4906 (class 3256 OID 18041)
 -- Name: workouts workouts_delete_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12304,7 +13036,7 @@ CREATE POLICY workouts_delete_creator ON public.workouts FOR DELETE USING ((prof
 
 
 --
--- TOC entry 4827 (class 3256 OID 18039)
+-- TOC entry 4900 (class 3256 OID 18039)
 -- Name: workouts workouts_insert_professionals_only; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12312,7 +13044,7 @@ CREATE POLICY workouts_insert_professionals_only ON public.workouts FOR INSERT W
 
 
 --
--- TOC entry 4787 (class 3256 OID 18225)
+-- TOC entry 4857 (class 3256 OID 18225)
 -- Name: workouts workouts_select_policy; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12322,7 +13054,7 @@ CREATE POLICY workouts_select_policy ON public.workouts FOR SELECT USING (((prof
 
 
 --
--- TOC entry 4828 (class 3256 OID 18040)
+-- TOC entry 4901 (class 3256 OID 18040)
 -- Name: workouts workouts_update_creator; Type: POLICY; Schema: public; Owner: postgres
 --
 
@@ -12330,7 +13062,7 @@ CREATE POLICY workouts_update_creator ON public.workouts FOR UPDATE USING ((prof
 
 
 --
--- TOC entry 4745 (class 0 OID 17434)
+-- TOC entry 4811 (class 0 OID 17434)
 -- Dependencies: 385
 -- Name: messages; Type: ROW SECURITY; Schema: realtime; Owner: supabase_realtime_admin
 --
@@ -12338,7 +13070,7 @@ CREATE POLICY workouts_update_creator ON public.workouts FOR UPDATE USING ((prof
 ALTER TABLE realtime.messages ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4843 (class 3256 OID 26160)
+-- TOC entry 4916 (class 3256 OID 26160)
 -- Name: objects Authenticated users can upload avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12346,7 +13078,7 @@ CREATE POLICY "Authenticated users can upload avatar" ON storage.objects FOR INS
 
 
 --
--- TOC entry 4785 (class 3256 OID 26194)
+-- TOC entry 4855 (class 3256 OID 26194)
 -- Name: objects Avatar Auth Update; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12354,7 +13086,7 @@ CREATE POLICY "Avatar Auth Update" ON storage.objects FOR UPDATE USING ((auth.ui
 
 
 --
--- TOC entry 4784 (class 3256 OID 26193)
+-- TOC entry 4854 (class 3256 OID 26193)
 -- Name: objects Avatar Auth Upload; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12362,7 +13094,7 @@ CREATE POLICY "Avatar Auth Upload" ON storage.objects FOR INSERT WITH CHECK (((b
 
 
 --
--- TOC entry 4783 (class 3256 OID 26192)
+-- TOC entry 4853 (class 3256 OID 26192)
 -- Name: objects Avatar Public Select; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12370,7 +13102,7 @@ CREATE POLICY "Avatar Public Select" ON storage.objects FOR SELECT USING ((bucke
 
 
 --
--- TOC entry 4842 (class 3256 OID 26159)
+-- TOC entry 4915 (class 3256 OID 26159)
 -- Name: objects Avatar images are publicly accessible; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12378,7 +13110,7 @@ CREATE POLICY "Avatar images are publicly accessible" ON storage.objects FOR SEL
 
 
 --
--- TOC entry 4803 (class 3256 OID 26398)
+-- TOC entry 4876 (class 3256 OID 26398)
 -- Name: objects Give me access to chat files; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12386,7 +13118,7 @@ CREATE POLICY "Give me access to chat files" ON storage.objects FOR SELECT TO au
 
 
 --
--- TOC entry 4804 (class 3256 OID 26399)
+-- TOC entry 4877 (class 3256 OID 26399)
 -- Name: objects Let me upload chat files; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12394,7 +13126,7 @@ CREATE POLICY "Let me upload chat files" ON storage.objects FOR INSERT TO authen
 
 
 --
--- TOC entry 4807 (class 3256 OID 27550)
+-- TOC entry 4880 (class 3256 OID 27550)
 -- Name: objects Upload Progress Photos; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12402,7 +13134,7 @@ CREATE POLICY "Upload Progress Photos" ON storage.objects FOR INSERT TO authenti
 
 
 --
--- TOC entry 4845 (class 3256 OID 26162)
+-- TOC entry 4918 (class 3256 OID 26162)
 -- Name: objects Users can delete their own avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12410,7 +13142,7 @@ CREATE POLICY "Users can delete their own avatar" ON storage.objects FOR DELETE 
 
 
 --
--- TOC entry 4844 (class 3256 OID 26161)
+-- TOC entry 4917 (class 3256 OID 26161)
 -- Name: objects Users can update their own avatar; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12418,7 +13150,7 @@ CREATE POLICY "Users can update their own avatar" ON storage.objects FOR UPDATE 
 
 
 --
--- TOC entry 4806 (class 3256 OID 27549)
+-- TOC entry 4879 (class 3256 OID 27549)
 -- Name: objects View Progress Photos; Type: POLICY; Schema: storage; Owner: supabase_storage_admin
 --
 
@@ -12426,7 +13158,7 @@ CREATE POLICY "View Progress Photos" ON storage.objects FOR SELECT TO authentica
 
 
 --
--- TOC entry 4727 (class 0 OID 16546)
+-- TOC entry 4793 (class 0 OID 16546)
 -- Dependencies: 355
 -- Name: buckets; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12434,7 +13166,7 @@ CREATE POLICY "View Progress Photos" ON storage.objects FOR SELECT TO authentica
 ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4744 (class 0 OID 17246)
+-- TOC entry 4810 (class 0 OID 17246)
 -- Dependencies: 379
 -- Name: buckets_analytics; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12442,7 +13174,7 @@ ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.buckets_analytics ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4768 (class 0 OID 22419)
+-- TOC entry 4834 (class 0 OID 22419)
 -- Dependencies: 408
 -- Name: buckets_vectors; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12450,7 +13182,7 @@ ALTER TABLE storage.buckets_analytics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.buckets_vectors ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4729 (class 0 OID 16588)
+-- TOC entry 4795 (class 0 OID 16588)
 -- Dependencies: 357
 -- Name: migrations; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12458,7 +13190,7 @@ ALTER TABLE storage.buckets_vectors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.migrations ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4728 (class 0 OID 16561)
+-- TOC entry 4794 (class 0 OID 16561)
 -- Dependencies: 356
 -- Name: objects; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12466,7 +13198,7 @@ ALTER TABLE storage.migrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4743 (class 0 OID 17197)
+-- TOC entry 4809 (class 0 OID 17197)
 -- Dependencies: 377
 -- Name: prefixes; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12474,7 +13206,7 @@ ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.prefixes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4741 (class 0 OID 17144)
+-- TOC entry 4807 (class 0 OID 17144)
 -- Dependencies: 375
 -- Name: s3_multipart_uploads; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12482,7 +13214,7 @@ ALTER TABLE storage.prefixes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.s3_multipart_uploads ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4742 (class 0 OID 17158)
+-- TOC entry 4808 (class 0 OID 17158)
 -- Dependencies: 376
 -- Name: s3_multipart_uploads_parts; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12490,7 +13222,7 @@ ALTER TABLE storage.s3_multipart_uploads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.s3_multipart_uploads_parts ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4769 (class 0 OID 22429)
+-- TOC entry 4835 (class 0 OID 22429)
 -- Dependencies: 409
 -- Name: vector_indexes; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
 --
@@ -12498,7 +13230,7 @@ ALTER TABLE storage.s3_multipart_uploads_parts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE storage.vector_indexes ENABLE ROW LEVEL SECURITY;
 
 --
--- TOC entry 4919 (class 6104 OID 16426)
+-- TOC entry 4996 (class 6104 OID 16426)
 -- Name: supabase_realtime; Type: PUBLICATION; Schema: -; Owner: postgres
 --
 
@@ -12508,7 +13240,7 @@ CREATE PUBLICATION supabase_realtime WITH (publish = 'insert, update, delete, tr
 ALTER PUBLICATION supabase_realtime OWNER TO postgres;
 
 --
--- TOC entry 4920 (class 6104 OID 22584)
+-- TOC entry 4997 (class 6104 OID 22584)
 -- Name: supabase_realtime_messages_publication; Type: PUBLICATION; Schema: -; Owner: supabase_admin
 --
 
@@ -12518,7 +13250,7 @@ CREATE PUBLICATION supabase_realtime_messages_publication WITH (publish = 'inser
 ALTER PUBLICATION supabase_realtime_messages_publication OWNER TO supabase_admin;
 
 --
--- TOC entry 4922 (class 6106 OID 22732)
+-- TOC entry 4999 (class 6106 OID 22732)
 -- Name: supabase_realtime chat_messages; Type: PUBLICATION TABLE; Schema: public; Owner: postgres
 --
 
@@ -12526,7 +13258,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE ONLY public.chat_messages;
 
 
 --
--- TOC entry 4921 (class 6106 OID 22585)
+-- TOC entry 4998 (class 6106 OID 22585)
 -- Name: supabase_realtime_messages_publication messages; Type: PUBLICATION TABLE; Schema: realtime; Owner: supabase_admin
 --
 
@@ -12534,7 +13266,7 @@ ALTER PUBLICATION supabase_realtime_messages_publication ADD TABLE ONLY realtime
 
 
 --
--- TOC entry 4998 (class 0 OID 0)
+-- TOC entry 5079 (class 0 OID 0)
 -- Dependencies: 38
 -- Name: SCHEMA auth; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -12548,7 +13280,7 @@ GRANT USAGE ON SCHEMA auth TO postgres;
 
 
 --
--- TOC entry 4999 (class 0 OID 0)
+-- TOC entry 5080 (class 0 OID 0)
 -- Dependencies: 24
 -- Name: SCHEMA extensions; Type: ACL; Schema: -; Owner: postgres
 --
@@ -12560,7 +13292,7 @@ GRANT ALL ON SCHEMA extensions TO dashboard_user;
 
 
 --
--- TOC entry 5000 (class 0 OID 0)
+-- TOC entry 5081 (class 0 OID 0)
 -- Dependencies: 40
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
 --
@@ -12572,7 +13304,7 @@ GRANT USAGE ON SCHEMA public TO service_role;
 
 
 --
--- TOC entry 5001 (class 0 OID 0)
+-- TOC entry 5082 (class 0 OID 0)
 -- Dependencies: 14
 -- Name: SCHEMA realtime; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -12585,7 +13317,7 @@ GRANT ALL ON SCHEMA realtime TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5002 (class 0 OID 0)
+-- TOC entry 5083 (class 0 OID 0)
 -- Dependencies: 39
 -- Name: SCHEMA storage; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -12599,7 +13331,7 @@ GRANT ALL ON SCHEMA storage TO dashboard_user;
 
 
 --
--- TOC entry 5003 (class 0 OID 0)
+-- TOC entry 5084 (class 0 OID 0)
 -- Dependencies: 33
 -- Name: SCHEMA vault; Type: ACL; Schema: -; Owner: supabase_admin
 --
@@ -12609,8 +13341,8 @@ GRANT USAGE ON SCHEMA vault TO service_role;
 
 
 --
--- TOC entry 5010 (class 0 OID 0)
--- Dependencies: 559
+-- TOC entry 5091 (class 0 OID 0)
+-- Dependencies: 568
 -- Name: FUNCTION gtrgm_in(cstring); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12618,8 +13350,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_in(cstring) TO postgres WITH GRANT OPTION
 
 
 --
--- TOC entry 5011 (class 0 OID 0)
--- Dependencies: 552
+-- TOC entry 5092 (class 0 OID 0)
+-- Dependencies: 561
 -- Name: FUNCTION gtrgm_out(extensions.gtrgm); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12627,8 +13359,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_out(extensions.gtrgm) TO postgres WITH GR
 
 
 --
--- TOC entry 5013 (class 0 OID 0)
--- Dependencies: 494
+-- TOC entry 5094 (class 0 OID 0)
+-- Dependencies: 502
 -- Name: FUNCTION email(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12636,8 +13368,8 @@ GRANT ALL ON FUNCTION auth.email() TO dashboard_user;
 
 
 --
--- TOC entry 5014 (class 0 OID 0)
--- Dependencies: 503
+-- TOC entry 5095 (class 0 OID 0)
+-- Dependencies: 511
 -- Name: FUNCTION jwt(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12646,8 +13378,8 @@ GRANT ALL ON FUNCTION auth.jwt() TO dashboard_user;
 
 
 --
--- TOC entry 5016 (class 0 OID 0)
--- Dependencies: 436
+-- TOC entry 5097 (class 0 OID 0)
+-- Dependencies: 441
 -- Name: FUNCTION role(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12655,8 +13387,8 @@ GRANT ALL ON FUNCTION auth.role() TO dashboard_user;
 
 
 --
--- TOC entry 5018 (class 0 OID 0)
--- Dependencies: 460
+-- TOC entry 5099 (class 0 OID 0)
+-- Dependencies: 466
 -- Name: FUNCTION uid(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -12664,8 +13396,8 @@ GRANT ALL ON FUNCTION auth.uid() TO dashboard_user;
 
 
 --
--- TOC entry 5019 (class 0 OID 0)
--- Dependencies: 502
+-- TOC entry 5100 (class 0 OID 0)
+-- Dependencies: 510
 -- Name: FUNCTION armor(bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12675,8 +13407,8 @@ GRANT ALL ON FUNCTION extensions.armor(bytea) TO dashboard_user;
 
 
 --
--- TOC entry 5020 (class 0 OID 0)
--- Dependencies: 556
+-- TOC entry 5101 (class 0 OID 0)
+-- Dependencies: 565
 -- Name: FUNCTION armor(bytea, text[], text[]); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12686,8 +13418,8 @@ GRANT ALL ON FUNCTION extensions.armor(bytea, text[], text[]) TO dashboard_user;
 
 
 --
--- TOC entry 5021 (class 0 OID 0)
--- Dependencies: 536
+-- TOC entry 5102 (class 0 OID 0)
+-- Dependencies: 545
 -- Name: FUNCTION crypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12697,8 +13429,8 @@ GRANT ALL ON FUNCTION extensions.crypt(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 5022 (class 0 OID 0)
--- Dependencies: 520
+-- TOC entry 5103 (class 0 OID 0)
+-- Dependencies: 528
 -- Name: FUNCTION dearmor(text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12708,8 +13440,8 @@ GRANT ALL ON FUNCTION extensions.dearmor(text) TO dashboard_user;
 
 
 --
--- TOC entry 5023 (class 0 OID 0)
--- Dependencies: 524
+-- TOC entry 5104 (class 0 OID 0)
+-- Dependencies: 532
 -- Name: FUNCTION decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12719,8 +13451,8 @@ GRANT ALL ON FUNCTION extensions.decrypt(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 5024 (class 0 OID 0)
--- Dependencies: 486
+-- TOC entry 5105 (class 0 OID 0)
+-- Dependencies: 493
 -- Name: FUNCTION decrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12730,8 +13462,8 @@ GRANT ALL ON FUNCTION extensions.decrypt_iv(bytea, bytea, bytea, text) TO dashbo
 
 
 --
--- TOC entry 5025 (class 0 OID 0)
--- Dependencies: 580
+-- TOC entry 5106 (class 0 OID 0)
+-- Dependencies: 589
 -- Name: FUNCTION digest(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12741,8 +13473,8 @@ GRANT ALL ON FUNCTION extensions.digest(bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 5026 (class 0 OID 0)
--- Dependencies: 544
+-- TOC entry 5107 (class 0 OID 0)
+-- Dependencies: 553
 -- Name: FUNCTION digest(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12752,8 +13484,8 @@ GRANT ALL ON FUNCTION extensions.digest(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 5027 (class 0 OID 0)
--- Dependencies: 474
+-- TOC entry 5108 (class 0 OID 0)
+-- Dependencies: 480
 -- Name: FUNCTION encrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12763,8 +13495,8 @@ GRANT ALL ON FUNCTION extensions.encrypt(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 5028 (class 0 OID 0)
--- Dependencies: 446
+-- TOC entry 5109 (class 0 OID 0)
+-- Dependencies: 451
 -- Name: FUNCTION encrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12774,8 +13506,8 @@ GRANT ALL ON FUNCTION extensions.encrypt_iv(bytea, bytea, bytea, text) TO dashbo
 
 
 --
--- TOC entry 5029 (class 0 OID 0)
--- Dependencies: 550
+-- TOC entry 5110 (class 0 OID 0)
+-- Dependencies: 559
 -- Name: FUNCTION gen_random_bytes(integer); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12785,8 +13517,8 @@ GRANT ALL ON FUNCTION extensions.gen_random_bytes(integer) TO dashboard_user;
 
 
 --
--- TOC entry 5030 (class 0 OID 0)
--- Dependencies: 439
+-- TOC entry 5111 (class 0 OID 0)
+-- Dependencies: 444
 -- Name: FUNCTION gen_random_uuid(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12796,8 +13528,8 @@ GRANT ALL ON FUNCTION extensions.gen_random_uuid() TO dashboard_user;
 
 
 --
--- TOC entry 5031 (class 0 OID 0)
--- Dependencies: 614
+-- TOC entry 5112 (class 0 OID 0)
+-- Dependencies: 624
 -- Name: FUNCTION gen_salt(text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12807,8 +13539,8 @@ GRANT ALL ON FUNCTION extensions.gen_salt(text) TO dashboard_user;
 
 
 --
--- TOC entry 5032 (class 0 OID 0)
--- Dependencies: 610
+-- TOC entry 5113 (class 0 OID 0)
+-- Dependencies: 620
 -- Name: FUNCTION gen_salt(text, integer); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12818,8 +13550,8 @@ GRANT ALL ON FUNCTION extensions.gen_salt(text, integer) TO dashboard_user;
 
 
 --
--- TOC entry 5033 (class 0 OID 0)
--- Dependencies: 477
+-- TOC entry 5114 (class 0 OID 0)
+-- Dependencies: 484
 -- Name: FUNCTION gin_extract_query_trgm(text, internal, smallint, internal, internal, internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12827,8 +13559,8 @@ GRANT ALL ON FUNCTION extensions.gin_extract_query_trgm(text, internal, smallint
 
 
 --
--- TOC entry 5034 (class 0 OID 0)
--- Dependencies: 481
+-- TOC entry 5115 (class 0 OID 0)
+-- Dependencies: 488
 -- Name: FUNCTION gin_extract_value_trgm(text, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12836,8 +13568,8 @@ GRANT ALL ON FUNCTION extensions.gin_extract_value_trgm(text, internal) TO postg
 
 
 --
--- TOC entry 5035 (class 0 OID 0)
--- Dependencies: 603
+-- TOC entry 5116 (class 0 OID 0)
+-- Dependencies: 613
 -- Name: FUNCTION gin_trgm_consistent(internal, smallint, text, integer, internal, internal, internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12845,8 +13577,8 @@ GRANT ALL ON FUNCTION extensions.gin_trgm_consistent(internal, smallint, text, i
 
 
 --
--- TOC entry 5036 (class 0 OID 0)
--- Dependencies: 606
+-- TOC entry 5117 (class 0 OID 0)
+-- Dependencies: 616
 -- Name: FUNCTION gin_trgm_triconsistent(internal, smallint, text, integer, internal, internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12854,8 +13586,8 @@ GRANT ALL ON FUNCTION extensions.gin_trgm_triconsistent(internal, smallint, text
 
 
 --
--- TOC entry 5038 (class 0 OID 0)
--- Dependencies: 542
+-- TOC entry 5119 (class 0 OID 0)
+-- Dependencies: 551
 -- Name: FUNCTION grant_pg_cron_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12865,8 +13597,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_cron_access() TO dashboard_user;
 
 
 --
--- TOC entry 5040 (class 0 OID 0)
--- Dependencies: 519
+-- TOC entry 5121 (class 0 OID 0)
+-- Dependencies: 527
 -- Name: FUNCTION grant_pg_graphql_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12874,8 +13606,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_graphql_access() TO postgres WITH GRAN
 
 
 --
--- TOC entry 5042 (class 0 OID 0)
--- Dependencies: 482
+-- TOC entry 5123 (class 0 OID 0)
+-- Dependencies: 489
 -- Name: FUNCTION grant_pg_net_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12885,8 +13617,8 @@ GRANT ALL ON FUNCTION extensions.grant_pg_net_access() TO dashboard_user;
 
 
 --
--- TOC entry 5043 (class 0 OID 0)
--- Dependencies: 574
+-- TOC entry 5124 (class 0 OID 0)
+-- Dependencies: 583
 -- Name: FUNCTION gtrgm_compress(internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12894,8 +13626,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_compress(internal) TO postgres WITH GRANT
 
 
 --
--- TOC entry 5044 (class 0 OID 0)
--- Dependencies: 447
+-- TOC entry 5125 (class 0 OID 0)
+-- Dependencies: 452
 -- Name: FUNCTION gtrgm_consistent(internal, text, smallint, oid, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12903,8 +13635,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_consistent(internal, text, smallint, oid,
 
 
 --
--- TOC entry 5045 (class 0 OID 0)
--- Dependencies: 538
+-- TOC entry 5126 (class 0 OID 0)
+-- Dependencies: 547
 -- Name: FUNCTION gtrgm_decompress(internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12912,8 +13644,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_decompress(internal) TO postgres WITH GRA
 
 
 --
--- TOC entry 5046 (class 0 OID 0)
--- Dependencies: 547
+-- TOC entry 5127 (class 0 OID 0)
+-- Dependencies: 556
 -- Name: FUNCTION gtrgm_distance(internal, text, smallint, oid, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12921,8 +13653,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_distance(internal, text, smallint, oid, i
 
 
 --
--- TOC entry 5047 (class 0 OID 0)
--- Dependencies: 607
+-- TOC entry 5128 (class 0 OID 0)
+-- Dependencies: 617
 -- Name: FUNCTION gtrgm_options(internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12930,8 +13662,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_options(internal) TO postgres WITH GRANT 
 
 
 --
--- TOC entry 5048 (class 0 OID 0)
--- Dependencies: 560
+-- TOC entry 5129 (class 0 OID 0)
+-- Dependencies: 569
 -- Name: FUNCTION gtrgm_penalty(internal, internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12939,8 +13671,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_penalty(internal, internal, internal) TO 
 
 
 --
--- TOC entry 5049 (class 0 OID 0)
--- Dependencies: 461
+-- TOC entry 5130 (class 0 OID 0)
+-- Dependencies: 467
 -- Name: FUNCTION gtrgm_picksplit(internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12948,8 +13680,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_picksplit(internal, internal) TO postgres
 
 
 --
--- TOC entry 5050 (class 0 OID 0)
--- Dependencies: 514
+-- TOC entry 5131 (class 0 OID 0)
+-- Dependencies: 522
 -- Name: FUNCTION gtrgm_same(extensions.gtrgm, extensions.gtrgm, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12957,8 +13689,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_same(extensions.gtrgm, extensions.gtrgm, 
 
 
 --
--- TOC entry 5051 (class 0 OID 0)
--- Dependencies: 594
+-- TOC entry 5132 (class 0 OID 0)
+-- Dependencies: 603
 -- Name: FUNCTION gtrgm_union(internal, internal); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -12966,8 +13698,8 @@ GRANT ALL ON FUNCTION extensions.gtrgm_union(internal, internal) TO postgres WIT
 
 
 --
--- TOC entry 5052 (class 0 OID 0)
--- Dependencies: 445
+-- TOC entry 5133 (class 0 OID 0)
+-- Dependencies: 450
 -- Name: FUNCTION hmac(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12977,8 +13709,8 @@ GRANT ALL ON FUNCTION extensions.hmac(bytea, bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 5053 (class 0 OID 0)
--- Dependencies: 597
+-- TOC entry 5134 (class 0 OID 0)
+-- Dependencies: 606
 -- Name: FUNCTION hmac(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12988,8 +13720,8 @@ GRANT ALL ON FUNCTION extensions.hmac(text, text, text) TO dashboard_user;
 
 
 --
--- TOC entry 5054 (class 0 OID 0)
--- Dependencies: 565
+-- TOC entry 5135 (class 0 OID 0)
+-- Dependencies: 574
 -- Name: FUNCTION pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -12999,8 +13731,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements(showtext boolean, OUT userid
 
 
 --
--- TOC entry 5055 (class 0 OID 0)
--- Dependencies: 605
+-- TOC entry 5136 (class 0 OID 0)
+-- Dependencies: 615
 -- Name: FUNCTION pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13010,8 +13742,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements_info(OUT dealloc bigint, OUT
 
 
 --
--- TOC entry 5056 (class 0 OID 0)
--- Dependencies: 549
+-- TOC entry 5137 (class 0 OID 0)
+-- Dependencies: 558
 -- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13021,8 +13753,8 @@ GRANT ALL ON FUNCTION extensions.pg_stat_statements_reset(userid oid, dbid oid, 
 
 
 --
--- TOC entry 5057 (class 0 OID 0)
--- Dependencies: 491
+-- TOC entry 5138 (class 0 OID 0)
+-- Dependencies: 498
 -- Name: FUNCTION pgp_armor_headers(text, OUT key text, OUT value text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13032,8 +13764,8 @@ GRANT ALL ON FUNCTION extensions.pgp_armor_headers(text, OUT key text, OUT value
 
 
 --
--- TOC entry 5058 (class 0 OID 0)
--- Dependencies: 487
+-- TOC entry 5139 (class 0 OID 0)
+-- Dependencies: 494
 -- Name: FUNCTION pgp_key_id(bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13043,8 +13775,8 @@ GRANT ALL ON FUNCTION extensions.pgp_key_id(bytea) TO dashboard_user;
 
 
 --
--- TOC entry 5059 (class 0 OID 0)
--- Dependencies: 589
+-- TOC entry 5140 (class 0 OID 0)
+-- Dependencies: 598
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13054,8 +13786,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea) TO dashboard_user
 
 
 --
--- TOC entry 5060 (class 0 OID 0)
--- Dependencies: 431
+-- TOC entry 5141 (class 0 OID 0)
+-- Dependencies: 436
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13065,8 +13797,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text) TO dashboar
 
 
 --
--- TOC entry 5061 (class 0 OID 0)
--- Dependencies: 591
+-- TOC entry 5142 (class 0 OID 0)
+-- Dependencies: 600
 -- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13076,8 +13808,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text, text) TO da
 
 
 --
--- TOC entry 5062 (class 0 OID 0)
--- Dependencies: 451
+-- TOC entry 5143 (class 0 OID 0)
+-- Dependencies: 457
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13087,8 +13819,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea) TO dashboar
 
 
 --
--- TOC entry 5063 (class 0 OID 0)
--- Dependencies: 602
+-- TOC entry 5144 (class 0 OID 0)
+-- Dependencies: 612
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13098,8 +13830,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text) TO da
 
 
 --
--- TOC entry 5064 (class 0 OID 0)
--- Dependencies: 599
+-- TOC entry 5145 (class 0 OID 0)
+-- Dependencies: 608
 -- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13109,8 +13841,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text, text)
 
 
 --
--- TOC entry 5065 (class 0 OID 0)
--- Dependencies: 498
+-- TOC entry 5146 (class 0 OID 0)
+-- Dependencies: 506
 -- Name: FUNCTION pgp_pub_encrypt(text, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13120,8 +13852,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea) TO dashboard_user;
 
 
 --
--- TOC entry 5066 (class 0 OID 0)
--- Dependencies: 493
+-- TOC entry 5147 (class 0 OID 0)
+-- Dependencies: 501
 -- Name: FUNCTION pgp_pub_encrypt(text, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13131,8 +13863,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea, text) TO dashboard
 
 
 --
--- TOC entry 5067 (class 0 OID 0)
--- Dependencies: 472
+-- TOC entry 5148 (class 0 OID 0)
+-- Dependencies: 478
 -- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13142,8 +13874,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea) TO dashboar
 
 
 --
--- TOC entry 5068 (class 0 OID 0)
--- Dependencies: 584
+-- TOC entry 5149 (class 0 OID 0)
+-- Dependencies: 593
 -- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13153,8 +13885,8 @@ GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea, text) TO da
 
 
 --
--- TOC entry 5069 (class 0 OID 0)
--- Dependencies: 587
+-- TOC entry 5150 (class 0 OID 0)
+-- Dependencies: 596
 -- Name: FUNCTION pgp_sym_decrypt(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13164,8 +13896,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text) TO dashboard_user;
 
 
 --
--- TOC entry 5070 (class 0 OID 0)
--- Dependencies: 495
+-- TOC entry 5151 (class 0 OID 0)
+-- Dependencies: 503
 -- Name: FUNCTION pgp_sym_decrypt(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13175,8 +13907,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text, text) TO dashboard
 
 
 --
--- TOC entry 5071 (class 0 OID 0)
--- Dependencies: 590
+-- TOC entry 5152 (class 0 OID 0)
+-- Dependencies: 599
 -- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13186,8 +13918,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text) TO dashboard
 
 
 --
--- TOC entry 5072 (class 0 OID 0)
--- Dependencies: 586
+-- TOC entry 5153 (class 0 OID 0)
+-- Dependencies: 595
 -- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13197,8 +13929,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text, text) TO das
 
 
 --
--- TOC entry 5073 (class 0 OID 0)
--- Dependencies: 612
+-- TOC entry 5154 (class 0 OID 0)
+-- Dependencies: 622
 -- Name: FUNCTION pgp_sym_encrypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13208,8 +13940,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text) TO dashboard_user;
 
 
 --
--- TOC entry 5074 (class 0 OID 0)
--- Dependencies: 508
+-- TOC entry 5155 (class 0 OID 0)
+-- Dependencies: 516
 -- Name: FUNCTION pgp_sym_encrypt(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13219,8 +13951,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text, text) TO dashboard_
 
 
 --
--- TOC entry 5075 (class 0 OID 0)
--- Dependencies: 459
+-- TOC entry 5156 (class 0 OID 0)
+-- Dependencies: 465
 -- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13230,8 +13962,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text) TO dashboard
 
 
 --
--- TOC entry 5076 (class 0 OID 0)
--- Dependencies: 593
+-- TOC entry 5157 (class 0 OID 0)
+-- Dependencies: 602
 -- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13241,8 +13973,8 @@ GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text, text) TO das
 
 
 --
--- TOC entry 5077 (class 0 OID 0)
--- Dependencies: 429
+-- TOC entry 5158 (class 0 OID 0)
+-- Dependencies: 434
 -- Name: FUNCTION pgrst_ddl_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13250,8 +13982,8 @@ GRANT ALL ON FUNCTION extensions.pgrst_ddl_watch() TO postgres WITH GRANT OPTION
 
 
 --
--- TOC entry 5078 (class 0 OID 0)
--- Dependencies: 566
+-- TOC entry 5159 (class 0 OID 0)
+-- Dependencies: 575
 -- Name: FUNCTION pgrst_drop_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13259,8 +13991,8 @@ GRANT ALL ON FUNCTION extensions.pgrst_drop_watch() TO postgres WITH GRANT OPTIO
 
 
 --
--- TOC entry 5080 (class 0 OID 0)
--- Dependencies: 443
+-- TOC entry 5161 (class 0 OID 0)
+-- Dependencies: 448
 -- Name: FUNCTION set_graphql_placeholder(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13268,8 +14000,8 @@ GRANT ALL ON FUNCTION extensions.set_graphql_placeholder() TO postgres WITH GRAN
 
 
 --
--- TOC entry 5081 (class 0 OID 0)
--- Dependencies: 563
+-- TOC entry 5162 (class 0 OID 0)
+-- Dependencies: 572
 -- Name: FUNCTION set_limit(real); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13277,8 +14009,8 @@ GRANT ALL ON FUNCTION extensions.set_limit(real) TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5082 (class 0 OID 0)
--- Dependencies: 455
+-- TOC entry 5163 (class 0 OID 0)
+-- Dependencies: 461
 -- Name: FUNCTION show_limit(); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13286,8 +14018,8 @@ GRANT ALL ON FUNCTION extensions.show_limit() TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5083 (class 0 OID 0)
--- Dependencies: 583
+-- TOC entry 5164 (class 0 OID 0)
+-- Dependencies: 592
 -- Name: FUNCTION show_trgm(text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13295,8 +14027,8 @@ GRANT ALL ON FUNCTION extensions.show_trgm(text) TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5084 (class 0 OID 0)
--- Dependencies: 515
+-- TOC entry 5165 (class 0 OID 0)
+-- Dependencies: 523
 -- Name: FUNCTION similarity(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13304,8 +14036,8 @@ GRANT ALL ON FUNCTION extensions.similarity(text, text) TO postgres WITH GRANT O
 
 
 --
--- TOC entry 5085 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 5166 (class 0 OID 0)
+-- Dependencies: 432
 -- Name: FUNCTION similarity_dist(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13313,8 +14045,8 @@ GRANT ALL ON FUNCTION extensions.similarity_dist(text, text) TO postgres WITH GR
 
 
 --
--- TOC entry 5086 (class 0 OID 0)
--- Dependencies: 492
+-- TOC entry 5167 (class 0 OID 0)
+-- Dependencies: 500
 -- Name: FUNCTION similarity_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13322,8 +14054,8 @@ GRANT ALL ON FUNCTION extensions.similarity_op(text, text) TO postgres WITH GRAN
 
 
 --
--- TOC entry 5087 (class 0 OID 0)
--- Dependencies: 506
+-- TOC entry 5168 (class 0 OID 0)
+-- Dependencies: 514
 -- Name: FUNCTION strict_word_similarity(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13331,8 +14063,8 @@ GRANT ALL ON FUNCTION extensions.strict_word_similarity(text, text) TO postgres 
 
 
 --
--- TOC entry 5088 (class 0 OID 0)
--- Dependencies: 452
+-- TOC entry 5169 (class 0 OID 0)
+-- Dependencies: 458
 -- Name: FUNCTION strict_word_similarity_commutator_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13340,8 +14072,8 @@ GRANT ALL ON FUNCTION extensions.strict_word_similarity_commutator_op(text, text
 
 
 --
--- TOC entry 5089 (class 0 OID 0)
--- Dependencies: 471
+-- TOC entry 5170 (class 0 OID 0)
+-- Dependencies: 477
 -- Name: FUNCTION strict_word_similarity_dist_commutator_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13349,8 +14081,8 @@ GRANT ALL ON FUNCTION extensions.strict_word_similarity_dist_commutator_op(text,
 
 
 --
--- TOC entry 5090 (class 0 OID 0)
--- Dependencies: 592
+-- TOC entry 5171 (class 0 OID 0)
+-- Dependencies: 601
 -- Name: FUNCTION strict_word_similarity_dist_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13358,8 +14090,8 @@ GRANT ALL ON FUNCTION extensions.strict_word_similarity_dist_op(text, text) TO p
 
 
 --
--- TOC entry 5091 (class 0 OID 0)
--- Dependencies: 548
+-- TOC entry 5172 (class 0 OID 0)
+-- Dependencies: 557
 -- Name: FUNCTION strict_word_similarity_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13367,8 +14099,8 @@ GRANT ALL ON FUNCTION extensions.strict_word_similarity_op(text, text) TO postgr
 
 
 --
--- TOC entry 5092 (class 0 OID 0)
--- Dependencies: 499
+-- TOC entry 5173 (class 0 OID 0)
+-- Dependencies: 507
 -- Name: FUNCTION uuid_generate_v1(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13378,8 +14110,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v1() TO dashboard_user;
 
 
 --
--- TOC entry 5093 (class 0 OID 0)
--- Dependencies: 571
+-- TOC entry 5174 (class 0 OID 0)
+-- Dependencies: 580
 -- Name: FUNCTION uuid_generate_v1mc(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13389,8 +14121,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v1mc() TO dashboard_user;
 
 
 --
--- TOC entry 5094 (class 0 OID 0)
--- Dependencies: 430
+-- TOC entry 5175 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: FUNCTION uuid_generate_v3(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13400,8 +14132,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v3(namespace uuid, name text) TO 
 
 
 --
--- TOC entry 5095 (class 0 OID 0)
--- Dependencies: 457
+-- TOC entry 5176 (class 0 OID 0)
+-- Dependencies: 463
 -- Name: FUNCTION uuid_generate_v4(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13411,8 +14143,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v4() TO dashboard_user;
 
 
 --
--- TOC entry 5096 (class 0 OID 0)
--- Dependencies: 470
+-- TOC entry 5177 (class 0 OID 0)
+-- Dependencies: 476
 -- Name: FUNCTION uuid_generate_v5(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13422,8 +14154,8 @@ GRANT ALL ON FUNCTION extensions.uuid_generate_v5(namespace uuid, name text) TO 
 
 
 --
--- TOC entry 5097 (class 0 OID 0)
--- Dependencies: 537
+-- TOC entry 5178 (class 0 OID 0)
+-- Dependencies: 546
 -- Name: FUNCTION uuid_nil(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13433,8 +14165,8 @@ GRANT ALL ON FUNCTION extensions.uuid_nil() TO dashboard_user;
 
 
 --
--- TOC entry 5098 (class 0 OID 0)
--- Dependencies: 473
+-- TOC entry 5179 (class 0 OID 0)
+-- Dependencies: 479
 -- Name: FUNCTION uuid_ns_dns(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13444,8 +14176,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_dns() TO dashboard_user;
 
 
 --
--- TOC entry 5099 (class 0 OID 0)
--- Dependencies: 596
+-- TOC entry 5180 (class 0 OID 0)
+-- Dependencies: 605
 -- Name: FUNCTION uuid_ns_oid(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13455,8 +14187,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_oid() TO dashboard_user;
 
 
 --
--- TOC entry 5100 (class 0 OID 0)
--- Dependencies: 529
+-- TOC entry 5181 (class 0 OID 0)
+-- Dependencies: 538
 -- Name: FUNCTION uuid_ns_url(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13466,8 +14198,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_url() TO dashboard_user;
 
 
 --
--- TOC entry 5101 (class 0 OID 0)
--- Dependencies: 539
+-- TOC entry 5182 (class 0 OID 0)
+-- Dependencies: 548
 -- Name: FUNCTION uuid_ns_x500(); Type: ACL; Schema: extensions; Owner: postgres
 --
 
@@ -13477,8 +14209,8 @@ GRANT ALL ON FUNCTION extensions.uuid_ns_x500() TO dashboard_user;
 
 
 --
--- TOC entry 5102 (class 0 OID 0)
--- Dependencies: 432
+-- TOC entry 5183 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: FUNCTION word_similarity(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13486,8 +14218,8 @@ GRANT ALL ON FUNCTION extensions.word_similarity(text, text) TO postgres WITH GR
 
 
 --
--- TOC entry 5103 (class 0 OID 0)
--- Dependencies: 478
+-- TOC entry 5184 (class 0 OID 0)
+-- Dependencies: 485
 -- Name: FUNCTION word_similarity_commutator_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13495,8 +14227,8 @@ GRANT ALL ON FUNCTION extensions.word_similarity_commutator_op(text, text) TO po
 
 
 --
--- TOC entry 5104 (class 0 OID 0)
--- Dependencies: 469
+-- TOC entry 5185 (class 0 OID 0)
+-- Dependencies: 475
 -- Name: FUNCTION word_similarity_dist_commutator_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13504,8 +14236,8 @@ GRANT ALL ON FUNCTION extensions.word_similarity_dist_commutator_op(text, text) 
 
 
 --
--- TOC entry 5105 (class 0 OID 0)
--- Dependencies: 523
+-- TOC entry 5186 (class 0 OID 0)
+-- Dependencies: 531
 -- Name: FUNCTION word_similarity_dist_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13513,8 +14245,8 @@ GRANT ALL ON FUNCTION extensions.word_similarity_dist_op(text, text) TO postgres
 
 
 --
--- TOC entry 5106 (class 0 OID 0)
--- Dependencies: 526
+-- TOC entry 5187 (class 0 OID 0)
+-- Dependencies: 534
 -- Name: FUNCTION word_similarity_op(text, text); Type: ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -13522,8 +14254,8 @@ GRANT ALL ON FUNCTION extensions.word_similarity_op(text, text) TO postgres WITH
 
 
 --
--- TOC entry 5107 (class 0 OID 0)
--- Dependencies: 598
+-- TOC entry 5188 (class 0 OID 0)
+-- Dependencies: 607
 -- Name: FUNCTION graphql("operationName" text, query text, variables jsonb, extensions jsonb); Type: ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -13534,8 +14266,8 @@ GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, v
 
 
 --
--- TOC entry 5108 (class 0 OID 0)
--- Dependencies: 449
+-- TOC entry 5189 (class 0 OID 0)
+-- Dependencies: 454
 -- Name: FUNCTION pg_reload_conf(); Type: ACL; Schema: pg_catalog; Owner: supabase_admin
 --
 
@@ -13543,8 +14275,8 @@ GRANT ALL ON FUNCTION pg_catalog.pg_reload_conf() TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5109 (class 0 OID 0)
--- Dependencies: 496
+-- TOC entry 5190 (class 0 OID 0)
+-- Dependencies: 504
 -- Name: FUNCTION get_auth(p_usename text); Type: ACL; Schema: pgbouncer; Owner: supabase_admin
 --
 
@@ -13553,8 +14285,19 @@ GRANT ALL ON FUNCTION pgbouncer.get_auth(p_usename text) TO pgbouncer;
 
 
 --
--- TOC entry 5110 (class 0 OID 0)
--- Dependencies: 558
+-- TOC entry 5191 (class 0 OID 0)
+-- Dependencies: 433
+-- Name: FUNCTION admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text); Type: ACL; Schema: public; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION public.admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) FROM PUBLIC;
+GRANT ALL ON FUNCTION public.admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) TO authenticated;
+GRANT ALL ON FUNCTION public.admin_save_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) TO service_role;
+
+
+--
+-- TOC entry 5192 (class 0 OID 0)
+-- Dependencies: 567
 -- Name: FUNCTION admin_update_user_role(target_user_id uuid, new_role text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13564,8 +14307,8 @@ GRANT ALL ON FUNCTION public.admin_update_user_role(target_user_id uuid, new_rol
 
 
 --
--- TOC entry 5111 (class 0 OID 0)
--- Dependencies: 516
+-- TOC entry 5193 (class 0 OID 0)
+-- Dependencies: 524
 -- Name: FUNCTION calculate_capipoints(duration_seconds integer, activity_type text, calories integer, distance_meters numeric); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13575,8 +14318,8 @@ GRANT ALL ON FUNCTION public.calculate_capipoints(duration_seconds integer, acti
 
 
 --
--- TOC entry 5112 (class 0 OID 0)
--- Dependencies: 437
+-- TOC entry 5194 (class 0 OID 0)
+-- Dependencies: 442
 -- Name: FUNCTION calculate_final_xp(base_cp numeric, trust_score numeric, workout_date timestamp with time zone, activity_type text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13586,8 +14329,8 @@ GRANT ALL ON FUNCTION public.calculate_final_xp(base_cp numeric, trust_score num
 
 
 --
--- TOC entry 5113 (class 0 OID 0)
--- Dependencies: 569
+-- TOC entry 5195 (class 0 OID 0)
+-- Dependencies: 578
 -- Name: FUNCTION calculate_level(xp integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13597,8 +14340,8 @@ GRANT ALL ON FUNCTION public.calculate_level(xp integer) TO service_role;
 
 
 --
--- TOC entry 5114 (class 0 OID 0)
--- Dependencies: 467
+-- TOC entry 5196 (class 0 OID 0)
+-- Dependencies: 473
 -- Name: FUNCTION calculate_session_duration(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13608,8 +14351,8 @@ GRANT ALL ON FUNCTION public.calculate_session_duration() TO service_role;
 
 
 --
--- TOC entry 5115 (class 0 OID 0)
--- Dependencies: 518
+-- TOC entry 5197 (class 0 OID 0)
+-- Dependencies: 526
 -- Name: FUNCTION check_professional_availability(p_professional_id uuid, p_start_time timestamp with time zone, p_duration_minutes integer, p_exclude_schedule_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13619,8 +14362,8 @@ GRANT ALL ON FUNCTION public.check_professional_availability(p_professional_id u
 
 
 --
--- TOC entry 5116 (class 0 OID 0)
--- Dependencies: 510
+-- TOC entry 5198 (class 0 OID 0)
+-- Dependencies: 518
 -- Name: FUNCTION cleanup_abandoned_sessions(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13630,8 +14373,8 @@ GRANT ALL ON FUNCTION public.cleanup_abandoned_sessions() TO service_role;
 
 
 --
--- TOC entry 5117 (class 0 OID 0)
--- Dependencies: 458
+-- TOC entry 5199 (class 0 OID 0)
+-- Dependencies: 464
 -- Name: FUNCTION client_has_professional_access(professional_uuid uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13641,8 +14384,8 @@ GRANT ALL ON FUNCTION public.client_has_professional_access(professional_uuid uu
 
 
 --
--- TOC entry 5118 (class 0 OID 0)
--- Dependencies: 567
+-- TOC entry 5200 (class 0 OID 0)
+-- Dependencies: 576
 -- Name: FUNCTION count_total_unread_messages(user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13652,8 +14395,8 @@ GRANT ALL ON FUNCTION public.count_total_unread_messages(user_id uuid) TO servic
 
 
 --
--- TOC entry 5119 (class 0 OID 0)
--- Dependencies: 581
+-- TOC entry 5201 (class 0 OID 0)
+-- Dependencies: 590
 -- Name: FUNCTION count_unread_messages(user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13663,8 +14406,8 @@ GRANT ALL ON FUNCTION public.count_unread_messages(user_id uuid) TO service_role
 
 
 --
--- TOC entry 5120 (class 0 OID 0)
--- Dependencies: 489
+-- TOC entry 5202 (class 0 OID 0)
+-- Dependencies: 496
 -- Name: FUNCTION find_client_by_email(client_email text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13674,8 +14417,8 @@ GRANT ALL ON FUNCTION public.find_client_by_email(client_email text) TO service_
 
 
 --
--- TOC entry 5121 (class 0 OID 0)
--- Dependencies: 601
+-- TOC entry 5203 (class 0 OID 0)
+-- Dependencies: 611
 -- Name: FUNCTION get_all_users(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13685,8 +14428,8 @@ GRANT ALL ON FUNCTION public.get_all_users() TO service_role;
 
 
 --
--- TOC entry 5122 (class 0 OID 0)
--- Dependencies: 433
+-- TOC entry 5204 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: FUNCTION get_conversation(user_id uuid, other_user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13696,8 +14439,8 @@ GRANT ALL ON FUNCTION public.get_conversation(user_id uuid, other_user_id uuid) 
 
 
 --
--- TOC entry 5123 (class 0 OID 0)
--- Dependencies: 453
+-- TOC entry 5205 (class 0 OID 0)
+-- Dependencies: 459
 -- Name: FUNCTION get_conversation(user1_id uuid, user2_id uuid, limit_count integer, offset_count integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13707,8 +14450,19 @@ GRANT ALL ON FUNCTION public.get_conversation(user1_id uuid, user2_id uuid, limi
 
 
 --
--- TOC entry 5124 (class 0 OID 0)
--- Dependencies: 475
+-- TOC entry 5206 (class 0 OID 0)
+-- Dependencies: 535
+-- Name: FUNCTION get_decrypted_payment_config(p_provider text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.get_decrypted_payment_config(p_provider text) TO anon;
+GRANT ALL ON FUNCTION public.get_decrypted_payment_config(p_provider text) TO authenticated;
+GRANT ALL ON FUNCTION public.get_decrypted_payment_config(p_provider text) TO service_role;
+
+
+--
+-- TOC entry 5207 (class 0 OID 0)
+-- Dependencies: 481
 -- Name: FUNCTION get_linked_clients(prof_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13718,8 +14472,8 @@ GRANT ALL ON FUNCTION public.get_linked_clients(prof_id uuid) TO service_role;
 
 
 --
--- TOC entry 5125 (class 0 OID 0)
--- Dependencies: 613
+-- TOC entry 5208 (class 0 OID 0)
+-- Dependencies: 623
 -- Name: FUNCTION get_professional_reputation(prof_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13729,8 +14483,8 @@ GRANT ALL ON FUNCTION public.get_professional_reputation(prof_id uuid) TO servic
 
 
 --
--- TOC entry 5126 (class 0 OID 0)
--- Dependencies: 609
+-- TOC entry 5209 (class 0 OID 0)
+-- Dependencies: 619
 -- Name: FUNCTION get_professional_reviews_details(prof_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13740,8 +14494,19 @@ GRANT ALL ON FUNCTION public.get_professional_reviews_details(prof_id uuid) TO s
 
 
 --
--- TOC entry 5127 (class 0 OID 0)
--- Dependencies: 450
+-- TOC entry 5210 (class 0 OID 0)
+-- Dependencies: 609
+-- Name: FUNCTION get_public_payment_config(p_provider text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.get_public_payment_config(p_provider text) TO anon;
+GRANT ALL ON FUNCTION public.get_public_payment_config(p_provider text) TO authenticated;
+GRANT ALL ON FUNCTION public.get_public_payment_config(p_provider text) TO service_role;
+
+
+--
+-- TOC entry 5211 (class 0 OID 0)
+-- Dependencies: 456
 -- Name: FUNCTION get_rank_title(level integer); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13751,8 +14516,8 @@ GRANT ALL ON FUNCTION public.get_rank_title(level integer) TO service_role;
 
 
 --
--- TOC entry 5128 (class 0 OID 0)
--- Dependencies: 435
+-- TOC entry 5212 (class 0 OID 0)
+-- Dependencies: 440
 -- Name: FUNCTION handle_new_user(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13762,8 +14527,8 @@ GRANT ALL ON FUNCTION public.handle_new_user() TO service_role;
 
 
 --
--- TOC entry 5129 (class 0 OID 0)
--- Dependencies: 490
+-- TOC entry 5213 (class 0 OID 0)
+-- Dependencies: 497
 -- Name: FUNCTION handle_notifications_updated_at(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13773,8 +14538,8 @@ GRANT ALL ON FUNCTION public.handle_notifications_updated_at() TO service_role;
 
 
 --
--- TOC entry 5130 (class 0 OID 0)
--- Dependencies: 557
+-- TOC entry 5214 (class 0 OID 0)
+-- Dependencies: 566
 -- Name: FUNCTION handle_updated_at(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13784,8 +14549,8 @@ GRANT ALL ON FUNCTION public.handle_updated_at() TO service_role;
 
 
 --
--- TOC entry 5131 (class 0 OID 0)
--- Dependencies: 468
+-- TOC entry 5215 (class 0 OID 0)
+-- Dependencies: 474
 -- Name: FUNCTION is_admin(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13795,8 +14560,8 @@ GRANT ALL ON FUNCTION public.is_admin() TO service_role;
 
 
 --
--- TOC entry 5132 (class 0 OID 0)
--- Dependencies: 444
+-- TOC entry 5216 (class 0 OID 0)
+-- Dependencies: 449
 -- Name: FUNCTION is_client(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13806,8 +14571,8 @@ GRANT ALL ON FUNCTION public.is_client() TO service_role;
 
 
 --
--- TOC entry 5133 (class 0 OID 0)
--- Dependencies: 483
+-- TOC entry 5217 (class 0 OID 0)
+-- Dependencies: 490
 -- Name: FUNCTION is_professional(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13817,8 +14582,8 @@ GRANT ALL ON FUNCTION public.is_professional() TO service_role;
 
 
 --
--- TOC entry 5135 (class 0 OID 0)
--- Dependencies: 464
+-- TOC entry 5219 (class 0 OID 0)
+-- Dependencies: 470
 -- Name: FUNCTION link_client_and_update_profile(p_client_id uuid, p_notes text, p_full_name text, p_phone text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13828,8 +14593,8 @@ GRANT ALL ON FUNCTION public.link_client_and_update_profile(p_client_id uuid, p_
 
 
 --
--- TOC entry 5136 (class 0 OID 0)
--- Dependencies: 500
+-- TOC entry 5220 (class 0 OID 0)
+-- Dependencies: 508
 -- Name: FUNCTION link_client_via_email(client_email text); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13839,8 +14604,8 @@ GRANT ALL ON FUNCTION public.link_client_via_email(client_email text) TO service
 
 
 --
--- TOC entry 5137 (class 0 OID 0)
--- Dependencies: 595
+-- TOC entry 5221 (class 0 OID 0)
+-- Dependencies: 604
 -- Name: FUNCTION mark_conversation_as_read(current_user_id uuid, other_user_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13850,8 +14615,19 @@ GRANT ALL ON FUNCTION public.mark_conversation_as_read(current_user_id uuid, oth
 
 
 --
--- TOC entry 5139 (class 0 OID 0)
--- Dependencies: 521
+-- TOC entry 5222 (class 0 OID 0)
+-- Dependencies: 483
+-- Name: FUNCTION process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text) TO anon;
+GRANT ALL ON FUNCTION public.process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text) TO authenticated;
+GRANT ALL ON FUNCTION public.process_subscription_payment(p_plan_id uuid, p_student_id uuid, p_payment_method text) TO service_role;
+
+
+--
+-- TOC entry 5224 (class 0 OID 0)
+-- Dependencies: 529
 -- Name: FUNCTION professional_can_link_client(p_client_id uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13861,8 +14637,8 @@ GRANT ALL ON FUNCTION public.professional_can_link_client(p_client_id uuid) TO s
 
 
 --
--- TOC entry 5140 (class 0 OID 0)
--- Dependencies: 561
+-- TOC entry 5225 (class 0 OID 0)
+-- Dependencies: 570
 -- Name: FUNCTION professional_has_client_access(client_uuid uuid); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13872,8 +14648,8 @@ GRANT ALL ON FUNCTION public.professional_has_client_access(client_uuid uuid) TO
 
 
 --
--- TOC entry 5141 (class 0 OID 0)
--- Dependencies: 551
+-- TOC entry 5226 (class 0 OID 0)
+-- Dependencies: 560
 -- Name: FUNCTION trigger_calculate_xp(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13883,8 +14659,8 @@ GRANT ALL ON FUNCTION public.trigger_calculate_xp() TO service_role;
 
 
 --
--- TOC entry 5142 (class 0 OID 0)
--- Dependencies: 546
+-- TOC entry 5227 (class 0 OID 0)
+-- Dependencies: 555
 -- Name: FUNCTION trigger_update_level(); Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -13894,8 +14670,30 @@ GRANT ALL ON FUNCTION public.trigger_update_level() TO service_role;
 
 
 --
--- TOC entry 5143 (class 0 OID 0)
--- Dependencies: 438
+-- TOC entry 5228 (class 0 OID 0)
+-- Dependencies: 499
+-- Name: FUNCTION upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) TO anon;
+GRANT ALL ON FUNCTION public.upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) TO authenticated;
+GRANT ALL ON FUNCTION public.upsert_payment_config(p_provider text, p_publishable_key text, p_secret_key text, p_webhook_secret text) TO service_role;
+
+
+--
+-- TOC entry 5229 (class 0 OID 0)
+-- Dependencies: 455
+-- Name: FUNCTION upsert_payment_config_v2(payload jsonb); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.upsert_payment_config_v2(payload jsonb) TO anon;
+GRANT ALL ON FUNCTION public.upsert_payment_config_v2(payload jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.upsert_payment_config_v2(payload jsonb) TO service_role;
+
+
+--
+-- TOC entry 5230 (class 0 OID 0)
+-- Dependencies: 443
 -- Name: FUNCTION apply_rls(wal jsonb, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13908,8 +14706,8 @@ GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO
 
 
 --
--- TOC entry 5144 (class 0 OID 0)
--- Dependencies: 608
+-- TOC entry 5231 (class 0 OID 0)
+-- Dependencies: 618
 -- Name: FUNCTION broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13918,8 +14716,8 @@ GRANT ALL ON FUNCTION realtime.broadcast_changes(topic_name text, event_name tex
 
 
 --
--- TOC entry 5145 (class 0 OID 0)
--- Dependencies: 511
+-- TOC entry 5232 (class 0 OID 0)
+-- Dependencies: 519
 -- Name: FUNCTION build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13932,8 +14730,8 @@ GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_n
 
 
 --
--- TOC entry 5146 (class 0 OID 0)
--- Dependencies: 454
+-- TOC entry 5233 (class 0 OID 0)
+-- Dependencies: 460
 -- Name: FUNCTION "cast"(val text, type_ regtype); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13946,8 +14744,8 @@ GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO supabase_realt
 
 
 --
--- TOC entry 5147 (class 0 OID 0)
--- Dependencies: 497
+-- TOC entry 5234 (class 0 OID 0)
+-- Dependencies: 505
 -- Name: FUNCTION check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13960,8 +14758,8 @@ GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ 
 
 
 --
--- TOC entry 5148 (class 0 OID 0)
--- Dependencies: 564
+-- TOC entry 5235 (class 0 OID 0)
+-- Dependencies: 573
 -- Name: FUNCTION is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13974,8 +14772,8 @@ GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_c
 
 
 --
--- TOC entry 5149 (class 0 OID 0)
--- Dependencies: 588
+-- TOC entry 5236 (class 0 OID 0)
+-- Dependencies: 597
 -- Name: FUNCTION list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -13988,8 +14786,8 @@ GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, ma
 
 
 --
--- TOC entry 5150 (class 0 OID 0)
--- Dependencies: 577
+-- TOC entry 5237 (class 0 OID 0)
+-- Dependencies: 586
 -- Name: FUNCTION quote_wal2json(entity regclass); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -14002,8 +14800,8 @@ GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO supabase_realt
 
 
 --
--- TOC entry 5151 (class 0 OID 0)
--- Dependencies: 466
+-- TOC entry 5238 (class 0 OID 0)
+-- Dependencies: 472
 -- Name: FUNCTION send(payload jsonb, event text, topic text, private boolean); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -14012,8 +14810,8 @@ GRANT ALL ON FUNCTION realtime.send(payload jsonb, event text, topic text, priva
 
 
 --
--- TOC entry 5152 (class 0 OID 0)
--- Dependencies: 525
+-- TOC entry 5239 (class 0 OID 0)
+-- Dependencies: 533
 -- Name: FUNCTION subscription_check_filters(); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -14026,8 +14824,8 @@ GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO supabase_realtime
 
 
 --
--- TOC entry 5153 (class 0 OID 0)
--- Dependencies: 531
+-- TOC entry 5240 (class 0 OID 0)
+-- Dependencies: 540
 -- Name: FUNCTION to_regrole(role_name text); Type: ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -14040,8 +14838,8 @@ GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO supabase_realtime_a
 
 
 --
--- TOC entry 5154 (class 0 OID 0)
--- Dependencies: 505
+-- TOC entry 5241 (class 0 OID 0)
+-- Dependencies: 513
 -- Name: FUNCTION topic(); Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
 --
 
@@ -14050,8 +14848,8 @@ GRANT ALL ON FUNCTION realtime.topic() TO dashboard_user;
 
 
 --
--- TOC entry 5155 (class 0 OID 0)
--- Dependencies: 463
+-- TOC entry 5242 (class 0 OID 0)
+-- Dependencies: 469
 -- Name: FUNCTION _crypto_aead_det_decrypt(message bytea, additional bytea, key_id bigint, context bytea, nonce bytea); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -14060,8 +14858,8 @@ GRANT ALL ON FUNCTION vault._crypto_aead_det_decrypt(message bytea, additional b
 
 
 --
--- TOC entry 5156 (class 0 OID 0)
--- Dependencies: 442
+-- TOC entry 5243 (class 0 OID 0)
+-- Dependencies: 447
 -- Name: FUNCTION create_secret(new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -14070,8 +14868,8 @@ GRANT ALL ON FUNCTION vault.create_secret(new_secret text, new_name text, new_de
 
 
 --
--- TOC entry 5157 (class 0 OID 0)
--- Dependencies: 517
+-- TOC entry 5244 (class 0 OID 0)
+-- Dependencies: 525
 -- Name: FUNCTION update_secret(secret_id uuid, new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
 --
 
@@ -14080,7 +14878,7 @@ GRANT ALL ON FUNCTION vault.update_secret(secret_id uuid, new_secret text, new_n
 
 
 --
--- TOC entry 5159 (class 0 OID 0)
+-- TOC entry 5246 (class 0 OID 0)
 -- Dependencies: 353
 -- Name: TABLE audit_log_entries; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14091,7 +14889,7 @@ GRANT SELECT ON TABLE auth.audit_log_entries TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5161 (class 0 OID 0)
+-- TOC entry 5248 (class 0 OID 0)
 -- Dependencies: 370
 -- Name: TABLE flow_state; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14102,7 +14900,7 @@ GRANT ALL ON TABLE auth.flow_state TO dashboard_user;
 
 
 --
--- TOC entry 5164 (class 0 OID 0)
+-- TOC entry 5251 (class 0 OID 0)
 -- Dependencies: 361
 -- Name: TABLE identities; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14113,7 +14911,7 @@ GRANT ALL ON TABLE auth.identities TO dashboard_user;
 
 
 --
--- TOC entry 5166 (class 0 OID 0)
+-- TOC entry 5253 (class 0 OID 0)
 -- Dependencies: 352
 -- Name: TABLE instances; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14124,7 +14922,7 @@ GRANT SELECT ON TABLE auth.instances TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5168 (class 0 OID 0)
+-- TOC entry 5255 (class 0 OID 0)
 -- Dependencies: 365
 -- Name: TABLE mfa_amr_claims; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14135,7 +14933,7 @@ GRANT ALL ON TABLE auth.mfa_amr_claims TO dashboard_user;
 
 
 --
--- TOC entry 5170 (class 0 OID 0)
+-- TOC entry 5257 (class 0 OID 0)
 -- Dependencies: 364
 -- Name: TABLE mfa_challenges; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14146,7 +14944,7 @@ GRANT ALL ON TABLE auth.mfa_challenges TO dashboard_user;
 
 
 --
--- TOC entry 5173 (class 0 OID 0)
+-- TOC entry 5260 (class 0 OID 0)
 -- Dependencies: 363
 -- Name: TABLE mfa_factors; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14157,7 +14955,7 @@ GRANT ALL ON TABLE auth.mfa_factors TO dashboard_user;
 
 
 --
--- TOC entry 5174 (class 0 OID 0)
+-- TOC entry 5261 (class 0 OID 0)
 -- Dependencies: 373
 -- Name: TABLE oauth_authorizations; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14167,7 +14965,7 @@ GRANT ALL ON TABLE auth.oauth_authorizations TO dashboard_user;
 
 
 --
--- TOC entry 5176 (class 0 OID 0)
+-- TOC entry 5263 (class 0 OID 0)
 -- Dependencies: 415
 -- Name: TABLE oauth_client_states; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14177,7 +14975,7 @@ GRANT ALL ON TABLE auth.oauth_client_states TO dashboard_user;
 
 
 --
--- TOC entry 5177 (class 0 OID 0)
+-- TOC entry 5264 (class 0 OID 0)
 -- Dependencies: 372
 -- Name: TABLE oauth_clients; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14187,7 +14985,7 @@ GRANT ALL ON TABLE auth.oauth_clients TO dashboard_user;
 
 
 --
--- TOC entry 5178 (class 0 OID 0)
+-- TOC entry 5265 (class 0 OID 0)
 -- Dependencies: 374
 -- Name: TABLE oauth_consents; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14197,7 +14995,7 @@ GRANT ALL ON TABLE auth.oauth_consents TO dashboard_user;
 
 
 --
--- TOC entry 5179 (class 0 OID 0)
+-- TOC entry 5266 (class 0 OID 0)
 -- Dependencies: 371
 -- Name: TABLE one_time_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14208,7 +15006,7 @@ GRANT ALL ON TABLE auth.one_time_tokens TO dashboard_user;
 
 
 --
--- TOC entry 5181 (class 0 OID 0)
+-- TOC entry 5268 (class 0 OID 0)
 -- Dependencies: 351
 -- Name: TABLE refresh_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14219,7 +15017,7 @@ GRANT SELECT ON TABLE auth.refresh_tokens TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5183 (class 0 OID 0)
+-- TOC entry 5270 (class 0 OID 0)
 -- Dependencies: 350
 -- Name: SEQUENCE refresh_tokens_id_seq; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14229,7 +15027,7 @@ GRANT ALL ON SEQUENCE auth.refresh_tokens_id_seq TO postgres;
 
 
 --
--- TOC entry 5185 (class 0 OID 0)
+-- TOC entry 5272 (class 0 OID 0)
 -- Dependencies: 368
 -- Name: TABLE saml_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14240,7 +15038,7 @@ GRANT ALL ON TABLE auth.saml_providers TO dashboard_user;
 
 
 --
--- TOC entry 5187 (class 0 OID 0)
+-- TOC entry 5274 (class 0 OID 0)
 -- Dependencies: 369
 -- Name: TABLE saml_relay_states; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14251,7 +15049,7 @@ GRANT ALL ON TABLE auth.saml_relay_states TO dashboard_user;
 
 
 --
--- TOC entry 5189 (class 0 OID 0)
+-- TOC entry 5276 (class 0 OID 0)
 -- Dependencies: 354
 -- Name: TABLE schema_migrations; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14260,7 +15058,7 @@ GRANT SELECT ON TABLE auth.schema_migrations TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5194 (class 0 OID 0)
+-- TOC entry 5281 (class 0 OID 0)
 -- Dependencies: 362
 -- Name: TABLE sessions; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14271,7 +15069,7 @@ GRANT ALL ON TABLE auth.sessions TO dashboard_user;
 
 
 --
--- TOC entry 5196 (class 0 OID 0)
+-- TOC entry 5283 (class 0 OID 0)
 -- Dependencies: 367
 -- Name: TABLE sso_domains; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14282,7 +15080,7 @@ GRANT ALL ON TABLE auth.sso_domains TO dashboard_user;
 
 
 --
--- TOC entry 5199 (class 0 OID 0)
+-- TOC entry 5286 (class 0 OID 0)
 -- Dependencies: 366
 -- Name: TABLE sso_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14293,7 +15091,7 @@ GRANT ALL ON TABLE auth.sso_providers TO dashboard_user;
 
 
 --
--- TOC entry 5202 (class 0 OID 0)
+-- TOC entry 5289 (class 0 OID 0)
 -- Dependencies: 349
 -- Name: TABLE users; Type: ACL; Schema: auth; Owner: supabase_auth_admin
 --
@@ -14304,7 +15102,7 @@ GRANT SELECT ON TABLE auth.users TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5203 (class 0 OID 0)
+-- TOC entry 5290 (class 0 OID 0)
 -- Dependencies: 348
 -- Name: TABLE pg_stat_statements; Type: ACL; Schema: extensions; Owner: postgres
 --
@@ -14315,7 +15113,7 @@ GRANT ALL ON TABLE extensions.pg_stat_statements TO dashboard_user;
 
 
 --
--- TOC entry 5204 (class 0 OID 0)
+-- TOC entry 5291 (class 0 OID 0)
 -- Dependencies: 347
 -- Name: TABLE pg_stat_statements_info; Type: ACL; Schema: extensions; Owner: postgres
 --
@@ -14326,7 +15124,7 @@ GRANT ALL ON TABLE extensions.pg_stat_statements_info TO dashboard_user;
 
 
 --
--- TOC entry 5205 (class 0 OID 0)
+-- TOC entry 5292 (class 0 OID 0)
 -- Dependencies: 411
 -- Name: TABLE achievements; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14337,7 +15135,7 @@ GRANT ALL ON TABLE public.achievements TO service_role;
 
 
 --
--- TOC entry 5206 (class 0 OID 0)
+-- TOC entry 5293 (class 0 OID 0)
 -- Dependencies: 404
 -- Name: TABLE appointments; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14348,7 +15146,7 @@ GRANT ALL ON TABLE public.appointments TO service_role;
 
 
 --
--- TOC entry 5207 (class 0 OID 0)
+-- TOC entry 5294 (class 0 OID 0)
 -- Dependencies: 403
 -- Name: TABLE biometric_data; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14359,7 +15157,7 @@ GRANT ALL ON TABLE public.biometric_data TO service_role;
 
 
 --
--- TOC entry 5208 (class 0 OID 0)
+-- TOC entry 5295 (class 0 OID 0)
 -- Dependencies: 405
 -- Name: TABLE chat_messages; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14370,7 +15168,7 @@ GRANT ALL ON TABLE public.chat_messages TO service_role;
 
 
 --
--- TOC entry 5209 (class 0 OID 0)
+-- TOC entry 5296 (class 0 OID 0)
 -- Dependencies: 388
 -- Name: TABLE client_details; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14381,7 +15179,7 @@ GRANT ALL ON TABLE public.client_details TO service_role;
 
 
 --
--- TOC entry 5210 (class 0 OID 0)
+-- TOC entry 5297 (class 0 OID 0)
 -- Dependencies: 400
 -- Name: TABLE client_meal_plans; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14392,7 +15190,7 @@ GRANT ALL ON TABLE public.client_meal_plans TO service_role;
 
 
 --
--- TOC entry 5211 (class 0 OID 0)
+-- TOC entry 5298 (class 0 OID 0)
 -- Dependencies: 389
 -- Name: TABLE client_professionals; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14403,7 +15201,7 @@ GRANT ALL ON TABLE public.client_professionals TO service_role;
 
 
 --
--- TOC entry 5212 (class 0 OID 0)
+-- TOC entry 5299 (class 0 OID 0)
 -- Dependencies: 393
 -- Name: TABLE client_workouts; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14414,7 +15212,7 @@ GRANT ALL ON TABLE public.client_workouts TO service_role;
 
 
 --
--- TOC entry 5214 (class 0 OID 0)
+-- TOC entry 5301 (class 0 OID 0)
 -- Dependencies: 390
 -- Name: TABLE exercises_library; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14425,7 +15223,18 @@ GRANT ALL ON TABLE public.exercises_library TO service_role;
 
 
 --
--- TOC entry 5215 (class 0 OID 0)
+-- TOC entry 5302 (class 0 OID 0)
+-- Dependencies: 429
+-- Name: TABLE financial_transactions; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.financial_transactions TO anon;
+GRANT ALL ON TABLE public.financial_transactions TO authenticated;
+GRANT ALL ON TABLE public.financial_transactions TO service_role;
+
+
+--
+-- TOC entry 5303 (class 0 OID 0)
 -- Dependencies: 395
 -- Name: TABLE foods_library; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14436,7 +15245,7 @@ GRANT ALL ON TABLE public.foods_library TO service_role;
 
 
 --
--- TOC entry 5216 (class 0 OID 0)
+-- TOC entry 5304 (class 0 OID 0)
 -- Dependencies: 387
 -- Name: TABLE professional_details; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14447,7 +15256,7 @@ GRANT ALL ON TABLE public.professional_details TO service_role;
 
 
 --
--- TOC entry 5217 (class 0 OID 0)
+-- TOC entry 5305 (class 0 OID 0)
 -- Dependencies: 414
 -- Name: TABLE professional_reviews; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14458,7 +15267,7 @@ GRANT ALL ON TABLE public.professional_reviews TO service_role;
 
 
 --
--- TOC entry 5218 (class 0 OID 0)
+-- TOC entry 5306 (class 0 OID 0)
 -- Dependencies: 386
 -- Name: TABLE profiles; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14469,7 +15278,7 @@ GRANT ALL ON TABLE public.profiles TO service_role;
 
 
 --
--- TOC entry 5219 (class 0 OID 0)
+-- TOC entry 5307 (class 0 OID 0)
 -- Dependencies: 426
 -- Name: TABLE marketplace_professionals_view; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14480,7 +15289,7 @@ GRANT ALL ON TABLE public.marketplace_professionals_view TO service_role;
 
 
 --
--- TOC entry 5220 (class 0 OID 0)
+-- TOC entry 5308 (class 0 OID 0)
 -- Dependencies: 401
 -- Name: TABLE meal_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14491,7 +15300,7 @@ GRANT ALL ON TABLE public.meal_logs TO service_role;
 
 
 --
--- TOC entry 5221 (class 0 OID 0)
+-- TOC entry 5309 (class 0 OID 0)
 -- Dependencies: 399
 -- Name: TABLE meal_plan_items; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14502,7 +15311,7 @@ GRANT ALL ON TABLE public.meal_plan_items TO service_role;
 
 
 --
--- TOC entry 5222 (class 0 OID 0)
+-- TOC entry 5310 (class 0 OID 0)
 -- Dependencies: 398
 -- Name: TABLE meal_plans; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14513,7 +15322,29 @@ GRANT ALL ON TABLE public.meal_plans TO service_role;
 
 
 --
--- TOC entry 5223 (class 0 OID 0)
+-- TOC entry 5311 (class 0 OID 0)
+-- Dependencies: 431
+-- Name: TABLE payment_gateway_configs; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.payment_gateway_configs TO anon;
+GRANT ALL ON TABLE public.payment_gateway_configs TO authenticated;
+GRANT ALL ON TABLE public.payment_gateway_configs TO service_role;
+
+
+--
+-- TOC entry 5312 (class 0 OID 0)
+-- Dependencies: 430
+-- Name: TABLE platform_settings; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.platform_settings TO anon;
+GRANT ALL ON TABLE public.platform_settings TO authenticated;
+GRANT ALL ON TABLE public.platform_settings TO service_role;
+
+
+--
+-- TOC entry 5313 (class 0 OID 0)
 -- Dependencies: 407
 -- Name: TABLE professional_notifications; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14524,7 +15355,7 @@ GRANT ALL ON TABLE public.professional_notifications TO service_role;
 
 
 --
--- TOC entry 5224 (class 0 OID 0)
+-- TOC entry 5314 (class 0 OID 0)
 -- Dependencies: 402
 -- Name: TABLE progress_photos; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14535,7 +15366,7 @@ GRANT ALL ON TABLE public.progress_photos TO service_role;
 
 
 --
--- TOC entry 5225 (class 0 OID 0)
+-- TOC entry 5315 (class 0 OID 0)
 -- Dependencies: 397
 -- Name: TABLE recipe_ingredients; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14546,7 +15377,7 @@ GRANT ALL ON TABLE public.recipe_ingredients TO service_role;
 
 
 --
--- TOC entry 5226 (class 0 OID 0)
+-- TOC entry 5316 (class 0 OID 0)
 -- Dependencies: 396
 -- Name: TABLE recipes; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14557,7 +15388,7 @@ GRANT ALL ON TABLE public.recipes TO service_role;
 
 
 --
--- TOC entry 5227 (class 0 OID 0)
+-- TOC entry 5317 (class 0 OID 0)
 -- Dependencies: 413
 -- Name: TABLE scheduled_workouts; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14568,7 +15399,18 @@ GRANT ALL ON TABLE public.scheduled_workouts TO service_role;
 
 
 --
--- TOC entry 5228 (class 0 OID 0)
+-- TOC entry 5318 (class 0 OID 0)
+-- Dependencies: 428
+-- Name: TABLE subscription_plans; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.subscription_plans TO anon;
+GRANT ALL ON TABLE public.subscription_plans TO authenticated;
+GRANT ALL ON TABLE public.subscription_plans TO service_role;
+
+
+--
+-- TOC entry 5319 (class 0 OID 0)
 -- Dependencies: 423
 -- Name: TABLE taco; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14579,7 +15421,7 @@ GRANT ALL ON TABLE public.taco TO service_role;
 
 
 --
--- TOC entry 5229 (class 0 OID 0)
+-- TOC entry 5320 (class 0 OID 0)
 -- Dependencies: 424
 -- Name: TABLE unified_foods_view; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14590,7 +15432,7 @@ GRANT ALL ON TABLE public.unified_foods_view TO service_role;
 
 
 --
--- TOC entry 5230 (class 0 OID 0)
+-- TOC entry 5321 (class 0 OID 0)
 -- Dependencies: 412
 -- Name: TABLE user_achievements; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14601,7 +15443,7 @@ GRANT ALL ON TABLE public.user_achievements TO service_role;
 
 
 --
--- TOC entry 5231 (class 0 OID 0)
+-- TOC entry 5322 (class 0 OID 0)
 -- Dependencies: 417
 -- Name: TABLE user_favorite_foods; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14612,7 +15454,7 @@ GRANT ALL ON TABLE public.user_favorite_foods TO service_role;
 
 
 --
--- TOC entry 5232 (class 0 OID 0)
+-- TOC entry 5323 (class 0 OID 0)
 -- Dependencies: 416
 -- Name: TABLE user_goals; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14623,7 +15465,7 @@ GRANT ALL ON TABLE public.user_goals TO service_role;
 
 
 --
--- TOC entry 5233 (class 0 OID 0)
+-- TOC entry 5324 (class 0 OID 0)
 -- Dependencies: 410
 -- Name: TABLE workout_execution_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14634,7 +15476,7 @@ GRANT ALL ON TABLE public.workout_execution_logs TO service_role;
 
 
 --
--- TOC entry 5234 (class 0 OID 0)
+-- TOC entry 5325 (class 0 OID 0)
 -- Dependencies: 392
 -- Name: TABLE workout_exercises; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14645,7 +15487,7 @@ GRANT ALL ON TABLE public.workout_exercises TO service_role;
 
 
 --
--- TOC entry 5235 (class 0 OID 0)
+-- TOC entry 5326 (class 0 OID 0)
 -- Dependencies: 394
 -- Name: TABLE workout_logs; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14656,7 +15498,7 @@ GRANT ALL ON TABLE public.workout_logs TO service_role;
 
 
 --
--- TOC entry 5236 (class 0 OID 0)
+-- TOC entry 5327 (class 0 OID 0)
 -- Dependencies: 406
 -- Name: TABLE workout_sessions; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14667,7 +15509,7 @@ GRANT ALL ON TABLE public.workout_sessions TO service_role;
 
 
 --
--- TOC entry 5237 (class 0 OID 0)
+-- TOC entry 5328 (class 0 OID 0)
 -- Dependencies: 391
 -- Name: TABLE workouts; Type: ACL; Schema: public; Owner: postgres
 --
@@ -14678,7 +15520,7 @@ GRANT ALL ON TABLE public.workouts TO service_role;
 
 
 --
--- TOC entry 5238 (class 0 OID 0)
+-- TOC entry 5329 (class 0 OID 0)
 -- Dependencies: 385
 -- Name: TABLE messages; Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
 --
@@ -14691,7 +15533,7 @@ GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO service_role;
 
 
 --
--- TOC entry 5239 (class 0 OID 0)
+-- TOC entry 5330 (class 0 OID 0)
 -- Dependencies: 418
 -- Name: TABLE messages_2026_01_01; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14701,7 +15543,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_01 TO dashboard_user;
 
 
 --
--- TOC entry 5240 (class 0 OID 0)
+-- TOC entry 5331 (class 0 OID 0)
 -- Dependencies: 419
 -- Name: TABLE messages_2026_01_02; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14711,7 +15553,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_02 TO dashboard_user;
 
 
 --
--- TOC entry 5241 (class 0 OID 0)
+-- TOC entry 5332 (class 0 OID 0)
 -- Dependencies: 420
 -- Name: TABLE messages_2026_01_03; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14721,7 +15563,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_03 TO dashboard_user;
 
 
 --
--- TOC entry 5242 (class 0 OID 0)
+-- TOC entry 5333 (class 0 OID 0)
 -- Dependencies: 421
 -- Name: TABLE messages_2026_01_04; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14731,7 +15573,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_04 TO dashboard_user;
 
 
 --
--- TOC entry 5243 (class 0 OID 0)
+-- TOC entry 5334 (class 0 OID 0)
 -- Dependencies: 422
 -- Name: TABLE messages_2026_01_05; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14741,7 +15583,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_05 TO dashboard_user;
 
 
 --
--- TOC entry 5244 (class 0 OID 0)
+-- TOC entry 5335 (class 0 OID 0)
 -- Dependencies: 425
 -- Name: TABLE messages_2026_01_06; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14751,7 +15593,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_06 TO dashboard_user;
 
 
 --
--- TOC entry 5245 (class 0 OID 0)
+-- TOC entry 5336 (class 0 OID 0)
 -- Dependencies: 427
 -- Name: TABLE messages_2026_01_07; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14761,7 +15603,7 @@ GRANT ALL ON TABLE realtime.messages_2026_01_07 TO dashboard_user;
 
 
 --
--- TOC entry 5246 (class 0 OID 0)
+-- TOC entry 5337 (class 0 OID 0)
 -- Dependencies: 378
 -- Name: TABLE schema_migrations; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14775,7 +15617,7 @@ GRANT ALL ON TABLE realtime.schema_migrations TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5247 (class 0 OID 0)
+-- TOC entry 5338 (class 0 OID 0)
 -- Dependencies: 382
 -- Name: TABLE subscription; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14789,7 +15631,7 @@ GRANT ALL ON TABLE realtime.subscription TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5248 (class 0 OID 0)
+-- TOC entry 5339 (class 0 OID 0)
 -- Dependencies: 381
 -- Name: SEQUENCE subscription_id_seq; Type: ACL; Schema: realtime; Owner: supabase_admin
 --
@@ -14803,7 +15645,7 @@ GRANT ALL ON SEQUENCE realtime.subscription_id_seq TO supabase_realtime_admin;
 
 
 --
--- TOC entry 5250 (class 0 OID 0)
+-- TOC entry 5341 (class 0 OID 0)
 -- Dependencies: 355
 -- Name: TABLE buckets; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14817,7 +15659,7 @@ GRANT ALL ON TABLE storage.buckets TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5251 (class 0 OID 0)
+-- TOC entry 5342 (class 0 OID 0)
 -- Dependencies: 379
 -- Name: TABLE buckets_analytics; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14828,7 +15670,7 @@ GRANT ALL ON TABLE storage.buckets_analytics TO anon;
 
 
 --
--- TOC entry 5252 (class 0 OID 0)
+-- TOC entry 5343 (class 0 OID 0)
 -- Dependencies: 408
 -- Name: TABLE buckets_vectors; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14839,7 +15681,7 @@ GRANT SELECT ON TABLE storage.buckets_vectors TO anon;
 
 
 --
--- TOC entry 5254 (class 0 OID 0)
+-- TOC entry 5345 (class 0 OID 0)
 -- Dependencies: 356
 -- Name: TABLE objects; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14853,7 +15695,7 @@ GRANT ALL ON TABLE storage.objects TO postgres WITH GRANT OPTION;
 
 
 --
--- TOC entry 5255 (class 0 OID 0)
+-- TOC entry 5346 (class 0 OID 0)
 -- Dependencies: 377
 -- Name: TABLE prefixes; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14864,7 +15706,7 @@ GRANT ALL ON TABLE storage.prefixes TO anon;
 
 
 --
--- TOC entry 5256 (class 0 OID 0)
+-- TOC entry 5347 (class 0 OID 0)
 -- Dependencies: 375
 -- Name: TABLE s3_multipart_uploads; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14875,7 +15717,7 @@ GRANT SELECT ON TABLE storage.s3_multipart_uploads TO anon;
 
 
 --
--- TOC entry 5257 (class 0 OID 0)
+-- TOC entry 5348 (class 0 OID 0)
 -- Dependencies: 376
 -- Name: TABLE s3_multipart_uploads_parts; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14886,7 +15728,7 @@ GRANT SELECT ON TABLE storage.s3_multipart_uploads_parts TO anon;
 
 
 --
--- TOC entry 5258 (class 0 OID 0)
+-- TOC entry 5349 (class 0 OID 0)
 -- Dependencies: 409
 -- Name: TABLE vector_indexes; Type: ACL; Schema: storage; Owner: supabase_storage_admin
 --
@@ -14897,7 +15739,7 @@ GRANT SELECT ON TABLE storage.vector_indexes TO anon;
 
 
 --
--- TOC entry 5259 (class 0 OID 0)
+-- TOC entry 5350 (class 0 OID 0)
 -- Dependencies: 358
 -- Name: TABLE secrets; Type: ACL; Schema: vault; Owner: supabase_admin
 --
@@ -14907,7 +15749,7 @@ GRANT SELECT,DELETE ON TABLE vault.secrets TO service_role;
 
 
 --
--- TOC entry 5260 (class 0 OID 0)
+-- TOC entry 5351 (class 0 OID 0)
 -- Dependencies: 359
 -- Name: TABLE decrypted_secrets; Type: ACL; Schema: vault; Owner: supabase_admin
 --
@@ -14917,7 +15759,7 @@ GRANT SELECT,DELETE ON TABLE vault.decrypted_secrets TO service_role;
 
 
 --
--- TOC entry 2718 (class 826 OID 16603)
+-- TOC entry 2749 (class 826 OID 16603)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -14926,7 +15768,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2719 (class 826 OID 16604)
+-- TOC entry 2750 (class 826 OID 16604)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -14935,7 +15777,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2717 (class 826 OID 16602)
+-- TOC entry 2748 (class 826 OID 16602)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
 --
 
@@ -14944,7 +15786,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL O
 
 
 --
--- TOC entry 2728 (class 826 OID 16682)
+-- TOC entry 2759 (class 826 OID 16682)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -14952,7 +15794,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2727 (class 826 OID 16681)
+-- TOC entry 2758 (class 826 OID 16681)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -14960,7 +15802,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2726 (class 826 OID 16680)
+-- TOC entry 2757 (class 826 OID 16680)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
 --
 
@@ -14968,7 +15810,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL 
 
 
 --
--- TOC entry 2731 (class 826 OID 16637)
+-- TOC entry 2762 (class 826 OID 16637)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -14979,7 +15821,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2730 (class 826 OID 16636)
+-- TOC entry 2761 (class 826 OID 16636)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -14990,7 +15832,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2729 (class 826 OID 16635)
+-- TOC entry 2760 (class 826 OID 16635)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
 --
 
@@ -15001,7 +15843,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON 
 
 
 --
--- TOC entry 2723 (class 826 OID 16617)
+-- TOC entry 2754 (class 826 OID 16617)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -15012,7 +15854,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2725 (class 826 OID 16616)
+-- TOC entry 2756 (class 826 OID 16616)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -15023,7 +15865,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2724 (class 826 OID 16615)
+-- TOC entry 2755 (class 826 OID 16615)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
 --
 
@@ -15034,7 +15876,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT 
 
 
 --
--- TOC entry 2710 (class 826 OID 16490)
+-- TOC entry 2741 (class 826 OID 16490)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -15045,7 +15887,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENC
 
 
 --
--- TOC entry 2711 (class 826 OID 16491)
+-- TOC entry 2742 (class 826 OID 16491)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -15056,7 +15898,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON S
 
 
 --
--- TOC entry 2709 (class 826 OID 16489)
+-- TOC entry 2740 (class 826 OID 16489)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -15067,7 +15909,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIO
 
 
 --
--- TOC entry 2713 (class 826 OID 16493)
+-- TOC entry 2744 (class 826 OID 16493)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -15078,7 +15920,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON F
 
 
 --
--- TOC entry 2708 (class 826 OID 16488)
+-- TOC entry 2739 (class 826 OID 16488)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: postgres
 --
 
@@ -15089,7 +15931,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES 
 
 
 --
--- TOC entry 2712 (class 826 OID 16492)
+-- TOC entry 2743 (class 826 OID 16492)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
 --
 
@@ -15100,7 +15942,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON T
 
 
 --
--- TOC entry 2721 (class 826 OID 16607)
+-- TOC entry 2752 (class 826 OID 16607)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -15109,7 +15951,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2722 (class 826 OID 16608)
+-- TOC entry 2753 (class 826 OID 16608)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -15118,7 +15960,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2720 (class 826 OID 16606)
+-- TOC entry 2751 (class 826 OID 16606)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
 --
 
@@ -15127,7 +15969,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON
 
 
 --
--- TOC entry 2716 (class 826 OID 16545)
+-- TOC entry 2747 (class 826 OID 16545)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -15138,7 +15980,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUEN
 
 
 --
--- TOC entry 2715 (class 826 OID 16544)
+-- TOC entry 2746 (class 826 OID 16544)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -15149,7 +15991,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTI
 
 
 --
--- TOC entry 2714 (class 826 OID 16543)
+-- TOC entry 2745 (class 826 OID 16543)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
 --
 
@@ -15160,7 +16002,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES
 
 
 --
--- TOC entry 3899 (class 3466 OID 16621)
+-- TOC entry 3930 (class 3466 OID 16621)
 -- Name: issue_graphql_placeholder; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15172,7 +16014,7 @@ CREATE EVENT TRIGGER issue_graphql_placeholder ON sql_drop
 ALTER EVENT TRIGGER issue_graphql_placeholder OWNER TO supabase_admin;
 
 --
--- TOC entry 3904 (class 3466 OID 16700)
+-- TOC entry 3935 (class 3466 OID 16700)
 -- Name: issue_pg_cron_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15184,7 +16026,7 @@ CREATE EVENT TRIGGER issue_pg_cron_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_cron_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3898 (class 3466 OID 16619)
+-- TOC entry 3929 (class 3466 OID 16619)
 -- Name: issue_pg_graphql_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15196,7 +16038,7 @@ CREATE EVENT TRIGGER issue_pg_graphql_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_graphql_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3905 (class 3466 OID 16703)
+-- TOC entry 3936 (class 3466 OID 16703)
 -- Name: issue_pg_net_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15208,7 +16050,7 @@ CREATE EVENT TRIGGER issue_pg_net_access ON ddl_command_end
 ALTER EVENT TRIGGER issue_pg_net_access OWNER TO supabase_admin;
 
 --
--- TOC entry 3900 (class 3466 OID 16622)
+-- TOC entry 3931 (class 3466 OID 16622)
 -- Name: pgrst_ddl_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15219,7 +16061,7 @@ CREATE EVENT TRIGGER pgrst_ddl_watch ON ddl_command_end
 ALTER EVENT TRIGGER pgrst_ddl_watch OWNER TO supabase_admin;
 
 --
--- TOC entry 3901 (class 3466 OID 16623)
+-- TOC entry 3932 (class 3466 OID 16623)
 -- Name: pgrst_drop_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
 --
 
@@ -15229,15 +16071,15 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 
 ALTER EVENT TRIGGER pgrst_drop_watch OWNER TO supabase_admin;
 
--- Completed on 2026-01-04 17:36:49
+-- Completed on 2026-01-05 00:02:31
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict fgan7SC6fEwnuJRpAKqOCrOqQxs9GMZolU3PMzWMjlDn7Y0Zwg5W07npnaVLqby
+\unrestrict Hk3KXE5EzP7Lw03rquYSNMvfUlcktwCKEr1TBQV2woEqjKgQpfffqMR0kPgnTQw
 
--- Completed on 2026-01-04 17:36:49
+-- Completed on 2026-01-05 00:02:31
 
 --
 -- PostgreSQL database cluster dump complete
