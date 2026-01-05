@@ -104,8 +104,7 @@ export default function PaymentSettings() {
                 p_provider: 'stripe',
                 p_publishable_key: stripeSecrets.publishable,
                 p_secret_key: stripeSecrets.secret,
-                p_webhook_secret: stripeSecrets.webhook,
-                p_is_active: true
+                p_webhook_secret: stripeSecrets.webhook
             });
 
             if (error) throw error;
