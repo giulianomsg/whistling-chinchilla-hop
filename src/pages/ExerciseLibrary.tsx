@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,69 +9,78 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Dumbbell, Plus, Search, Eye, Loader2, Edit, Trash2, Video, List, X } from 'lucide-react'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Dumbbell, Plus, Search, Eye, Loader2, Edit, Trash2, Video, List, X, Upload, Image as ImageIcon, Film } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Checkbox } from '@/components/ui/checkbox'
 
-// Helper Component for Static/Hover GIF
-const GifThumbnail = ({ src, alt }: { src: string, alt: string }) => {
+// Component for Exercise Media (GIF or Video)
+const ExerciseMediaThumbnail = ({ 
+  src, 
+  type, 
+  alt, 
+  poster 
+}: { 
+  src: string | null, 
+  type: 'video' | 'gif' | null, 
+  alt: string,
+  poster?: string 
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [hovering, setHovering] = useState(false)
-  const [staticSrc, setStaticSrc] = useState<string | null>(null)
-  const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
+  // Autoplay video on hover
   useEffect(() => {
-    if (!src) return
-
-    // Attempt to generate static frame
-    const img = new Image()
-    img.crossOrigin = 'Anonymous'
-    img.src = src
-    img.onload = () => {
-      // Create a temporary canvas if we don't have a ref (though we do)
-      const canvas = document.createElement('canvas')
-      canvas.width = img.naturalWidth
-      canvas.height = img.naturalHeight
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.drawImage(img, 0, 0)
-        try {
-          const dataUrl = canvas.toDataURL()
-          setStaticSrc(dataUrl)
-        } catch (e) {
-          console.warn('Cannot generate static thumbnail (likely CORS)', e)
-          // If CORS fails, we just won't have a static src, so we might show loading or just the gif
-        }
+    if (type === 'video' && videoRef.current) {
+      if (hovering) {
+        videoRef.current.play().catch(() => {})
+      } else {
+        videoRef.current.pause()
+        videoRef.current.currentTime = 0
       }
     }
-  }, [src])
+  }, [hovering, type])
 
-  const displaySrc = (hovering || !staticSrc) ? src : staticSrc
+  if (!src) {
+    return (
+      <div className="w-full aspect-video bg-muted rounded-md mb-3 border border-border flex items-center justify-center text-muted-foreground">
+        <Dumbbell className="h-8 w-8 opacity-20" />
+      </div>
+    )
+  }
 
   return (
     <div
-      className="relative w-full aspect-video bg-muted rounded-md overflow-hidden mb-3 border border-border flex items-center justify-center cursor-pointer group-hover:border-blue-500/50 transition-colors"
+      className="relative w-full aspect-video bg-black rounded-md overflow-hidden mb-3 border border-border group-hover:border-blue-500/50 transition-colors"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      {!src ? (
-        <span className="text-xs text-muted-foreground">Sem GIF</span>
+      {type === 'video' ? (
+        <video
+          ref={videoRef}
+          src={src}
+          poster={poster} // Optional: could be a generated thumb
+          className="w-full h-full object-cover"
+          muted
+          loop
+          playsInline
+          preload="metadata" // Lazy load-ish
+        />
       ) : (
         <img
-          src={displaySrc}
+          src={src}
           alt={alt}
           className="w-full h-full object-cover"
           loading="lazy"
         />
       )}
-      {/* Badge to indicate interaction */}
-      {!hovering && src && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-50">
-          <div className="bg-black/50 p-2 rounded-full backdrop-blur-sm">
-            <span className="text-[10px] text-white font-bold uppercase tracking-widest">GIF</span>
-          </div>
-        </div>
-      )}
+      
+      {/* Type Badge */}
+      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-white uppercase flex items-center gap-1">
+        {type === 'video' ? <Film className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
+        <span>{type === 'video' ? 'Vídeo' : 'GIF'}</span>
+      </div>
     </div>
   )
 }
@@ -87,29 +96,53 @@ const ExerciseLibrary: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [previewExercise, setPreviewExercise] = useState<any>(null)
+  const [uploading, setUploading] = useState(false)
 
-  const initialFormState = {
+  // State definitions
+  interface ExerciseForm {
+    id: string
+    name: string
+    description: string
+    muscles: string
+    equipment: string
+    difficulty: string
+    instructions: string
+    tips: string
+    is_public: boolean
+    base_type: string
+    // Media
+    demo_type: 'video' | 'gif' | null
+    demo_url: string | null
+    // Legacy support (optional, kept for transition if needed, but focusing on demo_*)
+    video_url: string 
+  }
+
+  const initialFormState: ExerciseForm = {
     id: '', name: '', description: '',
     muscles: '', equipment: '',
-    difficulty: 'beginner', video_url: '', gif_url: '',
+    difficulty: 'beginner', 
     instructions: '', tips: '',
     is_public: false,
-    base_type: 'none'
+    base_type: 'none',
+    demo_type: null,
+    demo_url: null,
+    video_url: '' // Keeping for YouTube links
   }
-  const [formData, setFormData] = useState(initialFormState)
+
+  const [formData, setFormData] = useState<ExerciseForm>(initialFormState)
+  const [demoFile, setDemoFile] = useState<File | null>(null)
+  const [demoPreview, setDemoPreview] = useState<string | null>(null)
 
   // Debounce Effect
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm)
-    }, 500) // 500ms delay
-
+    }, 500)
     return () => clearTimeout(timer)
   }, [searchTerm])
 
   const fetchExercises = async () => {
     if (!user) return
-    // Only block full page if it's the very first load or if we want to show a spinner in the grid
     setPageLoading(true)
     try {
       let query = supabase.from('exercises_library').select('*').or(`created_by.eq.${user.id},is_public.eq.true`).order('created_at', { ascending: false })
@@ -123,15 +156,80 @@ const ExerciseLibrary: React.FC = () => {
 
   useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, debouncedSearch, difficultyFilter])
 
-  // RESET CORRETO AO ABRIR DIALOG
   const openCreateDialog = () => {
     setFormData(initialFormState)
+    setDemoFile(null)
+    setDemoPreview(null)
     setIsCreateDialogOpen(true)
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: 'video' | 'gif') => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      
+      // Validation
+      if (type === 'video') {
+        if (file.size > 50 * 1024 * 1024) { // 50MB
+          showError('O vídeo deve ter no máximo 50MB.')
+          return
+        }
+        if (!file.type.startsWith('video/')) {
+          showError('Arquivo inválido. Selecione um vídeo.')
+          return
+        }
+      } else {
+        if (!file.type.includes('gif')) {
+          showError('Arquivo inválido. Selecione um GIF.')
+          return
+        }
+      }
+
+      setDemoFile(file)
+      setFormData(prev => ({ ...prev, demo_type: type }))
+      
+      // Preview
+      const objectUrl = URL.createObjectURL(file)
+      setDemoPreview(objectUrl)
+    }
+  }
+
+  const clearMedia = () => {
+    setDemoFile(null)
+    setDemoPreview(null)
+    setFormData(prev => ({ ...prev, demo_type: null, demo_url: null }))
   }
 
   const handleSave = async (e: React.FormEvent, mode: 'create' | 'update') => {
     e.preventDefault()
     if (!user) return
+
+    setUploading(true)
+    let finalDemoUrl = formData.demo_url
+
+    // Upload Logic
+    if (demoFile && formData.demo_type) {
+      try {
+        const fileExt = demoFile.name.split('.').pop()
+        const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
+        
+        const { error: uploadError } = await supabase.storage
+          .from('exercise-demos')
+          .upload(fileName, demoFile)
+
+        if (uploadError) throw uploadError
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('exercise-demos')
+          .getPublicUrl(fileName)
+        
+        finalDemoUrl = publicUrl
+      } catch (err: any) {
+        console.error(err)
+        showError('Erro ao fazer upload da mídia.')
+        setUploading(false)
+        return
+      }
+    }
 
     const payload = {
       name: formData.name,
@@ -139,13 +237,16 @@ const ExerciseLibrary: React.FC = () => {
       muscle_groups: formData.muscles.split(',').map(s => s.trim()).filter(Boolean),
       equipment_needed: formData.equipment.split(',').map(s => s.trim()).filter(Boolean),
       difficulty_level: formData.difficulty,
-      video_url: formData.video_url,
-      gif_url: formData.gif_url,
       instructions: formData.instructions.split('\n').filter(Boolean),
       tips: formData.tips.split('\n').filter(Boolean),
       is_public: formData.is_public,
       created_by: user.id,
-      base_type: formData.base_type === 'none' ? null : formData.base_type
+      base_type: formData.base_type === 'none' ? null : formData.base_type,
+      // New Columns
+      demo_url: finalDemoUrl,
+      demo_type: formData.demo_type,
+      // Legacy/Extra
+      video_url: formData.video_url // Youtube
     }
 
     let error
@@ -156,6 +257,8 @@ const ExerciseLibrary: React.FC = () => {
       const res = await supabase.from('exercises_library').update(payload).eq('id', formData.id)
       error = res.error
     }
+
+    setUploading(false)
 
     if (!error) {
       showSuccess(mode === 'create' ? 'Criado!' : 'Atualizado!')
@@ -175,20 +278,25 @@ const ExerciseLibrary: React.FC = () => {
 
   const openEdit = (ex: any) => {
     setFormData({
-      id: ex.id, name: ex.name, description: ex.description || '',
+      id: ex.id, 
+      name: ex.name, 
+      description: ex.description || '',
       muscles: (ex.muscle_groups || []).join(', '),
       equipment: (ex.equipment_needed || []).join(', '),
       difficulty: ex.difficulty_level,
-      video_url: ex.video_url || '', gif_url: ex.gif_url || '',
+      video_url: ex.video_url || '', 
       instructions: (ex.instructions || []).join('\n'),
       tips: (ex.tips || []).join('\n'),
       is_public: ex.is_public,
-      base_type: ex.base_type || 'none'
+      base_type: ex.base_type || 'none',
+      demo_type: ex.demo_type || (ex.gif_url ? 'gif' : null), // Fallback to gif_url if demo_type null
+      demo_url: ex.demo_url || ex.gif_url || null
     })
+    setDemoFile(null)
+    setDemoPreview(ex.demo_url || ex.gif_url || null)
     setIsEditDialogOpen(true)
   }
 
-  // Auth loading only blocks
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
@@ -203,7 +311,7 @@ const ExerciseLibrary: React.FC = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar..."
+              placeholder="Buscar exercício..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="pl-10 pr-10 bg-card border-border text-foreground"
@@ -251,8 +359,12 @@ const ExerciseLibrary: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {/* GIF THUMBNAIL */}
-                  <GifThumbnail src={ex.gif_url} alt={ex.name} />
+                  {/* MEDIA DISPLAY */}
+                  <ExerciseMediaThumbnail 
+                    src={ex.demo_url || ex.gif_url} 
+                    type={ex.demo_type || (ex.gif_url ? 'gif' : null)} 
+                    alt={ex.name} 
+                  />
 
                   <div className="flex flex-wrap gap-1 mb-3 h-6 overflow-hidden">
                     {ex.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-muted text-muted-foreground text-[10px]">{m}</Badge>)}
@@ -262,7 +374,7 @@ const ExerciseLibrary: React.FC = () => {
                     <div className="flex gap-2 text-muted-foreground">
                       {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
                       {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
-                      {<Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                      <Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />
                     </div>
                   </div>
                 </CardContent>
@@ -271,7 +383,7 @@ const ExerciseLibrary: React.FC = () => {
           </div>
         )}
 
-        {/* Dialogs (Forms Inline para evitar perda de foco) */}
+        {/* Create/Edit Dialog */}
         {[
           { open: isCreateDialogOpen, change: setIsCreateDialogOpen, title: 'Novo Exercício', mode: 'create' as const },
           { open: isEditDialogOpen, change: setIsEditDialogOpen, title: 'Editar Exercício', mode: 'update' as const }
@@ -284,6 +396,78 @@ const ExerciseLibrary: React.FC = () => {
               </DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
                 <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
+                
+                {/* MEDIA UPLOAD SECTION */}
+                <div className="space-y-2 border border-border rounded-md p-4 bg-muted/30">
+                  <Label className="font-semibold flex items-center gap-2">Mídia Demonstrativa</Label>
+                  <Tabs 
+                    defaultValue="none" 
+                    value={formData.demo_type ? (formData.demo_type === 'gif' ? 'gif' : 'video') : 'none'}
+                    onValueChange={(val) => {
+                      if (val === 'none') clearMedia()
+                      else {
+                         setFormData(prev => ({ ...prev, demo_type: val as 'gif' | 'video' }))
+                         // Clear previous file if switching types, as requested
+                         if ((val === 'gif' && formData.demo_type === 'video') || (val === 'video' && formData.demo_type === 'gif')) {
+                             setDemoFile(null)
+                             setDemoPreview(null)
+                             setFormData(p => ({ ...p, demo_url: null }))
+                         }
+                      }
+                    }}
+                  >
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="none">Nenhum</TabsTrigger>
+                      <TabsTrigger value="gif">GIF Animado</TabsTrigger>
+                      <TabsTrigger value="video">Vídeo (MP4)</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="none" className="text-xs text-muted-foreground p-2 text-center">
+                      Nenhuma mídia selecionada.
+                    </TabsContent>
+
+                    <TabsContent value="gif" className="space-y-3">
+                      <div className="flex items-center gap-4">
+                         <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
+                            <Upload className="mr-2 h-4 w-4" /> Selecionar GIF
+                            <input 
+                              type="file" 
+                              className="absolute inset-0 opacity-0 cursor-pointer" 
+                              accept="image/gif"
+                              onChange={(e) => handleFileSelect(e, 'gif')}
+                            />
+                         </Button>
+                      </div>
+                      {demoPreview && formData.demo_type === 'gif' && (
+                        <div className="relative w-full aspect-video bg-black rounded overflow-hidden">
+                           <img src={demoPreview} alt="Preview" className="w-full h-full object-contain" />
+                           <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="video" className="space-y-3">
+                      <div className="flex items-center gap-4">
+                         <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
+                            <Upload className="mr-2 h-4 w-4" /> Selecionar Vídeo (max 50MB)
+                            <input 
+                              type="file" 
+                              className="absolute inset-0 opacity-0 cursor-pointer" 
+                              accept="video/mp4,video/webm"
+                              onChange={(e) => handleFileSelect(e, 'video')}
+                            />
+                         </Button>
+                      </div>
+                      {demoPreview && formData.demo_type === 'video' && (
+                        <div className="relative w-full aspect-video bg-black rounded overflow-hidden">
+                           <video src={demoPreview} className="w-full h-full object-contain" controls />
+                           <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
+                        </div>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Dificuldade</Label>
@@ -308,10 +492,7 @@ const ExerciseLibrary: React.FC = () => {
                 </div>
                 <div><Label>Músculos</Label><Input className="bg-muted border-border" value={formData.muscles} onChange={e => setFormData({ ...formData, muscles: e.target.value })} /></div>
                 <div><Label>Equipamentos</Label><Input className="bg-muted border-border" value={formData.equipment} onChange={e => setFormData({ ...formData, equipment: e.target.value })} /></div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Vídeo URL</Label><Input className="bg-muted border-border" value={formData.video_url} onChange={e => setFormData({ ...formData, video_url: e.target.value })} /></div>
-                  <div><Label>GIF URL</Label><Input className="bg-muted border-border" value={formData.gif_url} onChange={e => setFormData({ ...formData, gif_url: e.target.value })} /></div>
-                </div>
+                <div><Label>URL de Tutorial (Youtube - Opcional)</Label><Input className="bg-muted border-border" value={formData.video_url} onChange={e => setFormData({ ...formData, video_url: e.target.value })} /></div>
                 <div><Label>Descrição</Label><Textarea className="bg-muted border-border" rows={2} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} /></div>
                 <div><Label className="text-blue-500">Instruções (uma por linha)</Label><Textarea className="bg-muted border-border font-mono text-xs" rows={4} value={formData.instructions} onChange={e => setFormData({ ...formData, instructions: e.target.value })} /></div>
                 <div><Label className="text-yellow-500">Dicas (uma por linha)</Label><Textarea className="bg-muted border-border font-mono text-xs" rows={3} value={formData.tips} onChange={e => setFormData({ ...formData, tips: e.target.value })} /></div>
@@ -319,13 +500,16 @@ const ExerciseLibrary: React.FC = () => {
                   <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-blue-600" />
                   <Label htmlFor={`public-${d.mode}`} className="cursor-pointer">Público</Label>
                 </div>
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold">Salvar</Button>
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold" disabled={uploading}>
+                  {uploading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+                  {uploading ? 'Salvando...' : 'Salvar'}
+                </Button>
               </form>
             </DialogContent>
           </Dialog>
         ))}
 
-        {/* PREVIEW DIALOG */}
+        {/* PREVIEW DIALOG DETAILED */}
         <Dialog open={!!previewExercise} onOpenChange={(open) => !open && setPreviewExercise(null)}>
           <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
@@ -334,17 +518,23 @@ const ExerciseLibrary: React.FC = () => {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-6">
-              {/* Media Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {previewExercise?.gif_url ? (
-                  <div className="rounded-lg overflow-hidden border border-border shadow-md bg-black/20 flex items-center justify-center min-h-[200px]">
-                    <img src={previewExercise.gif_url} alt={previewExercise.name} className="w-full h-auto object-cover" />
-                  </div>
-                ) : (
-                  <div className="rounded-lg border border-border bg-muted flex items-center justify-center min-h-[200px] text-muted-foreground">
-                    Sem GIF disponível
-                  </div>
-                )}
+                
+                {/* LARGE PREVIEW */}
+                <div className="rounded-lg overflow-hidden border border-border shadow-md bg-black flex items-center justify-center min-h-[200px]">
+                  {(previewExercise?.demo_url || previewExercise?.gif_url) ? (
+                    (previewExercise?.demo_type === 'video') ? (
+                       <video src={previewExercise.demo_url} className="w-full h-auto max-h-[400px]" controls autoPlay muted loop />
+                    ) : (
+                       <img src={previewExercise?.demo_url || previewExercise?.gif_url} alt={previewExercise?.name} className="w-full h-auto object-contain" />
+                    )
+                  ) : (
+                    <div className="text-muted-foreground flex flex-col items-center">
+                      <Dumbbell className="h-12 w-12 mb-2 opacity-50" />
+                      Sem demonstração visual
+                    </div>
+                  )}
+                </div>
 
                 <div className="space-y-4">
                   <div>
@@ -363,7 +553,6 @@ const ExerciseLibrary: React.FC = () => {
                 </div>
               </div>
 
-              {/* Instructions Section */}
               {(previewExercise?.instructions?.length > 0 || previewExercise?.tips?.length > 0) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-6">
                   {previewExercise.instructions?.length > 0 && (
