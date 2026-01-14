@@ -10,22 +10,24 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Dumbbell, Plus, Search, Eye, Loader2, Edit, Trash2, Video, List, X, Upload, Image as ImageIcon, Film } from 'lucide-react'
+import { Dumbbell, Plus, Search, Eye, Loader2, Edit, Trash2, Video, List, X, Upload, Image as ImageIcon, Film, User as UserIcon, Clock } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Checkbox } from '@/components/ui/checkbox'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 // Component for Exercise Media (GIF or Video)
-const ExerciseMediaThumbnail = ({ 
-  src, 
-  type, 
-  alt, 
-  poster 
-}: { 
-  src: string | null, 
-  type: 'video' | 'gif' | null, 
+const ExerciseMediaThumbnail = ({
+  src,
+  type,
+  alt,
+  poster
+}: {
+  src: string | null,
+  type: 'video' | 'gif' | null,
   alt: string,
-  poster?: string 
+  poster?: string
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hovering, setHovering] = useState(false)
@@ -34,7 +36,7 @@ const ExerciseMediaThumbnail = ({
   useEffect(() => {
     if (type === 'video' && videoRef.current) {
       if (hovering) {
-        videoRef.current.play().catch(() => {})
+        videoRef.current.play().catch(() => { })
       } else {
         videoRef.current.pause()
         videoRef.current.currentTime = 0
@@ -75,7 +77,7 @@ const ExerciseMediaThumbnail = ({
           loading="lazy"
         />
       )}
-      
+
       {/* Type Badge */}
       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-white uppercase flex items-center gap-1">
         {type === 'video' ? <Film className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
@@ -86,7 +88,7 @@ const ExerciseMediaThumbnail = ({
 }
 
 const ExerciseLibrary: React.FC = () => {
-  const { user, loading } = useAuth()
+  const { user, profile, loading } = useAuth()
   const [exercises, setExercises] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -97,6 +99,9 @@ const ExerciseLibrary: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [previewExercise, setPreviewExercise] = useState<any>(null)
   const [uploading, setUploading] = useState(false)
+
+  // Permission Check: Admins and Professionals can edit
+  const canEdit = profile?.role === 'admin' || profile?.role === 'professional'
 
   // State definitions
   interface ExerciseForm {
@@ -113,20 +118,20 @@ const ExerciseLibrary: React.FC = () => {
     // Media
     demo_type: 'video' | 'gif' | null
     demo_url: string | null
-    // Legacy support (optional, kept for transition if needed, but focusing on demo_*)
-    video_url: string 
+    // Legacy support
+    video_url: string
   }
 
   const initialFormState: ExerciseForm = {
     id: '', name: '', description: '',
     muscles: '', equipment: '',
-    difficulty: 'beginner', 
+    difficulty: 'beginner',
     instructions: '', tips: '',
     is_public: false,
     base_type: 'none',
     demo_type: null,
     demo_url: null,
-    video_url: '' // Keeping for YouTube links
+    video_url: ''
   }
 
   const [formData, setFormData] = useState<ExerciseForm>(initialFormState)
@@ -145,13 +150,30 @@ const ExerciseLibrary: React.FC = () => {
     if (!user) return
     setPageLoading(true)
     try {
-      let query = supabase.from('exercises_library').select('*').or(`created_by.eq.${user.id},is_public.eq.true`).order('created_at', { ascending: false })
+      // Changed Logic: Fetch all accessible exercises (RLS handles visibility).
+      // Join with profiles to get Creator and Updater names.
+      let query = supabase
+        .from('exercises_library')
+        .select(`
+          *,
+          created_by_profile:created_by(full_name),
+          updated_by_profile:updated_by(full_name)
+        `)
+        .order('created_at', { ascending: false })
+
       if (debouncedSearch) query = query.ilike('name', `%${debouncedSearch}%`)
       if (difficultyFilter !== 'all') query = query.eq('difficulty_level', difficultyFilter)
-      const { data } = await query
+
+      const { data, error } = await query
+
+      if (error) throw error
       setExercises(data || [])
-    } catch { showError('Erro ao carregar') }
-    finally { setPageLoading(false) }
+    } catch (err) {
+      console.error(err)
+      showError('Erro ao carregar exercícios')
+    } finally {
+      setPageLoading(false)
+    }
   }
 
   useEffect(() => { if (!loading && user) fetchExercises() }, [user, loading, debouncedSearch, difficultyFilter])
@@ -166,7 +188,7 @@ const ExerciseLibrary: React.FC = () => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: 'video' | 'gif') => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      
+
       // Validation
       if (type === 'video') {
         if (file.size > 50 * 1024 * 1024) { // 50MB
@@ -186,7 +208,7 @@ const ExerciseLibrary: React.FC = () => {
 
       setDemoFile(file)
       setFormData(prev => ({ ...prev, demo_type: type }))
-      
+
       // Preview
       const objectUrl = URL.createObjectURL(file)
       setDemoPreview(objectUrl)
@@ -211,7 +233,7 @@ const ExerciseLibrary: React.FC = () => {
       try {
         const fileExt = demoFile.name.split('.').pop()
         const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
-        
+
         const { error: uploadError } = await supabase.storage
           .from('exercise-demos')
           .upload(fileName, demoFile)
@@ -221,7 +243,7 @@ const ExerciseLibrary: React.FC = () => {
         const { data: { publicUrl } } = supabase.storage
           .from('exercise-demos')
           .getPublicUrl(fileName)
-        
+
         finalDemoUrl = publicUrl
       } catch (err: any) {
         console.error(err)
@@ -231,7 +253,7 @@ const ExerciseLibrary: React.FC = () => {
       }
     }
 
-    const payload = {
+    const payload: any = {
       name: formData.name,
       description: formData.description,
       muscle_groups: formData.muscles.split(',').map(s => s.trim()).filter(Boolean),
@@ -240,13 +262,14 @@ const ExerciseLibrary: React.FC = () => {
       instructions: formData.instructions.split('\n').filter(Boolean),
       tips: formData.tips.split('\n').filter(Boolean),
       is_public: formData.is_public,
-      created_by: user.id,
       base_type: formData.base_type === 'none' ? null : formData.base_type,
-      // New Columns
       demo_url: finalDemoUrl,
       demo_type: formData.demo_type,
-      // Legacy/Extra
-      video_url: formData.video_url // Youtube
+      video_url: formData.video_url
+    }
+
+    if (mode === 'create') {
+      payload.created_by = user.id
     }
 
     let error
@@ -254,6 +277,7 @@ const ExerciseLibrary: React.FC = () => {
       const res = await supabase.from('exercises_library').insert(payload)
       error = res.error
     } else {
+      // updated_by is handled by Database Trigger (or we could send it here, but trigger is safer)
       const res = await supabase.from('exercises_library').update(payload).eq('id', formData.id)
       error = res.error
     }
@@ -266,6 +290,7 @@ const ExerciseLibrary: React.FC = () => {
       setIsEditDialogOpen(false)
       fetchExercises()
     } else {
+      console.error(error)
       showError('Erro ao salvar')
     }
   }
@@ -278,18 +303,18 @@ const ExerciseLibrary: React.FC = () => {
 
   const openEdit = (ex: any) => {
     setFormData({
-      id: ex.id, 
-      name: ex.name, 
+      id: ex.id,
+      name: ex.name,
       description: ex.description || '',
       muscles: (ex.muscle_groups || []).join(', '),
       equipment: (ex.equipment_needed || []).join(', '),
       difficulty: ex.difficulty_level,
-      video_url: ex.video_url || '', 
+      video_url: ex.video_url || '',
       instructions: (ex.instructions || []).join('\n'),
       tips: (ex.tips || []).join('\n'),
       is_public: ex.is_public,
       base_type: ex.base_type || 'none',
-      demo_type: ex.demo_type || (ex.gif_url ? 'gif' : null), // Fallback to gif_url if demo_type null
+      demo_type: ex.demo_type || (ex.gif_url ? 'gif' : null),
       demo_url: ex.demo_url || ex.gif_url || null
     })
     setDemoFile(null)
@@ -304,7 +329,9 @@ const ExerciseLibrary: React.FC = () => {
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3"><Dumbbell className="text-blue-500" /> Exercícios</h1>
-          <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4" /> Novo</Button>
+          {canEdit && (
+            <Button onClick={openCreateDialog} className="bg-blue-600 text-white hover:bg-blue-500"><Plus className="mr-2 h-4 w-4" /> Novo</Button>
+          )}
         </div>
 
         <div className="flex gap-4 mb-6">
@@ -338,12 +365,12 @@ const ExerciseLibrary: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {exercises.map(ex => (
-              <Card key={ex.id} className="bg-card border-border hover:bg-accent/50 transition-all group">
+              <Card key={ex.id} className="bg-card border-border hover:bg-accent/50 transition-all group overflow-hidden flex flex-col">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-foreground text-lg truncate pr-2">{ex.name}</CardTitle>
                     <div className="flex gap-1 shrink-0">
-                      {ex.created_by === user?.id && (
+                      {canEdit && (
                         <>
                           <Button variant="ghost" size="icon" onClick={() => openEdit(ex)} className="text-muted-foreground hover:text-blue-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
                           <AlertDialog>
@@ -358,23 +385,40 @@ const ExerciseLibrary: React.FC = () => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col">
                   {/* MEDIA DISPLAY */}
-                  <ExerciseMediaThumbnail 
-                    src={ex.demo_url || ex.gif_url} 
-                    type={ex.demo_type || (ex.gif_url ? 'gif' : null)} 
-                    alt={ex.name} 
+                  <ExerciseMediaThumbnail
+                    src={ex.demo_url || ex.gif_url}
+                    type={ex.demo_type || (ex.gif_url ? 'gif' : null)}
+                    alt={ex.name}
                   />
 
                   <div className="flex flex-wrap gap-1 mb-3 h-6 overflow-hidden">
                     {ex.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-muted text-muted-foreground text-[10px]">{m}</Badge>)}
                   </div>
-                  <div className="flex justify-between items-center border-t border-border pt-2">
-                    <Badge variant="outline" className="border-border text-muted-foreground">{ex.difficulty_level}</Badge>
-                    <div className="flex gap-2 text-muted-foreground">
-                      {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
-                      {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
-                      <Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />
+
+                  <div className="mt-auto">
+                    <div className="flex justify-between items-center border-t border-border pt-2 mb-2">
+                      <Badge variant="outline" className="border-border text-muted-foreground">{ex.difficulty_level}</Badge>
+                      <div className="flex gap-2 text-muted-foreground">
+                        {ex.video_url && <Video className="h-4 w-4 hover:text-blue-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                        {(ex.instructions?.length > 0) && <List className="h-4 w-4 hover:text-yellow-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />}
+                        <Eye className="h-4 w-4 hover:text-green-500 cursor-pointer" onClick={() => setPreviewExercise(ex)} />
+                      </div>
+                    </div>
+
+                    {/* Created/Updated By Info */}
+                    <div className="text-[10px] text-muted-foreground border-t border-border pt-2 flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1">
+                        <UserIcon className="h-3 w-3" />
+                        <span>Criado por: <span className="font-medium text-foreground">{ex.created_by_profile?.full_name || 'Desconhecido'}</span></span>
+                      </div>
+                      {ex.updated_by_profile && (
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          <span>Atualizado por: <span className="font-medium text-foreground">{ex.updated_by_profile.full_name}</span></span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -390,29 +434,29 @@ const ExerciseLibrary: React.FC = () => {
         ].map((d, i) => (
           <Dialog key={i} open={d.open} onOpenChange={d.change}>
             <DialogContent className="bg-card border-border text-foreground max-w-2xl h-[90vh] overflow-y-auto">
+              {/* ... Same Form Content as before ... */}
               <DialogHeader>
                 <DialogTitle>{d.title}</DialogTitle>
                 <DialogDescription>Preencha os dados do exercício abaixo.</DialogDescription>
               </DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
                 <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
-                
+
                 {/* MEDIA UPLOAD SECTION */}
                 <div className="space-y-2 border border-border rounded-md p-4 bg-muted/30">
                   <Label className="font-semibold flex items-center gap-2">Mídia Demonstrativa</Label>
-                  <Tabs 
-                    defaultValue="none" 
+                  <Tabs
+                    defaultValue="none"
                     value={formData.demo_type ? (formData.demo_type === 'gif' ? 'gif' : 'video') : 'none'}
                     onValueChange={(val) => {
                       if (val === 'none') clearMedia()
                       else {
-                         setFormData(prev => ({ ...prev, demo_type: val as 'gif' | 'video' }))
-                         // Clear previous file if switching types, as requested
-                         if ((val === 'gif' && formData.demo_type === 'video') || (val === 'video' && formData.demo_type === 'gif')) {
-                             setDemoFile(null)
-                             setDemoPreview(null)
-                             setFormData(p => ({ ...p, demo_url: null }))
-                         }
+                        setFormData(prev => ({ ...prev, demo_type: val as 'gif' | 'video' }))
+                        if ((val === 'gif' && formData.demo_type === 'video') || (val === 'video' && formData.demo_type === 'gif')) {
+                          setDemoFile(null)
+                          setDemoPreview(null)
+                          setFormData(p => ({ ...p, demo_url: null }))
+                        }
                       }
                     }}
                   >
@@ -428,40 +472,40 @@ const ExerciseLibrary: React.FC = () => {
 
                     <TabsContent value="gif" className="space-y-3">
                       <div className="flex items-center gap-4">
-                         <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
-                            <Upload className="mr-2 h-4 w-4" /> Selecionar GIF
-                            <input 
-                              type="file" 
-                              className="absolute inset-0 opacity-0 cursor-pointer" 
-                              accept="image/gif"
-                              onChange={(e) => handleFileSelect(e, 'gif')}
-                            />
-                         </Button>
+                        <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
+                          <Upload className="mr-2 h-4 w-4" /> Selecionar GIF
+                          <input
+                            type="file"
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                            accept="image/gif"
+                            onChange={(e) => handleFileSelect(e, 'gif')}
+                          />
+                        </Button>
                       </div>
                       {demoPreview && formData.demo_type === 'gif' && (
                         <div className="relative w-full aspect-video bg-black rounded overflow-hidden">
-                           <img src={demoPreview} alt="Preview" className="w-full h-full object-contain" />
-                           <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
+                          <img src={demoPreview} alt="Preview" className="w-full h-full object-contain" />
+                          <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
                         </div>
                       )}
                     </TabsContent>
 
                     <TabsContent value="video" className="space-y-3">
                       <div className="flex items-center gap-4">
-                         <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
-                            <Upload className="mr-2 h-4 w-4" /> Selecionar Vídeo (max 50MB)
-                            <input 
-                              type="file" 
-                              className="absolute inset-0 opacity-0 cursor-pointer" 
-                              accept="video/mp4,video/webm"
-                              onChange={(e) => handleFileSelect(e, 'video')}
-                            />
-                         </Button>
+                        <Button type="button" variant="outline" className="w-full relative overflow-hidden" disabled={uploading}>
+                          <Upload className="mr-2 h-4 w-4" /> Selecionar Vídeo (max 50MB)
+                          <input
+                            type="file"
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                            accept="video/mp4,video/webm"
+                            onChange={(e) => handleFileSelect(e, 'video')}
+                          />
+                        </Button>
                       </div>
                       {demoPreview && formData.demo_type === 'video' && (
                         <div className="relative w-full aspect-video bg-black rounded overflow-hidden">
-                           <video src={demoPreview} className="w-full h-full object-contain" controls />
-                           <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
+                          <video src={demoPreview} className="w-full h-full object-contain" controls />
+                          <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-6 w-6" onClick={clearMedia}><X className="h-3 w-3" /></Button>
                         </div>
                       )}
                     </TabsContent>
@@ -519,14 +563,14 @@ const ExerciseLibrary: React.FC = () => {
             </DialogHeader>
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
+
                 {/* LARGE PREVIEW */}
                 <div className="rounded-lg overflow-hidden border border-border shadow-md bg-black flex items-center justify-center min-h-[200px]">
                   {(previewExercise?.demo_url || previewExercise?.gif_url) ? (
                     (previewExercise?.demo_type === 'video') ? (
-                       <video src={previewExercise.demo_url} className="w-full h-auto max-h-[400px]" controls autoPlay muted loop />
+                      <video src={previewExercise.demo_url} className="w-full h-auto max-h-[400px]" controls autoPlay muted loop />
                     ) : (
-                       <img src={previewExercise?.demo_url || previewExercise?.gif_url} alt={previewExercise?.name} className="w-full h-auto object-contain" />
+                      <img src={previewExercise?.demo_url || previewExercise?.gif_url} alt={previewExercise?.name} className="w-full h-auto object-contain" />
                     )
                   ) : (
                     <div className="text-muted-foreground flex flex-col items-center">
@@ -543,6 +587,13 @@ const ExerciseLibrary: React.FC = () => {
                       {previewExercise?.muscle_groups?.map((m: string) => <Badge key={m} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">{m}</Badge>)}
                     </div>
                     <p className="text-sm text-muted-foreground">{previewExercise?.description || 'Sem descrição.'}</p>
+                    {/* CREATION INFO IN PREVIEW */}
+                    <div className="text-xs text-muted-foreground mt-2 border-t border-border pt-2">
+                      Criado por: {previewExercise?.created_by_profile?.full_name || 'Desconhecido'}
+                      {previewExercise?.updated_by_profile && (
+                        <span> | Atualizado por: {previewExercise?.updated_by_profile.full_name}</span>
+                      )}
+                    </div>
                   </div>
 
                   {previewExercise?.video_url && (
