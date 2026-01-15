@@ -68,7 +68,7 @@ const ClientWorkout: React.FC = () => {
       }
     }
     fetchData()
-  }, [user])
+  }, [user?.id])
 
   // Agrupar exercícios por dia
   const exercisesByDay = workoutExercises.reduce((acc: any, curr) => {

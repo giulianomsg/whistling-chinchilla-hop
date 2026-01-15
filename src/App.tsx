@@ -44,7 +44,13 @@ const Settings = lazy(() => import("./pages/Settings")); // New Settings Page
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Componente de Loading para lazy loading
 const PageLoader = () => (
