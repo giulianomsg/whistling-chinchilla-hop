@@ -42,9 +42,15 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     const [showInfo, setShowInfo] = useState(false)
 
     const isCompleted = executionLogs.some(log => log.workout_exercise_id === we.id)
-    const videoId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
-    const hasGif = !!we.exercise?.gif_url
-    const hasVideo = !!videoId
+
+    // Logic for Media Types
+    const youtubeId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
+    const uploadedVideo = we.exercise?.demo_type === 'video' ? we.exercise?.demo_url : null
+    const uploadedGif = we.exercise?.demo_type === 'gif' ? we.exercise?.demo_url : null
+    const legacyGif = we.exercise?.gif_url
+
+    const hasVideo = !!(youtubeId || uploadedVideo)
+    const hasGif = !!(uploadedGif || legacyGif || (we.exercise?.demo_url && !uploadedVideo)) // Fallback if type not set but url exists
     const hasInfo = (we.exercise?.instructions?.length > 0) || (we.exercise?.tips?.length > 0)
 
     return (
@@ -145,30 +151,40 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                 <div className="bg-muted/30 border-t border-border p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
 
                     {/* Gif View */}
-                    {showGif && we.exercise.gif_url && (
+                    {showGif && hasGif && (
                         <div className="space-y-2">
                             <p className="text-xs font-semibold text-primary/80 uppercase tracking-wider">Demonstração</p>
                             <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px]">
-                                <img src={we.exercise.gif_url} alt={we.exercise.name} className="w-full h-full object-cover" />
+                                <img
+                                    src={uploadedGif || legacyGif || we.exercise?.demo_url}
+                                    alt={we.exercise.name}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         </div>
                     )}
 
                     {/* Video View */}
-                    {showVideo && videoId && (
+                    {showVideo && hasVideo && (
                         <div className="space-y-2">
                             <p className="text-xs font-semibold text-red-500/80 uppercase tracking-wider">Vídeo Completo</p>
                             <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-border">
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                                    title="YouTube video player"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerPolicy="strict-origin-when-cross-origin"
-                                    allowFullScreen
-                                    className="border-0"
-                                />
+                                {uploadedVideo ? (
+                                    <video src={uploadedVideo} controls className="w-full h-full object-contain" />
+                                ) : (
+                                    youtubeId && (
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
+                                            title="YouTube video player"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerPolicy="strict-origin-when-cross-origin"
+                                            allowFullScreen
+                                            className="border-0"
+                                        />
+                                    )
+                                )}
                             </div>
                         </div>
                     )}

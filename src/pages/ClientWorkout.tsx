@@ -9,13 +9,25 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import WorkoutDetailView from '@/components/client/WorkoutDetailView'
+import { useSearchParams } from 'react-router-dom'
 
 const ClientWorkout: React.FC = () => {
   const { user } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [clientWorkout, setClientWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [showDetailView, setShowDetailView] = useState(false)
+
+  // URL-driven state for view
+  const showDetailView = searchParams.get('view') === 'detail'
+  const setShowDetailView = (show: boolean) => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev)
+      if (show) newParams.set('view', 'detail')
+      else newParams.delete('view')
+      return newParams
+    })
+  }
 
   useEffect(() => {
     if (!user) return
