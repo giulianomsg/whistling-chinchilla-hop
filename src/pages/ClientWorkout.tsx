@@ -20,11 +20,21 @@ const ClientWorkout: React.FC = () => {
 
   // URL-driven state for view
   const showDetailView = searchParams.get('view') === 'detail'
-  const setShowDetailView = (show: boolean) => {
+
+  const openDay = (dayNumber: number) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev)
-      if (show) newParams.set('view', 'detail')
-      else newParams.delete('view')
+      newParams.set('view', 'detail')
+      newParams.set('day', `day-${dayNumber}`)
+      return newParams
+    })
+  }
+
+  const closeDetailView = () => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev)
+      newParams.delete('view')
+      newParams.delete('day')
       return newParams
     })
   }
@@ -85,7 +95,7 @@ const ClientWorkout: React.FC = () => {
     return (
       <div className="min-h-screen bg-background py-8">
         <div className="w-full mx-auto px-4">
-          <Button variant="outline" onClick={() => setShowDetailView(false)} className="mb-6 border-border text-muted-foreground hover:text-foreground hover:bg-accent">
+          <Button variant="outline" onClick={closeDetailView} className="mb-6 border-border text-muted-foreground hover:text-foreground hover:bg-accent">
             ← Voltar ao Resumo
           </Button>
           <WorkoutDetailView clientWorkout={clientWorkout} />
@@ -106,7 +116,8 @@ const ClientWorkout: React.FC = () => {
               <p className="text-muted-foreground">Seu plano personalizado</p>
             </div>
           </div>
-          <Button onClick={() => setShowDetailView(true)} className="bg-primary text-primary-foreground hover:bg-primary/80 font-semibold">
+          {/* Default to Day 1 if clicked directly */}
+          <Button onClick={() => openDay(1)} className="bg-primary text-primary-foreground hover:bg-primary/80 font-semibold">
             <Maximize2 className="h-4 w-4 mr-2" /> Iniciar Treino
           </Button>
         </div>
@@ -139,7 +150,7 @@ const ClientWorkout: React.FC = () => {
             const dayNumber = i + 1
             const dayExs = exercisesByDay[dayNumber] || []
             return (
-              <Card key={dayNumber} className="bg-card border-border hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => setShowDetailView(true)}>
+              <Card key={dayNumber} className="bg-card border-border hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => openDay(dayNumber)}>
                 <CardContent className="p-4">
                   <h3 className="font-bold text-foreground mb-3 flex justify-between">Dia {dayNumber} <Badge variant="secondary" className="bg-muted text-muted-foreground">{dayExs.length} ex</Badge></h3>
                   <div className="space-y-2">

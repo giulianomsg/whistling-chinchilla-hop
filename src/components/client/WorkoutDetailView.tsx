@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Timer, Play, Pause, Square, Loader2, BarChart3,
-  Save, Trash2, Plus, Search, X
+  Save, Trash2, Plus, Search, X, Calendar as CalendarIcon
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -28,17 +27,11 @@ interface WorkoutDetailViewProps {
 
 const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) => {
   const { refreshProfile } = useAuth()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
-  // Day Persistence
+  // Day Persistence (Read Only here, navigation is handled by parent or headers hidden)
   const activeTab = searchParams.get('day') || 'day-1'
-  const setActiveTab = (val: string) => {
-    setSearchParams(prev => {
-      const p = new URLSearchParams(prev)
-      p.set('day', val)
-      return p
-    })
-  }
+  const activeDayNumber = parseInt(activeTab.replace('day-', '')) || 1
 
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -91,12 +84,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const fetchLibrary = async () => {
     setLibraryLoading(true)
     const { data } = await supabase.from('exercises_library').select('*').eq('is_public', true).order('name')
-    // Note: Ideally filter by 'is_public' or created_by user, but for now Public is safe
     setLibraryExercises(data || [])
     setLibraryLoading(false)
   }
 
-  // Effect for fetching library once when opening dialog
   useEffect(() => {
     if (isAddExerciseOpen && libraryExercises.length === 0) {
       fetchLibrary()
@@ -327,7 +318,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
         if (!updateError) {
           if (xpResult.details.length > 0) {
-            console.log("XP Details:", xpResult.details)
             xpResult.details.forEach(d => showSuccess(d))
           }
 
@@ -381,19 +371,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setIsLogModalOpen(true)
   }
 
-  // Custom: Handle Ad Hoc Click (Edit existing ad-hoc log)
   const handleAdHocLogClick = (log: any) => {
-    // Mock an 'exercise' object that matches structure needed for save
-    // For ad-hoc, id is undefined or we use a unique identifier?
-    // Actually, we can use the log itself as reference, but the save function expects 'selectedExercise' to be a workout_exercise or similar.
-    // We'll wrap it.
-
     const mockExercise = {
-      id: log.workout_exercise_id || 'ADHOC_' + log.id, // fake ID to flag adhoc
+      id: log.workout_exercise_id || 'ADHOC_' + log.id,
       exercise_id: log.exercise_id,
-      exercise: log.exercise, // embedded library data
+      exercise: log.exercise,
       name: log.exercise?.name,
-      // no sets/reps planned
     }
 
     setSelectedExercise(mockExercise)
@@ -409,7 +392,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     if (!sessionId || !selectedExercise) return
     setSavingLog(true)
     try {
-      const isAdHoc = selectedExercise.id?.toString().startsWith('ADHOC_') || !selectedExercise.id // New adhoc from modal has no ID initially?
+      const isAdHoc = selectedExercise.id?.toString().startsWith('ADHOC_') || !selectedExercise.id
 
       const logData = {
         workout_session_id: sessionId,
@@ -421,22 +404,13 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         completed_at: new Date().toISOString()
       }
 
-      // Check if already exists to update or insert
-      // For AdHoc, we check by LOG ID if we are editing, OR by exercise_id + null workout_exercise_id? 
-      // If we support multiple sets of same adhoc exercise, we need unique log IDs. 
-      // Current system assumes one log per exercise per session (composite key logic in frontend?).
-      // If we want multiple sets, we need to change logic. But let's stick to 'One Log Record' per exercise for now to match existing.
-
       let existingLog
       if (isAdHoc && selectedExercise.id?.startsWith('ADHOC_')) {
-        // Editing existing log
         const realLogId = selectedExercise.id.replace('ADHOC_', '')
         existingLog = executionLogs.find(l => l.id === realLogId)
       } else if (!isAdHoc) {
         existingLog = executionLogs.find(log => log.workout_exercise_id === selectedExercise.id)
       } else {
-        // New AdHoc - check if we already logged this exercise_id as adhoc?
-        // If user adds same exercise twice, maybe just update?
         existingLog = executionLogs.find(l => l.exercise_id === selectedExercise.exercise_id && l.workout_exercise_id === null)
       }
 
@@ -464,7 +438,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       }
 
       setIsLogModalOpen(false)
-      setIsAddExerciseOpen(false) // Close add modal if open
+      setIsAddExerciseOpen(false)
       showSuccess('Registro salvo!')
     } catch (error) {
       showError('Erro ao salvar registro')
@@ -475,7 +449,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   }
 
   const handleAddCustomExerciseConfirm = async (exLibrary: any) => {
-    // Open Log Modal for this new exercise
     if (!isSessionActive) {
       showError('Inicie o treino primeiro.')
       return
@@ -483,26 +456,19 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setSelectedExercise({
       exercise_id: exLibrary.id,
       exercise: exLibrary,
-      id: null, // No workout_exercise ID
+      id: null,
       name: exLibrary.name
     })
     setLogForm({ weight: '', reps: '', notes: '' })
     setIsLogModalOpen(true)
-    // We keep setIsAddExerciseOpen(true) until saved? No, close it so log modal is focus.
     setIsAddExerciseOpen(false)
   }
 
   if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto" /></div>
 
-  const exercisesByDay = workoutExercises.reduce((acc: any, curr) => {
-    if (!acc[curr.day_number]) acc[curr.day_number] = []
-    acc[curr.day_number].push(curr)
-    return acc
-  }, {})
-
-  // Calculate Extra Exercises (those with null workout_exercise_id)
+  // Filter exercises strictly for the active day
+  const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
   const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
-
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
   return (
@@ -511,11 +477,11 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
           <p className="text-2xl font-bold text-blue-500">{workoutExercises.length}</p>
-          <p className="text-xs text-muted-foreground">Exercícios</p>
+          <p className="text-xs text-muted-foreground">Total Exercícios</p>
         </div>
         <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
-          <p className="text-2xl font-bold text-green-500">{workoutExercises.reduce((s, i) => s + i.sets, 0)}</p>
-          <p className="text-xs text-muted-foreground">Séries</p>
+          <p className="text-2xl font-bold text-green-500">{workoutExercises.filter(e => e.day_number === activeDayNumber).reduce((s: any, i: any) => s + i.sets, 0)}</p>
+          <p className="text-xs text-muted-foreground">Séries Hoje</p>
         </div>
         <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
           <p className="text-2xl font-bold text-purple-500">{clientWorkout.workout.days_per_week}</p>
@@ -527,71 +493,68 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Main Content Area: Active Day */}
       <Card className="bg-card border-border backdrop-blur-md shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-foreground">Exercícios</CardTitle>
-          <Button size="sm" variant="outline" onClick={() => setIsAddExerciseOpen(true)} disabled={!isSessionActive}>
-            <Plus className="h-4 w-4 mr-2" /> Extra
+        <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/10 p-2 rounded-full">
+              <CalendarIcon className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-foreground text-xl">Dia {activeDayNumber}</CardTitle>
+              <p className="text-xs text-muted-foreground">{displayedExercises.length} exercícios programados</p>
+            </div>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setIsAddExerciseOpen(true)} disabled={!isSessionActive} className="gap-2">
+            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Adicionar Extra</span>
           </Button>
         </CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="bg-muted w-full justify-start overflow-x-auto">
-              {Object.keys(exercisesByDay).map(day => (
-                <TabsTrigger key={day} value={`day-${day}`} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground">
-                  Dia {day}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {Object.keys(exercisesByDay).map(day => (
-              <TabsContent key={day} value={`day-${day}`} className="space-y-4 mt-4">
-                {exercisesByDay[day].map((we: any) => {
-                  return (
-                    <WorkoutExerciseCard
-                      key={we.id}
-                      exercise={we}
-                      executionLogs={executionLogs}
-                      isSessionActive={isSessionActive && sessionStatus === 'started'}
-                      activeTime={exerciseTimers[we.id] || 0}
-                      isTimerRunning={activeTimerId === we.id}
-                      onLogClick={handleExerciseClick}
-                      onToggleTimer={handleToggleTimer}
-                    />
-                  )
-                })}
-              </TabsContent>
-            ))}
-          </Tabs>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {displayedExercises.length > 0 ? (
+              displayedExercises.map((we: any) => (
+                <WorkoutExerciseCard
+                  key={we.id}
+                  exercise={we}
+                  executionLogs={executionLogs}
+                  isSessionActive={isSessionActive && sessionStatus === 'started'}
+                  activeTime={exerciseTimers[we.id] || 0}
+                  isTimerRunning={activeTimerId === we.id}
+                  onLogClick={handleExerciseClick}
+                  onToggleTimer={handleToggleTimer}
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>Nenhum exercício programado para este dia.</p>
+              </div>
+            )}
+          </div>
 
-          {/* Extra Exercises Section (Always Visible or just under active tab? Always visible at bottom seems good for AdHoc) */}
+          {/* Extra Exercises Section */}
           {extraExercises.length > 0 && (
             <div className="mt-8 pt-6 border-t border-border">
               <h4 className="text-sm font-bold text-muted-foreground mb-4 flex items-center gap-2"><Plus className="h-4 w-4" /> Exercícios Extras / Livres</h4>
               <div className="space-y-4">
                 {extraExercises.map((log: any) => {
-                  // Construct fake 'we' object for the card
                   const fakeWe = {
                     id: 'ADHOC_' + log.id,
                     exercise: log.exercise,
-                    sets: 1, // dummy
+                    sets: 1,
                     reps: log.reps || 0,
                     weight: log.weight,
                     exercise_id: log.exercise_id
                   }
-                  // We pass executionLogs containing THIS log, so it appears checked
                   return (
                     <WorkoutExerciseCard
                       key={log.id}
                       exercise={fakeWe}
                       executionLogs={executionLogs.map(l => l.id === log.id ? { ...l, workout_exercise_id: fakeWe.id } : l)}
-                      // ^ Hack: Card checks log.workout_exercise_id === we.id. 
-                      // The log has null real workout_exercise_id. We map it temporarily in props so the check passes.
                       isSessionActive={isSessionActive && sessionStatus === 'started'}
                       activeTime={0}
                       isTimerRunning={false}
                       onLogClick={() => handleAdHocLogClick(log)}
-                      onToggleTimer={() => { }} // Timer not supported for adhoc yet
+                      onToggleTimer={() => { }}
                     />
                   )
                 })}
