@@ -24,7 +24,10 @@ const getVideoId = (url: string) => {
     } catch (e) { }
 
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?\/]+)/)
-    if (match && match[1]) return match[1]
+    // Extra validation to avoid matching generic filenames
+    // A clean youtube ID is usually 11 chars, but can vary.
+    // Important: Don't match if it ends in .mp4 or similar extension
+    if (match && match[1] && !/\.(mp4|webm|ogg|mov)$/i.test(match[1])) return match[1]
     return null
 }
 
@@ -56,25 +59,33 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     // Logic for Media Types
     const demoUrl = we.exercise?.demo_url
     const demoType = we.exercise?.demo_type
+    const videoUrl = we.exercise?.video_url
 
-    const youtubeId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
+    // 1. Try to get YouTube ID from video_url
+    const youtubeId = videoUrl ? getVideoId(videoUrl) : null
 
-    // Determine if uploaded media is video or gif/image
-    let isUploadedVideo = demoType === 'video'
-    if (!demoType && demoUrl && isVideoUrl(demoUrl)) {
-        isUploadedVideo = true
+    // 2. Check source of direct video
+    // Priority: demo_url (if explicit video OR implicit video) -> video_url (if implicit video)
+    let directVideoSrc: string | null = null
+
+    if (demoType === 'video' && demoUrl) {
+        directVideoSrc = demoUrl
+    } else if (demoUrl && isVideoUrl(demoUrl)) {
+        directVideoSrc = demoUrl
+    } else if (!youtubeId && videoUrl && isVideoUrl(videoUrl)) {
+        // If not youtube, but is video extension in video_url field
+        directVideoSrc = videoUrl
     }
 
-    const uploadedVideo = isUploadedVideo ? demoUrl : null
+    const hasVideo = !!(youtubeId || directVideoSrc)
 
-    // If not video, and has URL, assume it's an image/gif
-    // FALLBACK: If we have a gif_url logacy, use it. 
-    // IF we have a demo_url that is NOT video, use it as gif.
-    const uploadedGif = (!isUploadedVideo && demoUrl) ? demoUrl : null
-    const legacyGif = we.exercise?.gif_url
+    // GIF/Image Logic
+    // If demo_url is NOT being used as the direct video source, it might be a gif/image
+    const isDemoUrlUsedAsVideo = directVideoSrc === demoUrl
+    const potentialDemoImage = !isDemoUrlUsedAsVideo ? demoUrl : null
 
-    const hasVideo = !!(youtubeId || uploadedVideo)
-    const hasGif = !!(uploadedGif || legacyGif)
+    const uploadedGif = potentialDemoImage || we.exercise?.gif_url
+    const hasGif = !!uploadedGif
     const hasInfo = (we.exercise?.instructions?.length > 0) || (we.exercise?.tips?.length > 0)
 
     return (
@@ -180,7 +191,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             <p className="text-xs font-semibold text-primary/80 uppercase tracking-wider">Demonstração</p>
                             <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px] flex items-center justify-center">
                                 <img
-                                    src={uploadedGif || legacyGif}
+                                    src={uploadedGif}
                                     alt={we.exercise.name}
                                     className="w-full h-full object-cover"
                                 />
@@ -193,8 +204,8 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         <div className="space-y-2">
                             <p className="text-xs font-semibold text-red-500/80 uppercase tracking-wider">Vídeo Completo</p>
                             <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-lg border border-border">
-                                {uploadedVideo ? (
-                                    <video src={uploadedVideo} controls className="w-full h-full object-contain" />
+                                {directVideoSrc ? (
+                                    <video src={directVideoSrc} controls className="w-full h-full object-contain" />
                                 ) : (
                                     youtubeId && (
                                         <iframe
