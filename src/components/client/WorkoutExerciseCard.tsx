@@ -44,13 +44,27 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     const isCompleted = executionLogs.some(log => log.workout_exercise_id === we.id)
 
     // Logic for Media Types
+    const demoUrl = we.exercise?.demo_url
+    const demoType = we.exercise?.demo_type
+
+    // Helper to check for video extension if type is missing
+    const isVideoUrl = (url: string) => /\.(mp4|webm|ogg|mov)$/i.test(url)
+
     const youtubeId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
-    const uploadedVideo = we.exercise?.demo_type === 'video' ? we.exercise?.demo_url : null
-    const uploadedGif = we.exercise?.demo_type === 'gif' ? we.exercise?.demo_url : null
+
+    // Determine if uploaded media is video or gif/image
+    let isUploadedVideo = demoType === 'video'
+    if (!demoType && demoUrl && isVideoUrl(demoUrl)) {
+        isUploadedVideo = true
+    }
+
+    const uploadedVideo = isUploadedVideo ? demoUrl : null
+    // If not video, and has URL, assume it's an image/gif
+    const uploadedGif = (!isUploadedVideo && demoUrl) ? demoUrl : null
     const legacyGif = we.exercise?.gif_url
 
     const hasVideo = !!(youtubeId || uploadedVideo)
-    const hasGif = !!(uploadedGif || legacyGif || (we.exercise?.demo_url && !uploadedVideo)) // Fallback if type not set but url exists
+    const hasGif = !!(uploadedGif || legacyGif)
     const hasInfo = (we.exercise?.instructions?.length > 0) || (we.exercise?.tips?.length > 0)
 
     return (
@@ -156,7 +170,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             <p className="text-xs font-semibold text-primary/80 uppercase tracking-wider">Demonstração</p>
                             <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px]">
                                 <img
-                                    src={uploadedGif || legacyGif || we.exercise?.demo_url}
+                                    src={uploadedGif || legacyGif}
                                     alt={we.exercise.name}
                                     className="w-full h-full object-cover"
                                 />
