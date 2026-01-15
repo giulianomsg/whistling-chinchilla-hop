@@ -28,6 +28,16 @@ const getVideoId = (url: string) => {
     return null
 }
 
+const isVideoUrl = (url: string) => {
+    if (!url) return false
+    try {
+        const path = new URL(url).pathname;
+        return /\.(mp4|webm|ogg|mov)$/i.test(path);
+    } catch {
+        return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
+    }
+}
+
 export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     exercise: we,
     executionLogs,
@@ -47,9 +57,6 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     const demoUrl = we.exercise?.demo_url
     const demoType = we.exercise?.demo_type
 
-    // Helper to check for video extension if type is missing
-    const isVideoUrl = (url: string) => /\.(mp4|webm|ogg|mov)$/i.test(url)
-
     const youtubeId = we.exercise?.video_url ? getVideoId(we.exercise.video_url) : null
 
     // Determine if uploaded media is video or gif/image
@@ -59,7 +66,10 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     }
 
     const uploadedVideo = isUploadedVideo ? demoUrl : null
+
     // If not video, and has URL, assume it's an image/gif
+    // FALLBACK: If we have a gif_url logacy, use it. 
+    // IF we have a demo_url that is NOT video, use it as gif.
     const uploadedGif = (!isUploadedVideo && demoUrl) ? demoUrl : null
     const legacyGif = we.exercise?.gif_url
 
@@ -127,7 +137,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                             className={`h-8 px-2 text-xs gap-1.5 ${showGif ? 'bg-primary/20 text-primary hover:bg-primary/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                         >
                             <ImageIcon className="h-3.5 w-3.5" />
-                            GIF
+                            Demonstração
                             {showGif ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                         </Button>
                     )}
@@ -168,7 +178,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                     {showGif && hasGif && (
                         <div className="space-y-2">
                             <p className="text-xs font-semibold text-primary/80 uppercase tracking-wider">Demonstração</p>
-                            <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px]">
+                            <div className="aspect-square rounded-lg overflow-hidden border border-border bg-background relative mx-auto max-w-[250px] flex items-center justify-center">
                                 <img
                                     src={uploadedGif || legacyGif}
                                     alt={we.exercise.name}
