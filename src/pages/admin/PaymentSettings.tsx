@@ -119,8 +119,7 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
                     fee_monthly_percent: fees.monthly,
                     fee_quarterly_percent: fees.quarterly,
                     fee_semiannual_percent: fees.semiannual,
-                    fee_annual_percent: fees.annual,
-                    updated_at: new Date().toISOString()
+                    fee_annual_percent: fees.annual
                 })
                 .eq('id', globalSettings.id);
 
