@@ -21,9 +21,15 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
         secret: '',
         webhook: ''
     });
+    const [fees, setFees] = useState({
+        monthly: 10,
+        quarterly: 10,
+        semiannual: 10,
+        annual: 10
+    });
 
-    // Fetch Global Settings to check Sandbox/Prod mode
-    const { data: globalSettings } = useQuery({
+    // Fetch Global Settings to check Sandbox/Prod mode and Fees
+    const { data: globalSettings, refetch: refetchSettings } = useQuery({
         queryKey: ['platform_settings'],
         queryFn: async () => {
             const { data, error } = await supabase
@@ -31,13 +37,24 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
                 .select('*')
                 .single();
             if (error) {
-                // If table empty or other error, handle gracefully
                 console.error("Error fetching settings:", error);
                 return null;
             }
             return data;
         }
     });
+
+    // Populate fees
+    useEffect(() => {
+        if (globalSettings) {
+            setFees({
+                monthly: Number(globalSettings.fee_monthly_percent) || 10,
+                quarterly: Number(globalSettings.fee_quarterly_percent) || 10,
+                semiannual: Number(globalSettings.fee_semiannual_percent) || 10,
+                annual: Number(globalSettings.fee_annual_percent) || 10
+            });
+        }
+    }, [globalSettings]);
 
     // Fetch Existing Configs (Public info only due to RLS/Policy)
     const { data: stripeConfig } = useQuery({
@@ -66,14 +83,10 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
         mutationFn: async (isSandbox: boolean) => {
             const mode = isSandbox ? 'sandbox' : 'stripe';
 
-            // We assume platform_settings has at least one row as per migration
-            // If globalSettings.id is missing, we might need to insert or fetch first
             if (!globalSettings?.id) {
-                // Create if missing (fallback)
-                const { data, error } = await supabase
+                const { error } = await supabase
                     .from('platform_settings')
                     .insert({ payment_mode: mode })
-                    .select()
                     .single();
                 if (error) throw error;
                 return;
@@ -95,16 +108,40 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
         }
     });
 
+    // Mutation to Save Fees
+    const saveFeesMutation = useMutation({
+        mutationFn: async () => {
+            if (!globalSettings?.id) return;
+
+            const { error } = await supabase
+                .from('platform_settings')
+                .update({
+                    fee_monthly_percent: fees.monthly,
+                    fee_quarterly_percent: fees.quarterly,
+                    fee_semiannual_percent: fees.semiannual,
+                    fee_annual_percent: fees.annual,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', globalSettings.id);
+
+            if (error) throw error;
+        },
+        onSuccess: () => {
+            refetchSettings();
+            toast({ title: "Taxas atualizadas", description: "As novas porcentagens serão aplicadas às próximas vendas." });
+        },
+        onError: (err) => {
+            toast({ title: "Erro ao salvar taxas", description: err.message, variant: "destructive" });
+        }
+    });
+
     // Mutation to Save Keys via secure RPC
     const saveKeysMutation = useMutation({
         mutationFn: async () => {
-            // Basic validation
             if (!stripeSecrets.publishable) {
                 throw new Error("Publishable Key é obrigatória.");
             }
 
-            // Call secure RPC
-            // Call secure RPC (V4 Production Secure)
             const { data, error } = await supabase.rpc('admin_save_payment_config', {
                 p_provider: 'stripe',
                 p_publishable_key: stripeSecrets.publishable,
@@ -113,7 +150,6 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
             });
 
             if (error) throw error;
-            // data returned from RPC is JSONB, check success property
             // @ts-ignore
             if (data && data.success === false) {
                 // @ts-ignore
@@ -122,7 +158,6 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
         },
         onSuccess: () => {
             toast({ title: "Configurações salvas", description: "As chaves foram criptografadas e armazenadas." });
-            // Clear secrets from state to prevent lingering in UI
             setStripeSecrets(prev => ({ ...prev, secret: '', webhook: '' }));
             queryClient.invalidateQueries({ queryKey: ['payment_gateway_configs'] });
         },
@@ -171,6 +206,82 @@ export default function PaymentSettings({ isEmbedded = false }: PaymentSettingsP
                             onCheckedChange={(checked) => toggleModeMutation.mutate(!checked)}
                         />
                         <span className={`text-xs uppercase font-bold ${!isSandbox ? 'text-green-600' : 'text-gray-400'}`}>Produção</span>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Platform Fees (New Section) */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <CreditCard className="h-5 w-5 text-primary" /> Taxas da Plataforma
+                    </CardTitle>
+                    <CardDescription>
+                        Defina a porcentagem retida sobre as vendas de cada tipo de plano.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="space-y-2">
+                            <Label>Plano Mensal (%)</Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    min="0" max="100" step="0.1"
+                                    value={fees.monthly}
+                                    onChange={e => setFees({ ...fees, monthly: Number(e.target.value) })}
+                                    className="pr-8"
+                                />
+                                <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">%</span>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Plano Trimestral (%)</Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    min="0" max="100" step="0.1"
+                                    value={fees.quarterly}
+                                    onChange={e => setFees({ ...fees, quarterly: Number(e.target.value) })}
+                                    className="pr-8"
+                                />
+                                <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">%</span>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Plano Semestral (%)</Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    min="0" max="100" step="0.1"
+                                    value={fees.semiannual}
+                                    onChange={e => setFees({ ...fees, semiannual: Number(e.target.value) })}
+                                    className="pr-8"
+                                />
+                                <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">%</span>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Plano Anual (%)</Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    min="0" max="100" step="0.1"
+                                    value={fees.annual}
+                                    onChange={e => setFees({ ...fees, annual: Number(e.target.value) })}
+                                    className="pr-8"
+                                />
+                                <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Button
+                            onClick={() => saveFeesMutation.mutate()}
+                            disabled={saveFeesMutation.isPending}
+                        >
+                            {saveFeesMutation.isPending ? "Salvando..." : "Salvar Taxas"}
+                        </Button>
                     </div>
                 </CardContent>
             </Card>

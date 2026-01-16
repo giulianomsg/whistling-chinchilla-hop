@@ -9,7 +9,6 @@ import { Loader2, ShieldCheck, UserCog, Search } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SystemSettings } from "@/components/admin/SystemSettings";
 import {
     Table,
     TableBody,
@@ -63,7 +62,7 @@ const AdminUsers: React.FC = () => {
             })
             if (error) throw error
 
-            showSuccess(`Usuário atualizado para ${newRole === 'admin' ? 'Administrador' : newRole === 'professional' ? 'Profissional' : 'Aluno'}!`)
+            showSuccess(`Usuário atualizado para ${newRole === 'admin' ? 'Administrador' : newRole === 'professional' ? 'Profissão' : 'Aluno'}!`)
             fetchUsers()
         } catch (error: any) {
             console.error(error)
@@ -93,9 +92,6 @@ const AdminUsers: React.FC = () => {
                 <TabsList>
                     <TabsTrigger value="users" className="flex items-center gap-2">
                         <UserCog className="w-4 h-4" /> Usuários
-                    </TabsTrigger>
-                    <TabsTrigger value="settings" className="flex items-center gap-2">
-                        <ShieldCheck className="w-4 h-4" /> Configurações do Sistema
                     </TabsTrigger>
                 </TabsList>
 
@@ -205,10 +201,6 @@ const AdminUsers: React.FC = () => {
                             </Table>
                         </CardContent>
                     </Card>
-                </TabsContent>
-
-                <TabsContent value="settings">
-                    <SystemSettings />
                 </TabsContent>
             </Tabs>
         </div>
