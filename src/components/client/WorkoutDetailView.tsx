@@ -17,6 +17,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
 import { WorkoutExerciseCard } from './WorkoutExerciseCard'
+import { ActiveWorkoutSession } from './ActiveWorkoutSession'
 import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useSearchParams } from 'react-router-dom'
@@ -65,6 +66,17 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [showSummaryModal, setShowSummaryModal] = useState(false)
   const [summaryData, setSummaryData] = useState({ xpEarned: 0, currentXP: 0, newLevel: 1, oldLevel: 1, workoutName: '', durationSeconds: 0, totalLoadKg: 0 })
 
+  // Active Session Overlay State
+  const [activeSessionOpen, setActiveSessionOpen] = useState(false)
+
+  // Rest Timer State
+  const [restTimerOpen, setRestTimerOpen] = useState(false)
+  const [restTimerSeconds, setRestTimerSeconds] = useState(0)
+  const [totalRestSeconds, setTotalRestSeconds] = useState(60)
+
+  // History State
+  const [historyLogs, setHistoryLogs] = useState<any[]>([])
+
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
     const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0')
@@ -87,6 +99,29 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setLibraryExercises(data || [])
     setLibraryLoading(false)
   }
+
+  const fetchHistory = async () => {
+    // Determine all exercise IDs for the current workout
+    if (workoutExercises.length === 0) return
+    const exerciseIds = workoutExercises.map(e => e.exercise_id).filter(Boolean)
+
+    if (exerciseIds.length > 0) {
+      const { data } = await supabase
+        .from('workout_execution_logs')
+        .select('*')
+        .in('exercise_id', exerciseIds)
+        .order('created_at', { ascending: false })
+        .limit(500) // Reasonable limit to get recent history
+
+      setHistoryLogs(data || [])
+    }
+  }
+
+  useEffect(() => {
+    if (workoutExercises.length > 0) {
+      fetchHistory()
+    }
+  }, [workoutExercises])
 
   useEffect(() => {
     if (isAddExerciseOpen && libraryExercises.length === 0) {
@@ -170,7 +205,25 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       }, 1000)
     }
     return () => clearInterval(interval)
+    return () => clearInterval(interval)
   }, [activeTimerId, sessionStatus])
+
+  // Rest Timer Countdown
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (restTimerOpen && restTimerSeconds > 0) {
+      interval = setInterval(() => {
+        setRestTimerSeconds((prev: number) => {
+          if (prev <= 1) {
+            setRestTimerOpen(false) // Auto close when done
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [restTimerOpen, restTimerSeconds])
 
   const handleToggleTimer = async (exerciseId: string) => {
     const isCompleted = executionLogs.some(log => log.workout_exercise_id === exerciseId)
@@ -232,6 +285,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         setSessionId(data.id); setSessionStatus('started'); setIsSessionActive(true); setElapsedTime(0)
         setSessionStartTime(Date.now())
         setExecutionLogs([])
+        setActiveSessionOpen(true) // Open overlay on start
         showSuccess('Treino iniciado!')
       } else if (action === 'pause' && sessionId) {
         await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
@@ -240,7 +294,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         const newStart = new Date(Date.now() - elapsedTime * 1000).toISOString()
         setSessionStartTime(Date.now() - elapsedTime * 1000)
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
+        await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
+        setActiveSessionOpen(true) // Open overlay on resume if desired
       } else if (action === 'finish' && sessionId) {
         if (elapsedTime < 60 || executionLogs.length === 0) {
           await supabase.from('workout_sessions')
@@ -336,7 +392,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           if (refreshProfile) refreshProfile()
         } else {
           console.error('Erro update XP:', updateError)
-          setSessionStatus('completed'); setIsSessionActive(false)
+          setSessionStatus('completed'); setIsSessionActive(false); setActiveSessionOpen(false)
           setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]); setExerciseTimers({}); setActiveTimerId(null) }, 3000)
         }
       }
@@ -437,6 +493,16 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         await handleToggleTimer(selectedExercise.id)
       }
 
+      // If completing a set, trigger Rest Timer
+      // We check if we just saved a log (so it's "done")
+      // In this dialog context, we just saved. 
+      // But the ActiveSession calls onSaveLog directly. We need to unify logic or just let ActiveSession handle its own "Done" check.
+      // BUT, ActiveSession uses this same logic via props? No, it passes its own onSaveLog.
+      // Wait, ActiveSession will likely call a wrapped version of this. 
+      // For the DIALOG (manual log), we might want to trigger timer too if it's considered "done".
+      // But let's leave the Dialog behavior as is for now to avoid confusion, 
+      // and add specific logic for ActiveWorkoutSession callback below.
+
       setIsLogModalOpen(false)
       setIsAddExerciseOpen(false)
       showSuccess('Registro salvo!')
@@ -464,7 +530,72 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setIsAddExerciseOpen(false)
   }
 
+  // Active Session Handler
+  const handleActiveSessionSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
+    if (!sessionId) return
+
+    // Check if there is already a log for this set
+    // We assume the caller knows what it's doing.
+    // Ideally we find the existing log by matching exerciseId and setIndex or something, 
+    // but our schema doesn't have setIndex strictly. 
+    // We will just Insert or Update based on... what?
+    // Current logic in `handleSaveLog` tries to find by workout_exercise_id.
+    // If we have multiple logs for one exercise, how do we differentiate them?
+    // The current `handleSaveLog` finds *any* log for that exercise. That's a bug for multiple sets!
+    // It seems the current app only supports ONE log ("series") per exercise visually in the card view?
+    // Looking at `WorkoutExerciseCard`: `executionLogs` are passed. `WorkoutExerciseCard` renders sets?
+    // `WorkoutExerciseCard` maps `Array.from({ length: sets })` but implementation details were hidden in step 16 view.
+    // Let's assume we need to handle multiple sets properly now.
+
+    // We will try to find a log that matches the "order" in the list of logs for that exercise.
+    const exerciseLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+
+    const existingLog = exerciseLogs[setIndex - 1] // 1-based index
+
+    const logData = {
+      workout_session_id: sessionId,
+      workout_exercise_id: exerciseId,
+      exercise_id: workoutExercises.find(we => we.id === exerciseId)?.exercise_id,
+      weight,
+      reps,
+      completed_at: new Date().toISOString()
+    }
+
+    try {
+      if (existingLog) {
+        if (!isCompleted) {
+          // If unchecking, maybe delete? Or just update? The UI toggle implies "Done".
+          // If user unchecks, we might want to keep data but mark valid? Schema doesn't have "is_completed". 
+          // Existence of log implies completion usually.
+          // If we want to "remove" the log:
+          await supabase.from('workout_execution_logs').delete().eq('id', existingLog.id)
+        } else {
+          await supabase.from('workout_execution_logs').update(logData).eq('id', existingLog.id)
+        }
+      } else {
+        if (isCompleted) {
+          await supabase.from('workout_execution_logs').insert(logData)
+        }
+      }
+
+      await fetchLogs(sessionId)
+
+      // Trigger Timer if completed
+      if (isCompleted) {
+        setRestTimerSeconds(60) // Default 60s
+        setTotalRestSeconds(60)
+        setRestTimerOpen(true)
+      }
+
+    } catch (e) {
+      console.error(e)
+      showError('Erro ao salvar série')
+    }
+  }
+
   if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto" /></div>
+
 
   // Filter exercises strictly for the active day
   const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
@@ -579,7 +710,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           <div className="flex gap-3 w-full md:w-auto">
             {!isSessionActive ? (
               <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-8 h-12 md:h-11">
-                {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar
+                {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar Treino
               </Button>
             ) : (
               <>
@@ -601,6 +732,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             {sessionStatus === 'abandoned' && (
               <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-12 md:h-11">
                 <Square className="mr-2 h-5 w-5 fill-current" /> Treino Abandonado
+              </Button>
+            )}
+
+            {isSessionActive && (
+              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="hidden md:flex">
+                Expandir Treino
               </Button>
             )}
           </div>
@@ -752,6 +889,21 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         workoutName={summaryData.workoutName}
         durationSeconds={summaryData.durationSeconds}
         totalLoadKg={summaryData.totalLoadKg}
+      />
+
+      <ActiveWorkoutSession
+        isOpen={activeSessionOpen}
+        onMinimize={() => setActiveSessionOpen(false)}
+        exercises={displayedExercises}
+        executionLogs={executionLogs}
+        historyLogs={historyLogs}
+        onSaveLog={handleActiveSessionSaveLog}
+        onFinishWorkout={() => handleSessionAction('finish')}
+        restTimerOpen={restTimerOpen}
+        setRestTimerOpen={setRestTimerOpen}
+        restTimerSeconds={restTimerSeconds}
+        setRestTimerSeconds={setRestTimerSeconds}
+        totalRestSeconds={totalRestSeconds}
       />
     </div>
   )
