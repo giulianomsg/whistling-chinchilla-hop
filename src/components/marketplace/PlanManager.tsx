@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { SubscriptionPlan } from '@/types/financial';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -105,13 +106,44 @@ export const PlanManager: React.FC = () => {
         }
     };
 
-    // Fees for visual calculation
+    const { data: fees } = useQuery({
+        queryKey: ['platform_settings_fees'],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('platform_settings')
+                .select('fee_monthly_percent, fee_quarterly_percent, fee_semiannual_percent, fee_annual_percent')
+                .single();
+            if (error) {
+                console.error("Error fetching fees:", error);
+                return null;
+            }
+            return data;
+        },
+        staleTime: 1000 * 60 * 5 // 5 minutes cache
+    });
+
     const getFeePercentage = (months: number) => {
-        if (months === 1) return 0.15;
-        if (months === 3) return 0.13;
-        if (months === 6) return 0.12;
-        if (months === 12) return 0.10;
-        return 0.15;
+        const defaults = {
+            monthly: 10,
+            quarterly: 10,
+            semiannual: 10,
+            annual: 10
+        };
+
+        const activeFees = fees ? {
+            monthly: Number(fees.fee_monthly_percent) || 10,
+            quarterly: Number(fees.fee_quarterly_percent) || 10,
+            semiannual: Number(fees.fee_semiannual_percent) || 10,
+            annual: Number(fees.fee_annual_percent) || 10
+        } : defaults;
+
+        // Convert percent (10) to ratio (0.10)
+        if (months === 1) return activeFees.monthly / 100;
+        if (months === 3) return activeFees.quarterly / 100;
+        if (months === 6) return activeFees.semiannual / 100;
+        if (months === 12) return activeFees.annual / 100;
+
+        return 0.10;
     };
 
     const calculateNet = (price: number, months: number) => {
