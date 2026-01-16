@@ -19,69 +19,90 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     historyLogs,
     onSaveLog
 }) => {
-    const [mediaError, setMediaError] = useState(false)
+    // State to track which media source we are trying to display
+    // 'local-gif' (Priority 1) -> 'remote-url' (Priority 2) -> 'error' (Fallback)
+    const [mediaMode, setMediaMode] = useState<'local-gif' | 'remote-url' | 'error'>('local-gif')
+
+    // Reset media mode when exercise changes
+    React.useEffect(() => {
+        setMediaMode('local-gif')
+    }, [exercise.id])
 
     // Helper to find log for a specific set
     // This assumes logs are created in order or processed to match sets.
-    // For simplicity, we filter logs for this exercise and map them by index if possible,
-    // or just rely on the parent to pass the correct structure.
-    // Here we filter logs for this specific exercise ID and assume order matters.
     const currentExLogs = executionLogs.filter(l => l.workout_exercise_id === exercise.id).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
 
     // Find history for this exercise (from a previous session)
-    // We look for logs with the same exercise_id but different workout_exercise_id or date
     const pastLogs = historyLogs.filter(l => l.exercise_id === exercise.exercise_id && l.workout_exercise_id !== exercise.id)
 
-    // Media priority: 1. GIF (local/url), 2. Video URL, 3. Placeholder
-    // Assuming 'demo_url' contains the URL. If it's a GIF, it's used.
-    // If user meant "local file system", we'd construct a path, but we'll stick to demo_url or a constructed path if demo_url is empty.
-    // We'll attempt a constructed path for the "local GIF" requirement if demo_url is missing.
+    // Construct Local GIF Path
+    const safeName = exercise.exercise?.name ? exercise.exercise.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : ''
+    const localGifUrl = `/gifs_exercicios/${safeName}.gif`
 
-    const getMediaSource = () => {
-        if (exercise.exercise?.demo_url) return exercise.exercise.demo_url
-        // Fallback logic for "local" gifs if needed using name convention
-        // const safeName = exercise.exercise?.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-        // return `/gifs_exercicios/${safeName}.gif`
-        return null
+    // Remote URL (from specific column or demo_url)
+    const remoteUrl = exercise.exercise?.demo_url
+
+    // Determine what to render based on current mode
+    const renderMedia = () => {
+        if (mediaMode === 'local-gif') {
+            return (
+                <img
+                    src={localGifUrl}
+                    alt={exercise.exercise?.name}
+                    className="w-full h-full object-cover"
+                    onError={() => {
+                        // If GIF fails, switch to remote URL if available, else error
+                        if (remoteUrl) {
+                            setMediaMode('remote-url')
+                        } else {
+                            setMediaMode('error')
+                        }
+                    }}
+                />
+            )
+        }
+
+        if (mediaMode === 'remote-url' && remoteUrl) {
+            const isVideo = remoteUrl.endsWith('.mp4') || remoteUrl.includes('youtube') || remoteUrl.includes('vimeo') || remoteUrl.includes('youtu.be')
+
+            if (isVideo) {
+                return (
+                    <iframe
+                        src={remoteUrl}
+                        className="w-full h-full object-cover"
+                        allow="autoplay; encrypted-media"
+                        // iFrames don't trigger onError reliably for 404s, but we assume if URL exists it's valid-ish.
+                        // If we really need fallback for iframe, we'd need a different approach (e.g. check link validity first), 
+                        // but standard iframe behavior shows a "video unavailable" block which is acceptable feedback.
+                        onError={() => setMediaMode('error')}
+                    />
+                )
+            } else {
+                return (
+                    <img
+                        src={remoteUrl}
+                        alt={exercise.exercise?.name}
+                        className="w-full h-full object-cover"
+                        onError={() => setMediaMode('error')}
+                    />
+                )
+            }
+        }
+
+        // Fallback / Error State
+        return (
+            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                <VideoOff className="h-12 w-12 mb-2 opacity-20" />
+                <p className="text-xs">Sem demonstração disponível</p>
+            </div>
+        )
     }
-
-    const mediaSrc = getMediaSource()
 
     return (
         <div className="h-full flex flex-col overflow-y-auto pb-20 custom-scrollbar">
             {/* Media Section */}
             <div className="w-full aspect-video bg-black/5 relative shrink-0">
-                {!mediaError && mediaSrc ? (
-                    mediaSrc.endsWith('.mp4') || mediaSrc.includes('youtube') || mediaSrc.includes('vimeo') ? (
-                        <iframe
-                            src={mediaSrc}
-                            className="w-full h-full object-cover"
-                            allow="autoplay; encrypted-media"
-                            onError={() => setMediaError(true)}
-                        />
-                    ) : (
-                        <img
-                            src={mediaSrc}
-                            alt={exercise.exercise?.name}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                                // Fallback to trying to load a local gif by name if the URL failed or wasn't provided
-                                const target = e.target as HTMLImageElement;
-                                if (!target.src.includes('/gifs_exercicios/')) {
-                                    const safeName = exercise.exercise?.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-                                    target.src = `/gifs_exercicios/${safeName}.gif`
-                                } else {
-                                    setMediaError(true)
-                                }
-                            }}
-                        />
-                    )
-                ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                        <VideoOff className="h-12 w-12 mb-2 opacity-20" />
-                        <p className="text-xs">Sem demonstração disponível</p>
-                    </div>
-                )}
+                {renderMedia()}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background to-transparent h-24 pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4">
                     <Badge variant="secondary" className="mb-2 backdrop-blur-md bg-background/50 text-foreground border-foreground/10">
