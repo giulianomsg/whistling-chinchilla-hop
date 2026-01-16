@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   Timer, Play, Pause, Square, Loader2, BarChart3,
-  Save, Trash2, Plus, Search, X, Calendar as CalendarIcon
+  Save, Trash2, Plus, Search, X, Calendar as CalendarIcon, Maximize2
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
@@ -603,7 +603,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
   return (
-    <div className="space-y-6 pb-24 max-w-[100vw] overflow-x-hidden">
+    <div className="space-y-6 pb-24 w-full max-w-full overflow-x-hidden">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
@@ -736,8 +736,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             )}
 
             {isSessionActive && (
-              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="flex-1 md:flex-none">
-                Expandir Treino
+              <Button
+                onClick={() => setActiveSessionOpen(true)}
+                className="w-full h-12 text-lg font-bold shadow-lg md:flex-none flex-1"
+                variant="secondary"
+              >
+                <Maximize2 className="mr-2 h-5 w-5" /> Expandir Treino
               </Button>
             )}
           </div>

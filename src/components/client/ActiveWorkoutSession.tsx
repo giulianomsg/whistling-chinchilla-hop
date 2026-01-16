@@ -95,15 +95,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     </div>
                 </div>
 
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-2 text-muted-foreground hover:text-foreground"
-                    onClick={onMinimize}
-                >
-                    <span className="hidden sm:inline">Ver Resumo</span>
-                    <Minimize2 className="h-5 w-5" />
-                </Button>
+                <div className="w-9" /> {/* Spacer to center title */}
             </div>
 
             {/* Main Content (Carousel) */}
