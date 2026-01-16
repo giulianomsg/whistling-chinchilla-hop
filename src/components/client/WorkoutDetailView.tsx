@@ -603,7 +603,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
   return (
-    <div className="space-y-6 pb-24">
+    <div className="space-y-6 pb-24 max-w-[100vw] overflow-x-hidden">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card border border-border p-4 rounded-lg text-center shadow-sm">
@@ -736,7 +736,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             )}
 
             {isSessionActive && (
-              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="hidden md:flex">
+              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="flex-1 md:flex-none">
                 Expandir Treino
               </Button>
             )}

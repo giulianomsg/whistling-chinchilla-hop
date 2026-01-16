@@ -74,7 +74,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
     return (
         <div className={cn(
-            "fixed inset-0 z-50 bg-background flex-col animate-in fade-in duration-300",
+            "fixed inset-0 z-50 h-[100dvh] w-screen bg-background flex-col animate-in fade-in duration-300",
             isOpen ? "flex" : "hidden"
         )}>
             {/* Header */}
@@ -96,19 +96,13 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                 </div>
 
                 <Button
-                    variant="default"
+                    variant="ghost"
                     size="sm"
-                    className={cn(
-                        "font-bold transition-all",
-                        progressPercentage === 100 ? "bg-green-600 hover:bg-green-700 animate-pulse" : ""
-                    )}
-                    onClick={onFinishWorkout}
+                    className="gap-2 text-muted-foreground hover:text-foreground"
+                    onClick={onMinimize}
                 >
-                    {progressPercentage === 100 ? (
-                        <>
-                            <Trophy className="mr-2 h-4 w-4" /> Finalizar
-                        </>
-                    ) : "Finalizar"}
+                    <span className="hidden sm:inline">Ver Resumo</span>
+                    <Minimize2 className="h-5 w-5" />
                 </Button>
             </div>
 
