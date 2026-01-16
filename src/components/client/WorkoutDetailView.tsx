@@ -709,8 +709,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
           <div className="flex gap-3 w-full md:w-auto">
             {!isSessionActive ? (
-              // Start button removed as per request. Flow controlled by selection.
-              null
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-8 h-12 md:h-11">
+                {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar Treino
+              </Button>
             ) : (
               <>
                 {sessionStatus === 'started' ? (
@@ -737,7 +738,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             {isSessionActive && (
               <Button
                 onClick={() => setActiveSessionOpen(true)}
-                className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 h-12 rounded-xl transition-all md:flex-none flex-1"
+                className="w-full h-12 text-lg font-bold shadow-lg md:flex-none flex-1"
                 variant="secondary"
               >
                 <Maximize2 className="mr-2 h-5 w-5" /> Expandir Treino

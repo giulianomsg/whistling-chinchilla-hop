@@ -116,10 +116,7 @@ const ClientWorkout: React.FC = () => {
               <p className="text-muted-foreground">Seu plano personalizado</p>
             </div>
           </div>
-          {/* Default to Day 1 if clicked directly */}
-          <Button onClick={() => openDay(1)} className="bg-primary text-primary-foreground hover:bg-primary/80 font-semibold">
-            <Maximize2 className="h-4 w-4 mr-2" /> Iniciar Treino
-          </Button>
+          {/* Default to Day 1 if clicked directly - REMOVED per user request */}
         </div>
 
         {/* Card Resumo */}

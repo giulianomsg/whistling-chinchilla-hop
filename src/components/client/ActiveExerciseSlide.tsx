@@ -99,7 +99,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     }
 
     return (
-        <div className="h-full flex-1 flex flex-col min-h-0 overflow-y-auto pb-20 custom-scrollbar">
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pb-20 custom-scrollbar">
             {/* Media Section */}
             <div className="w-full md:w-1/3 md:mx-auto aspect-video bg-black/5 relative shrink-0">
                 {renderMedia()}

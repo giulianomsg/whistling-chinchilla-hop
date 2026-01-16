@@ -74,7 +74,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
     return (
         <div className={cn(
-            "fixed inset-0 z-50 h-[100dvh] w-full flex flex-col bg-background overflow-hidden animate-in fade-in duration-300",
+            "fixed inset-0 z-50 flex flex-col bg-background h-[100dvh] w-full overflow-hidden",
             isOpen ? "flex" : "hidden"
         )}>
             {/* Header */}
@@ -99,7 +99,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             </div>
 
             {/* Main Content (Carousel) */}
-            <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
+            <div className="flex-1 overflow-hidden relative">
                 {/* We could use a real carousel lib, but simple conditional rendering 
               with animation keys works well for step-by-step 
           */}
@@ -113,13 +113,13 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             </div>
 
             {/* Footer Navigation */}
-            <div className="w-full max-w-full px-4 pb-6 pt-4 border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4 shrink-0 box-border">
+            <div className="w-full max-w-full px-4 pb-6 pt-4 box-border border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4">
                 <Button
                     variant="outline"
                     size="icon"
                     onClick={handlePrev}
                     disabled={currentIndex === 0}
-                    className="h-12 w-12 rounded-full border-2 shrink-0"
+                    className="h-12 w-12 flex-none rounded-full border-2"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </Button>
@@ -135,7 +135,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     onClick={handleNext}
                     disabled={currentIndex === exercises.length - 1}
                     className={cn(
-                        "h-12 w-12 rounded-full border-2 shrink-0",
+                        "h-12 w-12 flex-none rounded-full border-2",
                         currentIndex < exercises.length - 1 ? "border-primary text-primary hover:bg-primary/10" : ""
                     )}
                 >
