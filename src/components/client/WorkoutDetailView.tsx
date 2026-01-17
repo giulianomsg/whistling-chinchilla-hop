@@ -899,7 +899,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         totalLoadKg={summaryData.totalLoadKg}
       />
 
-      <ActiveWorkoutSession
+      <FocusWorkoutSession
         isOpen={activeSessionOpen}
         onMinimize={() => setActiveSessionOpen(false)}
         exercises={displayedExercises}
