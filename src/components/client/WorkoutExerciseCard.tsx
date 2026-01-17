@@ -92,10 +92,10 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
         <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-lg overflow-hidden transition-all shadow-sm`}>
             <div className="p-4">
                 <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`text-base font-bold ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>{we.exercise.name}</h4>
-                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5">Feito</Badge>}
+                            <h4 className={`text-base font-bold break-words ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>{we.exercise.name}</h4>
+                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 shrink-0">Feito</Badge>}
                         </div>
 
                         <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-3">

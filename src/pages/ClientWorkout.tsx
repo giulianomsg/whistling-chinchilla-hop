@@ -30,6 +30,12 @@ const ClientWorkout: React.FC = () => {
     })
   }
 
+  useEffect(() => {
+    if (showDetailView) {
+      window.scrollTo(0, 0)
+    }
+  }, [showDetailView])
+
   const closeDetailView = () => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev)
