@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, Circle, Play, Info, Image as ImageIcon, Video as VideoIcon, ChevronDown, ChevronUp, PlayCircle } from 'lucide-react'
+import { CheckCircle, Circle, Play, Info, Image as ImageIcon, Video as VideoIcon, ChevronDown, ChevronUp, PlayCircle, Square, Clock } from 'lucide-react'
 
 interface WorkoutExerciseCardProps {
     exercise: any
@@ -94,22 +94,41 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
             <div className="p-3">
 
                 {/* 1. Header: Title & Status - Grid to separate Title from main Status/Check */}
-                <div className="grid grid-cols-[1fr_auto] gap-3 mb-2 items-start">
-                    <div className="min-w-0">
-                        <h4 className={`text-sm md:text-base font-bold leading-tight break-words ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
-                            {we.exercise.name}
-                        </h4>
-                        {isCompleted && (
-                            <div className="mt-1">
-                                <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-4 px-1 rounded-sm">
+                <div className="flex justify-between items-start gap-4 mb-3">
+                    <div className="flex-1 min-w-0 pr-2">
+                        <div className="flex flex-col">
+                            <h4 className={`text-base font-bold leading-tight break-words ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
+                                {we.exercise.name}
+                            </h4>
+                            {isCompleted && (
+                                <Badge variant="outline" className="self-start mt-1.5 border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 font-medium bg-green-500/5">
                                     Concluído
                                 </Badge>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
 
-                    {/* Primary Action: Check Button (Always visible top right or beside title) */}
-                    <div className="shrink-0">
+                    {/* Actions Wrapper: Timer + Check */}
+                    <div className="shrink-0 flex items-center gap-2">
+                        {/* Timer Button - New Location & Look */}
+                        <Button
+                            size="sm"
+                            variant={isTimerRunning ? "destructive" : "outline"}
+                            onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
+                            disabled={!isSessionActive || isCompleted}
+                            className={`h-10 px-3 rounded-full transition-all shadow-sm flex items-center gap-2 ${isTimerRunning ? 'animate-pulse' : 'border-dashed border-border text-muted-foreground'}`}
+                        >
+                            {isTimerRunning ? <Square className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 ml-0.5" />}
+                            <span className="font-mono font-bold text-xs min-w-[3ch] text-center">
+                                {(() => {
+                                    const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
+                                    const s = (activeTime % 60).toString().padStart(2, '0')
+                                    return `${m}:${s}`
+                                })()}
+                            </span>
+                        </Button>
+
+                        {/* Check Button */}
                         <Button
                             size="icon"
                             onClick={() => onLogClick(we)}
@@ -121,91 +140,98 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                 </div>
 
                 {/* 2. Stats / Tags - Flow Layout */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                    <div className="bg-muted/50 border border-border px-2 py-1 rounded text-[10px] md:text-xs text-muted-foreground font-medium">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="bg-muted px-2 py-1 rounded text-xs font-medium text-muted-foreground border border-border">
                         {we.sets} séries
-                    </div>
-                    <div className="bg-muted/50 border border-border px-2 py-1 rounded text-[10px] md:text-xs text-muted-foreground font-medium">
+                    </span>
+                    <span className="bg-muted px-2 py-1 rounded text-xs font-medium text-muted-foreground border border-border">
                         {we.reps} reps
-                    </div>
+                    </span>
                     {we.weight && (
-                        <div className="bg-muted/50 border border-border px-2 py-1 rounded text-[10px] md:text-xs text-muted-foreground font-medium">
+                        <span className="bg-muted px-2 py-1 rounded text-xs font-medium text-muted-foreground border border-border">
                             {we.weight}kg
-                        </div>
+                        </span>
                     )}
                     {we.rest_time_seconds && (
-                        <div className="bg-muted/50 border border-border px-2 py-1 rounded text-[10px] md:text-xs text-muted-foreground font-medium flex items-center gap-1">
+                        <span className="bg-muted px-2 py-1 rounded text-xs font-medium text-muted-foreground border border-border flex items-center gap-1">
                             <PlayCircle className="h-3 w-3" /> {we.rest_time_seconds}s
-                        </div>
+                        </span>
                     )}
                 </div>
 
-                {/* 3. Secondary Actions & Timer - Grid Layout */}
-                <div className="grid grid-cols-4 gap-2">
-                    {/* Timer Button - Spans 1 */}
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
-                        disabled={!isSessionActive || isCompleted}
-                        className={`col-span-1 h-9 p-0 flex flex-col items-center justify-center border-dashed ${isTimerRunning ? 'border-orange-500 text-orange-500 bg-orange-500/5' : 'border-border text-muted-foreground'}`}
-                    >
-                        {isTimerRunning ? <PlayCircle className="h-3.5 w-3.5 animate-spin mb-0.5" /> : <PlayCircle className="h-3.5 w-3.5 mb-0.5" />}
-                        <span className="text-[9px] font-mono leading-none">
-                            {(() => {
-                                const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
-                                const s = (activeTime % 60).toString().padStart(2, '0')
-                                return `${m}:${s}`
-                            })()}
-                        </span>
-                    </Button>
-
-
-
+                {/* 3. Actions Toolbar - Simplified Grid (Timer removed from here) */}
+                <div className="grid grid-cols-3 gap-2">
+                    {/* Media Toggles Only */}
+                    {hasGif && (
+                        <Button variant="ghost" size="sm" onClick={() => setShowGif(!showGif)} className={`h-9 px-0 ${showGif ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}>
+                            <div className="flex flex-col items-center">
+                                <ImageIcon className="h-3.5 w-3.5 mb-0.5" />
+                                <span className="text-[9px] uppercase font-bold">Demo</span>
+                            </div>
+                        </Button>
+                    )}
+                    {hasVideo && (
+                        <Button variant="ghost" size="sm" onClick={() => setShowVideo(!showVideo)} className={`h-9 px-0 ${showVideo ? 'bg-red-500/20 text-red-500' : 'text-muted-foreground hover:bg-muted'}`}>
+                            <div className="flex flex-col items-center">
+                                <VideoIcon className="h-3.5 w-3.5 mb-0.5" />
+                                <span className="text-[9px] uppercase font-bold">Vídeo</span>
+                            </div>
+                        </Button>
+                    )}
+                    {hasInfo && (
+                        <Button variant="ghost" size="sm" onClick={() => setShowInfo(!showInfo)} className={`h-9 px-0 ${showInfo ? 'bg-blue-500/20 text-blue-500' : 'text-muted-foreground hover:bg-muted'}`}>
+                            <div className="flex flex-col items-center">
+                                <Info className="h-3.5 w-3.5 mb-0.5" />
+                                <span className="text-[9px] uppercase font-bold">Info</span>
+                            </div>
+                        </Button>
+                    )}
                 </div>
 
-                {/* Expandable Content Area - Remained mostly same but adjusted padding */}
-                {(showGif || showVideo || showInfo) && (
-                    <div className="bg-muted/30 border-t border-border p-3 space-y-4 animate-in slide-in-from-top-2 duration-200">
-                        {/* Gif View */}
-                        {showGif && hasGif && (
-                            <div>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Demonstração Visual</p>
-                                <div className="rounded-lg overflow-hidden border border-border bg-background max-w-xs mx-auto">
-                                    <img src={uploadedGif} alt="Demo" className="w-full h-auto object-cover" />
-                                </div>
-                            </div>
-                        )}
+            </div>
 
-                        {/* Video View */}
-                        {showVideo && hasVideo && (
-                            <div>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Vídeo Completo</p>
-                                <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-sm">
-                                    {directVideoSrc ? (
-                                        <video src={directVideoSrc} controls className="w-full h-full" />
-                                    ) : youtubeId && (
-                                        <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} allowFullScreen />
-                                    )}
-                                </div>
+            {/* Expandable Content Area */}
+            {(showGif || showVideo || showInfo) && (
+                <div className="bg-muted/30 border-t border-border p-3 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                    {/* Gif View */}
+                    {showGif && hasGif && (
+                        <div>
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Demonstração Visual</p>
+                            <div className="rounded-lg overflow-hidden border border-border bg-background max-w-xs mx-auto">
+                                <img src={uploadedGif} alt="Demo" className="w-full h-auto object-cover" />
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* Info View */}
-                        {showInfo && (
-                            <div className="space-y-3">
-                                {we.exercise.instructions?.length > 0 && (
-                                    <div>
-                                        <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Instruções</p>
-                                        <ul className="list-disc pl-4 text-xs space-y-1 text-muted-foreground">
-                                            {we.exercise.instructions.map((inst: string, i: number) => <li key={i}>{inst}</li>)}
-                                        </ul>
-                                    </div>
+                    {/* Video View */}
+                    {showVideo && hasVideo && (
+                        <div>
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Vídeo Completo</p>
+                            <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-sm">
+                                {directVideoSrc ? (
+                                    <video src={directVideoSrc} controls className="w-full h-full" />
+                                ) : youtubeId && (
+                                    <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} allowFullScreen />
                                 )}
                             </div>
-                        )}
-                    </div>
-                )}
-            </div>
-            )
+                        </div>
+                    )}
+
+                    {/* Info View */}
+                    {showInfo && (
+                        <div className="space-y-3">
+                            {we.exercise.instructions?.length > 0 && (
+                                <div>
+                                    <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Instruções</p>
+                                    <ul className="list-disc pl-4 text-xs space-y-1 text-muted-foreground">
+                                        {we.exercise.instructions.map((inst: string, i: number) => <li key={i}>{inst}</li>)}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    )
 }
