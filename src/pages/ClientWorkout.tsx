@@ -111,7 +111,7 @@ const ClientWorkout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 space-y-8">
+    <div className="min-h-screen bg-background w-full overflow-x-hidden p-2 md:p-8 space-y-8">
       <div>
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">

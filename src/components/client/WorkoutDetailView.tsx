@@ -697,46 +697,48 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       </Card>
 
       {/* Player Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 border-t border-border backdrop-blur-xl p-4 pb-6 md:pb-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
-          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
-            <div className="bg-muted p-2 rounded-lg"><Timer className="h-5 w-5 md:h-6 md:w-6 text-primary animate-pulse" /></div>
-            <div>
-              <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">Tempo de Treino</p>
-              <p className="text-xl md:text-2xl font-mono font-bold text-foreground tracking-widest">{formatTime(elapsedTime)}</p>
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
+          <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+            <div className="flex items-center gap-2">
+              <div className="bg-muted p-1.5 rounded-lg"><Timer className="h-4 w-4 md:h-6 md:w-6 text-primary animate-pulse" /></div>
+              <div>
+                <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider leading-none">Tempo</p>
+                <p className="text-lg md:text-2xl font-mono font-bold text-foreground tracking-widest leading-none">{formatTime(elapsedTime)}</p>
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex gap-2 w-full md:w-auto">
             {!isSessionActive ? (
-              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-8 h-12 md:h-11">
-                {sessionLoading ? <Loader2 className="animate-spin" /> : <Play className="mr-2 h-5 w-5" />} Iniciar Treino
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold h-10 md:h-11 text-sm">
+                {sessionLoading ? <Loader2 className="animate-spin h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />} Iniciar Treino
               </Button>
             ) : (
               <>
                 {sessionStatus === 'started' ? (
-                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-12 md:h-11">
-                    <Pause className="mr-2 h-5 w-5" /> Pausar
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-10 md:h-11">
+                    <Pause className="mr-2 h-4 w-4" /> Pausar
                   </Button>
                 ) : (
-                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-12 md:h-11">
-                    <Play className="mr-2 h-5 w-5" /> Retomar
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-10 md:h-11">
+                    <Play className="mr-2 h-4 w-4" /> Retomar
                   </Button>
                 )}
-                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-12 md:h-11">
-                  <Square className="mr-2 h-5 w-5 fill-current" /> Finalizar
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-10 md:h-11">
+                  <Square className="mr-2 h-4 w-4 fill-current" /> Finalizar
                 </Button>
               </>
             )}
 
             {sessionStatus === 'abandoned' && (
-              <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-12 md:h-11">
-                <Square className="mr-2 h-5 w-5 fill-current" /> Treino Abandonado
+              <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-10 md:h-11">
+                <Square className="mr-2 h-4 w-4 fill-current" /> Treino Abandonado
               </Button>
             )}
 
             {isSessionActive && (
-              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="hidden md:flex">
+              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="hidden md:flex h-10 md:h-11">
                 Expandir Treino
               </Button>
             )}

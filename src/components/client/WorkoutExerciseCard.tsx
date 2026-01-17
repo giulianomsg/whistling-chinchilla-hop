@@ -90,33 +90,33 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
 
     return (
         <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-lg overflow-hidden transition-all shadow-sm`}>
-            <div className="p-3 md:p-4">
-                <div className="grid grid-cols-12 gap-2 md:gap-4 items-start">
+            <div className="p-2 md:p-4">
+                <div className="grid grid-cols-12 gap-1.5 md:gap-4 items-start">
                     {/* Main Info - Spans 9 on mobile, Grows on Desktop */}
                     <div className="col-span-9 md:col-span-10 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`text-base font-bold break-words leading-tight ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
+                            <h4 className={`text-sm md:text-base font-bold break-words leading-tight ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
                                 {we.exercise.name}
                             </h4>
                             {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 shrink-0">Feito</Badge>}
                         </div>
 
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-1">
-                            <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.sets} séries</span>
-                            <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.reps} reps</span>
-                            {we.weight && <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.weight}kg</span>}
-                            {we.rest_time_seconds && <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.rest_time_seconds}s</span>}
+                        <div className="flex flex-wrap gap-1.5 text-[10px] md:text-xs text-muted-foreground mb-1">
+                            <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.sets} séries</span>
+                            <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.reps} reps</span>
+                            {we.weight && <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.weight}kg</span>}
+                            {we.rest_time_seconds && <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.rest_time_seconds}s</span>}
                         </div>
                     </div>
 
                     {/* Actions - Spans 3 on mobile */}
-                    <div className="col-span-3 md:col-span-2 flex flex-col items-center gap-2">
+                    <div className="col-span-3 md:col-span-2 flex flex-col items-center gap-1.5">
                         {/* Timer Button */}
                         <Button
                             size="sm"
                             variant="outline"
                             onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
-                            className={`w-full h-8 md:h-9 px-1 gap-1 transition-all text-[10px] md:text-xs border-dashed ${isTimerRunning
+                            className={`w-full h-7 md:h-9 px-0 gap-1 transition-all text-[10px] md:text-xs border-dashed ${isTimerRunning
                                 ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
                                 : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
                             disabled={!isSessionActive || isCompleted}
