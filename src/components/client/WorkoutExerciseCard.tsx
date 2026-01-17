@@ -90,35 +90,39 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
 
     return (
         <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-lg overflow-hidden transition-all shadow-sm`}>
-            <div className="p-4">
-                <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
+            <div className="p-3 md:p-4">
+                <div className="grid grid-cols-12 gap-2 md:gap-4 items-start">
+                    {/* Main Info - Spans 9 on mobile, Grows on Desktop */}
+                    <div className="col-span-9 md:col-span-10 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`text-base font-bold break-words ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>{we.exercise.name}</h4>
+                            <h4 className={`text-base font-bold break-words leading-tight ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
+                                {we.exercise.name}
+                            </h4>
                             {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 shrink-0">Feito</Badge>}
                         </div>
 
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-3">
-                            <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.sets} séries</span>
-                            <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.reps} reps</span>
-                            {we.weight && <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.weight}kg</span>}
-                            {we.rest_time_seconds && <span className="bg-muted px-2 py-0.5 rounded border border-border">{we.rest_time_seconds}s</span>}
+                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-1">
+                            <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.sets} séries</span>
+                            <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.reps} reps</span>
+                            {we.weight && <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.weight}kg</span>}
+                            {we.rest_time_seconds && <span className="bg-muted px-2 py-0.5 rounded border border-border whitespace-nowrap">{we.rest_time_seconds}s</span>}
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center gap-2">
+                    {/* Actions - Spans 3 on mobile */}
+                    <div className="col-span-3 md:col-span-2 flex flex-col items-center gap-2">
                         {/* Timer Button */}
                         <Button
                             size="sm"
                             variant="outline"
                             onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
-                            className={`h-9 px-2 gap-1.5 transition-all text-xs border-dashed ${isTimerRunning
+                            className={`w-full h-8 md:h-9 px-1 gap-1 transition-all text-[10px] md:text-xs border-dashed ${isTimerRunning
                                 ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
                                 : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
                             disabled={!isSessionActive || isCompleted}
                         >
-                            {isTimerRunning ? <PlayCircle className="h-4 w-4 animate-spin" /> : <PlayCircle className="h-4 w-4" />}
-                            <span className="font-mono font-bold w-[40px] text-center">
+                            {isTimerRunning ? <PlayCircle className="h-3 w-3 md:h-4 md:w-4 animate-spin shrink-0" /> : <PlayCircle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />}
+                            <span className="font-mono font-bold">
                                 {(() => {
                                     const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
                                     const s = (activeTime % 60).toString().padStart(2, '0')
@@ -131,9 +135,9 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         <Button
                             size="icon"
                             onClick={() => onLogClick(we)}
-                            className={`h-10 w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
+                            className={`h-8 w-8 md:h-10 md:w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
                         >
-                            {isCompleted ? <CheckCircle className="h-6 w-6" /> : <Circle className="h-6 w-6" />}
+                            {isCompleted ? <CheckCircle className="h-5 w-5 md:h-6 md:w-6" /> : <Circle className="h-5 w-5 md:h-6 md:w-6" />}
                         </Button>
                     </div>
                 </div>
