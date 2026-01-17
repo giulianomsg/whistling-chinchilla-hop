@@ -84,7 +84,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
     return (
         <div className={cn(
-            "fixed inset-0 z-[9999] flex flex-col bg-background h-[100dvh] w-screen overflow-hidden overscroll-none touch-none",
+            "fixed inset-0 z-[9999] flex flex-col bg-background h-[100dvh] w-screen overflow-hidden overscroll-none touch-none !mt-0 !mb-0",
             isOpen ? "flex" : "hidden"
         )} style={{ backgroundColor: 'hsl(var(--background))' }}>
             {/* Header */}
