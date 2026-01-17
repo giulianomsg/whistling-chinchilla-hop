@@ -719,16 +719,16 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             ) : (
               <>
                 {sessionStatus === 'started' ? (
-                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-10 md:h-11">
-                    <Pause className="mr-2 h-4 w-4" /> Pausar
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-10 md:h-11 px-0 overflow-hidden">
+                    <Pause className="mr-1.5 h-4 w-4 shrink-0" /> <span className="truncate">Pausar</span>
                   </Button>
                 ) : (
-                  <Button size="default" onClick={() => handleSessionAction('resume')} className="bg-blue-500 text-white hover:bg-blue-600 h-10 md:h-11">
-                    <Play className="mr-2 h-4 w-4" /> Retomar
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="bg-blue-500 text-white hover:bg-blue-600 h-10 md:h-11 px-0 overflow-hidden">
+                    <Play className="mr-1.5 h-4 w-4 shrink-0" /> <span className="truncate">Retomar</span>
                   </Button>
                 )}
-                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-10 md:h-11">
-                  <Square className="mr-2 h-4 w-4 fill-current" /> Finalizar
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-10 md:h-11 px-0 overflow-hidden">
+                  <Square className="mr-1.5 h-4 w-4 fill-current shrink-0" /> <span className="truncate">Finalizar</span>
                 </Button>
               </>
             )}

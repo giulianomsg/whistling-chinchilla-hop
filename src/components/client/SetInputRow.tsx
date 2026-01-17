@@ -49,14 +49,14 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
             isCompleted ? "bg-green-500/10 border border-green-500/20" : "bg-card border border-border"
         )}>
             {/* Set Indicator */}
-            <div className="col-span-1 flex flex-col items-center justify-center">
-                <span className="text-sm font-bold text-muted-foreground">#{setNumber}</span>
+            <div className="col-span-1 md:col-span-1 flex flex-col items-center justify-center">
+                <span className="text-xs md:text-sm font-bold text-muted-foreground">#{setNumber}</span>
             </div>
 
             {/* Inputs */}
-            <div className="col-span-8 grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                    <label className="text-[10px] uppercase text-muted-foreground font-bold pl-1">Kg</label>
+            <div className="col-span-8 md:col-span-9 grid grid-cols-2 gap-2">
+                <div className="space-y-0.5">
+                    <label className="text-[9px] uppercase text-muted-foreground font-bold pl-1">Kg</label>
                     <Input
                         type="number"
                         value={weight}
@@ -90,18 +90,18 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
             </div>
 
             {/* Action Button */}
-            <div className="col-span-3 flex justify-center">
+            <div className="col-span-3 md:col-span-2 flex justify-center">
                 <Button
                     size="icon"
                     className={cn(
-                        "h-12 w-12 rounded-xl transition-all",
+                        "h-10 w-10 md:h-12 md:w-12 rounded-xl transition-all",
                         isCompleted
                             ? "bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20"
                             : "bg-muted hover:bg-muted/80 text-muted-foreground"
                     )}
                     onClick={handleCheck}
                 >
-                    {isCompleted ? <Check className="h-6 w-6" /> : <Check className="h-6 w-6" />}
+                    {isCompleted ? <Check className="h-5 w-5 md:h-6 md:w-6" /> : <Check className="h-5 w-5 md:h-6 md:w-6" />}
                 </Button>
             </div>
         </div>
