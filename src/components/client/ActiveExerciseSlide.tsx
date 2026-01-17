@@ -112,7 +112,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                 </div>
             </div>
 
-            <div className="p-4 space-y-6">
+            <div className="p-4 flex flex-col gap-6">
                 {/* Helper Info Tabs */}
                 {(exercise.notes || exercise.exercise?.instructions) && (
                     <div className="bg-muted/30 rounded-lg p-3 text-sm text-muted-foreground border border-border">
@@ -132,7 +132,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                 )}
 
                 {/* Sets List */}
-                <div className="space-y-1">
+                <div className="flex flex-col gap-1">
                     <div className="flex justify-between items-end mb-2 px-1">
                         <h3 className="font-bold text-lg">Séries</h3>
                         <span className="text-xs text-muted-foreground">{exercise.sets} séries programadas</span>
