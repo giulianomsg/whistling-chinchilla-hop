@@ -737,7 +737,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                   </Button>
                 )}
 
-
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-11 px-6 font-bold">
+                  <Square className="mr-2 h-4 w-4 fill-current" /> FINALIZAR
+                </Button>
               </>
             )}
 
