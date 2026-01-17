@@ -72,23 +72,13 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     // If no exercises, show something else (but we keep rendered if hidden)
     if (!currentExercise && isOpen) return null
 
-    // Lock body scroll when open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
-        return () => { document.body.style.overflow = '' }
-    }, [isOpen])
-
     return (
         <div className={cn(
-            "fixed inset-0 z-[9999] flex flex-col bg-background h-[100dvh] w-screen overflow-hidden overscroll-none touch-none !mt-0 !mb-0",
+            "fixed inset-0 z-50 bg-background flex-col animate-in fade-in duration-300",
             isOpen ? "flex" : "hidden"
-        )} style={{ backgroundColor: 'hsl(var(--background))' }}>
+        )}>
             {/* Header */}
-            <div className="flex-none flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-md z-10">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-md">
                 <Button variant="ghost" size="icon" onClick={onMinimize}>
                     <Minimize2 className="h-5 w-5 text-muted-foreground" />
                 </Button>
@@ -105,14 +95,28 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     </div>
                 </div>
 
-                <div className="w-9" /> {/* Spacer to center title */}
+                <Button
+                    variant="default"
+                    size="sm"
+                    className={cn(
+                        "font-bold transition-all",
+                        progressPercentage === 100 ? "bg-green-600 hover:bg-green-700 animate-pulse" : ""
+                    )}
+                    onClick={onFinishWorkout}
+                >
+                    {progressPercentage === 100 ? (
+                        <>
+                            <Trophy className="mr-2 h-4 w-4" /> Finalizar
+                        </>
+                    ) : "Finalizar"}
+                </Button>
             </div>
 
             {/* Main Content (Carousel) */}
-            <div className="flex-1 relative min-h-0 w-full">
+            <div className="flex-1 overflow-hidden relative">
                 {/* We could use a real carousel lib, but simple conditional rendering 
-                with animation keys works well for step-by-step 
-            */}
+              with animation keys works well for step-by-step 
+          */}
                 <ActiveExerciseSlide
                     key={currentExercise.id}
                     exercise={currentExercise}
@@ -123,18 +127,18 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             </div>
 
             {/* Footer Navigation */}
-            <div className="flex-none w-full max-w-full px-4 py-3 box-border border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4 z-10 pb-safe">
+            <div className="p-4 border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4">
                 <Button
                     variant="outline"
                     size="icon"
                     onClick={handlePrev}
                     disabled={currentIndex === 0}
-                    className="h-12 w-12 flex-none rounded-full border-2"
+                    className="h-12 w-12 rounded-full border-2"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </Button>
 
-                <div className="flex-1 text-center min-w-0">
+                <div className="flex-1 text-center">
                     <p className="text-xs text-muted-foreground uppercase font-bold text-[10px] tracking-widest">Exercício Atual</p>
                     <p className="font-bold truncate px-2">{currentExercise.exercise?.name}</p>
                 </div>
@@ -145,7 +149,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     onClick={handleNext}
                     disabled={currentIndex === exercises.length - 1}
                     className={cn(
-                        "h-12 w-12 flex-none rounded-full border-2",
+                        "h-12 w-12 rounded-full border-2",
                         currentIndex < exercises.length - 1 ? "border-primary text-primary hover:bg-primary/10" : ""
                     )}
                 >
