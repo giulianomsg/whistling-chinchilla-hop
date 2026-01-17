@@ -709,38 +709,44 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
             </div>
           </div>
 
-          <div className="flex gap-2 w-full md:w-auto">
+          <div className="w-full md:w-auto grid grid-cols-2 md:flex md:gap-3 gap-2">
             {!isSessionActive ? (
-              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold h-10 md:h-11 text-sm">
-                {sessionLoading ? <Loader2 className="animate-spin h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />} Iniciar Treino
-              </Button>
+              <div className="col-span-2 md:w-auto">
+                <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold h-10 md:h-11 text-sm">
+                  {sessionLoading ? <Loader2 className="animate-spin h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />} Iniciar Treino
+                </Button>
+              </div>
             ) : (
               <>
                 {sessionStatus === 'started' ? (
-                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-10 md:h-11">
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-10 md:h-11">
                     <Pause className="mr-2 h-4 w-4" /> Pausar
                   </Button>
                 ) : (
-                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-10 md:h-11">
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="bg-blue-500 text-white hover:bg-blue-600 h-10 md:h-11">
                     <Play className="mr-2 h-4 w-4" /> Retomar
                   </Button>
                 )}
-                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-10 md:h-11">
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-10 md:h-11">
                   <Square className="mr-2 h-4 w-4 fill-current" /> Finalizar
                 </Button>
               </>
             )}
 
             {sessionStatus === 'abandoned' && (
-              <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-10 md:h-11">
-                <Square className="mr-2 h-4 w-4 fill-current" /> Treino Abandonado
-              </Button>
+              <div className="col-span-2">
+                <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-10 md:h-11">
+                  <Square className="mr-2 h-4 w-4 fill-current" /> Treino Abandonado
+                </Button>
+              </div>
             )}
 
             {isSessionActive && (
-              <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="hidden md:flex h-10 md:h-11">
-                Expandir Treino
-              </Button>
+              <div className="hidden md:block">
+                <Button size="default" variant="secondary" onClick={() => setActiveSessionOpen(true)} className="h-10 md:h-11">
+                  Expandir Treino
+                </Button>
+              </div>
             )}
           </div>
         </div>

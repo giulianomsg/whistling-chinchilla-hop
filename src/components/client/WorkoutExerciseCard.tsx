@@ -91,54 +91,64 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     return (
         <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-lg overflow-hidden transition-all shadow-sm`}>
             <div className="p-2 md:p-4">
-                <div className="grid grid-cols-12 gap-1.5 md:gap-4 items-start">
-                    {/* Main Info - Spans 9 on mobile, Grows on Desktop */}
+                <div className="grid grid-cols-12 gap-1 md:gap-4">
+                    {/* Main Info - Spans 9 on mobile */}
                     <div className="col-span-9 md:col-span-10 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`text-sm md:text-base font-bold break-words leading-tight ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
+                        {/* Title and Badge - Flow Layout */}
+                        <div className="mb-1 leading-snug">
+                            <span className={`text-sm md:text-base font-bold break-words mr-2 align-middle ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
                                 {we.exercise.name}
-                            </h4>
-                            {isCompleted && <Badge variant="outline" className="border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 shrink-0">Feito</Badge>}
+                            </span>
+                            {isCompleted && (
+                                <Badge variant="outline" className="inline-flex border-green-500/50 text-green-600 dark:text-green-400 text-[10px] h-5 px-1.5 align-middle bg-green-500/5">
+                                    Feito
+                                </Badge>
+                            )}
                         </div>
 
-                        <div className="flex flex-wrap gap-1.5 text-[10px] md:text-xs text-muted-foreground mb-1">
-                            <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.sets} séries</span>
-                            <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.reps} reps</span>
-                            {we.weight && <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.weight}kg</span>}
-                            {we.rest_time_seconds && <span className="bg-muted px-1.5 py-0.5 rounded border border-border whitespace-nowrap">{we.rest_time_seconds}s</span>}
+                        {/* Badges - Flow Layout */}
+                        <div className="text-[10px] md:text-xs text-muted-foreground leading-relaxed">
+                            <span className="inline-block bg-muted px-1.5 py-0.5 rounded border border-border mr-1 mb-1">{we.sets} séries</span>
+                            <span className="inline-block bg-muted px-1.5 py-0.5 rounded border border-border mr-1 mb-1">{we.reps} reps</span>
+                            {we.weight && <span className="inline-block bg-muted px-1.5 py-0.5 rounded border border-border mr-1 mb-1">{we.weight}kg</span>}
+                            {we.rest_time_seconds && <span className="inline-block bg-muted px-1.5 py-0.5 rounded border border-border mr-1 mb-1">{we.rest_time_seconds}s</span>}
                         </div>
                     </div>
 
-                    {/* Actions - Spans 3 on mobile */}
-                    <div className="col-span-3 md:col-span-2 flex flex-col items-center gap-1.5">
-                        {/* Timer Button */}
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
-                            className={`w-full h-7 md:h-9 px-0 gap-1 transition-all text-[10px] md:text-xs border-dashed ${isTimerRunning
-                                ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
-                                : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
-                            disabled={!isSessionActive || isCompleted}
-                        >
-                            {isTimerRunning ? <PlayCircle className="h-3 w-3 md:h-4 md:w-4 animate-spin shrink-0" /> : <PlayCircle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />}
-                            <span className="font-mono font-bold">
-                                {(() => {
-                                    const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
-                                    const s = (activeTime % 60).toString().padStart(2, '0')
-                                    return `${m}:${s}`
-                                })()}
-                            </span>
-                        </Button>
+                    {/* Actions - Spans 3 on mobile - Vertical Stack (Block) */}
+                    <div className="col-span-3 md:col-span-2 text-center pt-0.5">
+                        <div className="space-y-2">
+                            {/* Timer Button */}
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => { e.stopPropagation(); onToggleTimer(we.id) }}
+                                className={`w-full h-7 md:h-9 px-0 gap-1 transition-all text-[10px] md:text-xs border-dashed block ${isTimerRunning
+                                    ? 'border-orange-500 bg-orange-500/10 text-orange-500 animate-pulse'
+                                    : activeTime > 0 ? 'border-blue-500/30 text-blue-500' : 'border-border text-muted-foreground'}`}
+                                disabled={!isSessionActive || isCompleted}
+                            >
+                                <div className="flex items-center justify-center gap-1 w-full h-full">
+                                    {isTimerRunning ? <PlayCircle className="h-3 w-3 md:h-4 md:w-4 animate-spin shrink-0" /> : <PlayCircle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />}
+                                    <span className="font-mono font-bold">
+                                        {(() => {
+                                            const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
+                                            const s = (activeTime % 60).toString().padStart(2, '0')
+                                            return `${m}:${s}`
+                                        })()}
+                                    </span>
+                                </div>
+                            </Button>
 
-                        {/* Check Button */}
-                        <Button
-                            size="icon"
-                            onClick={() => onLogClick(we)}
-                            className={`h-8 w-8 md:h-10 md:w-10 shrink-0 rounded-full transition-all ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
-                        >
-                            {isCompleted ? <CheckCircle className="h-5 w-5 md:h-6 md:w-6" /> : <Circle className="h-5 w-5 md:h-6 md:w-6" />}
-                        </Button>
+                            {/* Check Button */}
+                            <Button
+                                size="icon"
+                                onClick={() => onLogClick(we)}
+                                className={`h-8 w-8 md:h-10 md:w-10 rounded-full transition-all inline-flex items-center justify-center ${isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-muted hover:bg-muted/80 text-muted-foreground border border-border'}`}
+                            >
+                                {isCompleted ? <CheckCircle className="h-5 w-5 md:h-6 md:w-6" /> : <Circle className="h-5 w-5 md:h-6 md:w-6" />}
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
