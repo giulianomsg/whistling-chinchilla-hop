@@ -99,7 +99,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     }
 
     return (
-        <div className="h-full flex flex-col overflow-y-auto pb-20 custom-scrollbar" style={{ '--tw-space-y-reverse': '1' }}>
+        <div className="h-full flex flex-col overflow-y-auto pb-20 custom-scrollbar" style={{ '--tw-space-y-reverse': '1' } as React.CSSProperties}>
             {/* Media Section */}
             <div className="w-full aspect-video bg-black/5 relative shrink-0">
                 {renderMedia()}
