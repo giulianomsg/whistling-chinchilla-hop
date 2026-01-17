@@ -20,6 +20,12 @@ interface ActiveWorkoutSessionProps {
     restTimerSeconds: number
     setRestTimerSeconds: (seconds: any) => void // Accepts function or number
     totalRestSeconds: number
+
+    // Exercise Timer Props
+    activeTimerId: string | null
+    exerciseTimers: Record<string, number>
+    onToggleTimer: (id: string) => void
+    isSessionActive: boolean
 }
 
 export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
@@ -34,7 +40,11 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     setRestTimerOpen,
     restTimerSeconds,
     setRestTimerSeconds,
-    totalRestSeconds
+    totalRestSeconds,
+    activeTimerId,
+    exerciseTimers,
+    onToggleTimer,
+    isSessionActive
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -109,6 +119,10 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     executionLogs={executionLogs}
                     historyLogs={historyLogs}
                     onSaveLog={onSaveLog}
+                    activeTime={exerciseTimers[currentExercise.id] || 0}
+                    isTimerRunning={activeTimerId === currentExercise.id}
+                    onToggleTimer={onToggleTimer}
+                    isSessionActive={isSessionActive}
                 />
             </div>
 

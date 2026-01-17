@@ -159,8 +159,51 @@ const ActiveSessionPage = () => {
         return () => clearInterval(interval)
     }, [restTimerOpen, restTimerSeconds])
 
+    // Exercise Timer Ticker
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+        if (activeTimerId && sessionData?.status === 'started') {
+            interval = setInterval(() => {
+                setExerciseTimers(prev => ({ ...prev, [activeTimerId]: (prev[activeTimerId] || 0) + 1 }))
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [activeTimerId, sessionData])
 
     // Actions
+    const handleToggleTimer = async (exerciseId: string) => {
+        if (!sessionId || sessionData?.status !== 'started') {
+            showError("Inicie o treino para cronometrar.")
+            return
+        }
+        const now = new Date()
+        let updatePayload: any = {}
+        let newTimersVal = { ...exerciseTimers }
+
+        if (activeTimerId) {
+            const elapsed = exerciseTimers[activeTimerId] || 0
+            newTimersVal[activeTimerId] = elapsed
+            updatePayload.exercise_timers_state = newTimersVal
+            updatePayload.active_timer_id = null
+            updatePayload.active_timer_started_at = null
+
+            if (activeTimerId === exerciseId) {
+                setActiveTimerId(null)
+            } else {
+                updatePayload.active_timer_id = exerciseId
+                updatePayload.active_timer_started_at = now.toISOString()
+                setActiveTimerId(exerciseId)
+            }
+        } else {
+            updatePayload.active_timer_id = exerciseId
+            updatePayload.active_timer_started_at = now.toISOString()
+            setActiveTimerId(exerciseId)
+        }
+
+        await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
+        setExerciseTimers(newTimersVal) // Optimistic update
+    }
+
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
         // Find existing log at this index
         const relevantLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
@@ -322,6 +365,12 @@ const ActiveSessionPage = () => {
                 restTimerSeconds={restTimerSeconds}
                 setRestTimerSeconds={setRestTimerSeconds}
                 totalRestSeconds={totalRestSeconds}
+
+                // Timer Props
+                activeTimerId={activeTimerId}
+                exerciseTimers={exerciseTimers}
+                onToggleTimer={handleToggleTimer}
+                isSessionActive={sessionData?.status === 'started'}
             />
         </div>
     )
