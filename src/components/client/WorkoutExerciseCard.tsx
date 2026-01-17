@@ -91,7 +91,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     return (
         <div className={`bg-card/50 border ${isCompleted ? 'border-green-500/30 bg-green-500/5' : 'border-border'} rounded-xl overflow-hidden shadow-sm mb-3`}>
             {/* Main Content Container - Vertical Stack for Mobile */}
-            <div className="p-3">
+            <div className="p-4 md:p-5">
 
                 {/* 1. Header: Title & Status - Grid to separate Title from main Status/Check */}
                 <div className="flex justify-between items-start gap-4 mb-3">
@@ -160,10 +160,10 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                 </div>
 
                 {/* 3. Actions Toolbar - Simplified Grid (Timer removed from here) */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-3 mt-2">
                     {/* Media Toggles Only */}
                     {hasGif && (
-                        <Button variant="ghost" size="sm" onClick={() => setShowGif(!showGif)} className={`h-9 px-0 ${showGif ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}>
+                        <Button variant="ghost" size="sm" onClick={() => setShowGif(!showGif)} className={`h-9 ${showGif ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}>
                             <div className="flex flex-col items-center">
                                 <ImageIcon className="h-3.5 w-3.5 mb-0.5" />
                                 <span className="text-[9px] uppercase font-bold">Demo</span>
@@ -171,7 +171,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         </Button>
                     )}
                     {hasVideo && (
-                        <Button variant="ghost" size="sm" onClick={() => setShowVideo(!showVideo)} className={`h-9 px-0 ${showVideo ? 'bg-red-500/20 text-red-500' : 'text-muted-foreground hover:bg-muted'}`}>
+                        <Button variant="ghost" size="sm" onClick={() => setShowVideo(!showVideo)} className={`h-9 ${showVideo ? 'bg-red-500/20 text-red-500' : 'text-muted-foreground hover:bg-muted'}`}>
                             <div className="flex flex-col items-center">
                                 <VideoIcon className="h-3.5 w-3.5 mb-0.5" />
                                 <span className="text-[9px] uppercase font-bold">Vídeo</span>
@@ -179,7 +179,7 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         </Button>
                     )}
                     {hasInfo && (
-                        <Button variant="ghost" size="sm" onClick={() => setShowInfo(!showInfo)} className={`h-9 px-0 ${showInfo ? 'bg-blue-500/20 text-blue-500' : 'text-muted-foreground hover:bg-muted'}`}>
+                        <Button variant="ghost" size="sm" onClick={() => setShowInfo(!showInfo)} className={`h-9 ${showInfo ? 'bg-blue-500/20 text-blue-500' : 'text-muted-foreground hover:bg-muted'}`}>
                             <div className="flex flex-col items-center">
                                 <Info className="h-3.5 w-3.5 mb-0.5" />
                                 <span className="text-[9px] uppercase font-bold">Info</span>
