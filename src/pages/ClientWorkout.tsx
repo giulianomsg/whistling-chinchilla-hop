@@ -117,9 +117,7 @@ const ClientWorkout: React.FC = () => {
             </div>
           </div>
           {/* Default to Day 1 if clicked directly */}
-          <Button onClick={() => openDay(1)} className="bg-primary text-primary-foreground hover:bg-primary/80 font-semibold">
-            <Maximize2 className="h-4 w-4 mr-2" /> Iniciar Treino
-          </Button>
+          {/* Button removed as per user request */}
         </div>
 
         {/* Card Resumo */}
