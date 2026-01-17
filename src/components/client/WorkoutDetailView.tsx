@@ -101,9 +101,11 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   }
 
   const fetchHistory = async () => {
-    // Determine all exercise IDs for the current workout
-    if (workoutExercises.length === 0) return
-    const exerciseIds = workoutExercises.map(e => e.exercise_id).filter(Boolean)
+    // Filter to only active day exercises to prevent URL overflow
+    const dayExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
+    if (dayExercises.length === 0) return
+
+    const exerciseIds = dayExercises.map(e => e.exercise_id).filter(Boolean)
 
     if (exerciseIds.length > 0) {
       const { data } = await supabase
@@ -111,7 +113,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         .select('*')
         .in('exercise_id', exerciseIds)
         .order('created_at', { ascending: false })
-        .limit(500) // Reasonable limit to get recent history
+        .limit(200)
 
       setHistoryLogs(data || [])
     }
@@ -121,7 +123,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     if (workoutExercises.length > 0) {
       fetchHistory()
     }
-  }, [workoutExercises])
+  }, [workoutExercises, activeDayNumber])
 
   useEffect(() => {
     if (isAddExerciseOpen && libraryExercises.length === 0) {
@@ -197,11 +199,80 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return () => clearInterval(interval)
   }, [sessionStatus, sessionStartTime])
 
-  // ... (Exercise Timer logic remains)
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (activeTimerId && sessionStatus === 'started') {
+      interval = setInterval(() => {
+        setExerciseTimers(prev => ({ ...prev, [activeTimerId]: (prev[activeTimerId] || 0) + 1 }))
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [activeTimerId, sessionStatus])
 
-  // ... (Rest Timer logic remains)
+  // Rest Timer Countdown
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (restTimerOpen && restTimerSeconds > 0) {
+      interval = setInterval(() => {
+        setRestTimerSeconds((prev: number) => {
+          if (prev <= 1) {
+            setRestTimerOpen(false) // Auto close when done
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [restTimerOpen, restTimerSeconds])
 
-  // ... (Timer Toggle logic remains)
+  const handleToggleTimer = async (exerciseId: string) => {
+    const isCompleted = executionLogs.some(log => log.workout_exercise_id === exerciseId)
+    if (!isSessionActive || sessionStatus !== 'started' || !sessionId) {
+      showError('Inicie o treino para cronometrar.')
+      return
+    }
+
+    const now = new Date()
+    let updatePayload: any = {}
+    let newTimersVal = { ...exerciseTimers }
+
+    if (activeTimerId) {
+      const elapsedForActive = exerciseTimers[activeTimerId] || 0
+      newTimersVal[activeTimerId] = elapsedForActive
+
+      updatePayload.exercise_timers_state = newTimersVal
+      updatePayload.active_timer_id = null
+      updatePayload.active_timer_started_at = null
+
+      if (activeTimerId === exerciseId) {
+        setActiveTimerId(null)
+      } else {
+        if (isCompleted) {
+          showError('Este exercício já foi concluído.')
+          return
+        }
+        updatePayload.active_timer_id = exerciseId
+        updatePayload.active_timer_started_at = now.toISOString()
+        setActiveTimerId(exerciseId)
+      }
+    } else {
+      if (isCompleted) {
+        showError('Este exercício já foi concluído.')
+        return
+      }
+      updatePayload.active_timer_id = exerciseId
+      updatePayload.active_timer_started_at = now.toISOString()
+      setActiveTimerId(exerciseId)
+    }
+
+    try {
+      const { error } = await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
+      if (error) throw error
+    } catch (err) {
+      console.error("Failed to persist timer", err)
+    }
+  }
 
   const handleSessionAction = async (action: 'start' | 'pause' | 'resume' | 'finish') => {
     setSessionLoading(true)
