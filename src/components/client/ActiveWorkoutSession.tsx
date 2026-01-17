@@ -72,13 +72,23 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     // If no exercises, show something else (but we keep rendered if hidden)
     if (!currentExercise && isOpen) return null
 
+    // Lock body scroll when open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => { document.body.style.overflow = '' }
+    }, [isOpen])
+
     return (
         <div className={cn(
             "fixed inset-0 z-50 flex flex-col bg-background h-[100dvh] w-full overflow-hidden",
             isOpen ? "flex" : "hidden"
         )}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-md">
+            <div className="flex-none flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-md z-10">
                 <Button variant="ghost" size="icon" onClick={onMinimize}>
                     <Minimize2 className="h-5 w-5 text-muted-foreground" />
                 </Button>
@@ -99,10 +109,10 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             </div>
 
             {/* Main Content (Carousel) */}
-            <div className="flex-1 overflow-hidden relative">
+            <div className="flex-1 relative min-h-0 w-full">
                 {/* We could use a real carousel lib, but simple conditional rendering 
-              with animation keys works well for step-by-step 
-          */}
+                with animation keys works well for step-by-step 
+            */}
                 <ActiveExerciseSlide
                     key={currentExercise.id}
                     exercise={currentExercise}
@@ -113,7 +123,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             </div>
 
             {/* Footer Navigation */}
-            <div className="w-full max-w-full px-4 pb-6 pt-4 box-border border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4">
+            <div className="flex-none w-full max-w-full px-4 py-3 box-border border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4 z-10 pb-safe">
                 <Button
                     variant="outline"
                     size="icon"
