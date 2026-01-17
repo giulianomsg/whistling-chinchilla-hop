@@ -41,6 +41,7 @@ const ProfessionalFinance = lazy(() => import("./pages/ProfessionalFinance"));
 const ClientBillingHistory = lazy(() => import("./pages/ClientBillingHistory"));
 const CheckoutSuccess = lazy(() => import("./pages/checkout/Success"));
 const Settings = lazy(() => import("./pages/Settings")); // New Settings Page
+const ActiveSessionPage = lazy(() => import("./pages/ActiveSessionPage"));
 
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 
@@ -244,6 +245,16 @@ const AppRoutes: React.FC = () => {
                 <PremiumGuard>
                   <ClientWorkout />
                 </PremiumGuard>
+              </Suspense> :
+              <Navigate to="/app/dashboard" replace />
+          }
+        />
+        <Route
+          path="my-workout/session/:sessionId"
+          element={
+            profile?.role === 'client' ?
+              <Suspense fallback={<PageLoader />}>
+                <ActiveSessionPage />
               </Suspense> :
               <Navigate to="/app/dashboard" replace />
           }

@@ -17,10 +17,10 @@ import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
 import { WorkoutExerciseCard } from './WorkoutExerciseCard'
-import { FocusWorkoutSession } from './FocusWorkoutSession'
+import { ActiveWorkoutSession } from './ActiveWorkoutSession'
 import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -29,6 +29,7 @@ interface WorkoutDetailViewProps {
 const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) => {
   const { refreshProfile } = useAuth()
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   // Day Persistence (Read Only here, navigation is handled by parent or headers hidden)
   const activeTab = searchParams.get('day') || 'day-1'
@@ -286,7 +287,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         setSessionId(data.id); setSessionStatus('started'); setIsSessionActive(true); setElapsedTime(0)
         setSessionStartTime(Date.now())
         setExecutionLogs([])
-        setActiveSessionOpen(true) // Open overlay on start
+        navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
         showSuccess('Treino iniciado!')
       } else if (action === 'pause' && sessionId) {
         await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
@@ -296,7 +297,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         setSessionStartTime(Date.now() - elapsedTime * 1000)
         await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
         setSessionStatus('started'); showSuccess('Retomado')
-        setActiveSessionOpen(true) // Open overlay on resume if desired
+        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       } else if (action === 'finish' && sessionId) {
         if (elapsedTime < 60 || executionLogs.length === 0) {
           await supabase.from('workout_sessions')
@@ -720,7 +721,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => setActiveSessionOpen(true)}
+                  onClick={() => navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)}
                   className="h-11 w-11 shrink-0 border-border bg-card hover:bg-muted"
                   title="Expandir Treino"
                 >
@@ -899,20 +900,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         totalLoadKg={summaryData.totalLoadKg}
       />
 
-      <FocusWorkoutSession
-        isOpen={activeSessionOpen}
-        onMinimize={() => setActiveSessionOpen(false)}
-        exercises={displayedExercises}
-        executionLogs={executionLogs}
-        historyLogs={historyLogs}
-        onSaveLog={handleActiveSessionSaveLog}
-        onFinishWorkout={() => handleSessionAction('finish')}
-        restTimerOpen={restTimerOpen}
-        setRestTimerOpen={setRestTimerOpen}
-        restTimerSeconds={restTimerSeconds}
-        setRestTimerSeconds={setRestTimerSeconds}
-        totalRestSeconds={totalRestSeconds}
-      />
+
     </div>
   )
 }
