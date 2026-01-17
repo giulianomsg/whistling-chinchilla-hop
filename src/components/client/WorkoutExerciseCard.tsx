@@ -160,79 +160,52 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
                         </span>
                     </Button>
 
-                    {/* Media/Info Toggles - Span remaining 3 */}
-                    <div className="col-span-3 grid grid-cols-3 gap-1">
-                        {hasGif && (
-                            <Button variant="ghost" size="sm" onClick={() => setShowGif(!showGif)} className={`h-9 px-0 ${showGif ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}>
-                                <div className="flex flex-col items-center">
-                                    <ImageIcon className="h-3.5 w-3.5 mb-0.5" />
-                                    <span className="text-[9px]">Demo</span>
-                                </div>
-                            </Button>
-                        )}
-                        {hasVideo && (
-                            <Button variant="ghost" size="sm" onClick={() => setShowVideo(!showVideo)} className={`h-9 px-0 ${showVideo ? 'bg-red-500/20 text-red-500' : 'text-muted-foreground'}`}>
-                                <div className="flex flex-col items-center">
-                                    <VideoIcon className="h-3.5 w-3.5 mb-0.5" />
-                                    <span className="text-[9px]">Vídeo</span>
-                                </div>
-                            </Button>
-                        )}
-                        {hasInfo && (
-                            <Button variant="ghost" size="sm" onClick={() => setShowInfo(!showInfo)} className={`h-9 px-0 ${showInfo ? 'bg-blue-500/20 text-blue-500' : 'text-muted-foreground'}`}>
-                                <div className="flex flex-col items-center">
-                                    <Info className="h-3.5 w-3.5 mb-0.5" />
-                                    <span className="text-[9px]">Info</span>
-                                </div>
-                            </Button>
-                        )}
-                    </div>
+
+
                 </div>
 
-            </div>
-
-            {/* Expandable Content Area - Remained mostly same but adjusted padding */}
-            {(showGif || showVideo || showInfo) && (
-                <div className="bg-muted/30 border-t border-border p-3 space-y-4 animate-in slide-in-from-top-2 duration-200">
-                    {/* Gif View */}
-                    {showGif && hasGif && (
-                        <div>
-                            <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Demonstração Visual</p>
-                            <div className="rounded-lg overflow-hidden border border-border bg-background max-w-xs mx-auto">
-                                <img src={uploadedGif} alt="Demo" className="w-full h-auto object-cover" />
+                {/* Expandable Content Area - Remained mostly same but adjusted padding */}
+                {(showGif || showVideo || showInfo) && (
+                    <div className="bg-muted/30 border-t border-border p-3 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                        {/* Gif View */}
+                        {showGif && hasGif && (
+                            <div>
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Demonstração Visual</p>
+                                <div className="rounded-lg overflow-hidden border border-border bg-background max-w-xs mx-auto">
+                                    <img src={uploadedGif} alt="Demo" className="w-full h-auto object-cover" />
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Video View */}
-                    {showVideo && hasVideo && (
-                        <div>
-                            <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Vídeo Completo</p>
-                            <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-sm">
-                                {directVideoSrc ? (
-                                    <video src={directVideoSrc} controls className="w-full h-full" />
-                                ) : youtubeId && (
-                                    <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} allowFullScreen />
+                        {/* Video View */}
+                        {showVideo && hasVideo && (
+                            <div>
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Vídeo Completo</p>
+                                <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-sm">
+                                    {directVideoSrc ? (
+                                        <video src={directVideoSrc} controls className="w-full h-full" />
+                                    ) : youtubeId && (
+                                        <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} allowFullScreen />
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Info View */}
+                        {showInfo && (
+                            <div className="space-y-3">
+                                {we.exercise.instructions?.length > 0 && (
+                                    <div>
+                                        <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Instruções</p>
+                                        <ul className="list-disc pl-4 text-xs space-y-1 text-muted-foreground">
+                                            {we.exercise.instructions.map((inst: string, i: number) => <li key={i}>{inst}</li>)}
+                                        </ul>
+                                    </div>
                                 )}
                             </div>
-                        </div>
-                    )}
-
-                    {/* Info View */}
-                    {showInfo && (
-                        <div className="space-y-3">
-                            {we.exercise.instructions?.length > 0 && (
-                                <div>
-                                    <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Instruções</p>
-                                    <ul className="list-disc pl-4 text-xs space-y-1 text-muted-foreground">
-                                        {we.exercise.instructions.map((inst: string, i: number) => <li key={i}>{inst}</li>)}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
-    )
+                        )}
+                    </div>
+                )}
+            </div>
+            )
 }
