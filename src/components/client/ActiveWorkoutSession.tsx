@@ -95,21 +95,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     </div>
                 </div>
 
-                <Button
-                    variant="default"
-                    size="sm"
-                    className={cn(
-                        "font-bold transition-all",
-                        progressPercentage === 100 ? "bg-green-600 hover:bg-green-700 animate-pulse" : ""
-                    )}
-                    onClick={onFinishWorkout}
-                >
-                    {progressPercentage === 100 ? (
-                        <>
-                            <Trophy className="mr-2 h-4 w-4" /> Finalizar
-                        </>
-                    ) : "Finalizar"}
-                </Button>
+                <div className="w-10" />
             </div>
 
             {/* Main Content (Carousel) */}
