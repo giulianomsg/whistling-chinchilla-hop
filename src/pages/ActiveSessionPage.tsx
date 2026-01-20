@@ -236,9 +236,18 @@ const ActiveSessionPage = () => {
                 if (data) setExecutionLogs(p => [...p, { ...data, exercise: workoutExercise?.exercise }])
             }
 
-            // Rest Timer
+            // Rest Timer Logic
             if (isCompleted) {
+                // Pause active timer if running for this exercise
+                if (activeTimerId === exerciseId) {
+                    await handleToggleTimer(exerciseId) // Stop it
+                    setLastRestExId(exerciseId) // Mark for auto-resume
+                } else {
+                    setLastRestExId(null)
+                }
+
                 const restTime = workoutExercise?.rest_time_seconds || 60
+                setRestTargetTime(Date.now() + restTime * 1000)
                 setTotalRestSeconds(restTime)
                 setRestTimerSeconds(restTime)
                 setRestTimerOpen(true)
