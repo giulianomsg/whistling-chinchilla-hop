@@ -23,7 +23,7 @@ interface ActiveWorkoutSessionProps {
 
     // Exercise Timer Props
     activeTimerId: string | null
-    exerciseTimers: Record<string, number>
+    exerciseTimers: Record<string, any> // Changed to 'any' to support internal persistence keys
     onToggleTimer: (id: string) => void
     isSessionActive: boolean
 }

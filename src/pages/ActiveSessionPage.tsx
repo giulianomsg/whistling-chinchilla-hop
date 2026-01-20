@@ -32,12 +32,66 @@ const ActiveSessionPage = () => {
 
     // Timers
     const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
-    const [exerciseTimers, setExerciseTimers] = useState<Record<string, number>>({})
+    const [exerciseTimers, setExerciseTimers] = useState<any>({})
 
     // Rest Timer
     const [restTimerOpen, setRestTimerOpen] = useState(false)
     const [restTimerSeconds, setRestTimerSeconds] = useState(0)
     const [totalRestSeconds, setTotalRestSeconds] = useState(60)
+    const [restTargetTime, setRestTargetTime] = useState<number | null>(null)
+    const [lastRestExId, setLastRestExId] = useState<string | null>(null)
+
+    useEffect(() => {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission()
+        }
+    }, [])
+
+    // Rest Timer Logic
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+        if (restTargetTime) {
+            interval = setInterval(() => {
+                const now = Date.now()
+                const remaining = Math.ceil((restTargetTime - now) / 1000)
+
+                if (remaining <= 0) {
+                    setRestTimerSeconds(0)
+                    setRestTargetTime(null)
+                    setRestTimerOpen(false)
+
+                    // Notify
+                    try {
+                        // ... notification logic ...
+                        const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
+                        audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
+                        if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
+
+                        if (Notification.permission === 'granted') {
+                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                                navigator.serviceWorker.ready.then(registration => {
+                                    registration.showNotification("CapiFit", { body: "Descanso finalizado!", icon: '/favicon.ico', vibrate: [300, 100, 300] })
+                                })
+                            } else {
+                                new Notification("CapiFit", { body: "Descanso finalizado!", vibrate: [300, 100, 300] })
+                            }
+                        }
+                    } catch (e) { console.error(e) }
+
+                    // Auto-Resume
+                    if (lastRestExId) {
+                        handleToggleTimer(lastRestExId)
+                        setLastRestExId(null)
+                        // Note: We don't actively clear _rt from DB here to avoid extra calls/race conditions.
+                        // Expired _rt is ignored by init logic.
+                    }
+                } else {
+                    setRestTimerSeconds(remaining)
+                }
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [restTargetTime, lastRestExId])
     const [restTargetTime, setRestTargetTime] = useState<number | null>(null)
     const [lastRestExId, setLastRestExId] = useState<string | null>(null)
 
@@ -95,7 +149,18 @@ const ActiveSessionPage = () => {
                 }
 
                 // 5. Restore Timer State
-                let loadedTimers = (session.exercise_timers_state as Record<string, number>) || {}
+                // 5. Restore Timer State
+                let loadedTimers = (session.exercise_timers_state as any) || {}
+
+                // Restore Persistent Rest Timer
+                const savedRt = loadedTimers['_rt']
+                const savedRre = loadedTimers['_rre']
+                if (savedRt && savedRt > Date.now()) {
+                    setRestTargetTime(savedRt)
+                    setLastRestExId(savedRre || null)
+                    setRestTimerOpen(true)
+                    setTotalRestSeconds(60) // Default fallback or derive? The UI adapts.
+                }
 
                 if (session.status === 'started' && session.active_timer_id && session.active_timer_started_at) {
                     const activeStart = new Date(session.active_timer_started_at).getTime()
@@ -103,8 +168,6 @@ const ActiveSessionPage = () => {
                     const additionalSeconds = Math.max(0, Math.floor((now - activeStart) / 1000))
                     const currentTotal = (loadedTimers[session.active_timer_id] || 0) + additionalSeconds
                     loadedTimers[session.active_timer_id] = currentTotal
-                    // We don't auto-resume active exercise timer in this UI logic yet (ActiveWorkoutSession doesn't use it directly)
-                    // But we keep the state for XP calc.
                     setActiveTimerId(session.active_timer_id)
                 }
                 setExerciseTimers(loadedTimers)
@@ -234,19 +297,42 @@ const ActiveSessionPage = () => {
 
             // Rest Timer Logic
             if (isCompleted) {
-                // Pause active timer if running for this exercise
+                const restTime = workoutExercise?.rest_time_seconds || 60
+                const targetTime = Date.now() + restTime * 1000
+                const resumeId = activeTimerId === exerciseId ? exerciseId : null // Resume if running
+
+                let updatePayload: any = {}
+                let newTimers = { ...exerciseTimers }
+
+                // 1. Pause Active Timer (Atomic Manual Update)
                 if (activeTimerId === exerciseId) {
-                    await handleToggleTimer(exerciseId) // Stop it
-                    setLastRestExId(exerciseId) // Mark for auto-resume
-                } else {
-                    setLastRestExId(null)
+                    const activeStartStr = sessionData?.active_timer_started_at
+                    if (activeStartStr) {
+                        const activeStart = new Date(activeStartStr).getTime()
+                        const additional = Math.max(0, Math.floor((Date.now() - activeStart) / 1000))
+                        newTimers[exerciseId] = (newTimers[exerciseId] || 0) + additional
+                    }
+                    updatePayload.active_timer_id = null
+                    updatePayload.active_timer_started_at = null
+                    setActiveTimerId(null) // Optimistic
                 }
 
-                const restTime = workoutExercise?.rest_time_seconds || 60
-                setRestTargetTime(Date.now() + restTime * 1000)
+                // 2. Persist Rest State in JSONB
+                newTimers['_rt'] = targetTime
+                newTimers['_rre'] = resumeId
+
+                updatePayload.exercise_timers_state = newTimers
+
+                // 3. Local State Updates
+                setRestTargetTime(targetTime)
+                setLastRestExId(resumeId)
                 setTotalRestSeconds(restTime)
                 setRestTimerSeconds(restTime)
                 setRestTimerOpen(true)
+                setExerciseTimers(newTimers)
+
+                // 4. DB Update
+                await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
             }
         } catch (e) {
             console.error(e)
