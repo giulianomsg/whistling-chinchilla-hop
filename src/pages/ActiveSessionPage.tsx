@@ -192,6 +192,15 @@ const ActiveSessionPage = () => {
     }
 
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
+        // Audio/Notification Permission Warmup (Triggered by user click)
+        if (Notification.permission === 'default') {
+            Notification.requestPermission()
+        }
+        try {
+            // Play silent buffer to unlock audio context on mobile for later
+            new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAgZGF0YQAAAAA=').play().catch(() => { })
+        } catch (e) { }
+
         // Find existing log at this index
         const relevantLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
             .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
@@ -332,13 +341,6 @@ const ActiveSessionPage = () => {
     }
 
 
-    // Permission Helper
-    useEffect(() => {
-        if ('Notification' in window && Notification.permission === 'default') {
-            try { Notification.requestPermission() } catch (e) { }
-        }
-    }, [])
-
     // Rest Timer Logic
     useEffect(() => {
         let interval: NodeJS.Timeout
@@ -354,12 +356,30 @@ const ActiveSessionPage = () => {
 
                     // Notify
                     try {
-                        if (Notification.permission === 'granted') {
-                            new Notification("CapiFit", { body: "Descanso finalizado!", silent: false })
-                        }
+                        // Sound & Vibration
                         const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
-                        audio.play().catch(() => { })
-                        if ('vibrate' in navigator) navigator.vibrate([200, 100, 200])
+                        audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
+
+                        if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
+
+                        // System Notification
+                        if (Notification.permission === 'granted') {
+                            // Try Service Worker registration first if available (better for Android)
+                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                                navigator.serviceWorker.ready.then(registration => {
+                                    registration.showNotification("CapiFit", {
+                                        body: "Descanso finalizado!",
+                                        icon: '/favicon.ico',
+                                        vibrate: [300, 100, 300]
+                                    })
+                                })
+                            } else {
+                                new Notification("CapiFit", {
+                                    body: "Descanso finalizado!",
+                                    vibrate: [300, 100, 300]
+                                })
+                            }
+                        }
                     } catch (e) {
                         console.error("Notify error", e)
                     }
@@ -376,6 +396,7 @@ const ActiveSessionPage = () => {
         }
         return () => clearInterval(interval)
     }, [restTargetTime, lastRestExId])
+
 
 
 
