@@ -38,6 +38,8 @@ const ActiveSessionPage = () => {
     const [restTimerOpen, setRestTimerOpen] = useState(false)
     const [restTimerSeconds, setRestTimerSeconds] = useState(0)
     const [totalRestSeconds, setTotalRestSeconds] = useState(60)
+    const [restTargetTime, setRestTargetTime] = useState<number | null>(null)
+    const [lastRestExId, setLastRestExId] = useState<string | null>(null)
 
     // Gamification
     const [showSummaryModal, setShowSummaryModal] = useState(false)
@@ -81,14 +83,11 @@ const ActiveSessionPage = () => {
                 setExecutionLogs(logs || [])
 
                 // 4. Load History (Optimization: only for displayed exercises)
-                const dayExIds = allExercises.filter(e => e.day_number === activeDayNumber).map(e => e.exercise_id)
+                const dayExIds = [...new Set(allExercises.filter(e => e.day_number === activeDayNumber).map(e => e.exercise_id))]
                 if (dayExIds.length > 0) {
                     const { data: hist } = await supabase
                         .from('workout_execution_logs')
                         .select('*')
-                        // We strictly want history from OTHER sessions, but simpler query finds all and we filter in UI if needed
-                        // Actually, fetching everything is safer for OneRM calcs? 
-                        // Let's stick to the component's pattern: fetch recent logs of these exercises
                         .in('exercise_id', dayExIds)
                         .order('created_at', { ascending: false })
                         .limit(200)
@@ -145,19 +144,7 @@ const ActiveSessionPage = () => {
 
     // Update DB Heartbeat occasionally or on unload? (Skipping for robust simplicity, relies on actions)
 
-    // Rest Timer
-    useEffect(() => {
-        let interval: NodeJS.Timeout
-        if (restTimerOpen && restTimerSeconds > 0) {
-            interval = setInterval(() => {
-                setRestTimerSeconds(p => {
-                    if (p <= 1) { setRestTimerOpen(false); return 0 }
-                    return p - 1
-                })
-            }, 1000)
-        }
-        return () => clearInterval(interval)
-    }, [restTimerOpen, restTimerSeconds])
+    // Rest Timer Effect moved to bottom to access handlers
 
     // Exercise Timer Ticker
     useEffect(() => {
