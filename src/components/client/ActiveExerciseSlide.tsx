@@ -1,131 +1,183 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { PlayCircle, VideoOff, Info } from 'lucide-react'
+import { PlayCircle, VideoOff, Info, Image as ImageIcon, Video as VideoIcon, Square, Play } from 'lucide-react'
 import { SetInputRow } from './SetInputRow'
 
 interface ActiveExerciseSlideProps {
     exercise: any
     executionLogs: any[]
-    historyLogs: any[] // Previous session logs for history lookup
+    historyLogs: any[]
     onSaveLog: (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => void
+    activeTime: number
+    isTimerRunning: boolean
+    onToggleTimer: (exerciseId: string) => void
+    isSessionActive: boolean
 }
 
 export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     exercise,
     executionLogs,
     historyLogs,
-    onSaveLog
+    onSaveLog,
+    activeTime,
+    isTimerRunning,
+    onToggleTimer,
+    isSessionActive
 }) => {
-    // State to track which media source we are trying to display
-    // 'local-gif' (Priority 1) -> 'remote-url' (Priority 2) -> 'error' (Fallback)
-    const [mediaMode, setMediaMode] = useState<'local-gif' | 'remote-url' | 'error'>('local-gif')
+    // View Mode: 'gif' | 'video' | 'info'
+    const [viewMode, setViewMode] = useState<'gif' | 'video' | 'info'>('gif')
 
-    // Reset media mode when exercise changes
-    React.useEffect(() => {
-        setMediaMode('local-gif')
+    // Reset view mode when exercise changes
+    useEffect(() => {
+        // Default priority: GIF -> Video -> Info
+        const hasGif = !!(exercise.exercise?.gif_url) || (exercise.exercise?.demo_url && !isVideoUrl(exercise.exercise?.demo_url))
+        if (hasGif) setViewMode('gif')
+        else if (hasVideo(exercise)) setViewMode('video')
+        else setViewMode('info')
     }, [exercise.id])
 
-    // Helper to find log for a specific set
-    // This assumes logs are created in order or processed to match sets.
-    const currentExLogs = executionLogs.filter(l => l.workout_exercise_id === exercise.id).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    // Helpers
+    const isVideoUrl = (url: string) => /\.(mp4|webm|ogg|mov)$/i.test(url) || url?.includes('youtu')
+    const hasVideo = (ex: any) => !!(ex.exercise?.video_url || (ex.exercise?.demo_type === 'video' && ex.exercise?.demo_url))
+    const hasGif = !!(exercise.exercise?.gif_url)
 
-    // Find history for this exercise (from a previous session)
-    const pastLogs = historyLogs.filter(l => l.exercise_id === exercise.exercise_id && l.workout_exercise_id !== exercise.id)
-
-    // Construct Local GIF Path
+    // Construct URLs
     const safeName = exercise.exercise?.name ? exercise.exercise.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : ''
     const localGifUrl = `/gifs_exercicios/${safeName}.gif`
-
-    // Remote URL (from specific column or demo_url)
     const remoteUrl = exercise.exercise?.demo_url
+    const videoUrl = exercise.exercise?.video_url || (exercise.exercise?.demo_type === 'video' ? exercise.exercise?.demo_url : null)
+    const youtubeId = videoUrl ? getVideoId(videoUrl) : null
 
-    // Determine what to render based on current mode
-    const renderMedia = () => {
-        if (mediaMode === 'local-gif') {
+    // Determine content to render in Hero
+    const renderHeroContent = () => {
+        if (viewMode === 'info') {
             return (
-                <img
-                    src={localGifUrl}
-                    alt={exercise.exercise?.name}
-                    className="w-full h-full object-cover"
-                    onError={() => {
-                        // If GIF fails, switch to remote URL if available, else error
-                        if (remoteUrl) {
-                            setMediaMode('remote-url')
-                        } else {
-                            setMediaMode('error')
-                        }
-                    }}
-                />
+                <div className="h-full bg-card p-6 overflow-y-auto border-b border-border">
+                    <div className="flex items-center gap-2 mb-4 text-blue-500">
+                        <Info className="h-6 w-6" />
+                        <span className="font-bold text-lg uppercase">Instruções</span>
+                    </div>
+                    {exercise.exercise?.instructions ? (
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                            <ul className="list-disc pl-4 space-y-2 text-muted-foreground">
+                                {exercise.exercise.instructions.map((inst: string, i: number) => <li key={i}>{inst}</li>)}
+                            </ul>
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground italic">Sem instruções disponíveis.</p>
+                    )}
+                    {exercise.notes && (
+                        <div className="mt-6 bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20">
+                            <p className="font-bold text-yellow-600 text-sm mb-1">Nota do Treinador</p>
+                            <p className="text-sm text-yellow-700 dark:text-yellow-400">{exercise.notes}</p>
+                        </div>
+                    )}
+                </div>
             )
         }
 
-        if (mediaMode === 'remote-url' && remoteUrl) {
-            const isVideo = remoteUrl.endsWith('.mp4') || remoteUrl.includes('youtube') || remoteUrl.includes('vimeo') || remoteUrl.includes('youtu.be')
-
-            if (isVideo) {
-                return (
-                    <iframe
-                        src={remoteUrl}
-                        className="w-full h-full object-cover"
-                        allow="autoplay; encrypted-media"
-                        // iFrames don't trigger onError reliably for 404s, but we assume if URL exists it's valid-ish.
-                        // If we really need fallback for iframe, we'd need a different approach (e.g. check link validity first), 
-                        // but standard iframe behavior shows a "video unavailable" block which is acceptable feedback.
-                        onError={() => setMediaMode('error')}
-                    />
-                )
-            } else {
-                return (
-                    <img
-                        src={remoteUrl}
-                        alt={exercise.exercise?.name}
-                        className="w-full h-full object-cover"
-                        onError={() => setMediaMode('error')}
-                    />
-                )
-            }
+        if (viewMode === 'video' && (videoUrl || youtubeId)) {
+            return (
+                <div className="w-full h-full bg-black">
+                    {youtubeId ? (
+                        <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} allowFullScreen />
+                    ) : (
+                        <video src={videoUrl} controls className="w-full h-full object-contain" />
+                    )}
+                </div>
+            )
         }
 
-        // Fallback / Error State
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                <VideoOff className="h-12 w-12 mb-2 opacity-20" />
-                <p className="text-xs">Sem demonstração disponível</p>
-            </div>
-        )
-    }
+        // Default: GIF (Local or Remote)
+        const displayGif = exercise.exercise?.gif_url || localGifUrl
 
-    return (
-        <div className="h-full flex flex-col overflow-y-auto pb-20 custom-scrollbar">
-            {/* Media Section */}
-            <div className="w-full aspect-video bg-black/5 relative shrink-0">
-                {renderMedia()}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background to-transparent h-24 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4">
+        return (
+            <div className="w-full h-full bg-black/5 relative">
+                <img
+                    src={displayGif}
+                    alt={exercise.exercise?.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                    }}
+                />
+                {/* Overlay Text only on GIF/Image mode */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/80 to-transparent h-32 pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
                     <Badge variant="secondary" className="mb-2 backdrop-blur-md bg-background/50 text-foreground border-foreground/10">
                         {exercise.exercise?.muscle_group || 'Geral'}
                     </Badge>
                     <h2 className="text-2xl font-bold text-foreground leading-tight shadow-md">{exercise.exercise?.name}</h2>
                 </div>
             </div>
+        )
+    }
+
+    const currentExLogs = executionLogs.filter(l => l.workout_exercise_id === exercise.id).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    const pastLogs = historyLogs.filter(l => l.exercise_id === exercise.exercise_id && l.workout_exercise_id !== exercise.id)
+
+    return (
+        <div className="h-full flex flex-col overflow-y-auto pb-20 custom-scrollbar" style={{ margin: 'auto' }}>
+            {/* Hero Section */}
+            <div className="w-full aspect-video bg-muted relative shrink-0">
+                {renderHeroContent()}
+            </div>
+
+            {/* Controls Bar */}
+            <div className="p-2 border-b border-border bg-card/50 flex items-center justify-between gap-2 sticky top-0 z-10 backdrop-blur-sm">
+                {/* Timer Button */}
+                <Button
+                    variant={isTimerRunning ? "destructive" : "outline"}
+                    size="sm"
+                    onClick={() => onToggleTimer(exercise.id)}
+                    className={`h-9 px-3 rounded-full flex items-center gap-2 transition-all ${isTimerRunning ? 'animate-pulse' : 'border-dashed border-muted-foreground/50'}`}
+                >
+                    {isTimerRunning ? <Square className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 ml-0.5" />}
+                    <span className="font-mono font-bold text-sm min-w-[3ch] text-center">
+                        {(() => {
+                            const m = Math.floor(activeTime / 60).toString().padStart(2, '0')
+                            const s = (activeTime % 60).toString().padStart(2, '0')
+                            return `${m}:${s}`
+                        })()}
+                    </span>
+                </Button>
+
+                {/* View Toggles */}
+                <div className="flex bg-muted/50 p-1 rounded-lg border border-border">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setViewMode('gif')}
+                        className={`h-7 px-2 text-[10px] uppercase font-bold rounded-md ${viewMode === 'gif' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
+                    >
+                        Demo
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setViewMode('video')}
+                        className={`h-7 px-2 text-[10px] uppercase font-bold rounded-md ${viewMode === 'video' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
+                        disabled={!hasVideo(exercise)}
+                    >
+                        Vídeo
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setViewMode('info')}
+                        className={`h-7 px-2 text-[10px] uppercase font-bold rounded-md ${viewMode === 'info' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
+                    >
+                        Info
+                    </Button>
+                </div>
+            </div>
 
             <div className="p-4 flex flex-col gap-6">
-                {/* Helper Info Tabs */}
-                {(exercise.notes || exercise.exercise?.instructions) && (
-                    <div className="bg-muted/30 rounded-lg p-3 text-sm text-muted-foreground border border-border">
-                        {exercise.notes && <div className="mb-2"><span className="font-bold text-foreground">Nota do Treinador:</span> {exercise.notes}</div>}
-
-                        {exercise.exercise?.instructions && (
-                            <details className="group cursor-pointer">
-                                <summary className="flex items-center font-medium hover:text-primary transition-colors">
-                                    <Info className="h-4 w-4 mr-2" /> Ver Instruções
-                                </summary>
-                                <p className="mt-2 text-xs leading-relaxed pl-6">
-                                    {exercise.exercise?.instructions}
-                                </p>
-                            </details>
-                        )}
+                {/* Helper Note if not in Info mode */}
+                {viewMode !== 'info' && exercise.notes && (
+                    <div className="bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20 text-xs text-yellow-700 dark:text-yellow-400">
+                        <span className="font-bold">Nota:</span> {exercise.notes}
                     </div>
                 )}
 
@@ -133,36 +185,27 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                 <div className="flex flex-col gap-1">
                     <div className="flex justify-between items-end mb-2 px-1">
                         <h3 className="font-bold text-lg">Séries</h3>
-                        <span className="text-xs text-muted-foreground">{exercise.sets} séries programadas</span>
+                        <div className="flex items-center gap-2">
+                            {exercise.rest_time_seconds && (
+                                <Badge variant="outline" className="text-[10px] h-5 gap-1">
+                                    <PlayCircle className="h-3 w-3" /> Descanso: {exercise.rest_time_seconds}s
+                                </Badge>
+                            )}
+                            <span className="text-xs text-muted-foreground">{exercise.sets} séries</span>
+                        </div>
                     </div>
 
                     {Array.from({ length: exercise.sets }).map((_, i) => {
-                        const historyLog = pastLogs[i] // Simple matching logic (1st set matches 1st past set)
-                        const currentLog = currentExLogs.find(l => l.workout_exercise_id === exercise.id && l.set_number === i + 1) // Need to ensure logs store set_number or infer it
-
-                        // If we don't have explicit set_number in logs, we might have to rely on order, which is risky if they are deleted. 
-                        // For now, let's assume we pass the INDEX to the save function and let the parent handle the "finding or creating" logic properly.
-                        // But we need to display current state.
-                        // A robust way: Parent passes an array of "SessionSet" objects that merge plan + log.
-                        // For now, let's rely on the parent passing updated 'executionLogs'.
-                        // We'll treat the i-th item in currentExLogs as the i-th set ONLY IF we strictly manage them.
-                        // Better: Let's assume the parent knows how to map them.
-                        // Actually, we should probably modify the schema to include `set_number` in `workout_execution_logs` to be precise, 
-                        // but the prompt asked not to check schema again unless necessary. 
-                        // I'll simulate it: The component renders N rows. The parent callback receives (setIndex).
-                        // We try to find a log that matches this setIndex. 
-
-                        // Refinement: I'll stick to using the log at index `i` if available, or undefined.
-                        const logForThisSet = currentExLogs[i]
-
+                        const historyLog = pastLogs[i]
+                        const currentLog = currentExLogs.find(l => l.set_number === i + 1) || currentExLogs[i] // Fallback index
                         return (
                             <SetInputRow
                                 key={i}
                                 setNumber={i + 1}
                                 previousWeight={historyLog?.weight}
                                 previousReps={historyLog?.reps}
-                                currentLog={logForThisSet}
-                                isCompleted={!!logForThisSet}
+                                currentLog={currentLog}
+                                isCompleted={!!currentLog}
                                 onSave={(w, r, c) => onSaveLog(exercise.id, i + 1, w, r, c)}
                             />
                         )
@@ -171,4 +214,19 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
             </div>
         </div>
     )
+}
+
+// Helpers outside component
+const getVideoId = (url: string) => {
+    if (!url) return null
+    try {
+        const urlObj = new URL(url)
+        if (urlObj.hostname === 'youtu.be') return urlObj.pathname.substring(1)
+        if (urlObj.searchParams.get('v')) return urlObj.searchParams.get('v')
+        if (urlObj.pathname.startsWith('/embed/')) return urlObj.pathname.split('/')[2]
+        if (urlObj.pathname.startsWith('/shorts/')) return urlObj.pathname.split('/')[2]
+    } catch (e) { }
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?\/]+)/)
+    if (match && match[1] && !/\.(mp4|webm|ogg|mov)$/i.test(match[1])) return match[1]
+    return null
 }
