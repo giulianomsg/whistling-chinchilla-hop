@@ -90,7 +90,9 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
         }
 
         // Default: GIF (Local or Remote)
-        const displayGif = exercise.exercise?.gif_url || localGifUrl
+        // Correctly prioritize Supabase URL (demo_url) if it is an image/gif
+        const demoIsGif = exercise.exercise?.demo_url && !isVideoUrl(exercise.exercise?.demo_url)
+        const displayGif = exercise.exercise?.gif_url || (demoIsGif ? exercise.exercise?.demo_url : null) || localGifUrl
 
         return (
             <div className="w-full h-full bg-black/5 relative">
