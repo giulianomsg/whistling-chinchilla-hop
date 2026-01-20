@@ -332,7 +332,52 @@ const ActiveSessionPage = () => {
     }
 
 
-    if (loading && !sessionData) return <div className="h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+    // Permission Helper
+    useEffect(() => {
+        if ('Notification' in window && Notification.permission === 'default') {
+            try { Notification.requestPermission() } catch (e) { }
+        }
+    }, [])
+
+    // Rest Timer Logic
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+        if (restTargetTime) {
+            interval = setInterval(() => {
+                const now = Date.now()
+                const remaining = Math.ceil((restTargetTime - now) / 1000)
+
+                if (remaining <= 0) {
+                    setRestTimerSeconds(0)
+                    setRestTargetTime(null)
+                    setRestTimerOpen(false)
+
+                    // Notify
+                    try {
+                        if (Notification.permission === 'granted') {
+                            new Notification("CapiFit", { body: "Descanso finalizado!", silent: false })
+                        }
+                        const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
+                        audio.play().catch(() => { })
+                        if ('vibrate' in navigator) navigator.vibrate([200, 100, 200])
+                    } catch (e) {
+                        console.error("Notify error", e)
+                    }
+
+                    // Auto-Resume
+                    if (lastRestExId) {
+                        handleToggleTimer(lastRestExId)
+                        setLastRestExId(null)
+                    }
+                } else {
+                    setRestTimerSeconds(remaining)
+                }
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [restTargetTime, lastRestExId])
+
+
 
     return (
         <div className="min-h-screen bg-background relative">
