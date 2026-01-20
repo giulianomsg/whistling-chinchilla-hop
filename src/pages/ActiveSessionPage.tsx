@@ -92,8 +92,7 @@ const ActiveSessionPage = () => {
         }
         return () => clearInterval(interval)
     }, [restTargetTime, lastRestExId])
-    const [restTargetTime, setRestTargetTime] = useState<number | null>(null)
-    const [lastRestExId, setLastRestExId] = useState<string | null>(null)
+
 
     // Gamification
     const [showSummaryModal, setShowSummaryModal] = useState(false)
