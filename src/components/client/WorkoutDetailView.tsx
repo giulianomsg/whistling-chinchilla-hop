@@ -79,6 +79,25 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   // History State
   const [historyLogs, setHistoryLogs] = useState<any[]>([])
 
+  // Derived State (Moved up to avoid conditional hook errors)
+  const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
+  const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
+  const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
+
+  // Calculate active day muscles
+  const activeDayMuscleGroups = React.useMemo(() => {
+    const muscles = new Set<string>()
+    displayedExercises.forEach((we: any) => {
+      const groups = we.exercise?.muscle_groups
+      if (Array.isArray(groups)) {
+        groups.forEach((g: string) => muscles.add(g))
+      } else if (typeof groups === 'string') {
+        muscles.add(groups)
+      }
+    })
+    return Array.from(muscles)
+  }, [displayedExercises])
+
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
     const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0')
@@ -103,11 +122,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   }
 
   const fetchHistory = async () => {
-    // Filter to only active day exercises to prevent URL overflow
-    const dayExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
-    if (dayExercises.length === 0) return
+    // Use derived state
+    if (displayedExercises.length === 0) return
 
-    const exerciseIds = dayExercises.map(e => e.exercise_id).filter(Boolean)
+    const exerciseIds = displayedExercises.map(e => e.exercise_id).filter(Boolean)
 
     if (exerciseIds.length > 0) {
       const { data } = await supabase
@@ -599,25 +617,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto" /></div>
 
 
-  // Filter exercises strictly for the active day
-  const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
 
-  // Calculate active day muscles
-  const activeDayMuscleGroups = React.useMemo(() => {
-    const muscles = new Set<string>()
-    displayedExercises.forEach((we: any) => {
-      const groups = we.exercise?.muscle_groups
-      if (Array.isArray(groups)) {
-        groups.forEach((g: string) => muscles.add(g))
-      } else if (typeof groups === 'string') {
-        muscles.add(groups)
-      }
-    })
-    return Array.from(muscles)
-  }, [displayedExercises])
-
-  const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
-  const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
   return (
     <div className="space-y-6 pb-48 md:pb-24">
