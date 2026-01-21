@@ -150,7 +150,7 @@ const ClientWorkout: React.FC = () => {
 
         {/* Grid dos Dias */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: Math.min(3, clientWorkout.workout.days_per_week || 3) }, (_, i) => {
+          {Array.from({ length: clientWorkout.workout.days_per_week || 1 }, (_, i) => {
             const dayNumber = i + 1
             const dayExs = exercisesByDay[dayNumber] || []
             return (
