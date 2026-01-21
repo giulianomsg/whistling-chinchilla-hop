@@ -21,6 +21,7 @@ import { ActiveWorkoutSession } from './ActiveWorkoutSession'
 import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { MuscleGroupVisualizer } from '@/components/client/MuscleGroupVisualizer'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -600,6 +601,21 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   // Filter exercises strictly for the active day
   const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
+
+  // Calculate active day muscles
+  const activeDayMuscleGroups = React.useMemo(() => {
+    const muscles = new Set<string>()
+    displayedExercises.forEach((we: any) => {
+      const groups = we.exercise?.muscle_groups
+      if (Array.isArray(groups)) {
+        groups.forEach((g: string) => muscles.add(g))
+      } else if (typeof groups === 'string') {
+        muscles.add(groups)
+      }
+    })
+    return Array.from(muscles)
+  }, [displayedExercises])
+
   const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
@@ -624,6 +640,23 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           <p className="text-xs text-muted-foreground">Estatísticas</p>
         </div>
       </div>
+
+      {/* Body Visualization for Active Day */}
+      {activeDayMuscleGroups.length > 0 && (
+        <Card className="mb-6 border-border bg-card/50 overflow-hidden">
+          <CardHeader className="pb-2 cursor-pointer transition-colors hover:bg-accent/50" onClick={() => {
+            const content = document.getElementById('muscle-viz-content');
+            if (content) content.classList.toggle('hidden');
+          }}>
+            <CardTitle className="text-sm uppercase text-muted-foreground flex items-center gap-2">
+              <Maximize2 className="h-4 w-4" /> Músuclos Alvo (Dia {activeDayNumber}) <span className="text-[10px] ml-auto opacity-50">(Clique para expandir/colapsar)</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent id="muscle-viz-content" className="transition-all">
+            <MuscleGroupVisualizer muscleGroups={activeDayMuscleGroups} className="h-[250px]" />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Main Content Area: Active Day */}
       <Card className="bg-card border-border backdrop-blur-md shadow-sm">
