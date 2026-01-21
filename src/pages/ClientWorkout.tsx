@@ -10,7 +10,6 @@ import {
 import { supabase } from '@/integrations/supabase/client'
 import WorkoutDetailView from '@/components/client/WorkoutDetailView'
 import { useSearchParams } from 'react-router-dom'
-import { MuscleGroupVisualizer } from '@/components/client/MuscleGroupVisualizer'
 
 const ClientWorkout: React.FC = () => {
   const { user } = useAuth()
@@ -84,20 +83,6 @@ const ClientWorkout: React.FC = () => {
     return acc
   }, {})
 
-  // Calculate unique targeted muscle groups
-  const allMuscleGroups = React.useMemo(() => {
-    const muscles = new Set<string>()
-    workoutExercises.forEach((we: any) => {
-      const groups = we.exercise?.muscle_groups
-      if (Array.isArray(groups)) {
-        groups.forEach((g: string) => muscles.add(g))
-      } else if (typeof groups === 'string') {
-        muscles.add(groups)
-      }
-    })
-    return Array.from(muscles)
-  }, [workoutExercises])
-
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   if (!clientWorkout) {
@@ -137,41 +122,35 @@ const ClientWorkout: React.FC = () => {
               <p className="text-muted-foreground">Seu plano personalizado</p>
             </div>
           </div>
+          {/* Default to Day 1 if clicked directly */}
+          {/* Button removed as per user request */}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Card Resumo */}
-          <Card className="md:col-span-2 bg-card border-border backdrop-blur-md h-full">
-            <CardHeader><CardTitle className="text-foreground flex gap-2"><Target className="text-primary" /> {clientWorkout.workout.name}</CardTitle></CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="flex items-center gap-2 text-muted-foreground"><Calendar className="h-4 w-4 text-muted-foreground" /> Início: {new Date(clientWorkout.start_date).toLocaleDateString('pt-BR')}</div>
-                <div className="flex items-center gap-2 text-muted-foreground"><Clock className="h-4 w-4 text-muted-foreground" /> Duração: {clientWorkout.workout.duration_weeks} semanas</div>
-                <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle className="h-4 w-4 text-green-500" /> Status: <Badge variant="outline" className="ml-2 border-green-500/50 text-green-600 dark:text-green-400">Ativo</Badge></div>
+        {/* Card Resumo */}
+        <Card className="mb-8 bg-card border-border backdrop-blur-md">
+          <CardHeader><CardTitle className="text-foreground flex gap-2"><Target className="text-primary" /> {clientWorkout.workout.name}</CardTitle></CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="flex items-center gap-2 text-muted-foreground"><Calendar className="h-4 w-4 text-muted-foreground" /> Início: {new Date(clientWorkout.start_date).toLocaleDateString('pt-BR')}</div>
+              <div className="flex items-center gap-2 text-muted-foreground"><Clock className="h-4 w-4 text-muted-foreground" /> Duração: {clientWorkout.workout.duration_weeks} semanas</div>
+              <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle className="h-4 w-4 text-green-500" /> Status: <Badge variant="outline" className="ml-2 border-green-500/50 text-green-600 dark:text-green-400">Ativo</Badge></div>
+            </div>
+            {clientWorkout.notes && (
+              <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-yellow-600 dark:text-yellow-200 text-sm mb-4">
+                <strong>Nota:</strong> {clientWorkout.notes}
               </div>
-              {clientWorkout.notes && (
-                <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-yellow-600 dark:text-yellow-200 text-sm mb-4">
-                  <strong>Nota:</strong> {clientWorkout.notes}
-                </div>
-              )}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-blue-500">{workoutExercises.length}</p><p className="text-xs text-muted-foreground">Exercícios</p></div>
-                <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-green-500">{workoutExercises.reduce((sum, we) => sum + we.sets, 0)}</p><p className="text-xs text-muted-foreground">Séries</p></div>
-                <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-purple-500">{clientWorkout.workout.days_per_week}</p><p className="text-xs text-muted-foreground">Dias/Semana</p></div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Body Map Visualization */}
-          <Card className="bg-card border-border flex flex-col items-center justify-center p-4 min-h-[300px]">
-            <h3 className="font-bold mb-4">Músculos Trabalhados</h3>
-            <MuscleGroupVisualizer muscleGroups={allMuscleGroups} />
-          </Card>
-        </div>
+            )}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-blue-500">{workoutExercises.length}</p><p className="text-xs text-muted-foreground">Exercícios</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-green-500">{workoutExercises.reduce((sum, we) => sum + we.sets, 0)}</p><p className="text-xs text-muted-foreground">Séries</p></div>
+              <div className="bg-muted/50 p-3 rounded text-center"><p className="text-xl font-bold text-purple-500">{clientWorkout.workout.days_per_week}</p><p className="text-xs text-muted-foreground">Dias/Semana</p></div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Grid dos Dias */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: clientWorkout.workout.days_per_week || 1 }, (_, i) => {
+          {Array.from({ length: Math.min(3, clientWorkout.workout.days_per_week || 3) }, (_, i) => {
             const dayNumber = i + 1
             const dayExs = exercisesByDay[dayNumber] || []
             return (
