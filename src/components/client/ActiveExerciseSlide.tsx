@@ -195,7 +195,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                                     <PlayCircle className="h-3 w-3" /> Descanso: {exercise.rest_time_seconds}s
                                 </Badge>
                             )}
-                            <span className="text-xs text-muted-foreground">{exercise.sets} séries</span>
+                            <span className="text-xs text-muted-foreground">{exercise.sets} séries • {exercise.reps} reps</span>
                         </div>
                     </div>
 

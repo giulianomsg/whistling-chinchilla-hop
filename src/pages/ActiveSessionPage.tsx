@@ -390,6 +390,15 @@ const ActiveSessionPage = () => {
             }
         }
 
+        if (updatePayload.active_timer_id) {
+            // If starting a timer, force clear any rest state so it doesn't persist
+            delete newTimersVal['_rt']
+            delete newTimersVal['_rre']
+            delete newTimersVal['_tr']
+            // Re-assign to ensure payload has clean state
+            updatePayload.exercise_timers_state = newTimersVal
+        }
+
         await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
         setExerciseTimers(newTimersVal)
     }
@@ -603,6 +612,14 @@ const ActiveSessionPage = () => {
         if (lastRestExId) {
             await handleToggleTimer(lastRestExId, true)
             setLastRestExId(null)
+        } else {
+            // If no auto-resume, explicitly clear rest from DB to prevent it from reappearing
+            let newTimersVal = { ...exerciseTimers }
+            delete newTimersVal['_rt']
+            delete newTimersVal['_rre']
+            delete newTimersVal['_tr']
+            setExerciseTimers(newTimersVal)
+            await supabase.from('workout_sessions').update({ exercise_timers_state: newTimersVal }).eq('id', sessionId)
         }
     }
 
