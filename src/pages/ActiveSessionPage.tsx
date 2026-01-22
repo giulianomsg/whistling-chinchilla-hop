@@ -330,6 +330,20 @@ const ActiveSessionPage = () => {
             showError("Inicie o treino para cronometrar.")
             return
         }
+
+        // Check if exercise is already completed (all sets done)
+        // We only block STARTING the timer. Stopping is always allowed (though if it's running it means it wasn't done?)
+        // Actually, if it's running, we assume we can stop it.
+        // So only block if `activeTimerId !== exerciseId` (i.e., we are trying to start it).
+        if (activeTimerId !== exerciseId) {
+            const targetEx = exercises.find(e => e.id === exerciseId)
+            const existingLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
+            if (targetEx && targetEx.sets && existingLogs.length >= targetEx.sets) {
+                showError("Exercício concluído! Não é necessário cronometrar.")
+                return
+            }
+        }
+
         const now = new Date()
         let updatePayload: any = {}
         let newTimersVal = { ...exerciseTimers }
@@ -418,14 +432,23 @@ const ActiveSessionPage = () => {
 
             // Rest Timer Logic
             if (isCompleted) {
+                // Determine if this was the last set
+                // We use the count of logs for this exercise.
+                // Note: 'relevantLogs' includes the one we just saved/updated if we re-fetched or updated state locally?
+                // 'executionLogs' state update in lines 412/416 is async/batched so 'executionLogs' here might be stale?
+                // Actually `setExecutionLogs` uses functional update, but `executionLogs` var is from render scope.
+                // However, we can use `setIndex` and `workoutExercise.sets`.
+                const setsTarget = workoutExercise?.sets || 0
+                const isLastSet = setsTarget > 0 && setIndex >= setsTarget
+
                 const restTime = workoutExercise?.rest_time_seconds || 60
                 const targetTime = Date.now() + restTime * 1000
 
-                // Determine if this was the last set
-                const isLastSet = workoutExercise?.sets ? setIndex >= workoutExercise.sets : false
+                // If it's the last set: Stop timer, NO rest, NO auto-resume
+                // If NOT last set: Stop timer, START rest, AUTO-resume
 
-                // If it's the last set, we do NOT want to resume automatically.
-                const resumeId = (activeTimerId === exerciseId && !isLastSet) ? exerciseId : null
+                const shouldRest = !isLastSet
+                const resumeId = shouldRest ? exerciseId : null
 
                 let updatePayload: any = {}
                 let newTimers = { ...exerciseTimers }
@@ -443,23 +466,30 @@ const ActiveSessionPage = () => {
                     setActiveTimerId(null) // Optimistic
                 }
 
-                // 2. Persist Rest State in JSONB
-                newTimers['_rt'] = targetTime
-                newTimers['_rre'] = resumeId
-                newTimers['_tr'] = restTime
+                // 2. Persist Rest State (Only if resting)
+                if (shouldRest) {
+                    newTimers['_rt'] = targetTime
+                    newTimers['_rre'] = resumeId
+                    newTimers['_tr'] = restTime
 
+                    updatePayload.exercise_timers_state = newTimers
 
-                updatePayload.exercise_timers_state = newTimers
+                    setRestTargetTime(targetTime)
+                    setLastRestExId(resumeId)
+                    setTotalRestSeconds(restTime)
+                    setRestTimerSeconds(restTime)
+                    setRestTimerOpen(true)
+                    toggleBackgroundMode(true)
+                } else {
+                    // Update only timers state (storing the stopped time)
+                    updatePayload.exercise_timers_state = newTimers
 
-                // 3. Local State Updates
-                setRestTargetTime(targetTime)
-                setLastRestExId(resumeId)
-                setTotalRestSeconds(restTime)
-                setRestTimerSeconds(restTime)
-                setRestTimerOpen(true)
+                    // Clear rest if any (edge case)
+                    setRestTargetTime(null)
+                    setRestTimerOpen(false)
+                }
+
                 setExerciseTimers(newTimers)
-                toggleBackgroundMode(true)
-
 
                 // 4. DB Update
                 await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)

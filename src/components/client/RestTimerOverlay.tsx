@@ -24,7 +24,7 @@ export const RestTimerOverlay: React.FC<RestTimerOverlayProps> = ({
     const progress = ((totalSeconds - secondsRemaining) / totalSeconds) * 100
 
     return (
-        <div className="fixed inset-x-0 bottom-24 z-[60] px-4 animate-in slide-in-from-bottom-10 fade-in duration-300">
+        <div className="fixed inset-x-0 top-[4.5rem] z-[60] px-4 animate-in slide-in-from-top-10 fade-in duration-300">
             <div className="bg-card/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl p-4 flex flex-col items-center gap-4 relative overflow-hidden">
                 {/* Background Progress Bar (Subtle) */}
                 <div className="absolute inset-0 bg-primary/5 pointer-events-none" style={{ width: `${100 - progress}%`, transition: 'width 1s linear' }} />
