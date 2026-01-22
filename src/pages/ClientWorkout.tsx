@@ -21,7 +21,7 @@ const ClientWorkout: React.FC = () => {
   const [clientWorkout, setClientWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [showMuscles, setShowMuscles] = useState(false)
+
 
   // URL-driven state for view
   const showDetailView = searchParams.get('view') === 'detail'
@@ -81,23 +81,6 @@ const ClientWorkout: React.FC = () => {
     fetchData()
   }, [user?.id])
 
-  // Calculate active muscles based on workoutExercises
-  const activeMuscles = React.useMemo(() => {
-    if (!workoutExercises) return []
-    const raw = workoutExercises.flatMap((e: any) => {
-      if (!e.exercise) return []
-      console.log('Ex:', e.exercise.name, 'G:', e.exercise.muscle_groups, 'S:', e.exercise.muscle_group)
-      const groups = e.exercise.muscle_groups || []
-      const single = e.exercise.muscle_group
-      // Ensure groups is actually an array before spreading
-      const safeGroups = Array.isArray(groups) ? groups : []
-      return [...safeGroups, single]
-    })
-    const unique = Array.from(new Set(raw.filter((m: any) => m && typeof m === 'string'))) as string[]
-    console.log('Active Muscles Final:', unique)
-    return unique
-  }, [workoutExercises])
-
   // Agrupar exercícios por dia
   const exercisesByDay = workoutExercises.reduce((acc: any, curr) => {
     if (!acc[curr.day_number]) acc[curr.day_number] = []
@@ -148,32 +131,7 @@ const ClientWorkout: React.FC = () => {
           {/* Button removed as per user request */}
         </div>
 
-        {/* BODY HIGHLIGHTER CARD */}
-        {activeMuscles.length > 0 && (
-          <Card className="mb-8 bg-card border-border overflow-hidden">
-            <Collapsible open={showMuscles} onOpenChange={setShowMuscles}>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="w-full flex justify-between items-center p-4 h-auto hover:bg-accent/50">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-full text-primary">
-                      <User className="h-5 w-5" />
-                    </div>
-                    <div className="text-left">
-                      <span className="font-bold text-foreground block">Músculos do Dia</span>
-                      <span className="text-xs text-muted-foreground">{activeMuscles.length} grupos mapeados</span>
-                    </div>
-                  </div>
-                  {showMuscles ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="p-6 bg-black/20 flex justify-center">
-                  <BodyHighlighter muscles={activeMuscles} />
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-        )}
+
 
         {/* Card Resumo */}
         <Card className="mb-8 bg-card border-border backdrop-blur-md">

@@ -10,8 +10,11 @@ import {
 } from '@/components/ui/dialog'
 import {
   Timer, Play, Pause, Square, Loader2, BarChart3,
-  Save, Trash2, Plus, Search, X, Calendar as CalendarIcon, Maximize2
+  Save, Trash2, Plus, Search, X, Calendar as CalendarIcon, Maximize2,
+  ChevronDown, ChevronUp, User
 } from 'lucide-react'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import BodyHighlighter from '@/components/visualization/BodyHighlighter'
 import { supabase } from '@/integrations/supabase/client'
 import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
@@ -80,6 +83,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   // History State
   const [historyLogs, setHistoryLogs] = useState<any[]>([])
+  const [showMuscles, setShowMuscles] = useState(false)
 
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
@@ -672,6 +676,19 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   // Filter exercises strictly for the active day
   const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
+
+  const activeMuscles = React.useMemo(() => {
+    return Array.from(new Set(
+      displayedExercises.flatMap((e: any) => {
+        if (!e.exercise) return []
+        const groups = e.exercise.muscle_groups || []
+        const single = e.exercise.muscle_group
+        const safeGroups = Array.isArray(groups) ? groups : []
+        return [...safeGroups, single]
+      }).filter((m: any) => m && typeof m === 'string')
+    )) as string[]
+  }, [displayedExercises])
+
   const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
 
@@ -714,6 +731,26 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           </Button>
         </CardHeader>
         <CardContent className="pt-6">
+          {activeMuscles.length > 0 && (
+            <div className="mb-6">
+              <Collapsible open={showMuscles} onOpenChange={setShowMuscles} className="border border-border rounded-lg bg-card/50">
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" className="w-full flex justify-between items-center p-3 h-auto hover:bg-accent/50">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 bg-primary/10 rounded-full text-primary"><User className="h-4 w-4" /></div>
+                      <span className="font-bold text-sm">Músculos do Dia ({activeMuscles.length})</span>
+                    </div>
+                    {showMuscles ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="p-4 bg-black/5 dark:bg-black/40 flex justify-center border-t border-border">
+                    <BodyHighlighter muscles={activeMuscles} height={250} width={200} />
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+          )}
           <div className="space-y-4">
             {displayedExercises.length > 0 ? (
               displayedExercises.map((we: any) => (
