@@ -325,13 +325,13 @@ const ActiveSessionPage = () => {
 
 
     // Handlers
-    const handleToggleTimer = async (exerciseId: string) => {
+    const handleToggleTimer = async (exerciseId: string, ignoreRest: boolean = false) => {
         if (!sessionId || sessionData?.status !== 'started') {
             showError("Inicie o treino para cronometrar.")
             return
         }
 
-        if (restTimerOpen) {
+        if (restTimerOpen && !ignoreRest) {
             showError("Descanso em andamento! Pule o descanso para retomar.")
             return
         }
@@ -601,7 +601,7 @@ const ActiveSessionPage = () => {
 
         // Resume Exercise Timer immediately without audio
         if (lastRestExId) {
-            await handleToggleTimer(lastRestExId)
+            await handleToggleTimer(lastRestExId, true)
             setLastRestExId(null)
         }
     }
