@@ -189,7 +189,23 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     loadData()
   }, [clientWorkout])
 
-  // Timer effects removed in favor of ActiveSessionPage logic
+  // Global Timer Interval for Detail View
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isSessionActive && sessionStatus === 'started' && sessionStartTime) {
+      interval = setInterval(() => {
+        const now = Date.now()
+        setElapsedTime(Math.max(0, Math.floor((now - sessionStartTime) / 1000)))
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [isSessionActive, sessionStatus, sessionStartTime])
+
+
+  // ... (rest of imports/state)
+
+  /* Rest of render */
+
 
 
   const handleToggleTimer = async (exerciseId: string) => {
@@ -646,18 +662,10 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
           {/* Time Display - Centered or Left aligned based on screen */}
           <div className="flex items-center justify-center md:justify-start w-full md:w-auto mb-1 md:mb-0">
-            {isSessionActive && sessionStatus === 'started' ? (
-              <div className="bg-green-500/10 px-3 py-1.5 rounded-lg border border-green-500/20 flex items-center min-w-[100px]">
-                <span className="text-sm font-bold text-green-500 animate-pulse flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Em Andamento
-                </span>
-              </div>
-            ) : (
-              <div className="bg-muted/50 px-3 py-1 pb-1.5 rounded-lg border border-border flex flex-col items-center min-w-[100px]">
-                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-none mb-0.5">Tempo</span>
-                <span className="text-xl font-mono font-bold text-foreground leading-none tracking-wider">{formatTime(elapsedTime)}</span>
-              </div>
-            )}
+            <div className="bg-muted/50 px-3 py-1 pb-1.5 rounded-lg border border-border flex flex-col items-center min-w-[100px]">
+              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-none mb-0.5">Tempo</span>
+              <span className="text-xl font-mono font-bold text-foreground leading-none tracking-wider">{formatTime(elapsedTime)}</span>
+            </div>
           </div>
 
           {/* Action Buttons */}

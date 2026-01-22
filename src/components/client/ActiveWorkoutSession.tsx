@@ -93,8 +93,8 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                 </Button>
 
                 <div className="flex flex-col items-center">
-                    <span className="text-sm font-bold font-mono">
-                        {formatSeconds(elapsedTime)}
+                    <span className="text-sm font-bold">
+                        {currentIndex + 1} / {exercises.length}
                     </span>
                     <div className="w-24 h-1 bg-muted rounded-full mt-1 overflow-hidden">
                         <div
