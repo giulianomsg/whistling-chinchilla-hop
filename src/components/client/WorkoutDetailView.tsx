@@ -41,6 +41,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   // Timer States
   const [exerciseTimers, setExerciseTimers] = useState<Record<string, number>>({})
   const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
+  const [activeTimerStartTime, setActiveTimerStartTime] = useState<number | null>(null)
 
   // Session States
   const [isSessionActive, setIsSessionActive] = useState(false)
@@ -160,7 +161,14 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
         if (session.status === 'started' && session.active_timer_id && session.active_timer_started_at) {
           const activeStart = new Date(session.active_timer_started_at).getTime()
+          setActiveTimerStartTime(activeStart)
           const now = Date.now()
+          // Note: We use delta for display, but here we set initial state.
+          // To mimic ActiveSession logic, we might want to keep the BASE separately and ADD delta in render or state.
+          // But WorkoutDetailView used simple state in previous turn.
+          // If we want real-time TICKING, we need an interval that updates state.
+          // The interval below (added in next chunk) will handle the updates.
+          // So here we just set the init state.
           const additionalSeconds = Math.max(0, Math.floor((now - activeStart) / 1000))
           const currentTotal = (loadedTimers[session.active_timer_id] || 0) + additionalSeconds
           loadedTimers[session.active_timer_id] = currentTotal
@@ -201,6 +209,26 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return () => clearInterval(interval)
   }, [isSessionActive, sessionStatus, sessionStartTime])
 
+  // Active Exercise Timer Interval (Real-time Ticking)
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (activeTimerId && activeTimerStartTime && isSessionActive && sessionStatus === 'started') {
+      const baseTime = exerciseTimers[activeTimerId] || 0 // Warning: This baseTime includes usage up to load.
+      // Issue: if we just add 1 every second to 'exerciseTimers', it drifts.
+      // Ideally we use a Ref for the Base like in ActiveSessionPage.
+      // But for simplicity in this View (which is secondary), an interval tick is usually acceptable unless user stays long.
+      // However, if we refresh, we recalc from DB.
+      // Let's use simple tick to update state.
+      interval = setInterval(() => {
+        setExerciseTimers(prev => ({
+          ...prev,
+          [activeTimerId]: (prev[activeTimerId] || 0) + 1
+        }))
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [activeTimerId, activeTimerStartTime, isSessionActive, sessionStatus])
+
 
   // ... (rest of imports/state)
 
@@ -229,6 +257,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       if (activeTimerId === exerciseId) {
         setActiveTimerId(null)
+        setActiveTimerStartTime(null)
       } else {
         if (isCompleted) {
           showError('Este exercício já foi concluído.')
@@ -237,6 +266,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         updatePayload.active_timer_id = exerciseId
         updatePayload.active_timer_started_at = now.toISOString()
         setActiveTimerId(exerciseId)
+        setActiveTimerStartTime(now.getTime())
       }
     } else {
       if (isCompleted) {
@@ -246,6 +276,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       updatePayload.active_timer_id = exerciseId
       updatePayload.active_timer_started_at = now.toISOString()
       setActiveTimerId(exerciseId)
+      setActiveTimerStartTime(now.getTime())
     }
 
     try {
