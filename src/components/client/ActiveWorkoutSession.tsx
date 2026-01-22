@@ -137,10 +137,12 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                             <BodyHighlighter muscles={
                                 Array.from(new Set(
                                     exercises.flatMap(e => {
-                                        const groups = e.exercise?.muscle_groups || []
-                                        const single = e.exercise?.muscle_group
-                                        return [...groups, single]
-                                    }).filter(Boolean)
+                                        if (!e.exercise) return []
+                                        const groups = e.exercise.muscle_groups || []
+                                        const single = e.exercise.muscle_group
+                                        const safeGroups = Array.isArray(groups) ? groups : []
+                                        return [...safeGroups, single]
+                                    }).filter((m: any) => m && typeof m === 'string')
                                 )) as string[]
                             } />
                         </div>

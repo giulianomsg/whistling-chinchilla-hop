@@ -86,10 +86,13 @@ const ClientWorkout: React.FC = () => {
     if (!workoutExercises) return []
     return Array.from(new Set(
       workoutExercises.flatMap((e: any) => {
-        const groups = e.exercise?.muscle_groups || []
-        const single = e.exercise?.muscle_group
-        return [...groups, single]
-      }).filter(Boolean)
+        if (!e.exercise) return []
+        const groups = e.exercise.muscle_groups || []
+        const single = e.exercise.muscle_group
+        // Ensure groups is actually an array before spreading
+        const safeGroups = Array.isArray(groups) ? groups : []
+        return [...safeGroups, single]
+      }).filter((m: any) => m && typeof m === 'string')
     )) as string[]
   }, [workoutExercises])
 
