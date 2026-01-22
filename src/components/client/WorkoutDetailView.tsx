@@ -113,7 +113,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     const dayExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
     if (dayExercises.length === 0) return
 
-    const exerciseIds = dayExercises.map(e => e.exercise_id).filter(Boolean)
+    const exerciseIds = dayExercises.map(e => e.exercise_id).filter(id => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
 
     if (exerciseIds.length > 0) {
       const { data } = await supabase
@@ -671,9 +671,6 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     }
   }
 
-  if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto" /></div>
-
-
   // Filter exercises strictly for the active day
   const displayedExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
 
@@ -691,6 +688,8 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
   const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)
   const filteredLibrary = libraryExercises.filter(e => e.name.toLowerCase().includes(searchExTerm.toLowerCase())).slice(0, 10)
+
+  if (loading) return <div className="py-12 text-center"><Loader2 className="animate-spin text-primary mx-auto" /></div>
 
   return (
     <div className="space-y-6 pb-48 md:pb-24">
