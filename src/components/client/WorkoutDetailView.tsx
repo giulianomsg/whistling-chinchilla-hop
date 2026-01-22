@@ -21,6 +21,7 @@ import { ActiveWorkoutSession } from './ActiveWorkoutSession'
 import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -30,6 +31,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const { refreshProfile } = useAuth()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { confirm } = useFeedback()
 
   // Day Persistence (Read Only here, navigation is handled by parent or headers hidden)
   const activeTab = searchParams.get('day') || 'day-1'
@@ -364,7 +366,15 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // UI Update handled by state
 
       } else if (action === 'finish' && sessionId) {
-        if (!confirm("Deseja realmente finalizar o treino de hoje?")) {
+
+        const confirmed = await confirm({
+          title: "Finalizar Treino",
+          description: "Deseja realmente finalizar o treino de hoje?",
+          confirmText: "Sim, Finalizar",
+          cancelText: "Cancelar"
+        })
+
+        if (!confirmed) {
           setSessionLoading(false)
           return
         }
@@ -380,9 +390,15 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           return
         }
 
-        /* Short Time Warning (OPTIONAL: Keep if desired, or let system handle low XP) */
+        /* Short Time Warning */
         if (elapsedTime < 60) {
-          if (!confirm("Treino muito curto (menos de 1min). Deseja finalizar mesmo assim?")) {
+          const shortConfirm = await confirm({
+            title: "Treino Curto",
+            description: "O treino durou menos de 1 minuto. Deseja finalizar mesmo assim?",
+            confirmText: "Sim",
+            cancelText: "Não"
+          })
+          if (!shortConfirm) {
             setSessionLoading(false)
             return
           }
@@ -859,7 +875,14 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
               <Button
                 variant="destructive"
                 onClick={async () => {
-                  if (confirm('Tem certeza que deseja remover este registro?')) {
+                  const confirmed = await confirm({
+                    title: 'Remover Registro',
+                    description: 'Tem certeza que deseja remover este registro?',
+                    variant: 'destructive',
+                    confirmText: 'Remover',
+                    cancelText: 'Cancelar'
+                  })
+                  if (confirmed) {
                     const isAdHoc = selectedExercise?.id?.startsWith('ADHOC_')
                     const logId = isAdHoc ? selectedExercise.id.replace('ADHOC_', '') : executionLogs.find(l => l.workout_exercise_id === selectedExercise?.id)?.id
 

@@ -1,17 +1,19 @@
-import { toast } from "sonner";
+import { feedbackService } from "@/components/ui/CapiFitFeedback";
 
 export const showSuccess = (message: string) => {
-  toast.success(message);
+  feedbackService.notify({ title: "Sucesso", description: message, type: 'success' });
 };
 
 export const showError = (message: string) => {
-  toast.error(message);
+  feedbackService.notify({ title: "Erro", description: message, type: 'error' });
 };
 
 export const showLoading = (message: string) => {
-  return toast.loading(message);
+  const id = Math.random().toString(36).substr(2, 9);
+  feedbackService.notify({ id, title: "Aguarde", description: message, type: 'info', duration: 0, dismissible: false });
+  return id;
 };
 
 export const dismissToast = (toastId: string) => {
-  toast.dismiss(toastId);
+  feedbackService.dismiss(toastId);
 };

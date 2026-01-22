@@ -9,6 +9,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import { Loader2 } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { PremiumGuard } from "@/components/auth/PremiumGuard";
+import { GlobalFeedbackProvider } from "@/components/ui/CapiFitFeedback";
 
 // Lazy loading das páginas principais
 const Index = lazy(() => import("./pages/Index"));
@@ -383,17 +384,19 @@ const AppRoutes: React.FC = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <AuthProvider>
-            <ChatProvider>
-              <AppRoutes />
-            </ChatProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </BrowserRouter>
+      <GlobalFeedbackProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <AuthProvider>
+              <ChatProvider>
+                <AppRoutes />
+              </ChatProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </GlobalFeedbackProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
