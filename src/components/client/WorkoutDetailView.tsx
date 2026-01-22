@@ -189,43 +189,8 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     loadData()
   }, [clientWorkout])
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (sessionStatus === 'started' && sessionStartTime) {
-      interval = setInterval(() => {
-        const now = Date.now()
-        setElapsedTime(Math.max(0, Math.floor((now - sessionStartTime) / 1000)))
-      }, 1000)
-    }
-    return () => clearInterval(interval)
-  }, [sessionStatus, sessionStartTime])
+  // Timer effects removed in favor of ActiveSessionPage logic
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (activeTimerId && sessionStatus === 'started') {
-      interval = setInterval(() => {
-        setExerciseTimers(prev => ({ ...prev, [activeTimerId]: (prev[activeTimerId] || 0) + 1 }))
-      }, 1000)
-    }
-    return () => clearInterval(interval)
-  }, [activeTimerId, sessionStatus])
-
-  // Rest Timer Countdown
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (restTimerOpen && restTimerSeconds > 0) {
-      interval = setInterval(() => {
-        setRestTimerSeconds((prev: number) => {
-          if (prev <= 1) {
-            setRestTimerOpen(false) // Auto close when done
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-    }
-    return () => clearInterval(interval)
-  }, [restTimerOpen, restTimerSeconds])
 
   const handleToggleTimer = async (exerciseId: string) => {
     const isCompleted = executionLogs.some(log => log.workout_exercise_id === exerciseId)
@@ -281,121 +246,22 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       if (action === 'start') {
         const { data, error } = await supabase.from('workout_sessions').insert({
           client_id: clientWorkout.client_id, professional_id: clientWorkout.professional_id,
-          workout_id: clientWorkout.workout_id, client_workout_id: clientWorkout.id, status: 'started'
+          workout_id: clientWorkout.workout_id, client_workout_id: clientWorkout.id, status: 'started',
+          started_at: new Date().toISOString()
         }).select().single()
         if (error) throw error
-        setSessionId(data.id); setSessionStatus('started'); setIsSessionActive(true); setElapsedTime(0)
-        setSessionStartTime(Date.now())
-        setExecutionLogs([])
-        navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
         showSuccess('Treino iniciado!')
-      } else if (action === 'pause' && sessionId) {
-        await supabase.from('workout_sessions').update({ status: 'paused', duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
-        setSessionStatus('paused'); showSuccess('Pausado')
+        navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
       } else if (action === 'resume' && sessionId) {
-        const newStart = new Date(Date.now() - elapsedTime * 1000).toISOString()
-        setSessionStartTime(Date.now() - elapsedTime * 1000)
-        await supabase.from('workout_sessions').update({ status: 'started', started_at: newStart, last_activity_at: new Date().toISOString() }).eq('id', sessionId)
-        setSessionStatus('started'); showSuccess('Retomado')
+        // Just navigate
+        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
+      } else if (action === 'pause' && sessionId) {
+        // Navigate to session to pause? Or just pause here simple?
+        // Simplest is direct user to session page to control it.
         navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       } else if (action === 'finish' && sessionId) {
-        if (elapsedTime < 60 || executionLogs.length === 0) {
-          await supabase.from('workout_sessions')
-            .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime, last_activity_at: new Date().toISOString() })
-            .eq('id', sessionId)
-
-          setSessionStatus('completed'); setIsSessionActive(false)
-          showSuccess('Treino finalizado! (Sem XP: muito curto ou sem registros)')
-          setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]) }, 3000)
-          return
-        }
-
-        const enrichedLogs = executionLogs.map(log => {
-          const exerciseDef = workoutExercises.find(we => we.id === log.workout_exercise_id)
-          // For AdHoc, exerciseDef is undefined, so we use log.exercise.name
-          return {
-            ...log,
-            exercise: { name: exerciseDef?.exercise?.name || log.exercise?.name || '' },
-            exercise_id: exerciseDef?.exercise_id || log.exercise_id
-          }
-        })
-
-        const performedExLibraryIds = [...new Set(enrichedLogs.map(l => l.exercise_id).filter(Boolean))] as string[]
-
-        let history1RMs: Record<string, number> = {}
-
-        if (performedExLibraryIds.length > 0) {
-          const { data: historyData } = await supabase
-            .from('workout_execution_logs')
-            .select(`weight, reps, exercise_id, workout_session!inner(client_id)`)
-            .eq('workout_session.client_id', clientWorkout.client_id)
-            .in('exercise_id', performedExLibraryIds)
-
-          if (historyData) {
-            historyData.forEach((h: any) => {
-              const exName = enrichedLogs.find(el => el.exercise_id === h.exercise_id)?.exercise?.name || ''
-              const cId = getCanonicalExerciseId(exName)
-              if (cId) {
-                const rm = calculateOneRM(h.weight, h.reps)
-                if (rm > (history1RMs[cId] || 0)) history1RMs[cId] = rm
-              }
-            })
-          }
-        }
-
-        const { data: freshProfile } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
-        const { data: freshBody } = await supabase.from('biometric_data').select('weight').eq('client_id', clientWorkout.client_id).order('date', { ascending: false }).limit(1).maybeSingle()
-
-        const userWeight = freshBody?.weight || 70
-        const currentXP = freshProfile?.current_xp || 0
-        const currentLevel = freshProfile?.level || 1
-
-        const xpResult = calculateSessionXP(
-          elapsedTime,
-          exerciseTimers,
-          enrichedLogs,
-          workoutExercises,
-          userWeight,
-          history1RMs
-        )
-
-        const xpGained = xpResult.total
-
-        await supabase.from('workout_sessions')
-          .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
-          .eq('id', sessionId)
-
-        const newTotalXP = currentXP + xpGained
-        const newLevel = Math.floor(newTotalXP / 1000) + 1
-
-        const { error: updateError } = await supabase.from('profiles').update({
-          current_xp: newTotalXP,
-          level: newLevel
-        }).eq('id', clientWorkout.client_id)
-
-        if (!updateError) {
-          if (xpResult.details.length > 0) {
-            xpResult.details.forEach(d => showSuccess(d))
-          }
-
-          const totalLoadKg = enrichedLogs.reduce((acc, log) => acc + (log.weight || 0) * (log.reps || 0), 0)
-
-          setSummaryData({
-            xpEarned: xpGained,
-            currentXP: newTotalXP,
-            newLevel: newLevel,
-            oldLevel: currentLevel,
-            workoutName: clientWorkout.workout.name,
-            durationSeconds: elapsedTime,
-            totalLoadKg: totalLoadKg
-          })
-          setShowSummaryModal(true)
-          if (refreshProfile) refreshProfile()
-        } else {
-          console.error('Erro update XP:', updateError)
-          setSessionStatus('completed'); setIsSessionActive(false); setActiveSessionOpen(false)
-          setTimeout(() => { setSessionId(null); setElapsedTime(0); setSessionStatus('idle'); setExecutionLogs([]); setExerciseTimers({}); setActiveTimerId(null) }, 3000)
-        }
+        // Navigate to session to finish
+        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       }
     } catch (error) { showError('Erro na sessão'); console.error(error) }
     finally { setSessionLoading(false) }

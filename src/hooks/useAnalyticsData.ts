@@ -38,7 +38,7 @@ export const useAnalyticsData = (clientId: string | undefined) => {
             reps,
             created_at:completed_at,
             exercise_id,
-            exercise:exercises_library(id, name),
+            exercise:exercises_library(id, name, is_unilateral),
             workout_session:workout_sessions!inner(id, created_at, client_id)
           `)
                     .eq('workout_session.client_id', clientId)
@@ -89,7 +89,10 @@ export const useAnalyticsData = (clientId: string | undefined) => {
 
         filtered.forEach(log => {
             const sessionId = log.workout_session.id
-            const vol = (log.weight || 0) * (log.reps || 0)
+            const isUnilateral = log.exercise?.is_unilateral || false
+            // Unilateral Logic
+            const effectiveWeight = isUnilateral ? (log.weight || 0) * 2 : (log.weight || 0)
+            const vol = effectiveWeight * (log.reps || 0)
 
             if (!sessionMap.has(sessionId)) {
                 sessionMap.set(sessionId, {
@@ -114,7 +117,12 @@ export const useAnalyticsData = (clientId: string | undefined) => {
 
         filtered.forEach(log => {
             const dateKey = new Date(log.workout_session.created_at).toISOString().split('T')[0] // Group by day
-            const w = log.weight || 0
+            const isUnilateral = log.exercise?.is_unilateral || false
+
+            // Unilateral Logic
+            const effectiveWeight = isUnilateral ? (log.weight || 0) * 2 : (log.weight || 0)
+
+            const w = effectiveWeight
             const r = log.reps || 0
             const oneRM = calculateOneRM(w, r)
 

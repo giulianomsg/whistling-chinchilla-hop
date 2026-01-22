@@ -82,50 +82,56 @@ const ActiveSessionPage = () => {
         }
     }, [])
 
-    // Rest Timer Logic
+    // Rest Timer Logic (Web Worker)
     useEffect(() => {
-        let interval: NodeJS.Timeout
-        if (restTargetTime) {
-            interval = setInterval(() => {
-                const now = Date.now()
-                const remaining = Math.ceil((restTargetTime - now) / 1000)
+        if (!restTargetTime) return
 
-                if (remaining <= 0) {
-                    setRestTimerSeconds(0)
-                    setRestTargetTime(null)
-                    setRestTimerOpen(false)
+        // Create a blob worker for the timer to run in background more reliably
+        const workerCode = `
+            self.onmessage = function() {
+                setInterval(() => {
+                    self.postMessage('tick');
+                }, 1000);
+            }
+        `
+        const blob = new Blob([workerCode], { type: 'application/javascript' })
+        const worker = new Worker(URL.createObjectURL(blob))
 
-                    // Notify
-                    try {
-                        // ... notification logic ...
-                        const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
-                        audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
-                        if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
+        worker.onmessage = () => {
+            const now = Date.now()
+            const remaining = Math.ceil((restTargetTime - now) / 1000)
 
-                        if (Notification.permission === 'granted') {
-                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
-                                navigator.serviceWorker.ready.then(registration => {
-                                    registration.showNotification("CapiFit", { body: "Descanso finalizado!", icon: '/favicon.ico', vibrate: [300, 100, 300] })
-                                })
-                            } else {
-                                new Notification("CapiFit", { body: "Descanso finalizado!", vibrate: [300, 100, 300] })
-                            }
-                        }
-                    } catch (e) { console.error(e) }
+            if (remaining <= 0) {
+                setRestTimerSeconds(0)
+                setRestTargetTime(null)
+                setRestTimerOpen(false)
+                worker.terminate()
 
-                    // Auto-Resume
-                    if (lastRestExId) {
-                        handleToggleTimer(lastRestExId)
-                        setLastRestExId(null)
-                        // Note: We don't actively clear _rt from DB here to avoid extra calls/race conditions.
-                        // Expired _rt is ignored by init logic.
+                // Notify Logic
+                try {
+                    const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
+                    audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
+                    if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
+
+                    if (Notification.permission === 'granted') {
+                        new Notification("CapiFit", { body: "Descanso finalizado!", vibrate: [300, 100, 300] } as any)
                     }
-                } else {
-                    setRestTimerSeconds(remaining)
+                } catch (e) { console.error(e) }
+
+                if (lastRestExId) {
+                    handleToggleTimer(lastRestExId)
+                    setLastRestExId(null)
                 }
-            }, 1000)
+            } else {
+                setRestTimerSeconds(remaining)
+            }
         }
-        return () => clearInterval(interval)
+
+        worker.postMessage('start')
+
+        return () => {
+            worker.terminate()
+        }
     }, [restTargetTime, lastRestExId])
 
 
@@ -201,12 +207,25 @@ const ActiveSessionPage = () => {
 
                 if (session.status === 'started' && session.active_timer_id && session.active_timer_started_at) {
                     const activeStart = new Date(session.active_timer_started_at).getTime()
+                    // Set start time for delta calc
+                    setActiveTimerStartTime(activeStart)
+
                     const now = Date.now()
                     const additionalSeconds = Math.max(0, Math.floor((now - activeStart) / 1000))
-                    const currentTotal = (loadedTimers[session.active_timer_id] || 0) + additionalSeconds
-                    loadedTimers[session.active_timer_id] = currentTotal
+                    // Base is what was saved previously. 
+                    // Verify if 'exercise_timers_state' stores the TOTAL up to previous pause.
+                    const currentTotal = (loadedTimers[session.active_timer_id] || 0)
+                    // If we use delta logic, we don't add additionalSeconds here to the base. 
+                    // The base is static. The display adds delta.
+                    // loadedTimers[session.active_timer_id] = currentTotal + additionalSeconds // This was mutating base in previous logic?
+                    // Actually, let's keep loadedTimers as the "Archived Time".
+
                     setActiveTimerId(session.active_timer_id)
                 }
+
+                // Hydrate Refs for Delta Calculation
+                exerciseTimersBaseRef.current = { ...loadedTimers }
+
                 setExerciseTimers(loadedTimers)
 
                 // Session Main Timer
@@ -229,7 +248,6 @@ const ActiveSessionPage = () => {
         init()
     }, [sessionId])
 
-
     // Global Session Timer
     useEffect(() => {
         let interval: NodeJS.Timeout
@@ -242,22 +260,71 @@ const ActiveSessionPage = () => {
         return () => clearInterval(interval)
     }, [sessionData, sessionStartTime])
 
-    // Update DB Heartbeat occasionally or on unload? (Skipping for robust simplicity, relies on actions)
+    // Exercise Timer Start Time State
+    const [activeTimerStartTime, setActiveTimerStartTime] = useState<number | null>(null)
 
-    // Rest Timer Effect moved to bottom to access handlers
-
-    // Exercise Timer Ticker
+    // Exercise Timer Ticker (Delta Time)
     useEffect(() => {
         let interval: NodeJS.Timeout
-        if (activeTimerId && sessionData?.status === 'started') {
+        if (activeTimerId && activeTimerStartTime && sessionData?.status === 'started') {
             interval = setInterval(() => {
-                setExerciseTimers(prev => ({ ...prev, [activeTimerId]: (prev[activeTimerId] || 0) + 1 }))
+                const now = Date.now()
+                const additional = Math.floor((now - activeTimerStartTime) / 1000)
+                // Update the "Display" timer in state.
+                // Note: This updates the state object which might cause re-renders.
+                // We are adding 'additional' to the base val.
+                // To avoid "summing up" drift, we need to know the BUFFERED/BASE value (from DB).
+                // But `exerciseTimers` is being updated here. This is circular if we use `exerciseTimers` as base.
+                // CORRECT FIX:
+                // `exerciseTimers` should be the source of truth for "Completed Time".
+                // We should NOT update `exerciseTimers` in this interval if we want to restart from base.
+                // BUT, the UI reads `exerciseTimers[id]`.
+                // So we update it.
+                // However, `setExerciseTimers(prev => base + additional)` requires `base`.
+                // But `prev` is the CURRENT value (which includes previous additional).
+                // This means we are Accumulating Delta! This is bad if we just add (now - start) to prev.
+                // We should add (now - start) to BASE.
+                // But we don't have BASE in a separate state.
+                // Temporary fix: Just rely on the previous "ticker" logic but use delta since last tick?
+                // No.
+                // Better: We only update the display component if possible.
+                // BUT, keeping it simple:
+                // We can just keep the "Ticker" (+1s) approach for the display if the background issue is solved by 
+                // re-syncing on visibility change.
+                // The user asked for "Delta Time" or "Web Workers".
+                // I will use `activeTimerStartTime` to calculating the TOTAL time every tick.
+                // I need the "Stored Time" (time before current range).
+                // I will store "timersBase" in a Ref.
             }, 1000)
         }
         return () => clearInterval(interval)
-    }, [activeTimerId, sessionData])
+    }, [])
 
-    // Actions
+    // New Ref approach for stability
+    const exerciseTimersBaseRef = React.useRef<Record<string, number>>({})
+
+    // Exercise Timer Ticker (Delta Time Implementation)
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+        if (activeTimerId && activeTimerStartTime && sessionData?.status === 'started') {
+            const baseTime = exerciseTimersBaseRef.current[activeTimerId] || 0
+
+            interval = setInterval(() => {
+                const now = Date.now()
+                const delta = Math.floor((now - activeTimerStartTime) / 1000)
+                const total = baseTime + delta
+
+                setExerciseTimers((prev: any) => ({
+                    ...prev,
+                    [activeTimerId]: total
+                }))
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [activeTimerId, activeTimerStartTime, sessionData])
+
+
+    // Handlers
     const handleToggleTimer = async (exerciseId: string) => {
         if (!sessionId || sessionData?.status !== 'started') {
             showError("Inicie o treino para cronometrar.")
@@ -268,27 +335,44 @@ const ActiveSessionPage = () => {
         let newTimersVal = { ...exerciseTimers }
 
         if (activeTimerId) {
-            const elapsed = exerciseTimers[activeTimerId] || 0
+            // STOPPING CURRENT
+            const elapsed = exerciseTimers[activeTimerId] || 0 // This is the total displayed
             newTimersVal[activeTimerId] = elapsed
+
+            // Update Base Ref
+            exerciseTimersBaseRef.current[activeTimerId] = elapsed
+
             updatePayload.exercise_timers_state = newTimersVal
             updatePayload.active_timer_id = null
             updatePayload.active_timer_started_at = null
 
             if (activeTimerId === exerciseId) {
                 setActiveTimerId(null)
+                setActiveTimerStartTime(null)
             } else {
+                // SWITCHING
                 updatePayload.active_timer_id = exerciseId
                 updatePayload.active_timer_started_at = now.toISOString()
                 setActiveTimerId(exerciseId)
+                setActiveTimerStartTime(now.getTime())
+                // Ensure base is set if not already (it should be from init)
+                if (exerciseTimersBaseRef.current[exerciseId] === undefined) {
+                    exerciseTimersBaseRef.current[exerciseId] = newTimersVal[exerciseId] || 0
+                }
             }
         } else {
+            // STARTING NEW
             updatePayload.active_timer_id = exerciseId
             updatePayload.active_timer_started_at = now.toISOString()
             setActiveTimerId(exerciseId)
+            setActiveTimerStartTime(now.getTime())
+            if (exerciseTimersBaseRef.current[exerciseId] === undefined) {
+                exerciseTimersBaseRef.current[exerciseId] = newTimersVal[exerciseId] || 0
+            }
         }
 
         await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
-        setExerciseTimers(newTimersVal) // Optimistic update
+        setExerciseTimers(newTimersVal)
     }
 
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
@@ -498,13 +582,13 @@ const ActiveSessionPage = () => {
                                         body: "Descanso finalizado!",
                                         icon: '/favicon.ico',
                                         vibrate: [300, 100, 300]
-                                    })
+                                    } as any)
                                 })
                             } else {
                                 new Notification("CapiFit", {
                                     body: "Descanso finalizado!",
                                     vibrate: [300, 100, 300]
-                                })
+                                } as any)
                             }
                         }
                     } catch (e) {
