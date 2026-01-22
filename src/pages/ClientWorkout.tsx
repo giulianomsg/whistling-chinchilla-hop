@@ -1,64 +1,4 @@
-// ... existing imports
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
-import { ChevronDown, ChevronUp, User } from 'lucide-react'
-import BodyHighlighter from '@/components/visualization/BodyHighlighter'
 
-// ... inside component function
-const [showMuscles, setShowMuscles] = useState(false)
-
-// ... previous logic
-
-// Calculate Unique Muscles for the Day
-// Note: workoutLogs might be logs, but we want PLANNED exercises for the day usually? 
-// Usually 'ClientWorkout' displays the Schedule or a specific workout.
-// Assuming 'exercises' state holds the workout definition.
-// If 'exercises' is not available here, check where we get the list.
-// In ClientWorkout.tsx (List View), we usually fetch 'workout_exercises'.
-
-// Let's assume we have 'exercises' array.
-const activeMuscles = React.useMemo(() => {
-  if (!exercises) return []
-  return Array.from(new Set(
-    exercises.map((e: any) => e.exercise?.muscle_group).filter(Boolean)
-  )) as string[]
-}, [exercises])
-
-  // ... render return
-  < div className = "min-h-screen bg-background pb-24" >
-    {/* ... Header ... */ }
-
-    < div className = "px-4 py-4 max-w-md mx-auto space-y-4" > // Added wrapper
-
-      {/* BODY HIGHLIGHTER CARD */ }
-{
-  activeMuscles.length > 0 && (
-    <Card className="bg-card border-border overflow-hidden">
-      <Collapsible open={showMuscles} onOpenChange={setShowMuscles}>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full flex justify-between items-center p-4 h-auto hover:bg-accent/50">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-full text-primary">
-                <User className="h-5 w-5" />
-              </div>
-              <div className="text-left">
-                <span className="font-bold text-foreground block">Músculos do Dia</span>
-                <span className="text-xs text-muted-foreground">{activeMuscles.length} grupos mapeados</span>
-              </div>
-            </div>
-            {showMuscles ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="p-6 bg-black/20 flex justify-center">
-            <BodyHighlighter muscles={activeMuscles} />
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
-    </Card>
-  )
-}
-
-{/* ... List ... */ }
 
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -81,6 +21,7 @@ const ClientWorkout: React.FC = () => {
   const [clientWorkout, setClientWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [showMuscles, setShowMuscles] = useState(false)
 
   // URL-driven state for view
   const showDetailView = searchParams.get('view') === 'detail'
@@ -201,6 +142,33 @@ const ClientWorkout: React.FC = () => {
           {/* Default to Day 1 if clicked directly */}
           {/* Button removed as per user request */}
         </div>
+
+        {/* BODY HIGHLIGHTER CARD */}
+        {activeMuscles.length > 0 && (
+          <Card className="mb-8 bg-card border-border overflow-hidden">
+            <Collapsible open={showMuscles} onOpenChange={setShowMuscles}>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full flex justify-between items-center p-4 h-auto hover:bg-accent/50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-full text-primary">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div className="text-left">
+                      <span className="font-bold text-foreground block">Músculos do Dia</span>
+                      <span className="text-xs text-muted-foreground">{activeMuscles.length} grupos mapeados</span>
+                    </div>
+                  </div>
+                  {showMuscles ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="p-6 bg-black/20 flex justify-center">
+                  <BodyHighlighter muscles={activeMuscles} />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        )}
 
         {/* Card Resumo */}
         <Card className="mb-8 bg-card border-border backdrop-blur-md">
