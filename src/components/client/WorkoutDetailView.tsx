@@ -364,6 +364,11 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // UI Update handled by state
 
       } else if (action === 'finish' && sessionId) {
+        if (!confirm("Deseja realmente finalizar o treino de hoje?")) {
+          setSessionLoading(false)
+          return
+        }
+
         // FINISH: Verify, Calculate XP, Update Profile, Show Summary
 
         // 1. Discard Empty Sessions (Anti-pollution)
