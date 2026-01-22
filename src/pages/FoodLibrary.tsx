@@ -1,8 +1,11 @@
+```
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
+import { sanitizeAlpha, sanitizeFloatInput, sanitizeNumeric } from '@/utils/masks'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useFeedback } from '@/components/ui/CapiFitFeedback'
@@ -34,8 +37,8 @@ const FoodLibrary: React.FC = () => {
     if (!user) return
     setPageLoading(true)
     try {
-      let query = supabase.from('foods_library').select('*').or(`created_by.eq.${user.id},is_public.eq.true`).order('created_at', { ascending: false })
-      if (searchTerm) query = query.ilike('name', `%${searchTerm}%`)
+      let query = supabase.from('foods_library').select('*').or(`created_by.eq.${ user.id }, is_public.eq.true`).order('created_at', { ascending: false })
+      if (searchTerm) query = query.ilike('name', `% ${ searchTerm }% `)
       const { data } = await query
       setFoods(data || [])
     } catch { showError('Erro ao carregar') }
@@ -156,34 +159,34 @@ const FoodLibrary: React.FC = () => {
               <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
-                  <div><Label>Marca</Label><Input className="bg-muted border-border" value={formData.brand} onChange={e => setFormData({ ...formData, brand: e.target.value })} /></div>
+                  <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: sanitizeAlpha(e.target.value) })} /></div>
+                  <div><Label>Marca</Label><Input className="bg-muted border-border" value={formData.brand} onChange={e => setFormData({ ...formData, brand: sanitizeAlpha(e.target.value) })} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  <div><Label>Porção</Label><Input type="number" className="bg-muted border-border" value={formData.serving_size} onChange={e => setFormData({ ...formData, serving_size: +e.target.value })} /></div>
-                  <div><Label>Unidade</Label><Input className="bg-muted border-border" value={formData.serving_unit} onChange={e => setFormData({ ...formData, serving_unit: e.target.value })} /></div>
-                  <div><Label>Categoria</Label><Input className="bg-muted border-border" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} /></div>
+                  <div><Label>Porção</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.serving_size} onChange={e => setFormData({ ...formData, serving_size: sanitizeFloatInput(e.target.value) })} /></div>
+                  <div><Label>Unidade</Label><Input className="bg-muted border-border" value={formData.serving_unit} onChange={e => setFormData({ ...formData, serving_unit: sanitizeAlpha(e.target.value) })} /></div>
+                  <div><Label>Categoria</Label><Input className="bg-muted border-border" value={formData.category} onChange={e => setFormData({ ...formData, category: sanitizeAlpha(e.target.value) })} /></div>
                 </div>
                 <div className="p-3 bg-muted/50 rounded-lg border border-border">
                   <Label className="text-green-600 dark:text-green-400 mb-2 block">Macronutrientes</Label>
                   <div className="grid grid-cols-4 gap-2">
-                    <div><Label>Kcal</Label><Input type="number" className="bg-muted border-border" value={formData.kcal} onChange={e => setFormData({ ...formData, kcal: +e.target.value })} /></div>
-                    <div><Label>Prot</Label><Input type="number" className="bg-muted border-border" value={formData.prot} onChange={e => setFormData({ ...formData, prot: +e.target.value })} /></div>
-                    <div><Label>Carb</Label><Input type="number" className="bg-muted border-border" value={formData.carb} onChange={e => setFormData({ ...formData, carb: +e.target.value })} /></div>
-                    <div><Label>Gord</Label><Input type="number" className="bg-muted border-border" value={formData.fat} onChange={e => setFormData({ ...formData, fat: +e.target.value })} /></div>
+                    <div><Label>Kcal</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.kcal} onChange={e => setFormData({ ...formData, kcal: sanitizeFloatInput(e.target.value) })} /></div>
+                    <div><Label>Prot</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.prot} onChange={e => setFormData({ ...formData, prot: sanitizeFloatInput(e.target.value) })} /></div>
+                    <div><Label>Carb</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.carb} onChange={e => setFormData({ ...formData, carb: sanitizeFloatInput(e.target.value) })} /></div>
+                    <div><Label>Gord</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.fat} onChange={e => setFormData({ ...formData, fat: sanitizeFloatInput(e.target.value) })} /></div>
                   </div>
                 </div>
                 <div className="p-3 bg-muted/50 rounded-lg border border-border">
                   <Label className="text-blue-600 dark:text-blue-400 mb-2 block">Micronutrientes</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <div><Label>Fibras</Label><Input type="number" className="bg-muted border-border" value={formData.fiber} onChange={e => setFormData({ ...formData, fiber: +e.target.value })} /></div>
-                    <div><Label>Açúcar</Label><Input type="number" className="bg-muted border-border" value={formData.sugar} onChange={e => setFormData({ ...formData, sugar: +e.target.value })} /></div>
-                    <div><Label>Sódio</Label><Input type="number" className="bg-muted border-border" value={formData.sodium} onChange={e => setFormData({ ...formData, sodium: +e.target.value })} /></div>
+                    <div><Label>Fibras</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.fiber} onChange={e => setFormData({ ...formData, fiber: sanitizeFloatInput(e.target.value) })} /></div>
+                    <div><Label>Açúcar</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.sugar} onChange={e => setFormData({ ...formData, sugar: sanitizeFloatInput(e.target.value) })} /></div>
+                    <div><Label>Sódio</Label><Input type="text" inputMode="decimal" className="bg-muted border-border" value={formData.sodium} onChange={e => setFormData({ ...formData, sodium: sanitizeFloatInput(e.target.value) })} /></div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 py-2">
-                  <Checkbox id={`public-${d.mode}`} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-green-600" />
-                  <Label htmlFor={`public-${d.mode}`} className="cursor-pointer">Público</Label>
+                  <Checkbox id={`public - ${ d.mode } `} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-green-600" />
+                  <Label htmlFor={`public - ${ d.mode } `} className="cursor-pointer">Público</Label>
                 </div>
                 <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar</Button>
               </form>

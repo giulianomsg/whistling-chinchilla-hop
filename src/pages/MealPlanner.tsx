@@ -16,7 +16,10 @@ import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
 import { UnifiedFoodSearch } from '@/components/nutrition/UnifiedFoodSearch'
 import { MyFoodsTab } from '@/components/nutrition/MyFoodsTab'
+import { UnifiedFoodSearch } from '@/components/nutrition/UnifiedFoodSearch'
+import { MyFoodsTab } from '@/components/nutrition/MyFoodsTab'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts'
+import { sanitizeAlpha, sanitizeFloatInput, sanitizeNumeric } from '@/utils/masks'
 
 const MealPlanner: React.FC = () => {
   const { user, loading } = useAuth()
@@ -229,13 +232,13 @@ const MealPlanner: React.FC = () => {
             <DialogContent className="bg-card border-border text-foreground">
               <DialogHeader><DialogTitle>{d.title}</DialogTitle></DialogHeader>
               <form onSubmit={d.handler} className="space-y-4">
-                <div><Label>Nome</Label><Input value={planForm.name} onChange={e => setPlanForm({ ...planForm, name: e.target.value })} className="bg-muted border-border" /></div>
-                <div><Label>Objetivo</Label><Input value={planForm.objective} onChange={e => setPlanForm({ ...planForm, objective: e.target.value })} className="bg-muted border-border" /></div>
+                <div><Label>Nome</Label><Input value={planForm.name} onChange={e => setPlanForm({ ...planForm, name: sanitizeAlpha(e.target.value) })} className="bg-muted border-border" /></div>
+                <div><Label>Objetivo</Label><Input value={planForm.objective} onChange={e => setPlanForm({ ...planForm, objective: sanitizeAlpha(e.target.value) })} className="bg-muted border-border" /></div>
                 <div className="grid grid-cols-4 gap-2">
-                  <div><Label>Kcal</Label><Input type="number" value={planForm.kcal} onChange={e => setPlanForm({ ...planForm, kcal: +e.target.value })} className="bg-muted border-border" /></div>
-                  <div><Label>Prot</Label><Input type="number" value={planForm.prot} onChange={e => setPlanForm({ ...planForm, prot: +e.target.value })} className="bg-muted border-border" /></div>
-                  <div><Label>Carb</Label><Input type="number" value={planForm.carb} onChange={e => setPlanForm({ ...planForm, carb: +e.target.value })} className="bg-muted border-border" /></div>
-                  <div><Label>Gord</Label><Input type="number" value={planForm.fat} onChange={e => setPlanForm({ ...planForm, fat: +e.target.value })} className="bg-muted border-border" /></div>
+                  <div><Label>Kcal</Label><Input type="text" inputMode="numeric" value={planForm.kcal} onChange={e => setPlanForm({ ...planForm, kcal: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
+                  <div><Label>Prot</Label><Input type="text" inputMode="numeric" value={planForm.prot} onChange={e => setPlanForm({ ...planForm, prot: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
+                  <div><Label>Carb</Label><Input type="text" inputMode="numeric" value={planForm.carb} onChange={e => setPlanForm({ ...planForm, carb: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
+                  <div><Label>Gord</Label><Input type="text" inputMode="numeric" value={planForm.fat} onChange={e => setPlanForm({ ...planForm, fat: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
                 </div>
                 <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white">Salvar</Button>
               </form>
@@ -297,7 +300,7 @@ const MealPlanner: React.FC = () => {
                           <Button variant="ghost" size="sm" onClick={() => { setPendingFood(null); setIsAddMealDialogOpen(false); }}><X className="h-4 w-4" /></Button>
                         </div>
 
-                        <div><Label>Refeição</Label><Input value={newMealName} onChange={e => setNewMealName(e.target.value)} placeholder="Ex: Café" /></div>
+                        <div><Label>Refeição</Label><Input value={newMealName} onChange={e => setNewMealName(sanitizeAlpha(e.target.value))} placeholder="Ex: Café" /></div>
 
                         <div>
                           <Label className="mb-2 block">Dias</Label>
@@ -332,7 +335,7 @@ const MealPlanner: React.FC = () => {
 
                         <div>
                           <Label>Quantidade (gramas)</Label>
-                          <Input type="number" value={newMealQty} onChange={e => setNewMealQty(+e.target.value)} className="text-lg font-bold" />
+                          <Input type="text" inputMode="numeric" value={newMealQty} onChange={e => setNewMealQty(+sanitizeNumeric(e.target.value))} className="text-lg font-bold" />
                         </div>
 
                         <div className="p-3 bg-green-500/10 rounded-md border border-green-500/20 text-sm">

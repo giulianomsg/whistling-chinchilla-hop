@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
+import { sanitizeAlpha, sanitizeFloatInput, sanitizeNumeric } from '@/utils/masks'
 
 const WorkoutPlanner: React.FC = () => {
   const { user, loading } = useAuth()
@@ -213,8 +214,8 @@ const WorkoutPlanner: React.FC = () => {
               <form onSubmit={handleSaveWorkout} className="space-y-4">
                 <div><Label>Nome do Plano *</Label><Input required value={planForm.name} onChange={e => setPlanForm({ ...planForm, name: e.target.value })} className="bg-muted border-border" /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Duração (Semanas)</Label><Input type="number" min="1" value={planForm.weeks} onChange={e => setPlanForm({ ...planForm, weeks: +e.target.value })} className="bg-muted border-border" /></div>
-                  <div><Label>Dias por Semana</Label><Input type="number" min="1" max="7" value={planForm.days} onChange={e => setPlanForm({ ...planForm, days: +e.target.value })} className="bg-muted border-border" /></div>
+                  <div><Label>Duração (Semanas)</Label><Input type="text" inputMode="numeric" min="1" value={planForm.weeks} onChange={e => setPlanForm({ ...planForm, weeks: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
+                  <div><Label>Dias por Semana</Label><Input type="text" inputMode="numeric" min="1" max="7" value={planForm.days} onChange={e => setPlanForm({ ...planForm, days: +sanitizeNumeric(e.target.value) })} className="bg-muted border-border" /></div>
                 </div>
                 <div><Label>Objetivo Principal</Label><Input value={planForm.objective} onChange={e => setPlanForm({ ...planForm, objective: e.target.value })} className="bg-muted border-border" placeholder="Ex: Hipertrofia" /></div>
                 <div><Label>Descrição Detalhada</Label><Textarea rows={3} value={planForm.description} onChange={e => setPlanForm({ ...planForm, description: e.target.value })} className="bg-muted border-border" placeholder="Ex: Foco em pernas e ombros..." /></div>

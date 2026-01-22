@@ -23,6 +23,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
+import { maskCPF, maskPhone, sanitizeAlpha, sanitizeNumeric, sanitizeFloatInput } from '@/utils/masks'
 import { useStrengthData } from '@/hooks/useStrengthData'
 import StrengthRadar from '@/components/analytics/StrengthRadar'
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
@@ -344,7 +345,23 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
   // ... existing handleSave ...
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    let finalValue = value
+
+    // Strict Character Enforcement
+    if (['fullName', 'nomePai', 'nomeMae'].includes(field)) {
+      finalValue = sanitizeAlpha(value)
+    }
+    if (['cpf'].includes(field)) {
+      finalValue = maskCPF(value)
+    }
+    if (['phone', 'whatsapp'].includes(field)) {
+      finalValue = maskPhone(value)
+    }
+    if (['consultationPrice'].includes(field)) {
+      finalValue = sanitizeFloatInput(value)
+    }
+
+    setFormData(prev => ({ ...prev, [field]: finalValue }))
   }
 
   const updateAnamnesis = (field: string, value: any) => {
@@ -475,7 +492,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
   const openNewAssessment = () => { setEditingAssessmentId(null); setNewAssessment(initialAssessmentState); setIsNewAssessmentOpen(true); }
 
   const updateNested = (section: 'skinfolds' | 'circumferences', field: string, value: string) => {
-    setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }))
+    const clean = sanitizeFloatInput(value)
+    setNewAssessment(prev => ({ ...prev, [section]: { ...prev[section], [field]: clean } }))
   }
 
   const handleSaveAssessment = async (status: 'draft' | 'completed') => {
@@ -1078,8 +1096,28 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
                 <h3 className="font-semibold flex items-center gap-2"><Ruler className="h-4 w-4" /> Dados Básicos</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2"><Label>Data</Label><Input type="date" value={newAssessment.date} onChange={e => setNewAssessment({ ...newAssessment, date: e.target.value })} className="bg-background border-border" /></div>
-                  <div className="space-y-2"><Label>Peso (kg)</Label><Input type="number" value={newAssessment.weight} onChange={e => setNewAssessment({ ...newAssessment, weight: e.target.value })} className="bg-background border-border" /></div>
-                  <div className="space-y-2"><Label>Altura (cm)</Label><Input type="number" value={newAssessment.height} onChange={e => setNewAssessment({ ...newAssessment, height: e.target.value })} className="bg-background border-border" /></div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Peso (kg)</Label>
+                      <Input
+                        type="text" inputMode="decimal"
+                        value={newAssessment.weight}
+                        onChange={e => setNewAssessment({ ...newAssessment, weight: sanitizeFloatInput(e.target.value) })}
+                        placeholder="0.0"
+                        className="bg-background border-border"
+                      />
+                    </div>
+                    <div>
+                      <Label>Altura (cm)</Label>
+                      <Input
+                        type="text" inputMode="decimal"
+                        value={newAssessment.height}
+                        onChange={e => setNewAssessment({ ...newAssessment, height: sanitizeFloatInput(e.target.value) })}
+                        placeholder="0"
+                        className="bg-background border-border"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="space-y-4">

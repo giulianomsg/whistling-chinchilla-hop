@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { ExerciseHistoryModal } from '@/components/modals/ExerciseHistoryModal'
+import { sanitizeAlpha, sanitizeFloatInput, sanitizeNumeric } from '@/utils/masks'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -448,7 +450,7 @@ const ExerciseLibrary: React.FC = () => {
                 <DialogDescription>Preencha os dados do exercício abaixo.</DialogDescription>
               </DialogHeader>
               <form onSubmit={(e) => handleSave(e, d.mode)} className="space-y-4">
-                <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /></div>
+                <div><Label>Nome *</Label><Input className="bg-muted border-border" required value={formData.name} onChange={e => setFormData({ ...formData, name: sanitizeAlpha(e.target.value) })} /></div>
 
                 {/* MEDIA UPLOAD SECTION */}
                 <div className="space-y-2 border border-border rounded-md p-4 bg-muted/30">
