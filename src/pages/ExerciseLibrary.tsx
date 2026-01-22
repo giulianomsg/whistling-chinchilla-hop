@@ -18,6 +18,30 @@ import { supabase } from '@/integrations/supabase/client'
 import { Checkbox } from '@/components/ui/checkbox'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import Model from 'react-body-highlighter'
+import { MultiSelect } from '@/components/ui/multi-select'
+
+const VALID_MUSCLES = [
+  { value: 'trapezius', label: 'Trapézio' },
+  { value: 'upper-back', label: 'Costas Superior' },
+  { value: 'lower-back', label: 'Lombar' },
+  { value: 'chest', label: 'Peitoral' },
+  { value: 'biceps', label: 'Bíceps' },
+  { value: 'triceps', label: 'Tríceps' },
+  { value: 'forearm', label: 'Antebraço' },
+  { value: 'back-deltoids', label: 'Deltoide Posterior' },
+  { value: 'front-deltoids', label: 'Deltoide Anterior' },
+  { value: 'abs', label: 'Abdômen' },
+  { value: 'obliques', label: 'Oblíquos' },
+  { value: 'adductor', label: 'Adutores' },
+  { value: 'hamstring', label: 'Isquiotibiais' },
+  { value: 'quadriceps', label: 'Quadríceps' },
+  { value: 'abductors', label: 'Abdutores' },
+  { value: 'calves', label: 'Panturrilhas' },
+  { value: 'gluteal', label: 'Glúteos' },
+  { value: 'head', label: 'Cabeça' },
+  { value: 'neck', label: 'Pescoço' }
+]
 
 // Component for Exercise Media (GIF or Video)
 const ExerciseMediaThumbnail = ({
@@ -111,7 +135,7 @@ const ExerciseLibrary: React.FC = () => {
     id: string
     name: string
     description: string
-    muscles: string
+    muscle_groups: string[] // Multi-select array
     equipment: string
     difficulty: string
     instructions: string
@@ -127,7 +151,7 @@ const ExerciseLibrary: React.FC = () => {
 
   const initialFormState: ExerciseForm = {
     id: '', name: '', description: '',
-    muscles: '', equipment: '',
+    muscle_groups: [], equipment: '',
     difficulty: 'beginner',
     instructions: '', tips: '',
     is_public: false,
@@ -259,7 +283,8 @@ const ExerciseLibrary: React.FC = () => {
     const payload: any = {
       name: formData.name,
       description: formData.description,
-      muscle_groups: formData.muscles.split(',').map(s => s.trim()).filter(Boolean),
+      muscle_groups: formData.muscle_groups, // ARRAY
+      muscle_group: formData.muscle_groups[0] || null, // PRIMARY (First selected)
       equipment_needed: formData.equipment.split(',').map(s => s.trim()).filter(Boolean),
       difficulty_level: formData.difficulty,
       instructions: formData.instructions.split('\n').filter(Boolean),
@@ -322,7 +347,7 @@ const ExerciseLibrary: React.FC = () => {
       id: ex.id,
       name: ex.name,
       description: ex.description || '',
-      muscles: (ex.muscle_groups || []).join(', '),
+      muscle_groups: ex.muscle_groups || [], // Load Array
       equipment: (ex.equipment_needed || []).join(', '),
       difficulty: ex.difficulty_level,
       video_url: ex.video_url || '',
@@ -544,7 +569,15 @@ const ExerciseLibrary: React.FC = () => {
                     </Select>
                   </div>
                 </div>
-                <div><Label>Músculos</Label><Input className="bg-muted border-border" value={formData.muscles} onChange={e => setFormData({ ...formData, muscles: e.target.value })} /></div>
+                <div>
+                  <Label>Músculos Alvo (Selecione todos que se aplicam)</Label>
+                  <MultiSelect
+                    options={VALID_MUSCLES}
+                    selected={formData.muscle_groups}
+                    onChange={(val) => setFormData({ ...formData, muscle_groups: val })}
+                    placeholder="Buscar músculos..."
+                  />
+                </div>
                 <div><Label>Equipamentos</Label><Input className="bg-muted border-border" value={formData.equipment} onChange={e => setFormData({ ...formData, equipment: e.target.value })} /></div>
                 <div><Label>URL de Tutorial (Youtube - Opcional)</Label><Input className="bg-muted border-border" value={formData.video_url} onChange={e => setFormData({ ...formData, video_url: e.target.value })} /></div>
                 <div><Label>Descrição</Label><Textarea className="bg-muted border-border" rows={2} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} /></div>

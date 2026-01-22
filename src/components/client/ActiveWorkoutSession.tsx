@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Minimize2, CheckCircle2, Trophy, ArrowLeft } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Minimize2, CheckCircle2, Trophy, ArrowLeft, User } from 'lucide-react'
 import { ActiveExerciseSlide } from './ActiveExerciseSlide'
 import { RestTimerOverlay } from './RestTimerOverlay'
 import { cn } from '@/lib/utils'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import BodyHighlighter from '@/components/visualization/BodyHighlighter'
 
 interface ActiveWorkoutSessionProps {
     exercises: any[]
@@ -122,7 +124,28 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     </div>
                 </div>
 
-                <div className="w-10" />
+                {/* Muscle View Button */}
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+                            <User className="h-5 w-5" />
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md bg-card/95 border-border text-foreground">
+                        <h3 className="font-bold text-center mb-4">Músculos Trabalhados</h3>
+                        <div className="flex justify-center">
+                            <BodyHighlighter muscles={
+                                Array.from(new Set(
+                                    exercises.flatMap(e => {
+                                        const groups = e.exercise?.muscle_groups || []
+                                        const single = e.exercise?.muscle_group
+                                        return [...groups, single]
+                                    }).filter(Boolean)
+                                )) as string[]
+                            } />
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             {/* Main Content (Carousel) */}

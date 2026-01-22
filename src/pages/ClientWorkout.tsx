@@ -1,13 +1,77 @@
+// ... existing imports
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { ChevronDown, ChevronUp, User } from 'lucide-react'
+import BodyHighlighter from '@/components/visualization/BodyHighlighter'
+
+// ... inside component function
+const [showMuscles, setShowMuscles] = useState(false)
+
+// ... previous logic
+
+// Calculate Unique Muscles for the Day
+// Note: workoutLogs might be logs, but we want PLANNED exercises for the day usually? 
+// Usually 'ClientWorkout' displays the Schedule or a specific workout.
+// Assuming 'exercises' state holds the workout definition.
+// If 'exercises' is not available here, check where we get the list.
+// In ClientWorkout.tsx (List View), we usually fetch 'workout_exercises'.
+
+// Let's assume we have 'exercises' array.
+const activeMuscles = React.useMemo(() => {
+  if (!exercises) return []
+  return Array.from(new Set(
+    exercises.map((e: any) => e.exercise?.muscle_group).filter(Boolean)
+  )) as string[]
+}, [exercises])
+
+  // ... render return
+  < div className = "min-h-screen bg-background pb-24" >
+    {/* ... Header ... */ }
+
+    < div className = "px-4 py-4 max-w-md mx-auto space-y-4" > // Added wrapper
+
+      {/* BODY HIGHLIGHTER CARD */ }
+{
+  activeMuscles.length > 0 && (
+    <Card className="bg-card border-border overflow-hidden">
+      <Collapsible open={showMuscles} onOpenChange={setShowMuscles}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full flex justify-between items-center p-4 h-auto hover:bg-accent/50">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-full text-primary">
+                <User className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <span className="font-bold text-foreground block">Músculos do Dia</span>
+                <span className="text-xs text-muted-foreground">{activeMuscles.length} grupos mapeados</span>
+              </div>
+            </div>
+            {showMuscles ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="p-6 bg-black/20 flex justify-center">
+            <BodyHighlighter muscles={activeMuscles} />
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
+  )
+}
+
+{/* ... List ... */ }
+
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useParams, useNavigate } from 'react-router-dom'
+import { supabase } from '@/integrations/supabase/client'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Dumbbell, Calendar, Target, Clock, Loader2, CheckCircle,
-  AlertCircle, Maximize2
-} from 'lucide-react'
-import { supabase } from '@/integrations/supabase/client'
+import { ArrowLeft, Play, Clock, Dumbbell, ChevronDown, ChevronUp, User, Calendar, Target, Loader2, CheckCircle, AlertCircle, Maximize2 } from 'lucide-react'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { useAuth } from '@/contexts/AuthContext'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import BodyHighlighter from '@/components/visualization/BodyHighlighter'
 import WorkoutDetailView from '@/components/client/WorkoutDetailView'
 import { useSearchParams } from 'react-router-dom'
 
@@ -75,6 +139,18 @@ const ClientWorkout: React.FC = () => {
     }
     fetchData()
   }, [user?.id])
+
+  // Calculate active muscles based on workoutExercises
+  const activeMuscles = React.useMemo(() => {
+    if (!workoutExercises) return []
+    return Array.from(new Set(
+      workoutExercises.flatMap((e: any) => {
+        const groups = e.exercise?.muscle_groups || []
+        const single = e.exercise?.muscle_group
+        return [...groups, single]
+      }).filter(Boolean)
+    )) as string[]
+  }, [workoutExercises])
 
   // Agrupar exercícios por dia
   const exercisesByDay = workoutExercises.reduce((acc: any, curr) => {
