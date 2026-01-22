@@ -8,12 +8,22 @@ interface BodyHighlighterProps {
     height?: number
 }
 
-const BodyHighlighter: React.FC<BodyHighlighterProps> = ({ muscles, className, width = 300, height = 300 }) => {
-    // Convert muscle names to Model compatible format
-    // Assuming inputs match valid keys or need mapping.
-    // The library expects [{ slug: 'chest', intensity: 1 }, ...]
+const VALID_SLUGS = [
+    'trapezius', 'upper-back', 'lower-back', 'chest', 'biceps', 'triceps', 'forearm',
+    'back-deltoids', 'front-deltoids', 'abs', 'obliques', 'adductor', 'hamstring',
+    'quadriceps', 'abductors', 'calves', 'gluteal', 'head', 'neck'
+]
 
-    const data = muscles.map(m => ({ slug: m, intensity: 1 }))
+const BodyHighlighter: React.FC<BodyHighlighterProps> = ({ muscles, className, width = 300, height = 300 }) => {
+    // Filter out invalid muscles to prevent library crash
+    const safeMuscles = muscles.filter(m => VALID_SLUGS.includes(m))
+
+    // Optional: Log warnings for dropped muscles to help debugging
+    if (muscles.length !== safeMuscles.length) {
+        console.warn('BodyHighlighter: Ignored invalid muscle keys:', muscles.filter(m => !VALID_SLUGS.includes(m)))
+    }
+
+    const data = safeMuscles.map(m => ({ slug: m, intensity: 1 }))
 
     return (
         <div className={`flex items-center justify-center ${className}`}>
