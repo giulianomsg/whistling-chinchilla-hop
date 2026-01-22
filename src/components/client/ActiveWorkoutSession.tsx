@@ -20,6 +20,7 @@ interface ActiveWorkoutSessionProps {
     restTimerSeconds: number
     setRestTimerSeconds: (seconds: any) => void
     totalRestSeconds: number
+    onSkipRest?: () => void
 
     // Exercise Timer Props
     activeTimerId: string | null
@@ -51,6 +52,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     restTimerSeconds,
     setRestTimerSeconds,
     totalRestSeconds,
+    onSkipRest,
     activeTimerId,
     exerciseTimers,
     onToggleTimer,
@@ -159,7 +161,10 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
             {/* Rest Timer Overlay */}
             <RestTimerOverlay
                 isOpen={restTimerOpen}
-                onClose={() => setRestTimerOpen(false)}
+                onClose={() => {
+                    if (onSkipRest) onSkipRest()
+                    else setRestTimerOpen(false)
+                }}
                 onAddSeconds={(s) => setRestTimerSeconds((prev: number) => prev + s)}
                 secondsRemaining={restTimerSeconds}
                 totalSeconds={totalRestSeconds}

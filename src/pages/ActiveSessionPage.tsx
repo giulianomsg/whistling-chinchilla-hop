@@ -588,6 +588,19 @@ const ActiveSessionPage = () => {
 
 
     // Rest Timer Logic
+    const handleSkipRest = async () => {
+        // Immediate cleanup of local state
+        setRestTargetTime(null)
+        setRestTimerSeconds(0)
+        setRestTimerOpen(false)
+
+        // Resume Exercise Timer immediately without audio
+        if (lastRestExId) {
+            await handleToggleTimer(lastRestExId)
+            setLastRestExId(null)
+        }
+    }
+
     useEffect(() => {
         let interval: NodeJS.Timeout
         if (restTargetTime) {
@@ -679,6 +692,7 @@ const ActiveSessionPage = () => {
                 restTimerSeconds={restTimerSeconds}
                 setRestTimerSeconds={setRestTimerSeconds}
                 totalRestSeconds={totalRestSeconds}
+                onSkipRest={handleSkipRest}
 
                 // Timer Props
                 activeTimerId={activeTimerId}
