@@ -84,16 +84,18 @@ const ClientWorkout: React.FC = () => {
   // Calculate active muscles based on workoutExercises
   const activeMuscles = React.useMemo(() => {
     if (!workoutExercises) return []
-    return Array.from(new Set(
-      workoutExercises.flatMap((e: any) => {
-        if (!e.exercise) return []
-        const groups = e.exercise.muscle_groups || []
-        const single = e.exercise.muscle_group
-        // Ensure groups is actually an array before spreading
-        const safeGroups = Array.isArray(groups) ? groups : []
-        return [...safeGroups, single]
-      }).filter((m: any) => m && typeof m === 'string')
-    )) as string[]
+    const raw = workoutExercises.flatMap((e: any) => {
+      if (!e.exercise) return []
+      console.log('Ex:', e.exercise.name, 'G:', e.exercise.muscle_groups, 'S:', e.exercise.muscle_group)
+      const groups = e.exercise.muscle_groups || []
+      const single = e.exercise.muscle_group
+      // Ensure groups is actually an array before spreading
+      const safeGroups = Array.isArray(groups) ? groups : []
+      return [...safeGroups, single]
+    })
+    const unique = Array.from(new Set(raw.filter((m: any) => m && typeof m === 'string'))) as string[]
+    console.log('Active Muscles Final:', unique)
+    return unique
   }, [workoutExercises])
 
   // Agrupar exercícios por dia
