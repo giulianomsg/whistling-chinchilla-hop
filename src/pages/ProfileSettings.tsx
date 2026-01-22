@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Loader2, Save, Upload, User, Shield, Award, Phone, Camera, HeartPulse, Activity, Apple, ZoomIn, FileText, Plus, Trash2, Calendar, Clock, CheckCircle, AlertCircle, Scale, Ruler, Dumbbell, ChevronRight, Trophy, ArrowLeft } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
 import { calculateBiometrics, calculateCompletion } from '@/utils/biometrics'
 import { useStrengthData } from '@/hooks/useStrengthData'
@@ -116,6 +117,7 @@ interface ProfileSettingsProps {
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false }) => {
   const navigate = useNavigate()
   const { user, loading: authLoading } = useAuth()
+  const { confirm } = useFeedback()
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
 
@@ -450,7 +452,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
   }
 
   const handleDeletePhoto = async (photoId: string) => {
-    if (!confirm('Excluir foto?')) return
+    if (!await confirm({ title: "Excluir Foto?", description: "Esta ação é irreversível.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
     try {
       await supabase.from('progress_photos').delete().eq('id', photoId)
       showSuccess('Foto removida.')
@@ -512,7 +514,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isEmbedded = false })
   }
 
   const handleDeleteAssessment = async (assessmentId: string) => {
-    if (!confirm('Tem certeza?')) return
+    if (!await confirm({ title: "Excluir Avaliação?", description: "Esta ação é irreversível.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
     try {
       await supabase.from('biometric_data').delete().eq('id', assessmentId)
       showSuccess('Avaliação excluída.')

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { Apple, Plus, Search, Edit, Trash2, Eye, Loader2 } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabase } from '@/integrations/supabase/client'
@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 const FoodLibrary: React.FC = () => {
   const { user, loading } = useAuth()
+  const { confirm } = useFeedback()
   const [foods, setFoods] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -83,6 +84,8 @@ const FoodLibrary: React.FC = () => {
   }
 
   const handleDelete = async (id: string) => {
+    if (!await confirm({ title: "Excluir Alimento?", description: "Esta ação é irreversível.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
+
     const { error } = await supabase.from('foods_library').delete().eq('id', id)
     if (!error) { showSuccess('Deletado!'); fetchFoods() }
     else showError('Erro ao deletar')
@@ -124,13 +127,7 @@ const FoodLibrary: React.FC = () => {
                     {food.created_by === user?.id && (
                       <>
                         <Button variant="ghost" size="icon" onClick={() => openEdit(food)} className="text-muted-foreground hover:text-green-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                          <AlertDialogContent className="bg-card border-border text-foreground">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle></AlertDialogHeader>
-                            <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(food.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(food.id)} className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button>
                       </>
                     )}
                   </div>

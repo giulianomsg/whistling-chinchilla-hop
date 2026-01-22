@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Dumbbell, Plus, Search, Eye, Loader2, Edit, Trash2, Video, List, X, Upload, Image as ImageIcon, Film, User as UserIcon, Clock } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
@@ -89,6 +89,7 @@ const ExerciseMediaThumbnail = ({
 
 const ExerciseLibrary: React.FC = () => {
   const { user, profile, loading } = useAuth()
+  const { confirm } = useFeedback()
   const [exercises, setExercises] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -295,9 +296,22 @@ const ExerciseLibrary: React.FC = () => {
     }
   }
 
+  /* Delete Logic with new Feedback */
   const handleDelete = async (id: string) => {
+    const confirmed = await confirm({
+      title: 'Excluir Exercício?',
+      description: 'Esta ação é irreversível e removerá o exercício da biblioteca.',
+      variant: 'destructive',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    })
+    if (!confirmed) return
+
     const { error } = await supabase.from('exercises_library').delete().eq('id', id)
-    if (!error) { showSuccess('Deletado!'); fetchExercises() }
+    if (!error) {
+      showSuccess('Deletado!')
+      fetchExercises()
+    }
     else showError('Erro ao deletar')
   }
 
@@ -373,13 +387,7 @@ const ExerciseLibrary: React.FC = () => {
                       {canEdit && (
                         <>
                           <Button variant="ghost" size="icon" onClick={() => openEdit(ex)} className="text-muted-foreground hover:text-blue-500 h-8 w-8"><Edit className="h-4 w-4" /></Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                            <AlertDialogContent className="bg-card border-border text-foreground">
-                              <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Irreversível.</AlertDialogDescription></AlertDialogHeader>
-                              <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(ex.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                          <Button variant="ghost" size="icon" onClick={() => handleDelete(ex.id)} className="text-muted-foreground hover:text-destructive h-8 w-8"><Trash2 className="h-4 w-4" /></Button>
                         </>
                       )}
                     </div>

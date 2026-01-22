@@ -28,6 +28,7 @@ import { isSameDay, isAfter, isBefore, startOfDay, format } from 'date-fns'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { FolderTabs, FolderTabsContent, FolderTabsList, FolderTabsTrigger } from '@/components/ui/folder-tabs'
 import { supabase } from '@/integrations/supabase/client'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { showSuccess, showError } from '@/utils/toast'
 import { calculateBiometrics, classifyBMI, calculateCompletion } from '@/utils/biometrics'
 import { AchievementsList } from '@/components/gamification/AchievementsList'
@@ -101,6 +102,7 @@ const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { confirm } = useFeedback()
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
@@ -280,9 +282,14 @@ const ClientDetails: React.FC = () => {
         }
 
         if (isAvailable === false) {
-          if (!confirm('Atenção: Você já tem um agendamento nesse horário (ou muito próximo). Deseja continuar mesmo assim?')) {
-            return
-          }
+          const confirmed = await confirm({
+            title: "Conflito de Horário",
+            description: "Você já tem um agendamento nesse horário (ou muito próximo). Deseja continuar mesmo assim?",
+            variant: "default",
+            confirmText: "Sim, Continuar",
+            cancelText: "Cancelar"
+          })
+          if (!confirmed) return
         }
 
         const { error } = await supabase.from('scheduled_workouts').insert({
@@ -452,7 +459,7 @@ const ClientDetails: React.FC = () => {
   }
 
   const handleDeleteAssessment = async (assessmentId: string) => {
-    if (!confirm('Tem certeza?')) return
+    if (!await confirm({ title: "Excluir Avaliação?", description: "Esta ação é irreversível.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
     try {
       const assessmentDate = assessments.find(a => a.id === assessmentId)?.date
       await supabase.from('biometric_data').delete().eq('id', assessmentId)
@@ -507,7 +514,7 @@ const ClientDetails: React.FC = () => {
   }
 
   const handleDeletePhoto = async (photoId: string) => {
-    if (!confirm('Excluir foto?')) return
+    if (!await confirm({ title: "Excluir Foto?", description: "Esta ação é irreversível.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
     try {
       const photoDate = progressPhotos.find(p => p.id === photoId)?.date
       await supabase.from('progress_photos').delete().eq('id', photoId)
@@ -689,7 +696,7 @@ const ClientDetails: React.FC = () => {
   }
 
   const handleDeleteSchedule = async (scheduleId: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir este agendamento permanentemente?')) return
+    if (!await confirm({ title: "Excluir Agendamento?", description: "Deseja excluir este agendamento permanentemente?", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
 
     try {
       const { error } = await supabase.from('scheduled_workouts').delete().eq('id', scheduleId)

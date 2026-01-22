@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { Loader2, Plus, Calendar as CalendarIcon, CheckCircle, Clock } from 'lucide-react'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { ptBR } from 'date-fns/locale'
 import { format, isSameDay, isAfter, isBefore, startOfDay } from 'date-fns'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -55,6 +56,7 @@ interface ClientWorkout {
 
 const ClientAgenda: React.FC = () => {
     const { user } = useAuth()
+    const { confirm } = useFeedback()
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [scheduledWorkouts, setScheduledWorkouts] = useState<ScheduledWorkout[]>([])
     const [workoutSessions, setWorkoutSessions] = useState<WorkoutSession[]>([])
@@ -213,7 +215,12 @@ const ClientAgenda: React.FC = () => {
                 })
 
                 if (isAvailable === false) {
-                    if (!confirm('O professor já tem um agendamento neste horário. Deseja solicitar mesmo assim?')) {
+                    if (!await confirm({
+                        title: "Conflito de Horário",
+                        description: "O professor já tem um agendamento neste horário. Deseja solicitar mesmo assim?",
+                        confirmText: "Solicitar",
+                        cancelText: "Cancelar"
+                    })) {
                         setSubmitting(false)
                         return
                     }

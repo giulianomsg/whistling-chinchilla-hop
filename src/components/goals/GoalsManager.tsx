@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Progress } from '@/components/ui/progress'
 import { Target, Plus, Trash2, Edit2, CheckCircle, Calendar } from 'lucide-react'
@@ -28,6 +29,7 @@ interface GoalsManagerProps {
 }
 
 const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId, simplified = false }) => {
+    const { confirm } = useFeedback()
     const [goals, setGoals] = useState<Goal[]>([])
     const [loading, setLoading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -116,7 +118,8 @@ const GoalsManager: React.FC<GoalsManagerProps> = ({ clientId, simplified = fals
     }
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Excluir esta meta?')) return
+        if (!await confirm({ title: "Excluir Meta?", description: "Esta ação não pode ser desfeita.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
+
         try {
             const { error } = await supabase.from('user_goals').delete().eq('id', id)
             if (error) throw error

@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import {
   Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search, X
 } from 'lucide-react'
@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 const WorkoutPlanner: React.FC = () => {
   const { user, loading } = useAuth()
+  const { confirm } = useFeedback()
   const [workouts, setWorkouts] = useState<any[]>([])
   const [exercises, setExercises] = useState<any[]>([])
   const [workoutExercises, setWorkoutExercises] = useState<any[]>([])
@@ -114,6 +115,15 @@ const WorkoutPlanner: React.FC = () => {
   }
 
   const handleDeleteWorkout = async (id: string) => {
+    const confirmed = await confirm({
+      title: "Excluir Plano?",
+      description: "Esta ação é irreversível. O plano será removido permanentemente.",
+      variant: "destructive",
+      confirmText: "Excluir",
+      cancelText: "Cancelar"
+    })
+    if (!confirmed) return
+
     const { error } = await supabase.from('workouts').delete().eq('id', id)
     if (!error) { showSuccess('Plano excluído'); fetchWorkouts() }
     else showError('Erro ao excluir')
@@ -177,6 +187,8 @@ const WorkoutPlanner: React.FC = () => {
   }
 
   const handleDeleteExercise = async (id: string) => {
+    if (!await confirm({ title: "Remover Exercício?", description: "Deseja remover este exercício do plano?", variant: "destructive", confirmText: "Remover", cancelText: "Cancelar" })) return
+
     await supabase.from('workout_exercises').delete().eq('id', id)
     const { data } = await supabase.from('workout_exercises').select(`*, exercise:exercises_library(*)`).eq('workout_id', selectedWorkout.id).order('day_number').order('order_index')
     setWorkoutExercises(data || [])
@@ -239,13 +251,7 @@ const WorkoutPlanner: React.FC = () => {
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => handleManage(workout)} title="Gerenciar Exercícios" className="text-muted-foreground hover:text-foreground"><Settings className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => openEditDialog(workout)} title="Editar Informações" className="text-muted-foreground hover:text-blue-500"><Edit className="h-4 w-4" /></Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                      <AlertDialogContent className="bg-card border-border text-foreground">
-                        <AlertDialogHeader><AlertDialogTitle>Excluir Plano?</AlertDialogTitle><AlertDialogDescription>Isso não afeta treinos já iniciados por alunos.</AlertDialogDescription></AlertDialogHeader>
-                        <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteWorkout(workout.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteWorkout(workout.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
               </CardHeader>

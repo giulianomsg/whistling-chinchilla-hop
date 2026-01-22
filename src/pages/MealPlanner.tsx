@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import { Progress } from '@/components/ui/progress'
 import {
   Utensils, Plus, Edit, Trash2, Settings, Target, Loader2, Search, Apple, Flame, X
@@ -20,6 +20,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } 
 
 const MealPlanner: React.FC = () => {
   const { user, loading } = useAuth()
+  const { confirm } = useFeedback()
   const [mealPlans, setMealPlans] = useState<any[]>([])
   const [mealPlanItems, setMealPlanItems] = useState<any[]>([])
   const [pageLoading, setPageLoading] = useState(true)
@@ -81,6 +82,8 @@ const MealPlanner: React.FC = () => {
   }
 
   const handleDeletePlan = async (id: string) => {
+    if (!await confirm({ title: "Excluir Plano?", description: "Esta ação não pode ser desfeita.", variant: "destructive", confirmText: "Excluir", cancelText: "Cancelar" })) return
+
     const { error } = await supabase.from('meal_plans').delete().eq('id', id)
     if (!error) { showSuccess('Deletado!'); fetchData() }
     else showError('Erro')
@@ -127,6 +130,8 @@ const MealPlanner: React.FC = () => {
   }
 
   const handleDeleteItem = async (itemId: string) => {
+    if (!await confirm({ title: "Remover Item?", description: "Remover este item da refeição?", variant: "destructive", confirmText: "Remover", cancelText: "Cancelar" })) return
+
     await supabase.from('meal_plan_items').delete().eq('id', itemId)
     handleManage(selectedMealPlan) // Refresh
   }
@@ -189,13 +194,7 @@ const MealPlanner: React.FC = () => {
                       <CardTitle className="text-foreground text-lg">{plan.name}</CardTitle>
                       <div className="flex gap-1" onClick={e => e.stopPropagation()}>
                         <Button variant="ghost" size="icon" onClick={() => openEditDialog(plan)} className="text-muted-foreground hover:text-blue-500"><Edit className="h-4 w-4" /></Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-                          <AlertDialogContent className="bg-card border-border text-foreground">
-                            <AlertDialogHeader><AlertDialogTitle>Excluir?</AlertDialogTitle><AlertDialogDescription>Essa ação não pode ser desfeita.</AlertDialogDescription></AlertDialogHeader>
-                            <AlertDialogFooter><AlertDialogCancel className="text-foreground">Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => handleDeletePlan(plan.id)} className="bg-destructive text-destructive-foreground">Excluir</AlertDialogAction></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeletePlan(plan.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </div>
                   </CardHeader>
