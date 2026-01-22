@@ -300,6 +300,22 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         showSuccess('Treino iniciado!')
         navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
       } else if (action === 'resume' && sessionId) {
+        // Update DB to resume timer (Recalculate started_at so delta works)
+        const effectiveStart = new Date(Date.now() - (elapsedTime * 1000))
+
+        const { error } = await supabase.from('workout_sessions')
+          .update({
+            status: 'started',
+            started_at: effectiveStart.toISOString()
+          })
+          .eq('id', sessionId)
+
+        if (error) throw error
+
+        setSessionStatus('started')
+        setSessionStartTime(effectiveStart.getTime())
+        setIsSessionActive(true)
+
         // Just navigate
         navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       } else if (action === 'pause' && sessionId) {

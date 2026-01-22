@@ -174,6 +174,7 @@ const ActiveSessionPage = () => {
                     .from('workout_execution_logs')
                     .select('*, exercise:exercises_library(*)')
                     .eq('workout_session_id', sessionId)
+                    .order('created_at', { ascending: true })
                 setExecutionLogs(logs || [])
 
                 // 4. Load History (Optimization: only for displayed exercises)
@@ -453,6 +454,12 @@ const ActiveSessionPage = () => {
                     if (data) setExecutionLogs(p => p.map(l => l.id === data.id ? { ...l, ...data, exercise: workoutExercise?.exercise } : l))
                 }
             } else if (isCompleted) {
+                // Safeguard: Enforce Sequential Check (Stack logic)
+                if (relevantLogs.length !== setIndex - 1) {
+                    showError('Por favor, marque as séries na ordem correta (1, 2, 3...).')
+                    return
+                }
+
                 const { data } = await supabase.from('workout_execution_logs').insert(logData).select().single()
                 if (data) setExecutionLogs(p => [...p, { ...data, exercise: workoutExercise?.exercise }])
             }
@@ -534,6 +541,18 @@ const ActiveSessionPage = () => {
         } catch (e) {
             console.error(e)
             showError("Erro ao salvar")
+        }
+    }
+
+    const handleUpdateLogNote = async (logId: string, note: string) => {
+        try {
+            const { error } = await supabase.from('workout_execution_logs').update({ notes: note }).eq('id', logId)
+            if (error) throw error
+
+            // Update local state
+            setExecutionLogs(prev => prev.map(l => l.id === logId ? { ...l, notes: note } : l))
+        } catch (e) {
+            console.error("Failed to update note", e)
         }
     }
 
@@ -731,6 +750,7 @@ const ActiveSessionPage = () => {
                 executionLogs={executionLogs}
                 historyLogs={historyLogs}
                 onSaveLog={handleSaveLog}
+                onUpdateLogNote={handleUpdateLogNote}
                 onFinishWorkout={handleFinish}
                 restTimerOpen={restTimerOpen}
                 setRestTimerOpen={setRestTimerOpen}

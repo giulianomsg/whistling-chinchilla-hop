@@ -10,6 +10,7 @@ interface ActiveWorkoutSessionProps {
     executionLogs: any[]
     historyLogs: any[]
     onSaveLog: (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => void
+    onUpdateLogNote: (logId: string, note: string) => void
     onFinishWorkout: () => void
     onMinimize: () => void
     isOpen: boolean
@@ -46,6 +47,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     executionLogs,
     historyLogs,
     onSaveLog,
+    onUpdateLogNote,
     onFinishWorkout,
     onMinimize,
     isOpen,
@@ -134,6 +136,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     executionLogs={executionLogs}
                     historyLogs={historyLogs}
                     onSaveLog={onSaveLog}
+                    onUpdateLogNote={onUpdateLogNote}
                     activeTime={exerciseTimers[currentExercise.id] || 0}
                     isTimerRunning={activeTimerId === currentExercise.id}
                     onToggleTimer={onToggleTimer}

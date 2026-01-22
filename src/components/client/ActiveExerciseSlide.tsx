@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PlayCircle, VideoOff, Info, Image as ImageIcon, Video as VideoIcon, Square, Play } from 'lucide-react'
 import { SetInputRow } from './SetInputRow'
+import { Textarea } from '@/components/ui/textarea'
 
 interface ActiveExerciseSlideProps {
     exercise: any
@@ -14,6 +15,7 @@ interface ActiveExerciseSlideProps {
     onToggleTimer: (exerciseId: string) => void
     isSessionActive: boolean
     isResting?: boolean
+    onUpdateLogNote: (logId: string, note: string) => void
 }
 
 export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
@@ -25,7 +27,8 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     isTimerRunning,
     onToggleTimer,
     isSessionActive,
-    isResting
+    isResting,
+    onUpdateLogNote
 }) => {
     // View Mode: 'gif' | 'video' | 'info'
     const [viewMode, setViewMode] = useState<'gif' | 'video' | 'info'>('gif')
@@ -202,16 +205,29 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                     {Array.from({ length: exercise.sets }).map((_, i) => {
                         const historyLog = pastLogs[i]
                         const currentLog = currentExLogs.find(l => l.set_number === i + 1) || currentExLogs[i] // Fallback index
+                        const isLastSet = i === exercise.sets - 1
                         return (
-                            <SetInputRow
-                                key={i}
-                                setNumber={i + 1}
-                                previousWeight={historyLog?.weight}
-                                previousReps={historyLog?.reps}
-                                currentLog={currentLog}
-                                isCompleted={!!currentLog}
-                                onSave={(w, r, c) => onSaveLog(exercise.id, i + 1, w, r, c)}
-                            />
+                            <div key={i} className="flex flex-col gap-2">
+                                <SetInputRow
+                                    setNumber={i + 1}
+                                    previousWeight={historyLog?.weight}
+                                    previousReps={historyLog?.reps}
+                                    currentLog={currentLog}
+                                    isCompleted={!!currentLog}
+                                    onSave={(w, r, c) => onSaveLog(exercise.id, i + 1, w, r, c)}
+                                />
+                                {isLastSet && currentLog && (
+                                    <div className="ml-10 md:ml-14 mb-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                                        <label className="text-[10px] md:text-xs font-bold text-muted-foreground/70 uppercase mb-1 block pl-1">Observações do Exercício</label>
+                                        <Textarea
+                                            placeholder="Alguma dor? Carga ficou leve? Anote aqui..."
+                                            defaultValue={currentLog.notes || ''}
+                                            className="bg-card/50 min-h-[80px] text-sm resize-none border-dashed focus:border-solid transition-all"
+                                            onBlur={(e) => onUpdateLogNote(currentLog.id, e.target.value)}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         )
                     })}
                 </div>
