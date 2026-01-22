@@ -602,11 +602,17 @@ const ActiveSessionPage = () => {
 
                     // Notify
                     try {
-                        // Sound & Vibration
-                        const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
-                        audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
+                        // Sound & Vibration - Repeat 3 times
+                        const playAlarm = (count: number) => {
+                            if (count <= 0) return
+                            const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
+                            audio.volume = 1.0
+                            audio.play().catch((e) => console.log("Audio Permission Blocked", e))
+                            if ('vibrate' in navigator) navigator.vibrate([500, 200, 500])
 
-                        if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
+                            setTimeout(() => playAlarm(count - 1), 1500) // Repeat every 1.5s
+                        }
+                        playAlarm(3)
 
                         // System Notification
                         if (Notification.permission === 'granted') {
