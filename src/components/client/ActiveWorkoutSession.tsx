@@ -61,6 +61,16 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
+    // Auto-navigate to active exercise on load or when timer starts
+    useEffect(() => {
+        if (activeTimerId && exercises.length > 0) {
+            const idx = exercises.findIndex(e => e.id === activeTimerId)
+            if (idx !== -1) {
+                setCurrentIndex(idx)
+            }
+        }
+    }, [activeTimerId, exercises])
+
     // ... (rest of state)
 
     const currentExercise = exercises[currentIndex]
