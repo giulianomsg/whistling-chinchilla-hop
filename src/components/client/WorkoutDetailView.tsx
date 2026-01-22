@@ -256,12 +256,89 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // Just navigate
         navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       } else if (action === 'pause' && sessionId) {
-        // Navigate to session to pause? Or just pause here simple?
-        // Simplest is direct user to session page to control it.
-        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
+        // PAUSE: Update status to 'paused' and update local state
+        const { error } = await supabase.from('workout_sessions')
+          .update({ status: 'paused', duration_seconds: elapsedTime })
+          .eq('id', sessionId)
+
+        if (error) throw error
+
+        setSessionStatus('paused')
+        showSuccess('Treino pausado!')
+        // We don't navigate, just update UI
       } else if (action === 'finish' && sessionId) {
-        // Navigate to session to finish
-        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
+        // FINISH: Verify, Calculate XP, Update Profile, Show Summary
+        if (elapsedTime < 60 && executionLogs.length === 0) {
+          if (!confirm("Tem certeza? O treino parece muito curto ou vazio.")) {
+            setSessionLoading(false)
+            return
+          }
+        }
+
+        // 1. Prepare Data for XP Calc
+        const enrichedLogs = executionLogs.map(log => {
+          const exerciseDef = workoutExercises.find(we => we.id === log.workout_exercise_id)
+          return {
+            ...log,
+            exercise: { name: exerciseDef?.exercise?.name || log.exercise?.name || '' },
+            exercise_id: exerciseDef?.exercise_id || log.exercise_id
+          }
+        })
+
+        // 2. Fetch Profile & Body (Optimization: could be fetched earlier or just now)
+        const { data: profile } = await supabase.from('profiles').select('current_xp, level').eq('id', clientWorkout.client_id).single()
+        const { data: body } = await supabase.from('biometric_data').select('weight').eq('client_id', clientWorkout.client_id).limit(1).maybeSingle()
+
+        // 3. 1RMs Calculation
+        let local1RMs: Record<string, number> = {}
+        // Use available historyLogs (which might be partial, but acceptable for this view context)
+        // Ideally we should fetch all history if accuracy is paramount, but using what we have is a tradeoff for speed.
+        // Actually, let's just use what's in historyLogs state.
+        historyLogs.forEach(h => {
+          const exName = workoutExercises.find(e => e.exercise_id === h.exercise_id)?.exercise?.name || ''
+          const cId = getCanonicalExerciseId(exName)
+          if (cId) {
+            const rm = calculateOneRM(h.weight, h.reps)
+            if (rm > (local1RMs[cId] || 0)) local1RMs[cId] = rm
+          }
+        })
+
+        const xpResult = calculateSessionXP(
+          elapsedTime,
+          exerciseTimers,
+          enrichedLogs,
+          workoutExercises,
+          body?.weight || 70,
+          local1RMs
+        )
+
+        const xpGained = xpResult.total
+        const newXP = (profile?.current_xp || 0) + xpGained
+        const newLevel = Math.floor(newXP / 1000) + 1
+
+        // 4. Update DB
+        const updatePayload = {
+          status: 'completed',
+          ended_at: new Date().toISOString(),
+          duration_seconds: elapsedTime
+        }
+        await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
+        await supabase.from('profiles').update({ current_xp: newXP, level: newLevel }).eq('id', clientWorkout.client_id)
+
+        // 5. Show Summary
+        setSummaryData({
+          xpEarned: xpGained,
+          currentXP: newXP,
+          newLevel,
+          oldLevel: profile?.level || 1,
+          workoutName: clientWorkout.workout?.name || 'Treino',
+          durationSeconds: elapsedTime,
+          totalLoadKg: enrichedLogs.reduce((a: number, l: any) => a + (l.weight || 0) * (l.reps || 0), 0)
+        })
+
+        setShowSummaryModal(true)
+        if (refreshProfile) refreshProfile()
+
       }
     } catch (error) { showError('Erro na sessão'); console.error(error) }
     finally { setSessionLoading(false) }
@@ -569,10 +646,18 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
           {/* Time Display - Centered or Left aligned based on screen */}
           <div className="flex items-center justify-center md:justify-start w-full md:w-auto mb-1 md:mb-0">
-            <div className="bg-muted/50 px-3 py-1 pb-1.5 rounded-lg border border-border flex flex-col items-center min-w-[100px]">
-              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-none mb-0.5">Tempo</span>
-              <span className="text-xl font-mono font-bold text-foreground leading-none tracking-wider">{formatTime(elapsedTime)}</span>
-            </div>
+            {isSessionActive && sessionStatus === 'started' ? (
+              <div className="bg-green-500/10 px-3 py-1.5 rounded-lg border border-green-500/20 flex items-center min-w-[100px]">
+                <span className="text-sm font-bold text-green-500 animate-pulse flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" /> Em Andamento
+                </span>
+              </div>
+            ) : (
+              <div className="bg-muted/50 px-3 py-1 pb-1.5 rounded-lg border border-border flex flex-col items-center min-w-[100px]">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-none mb-0.5">Tempo</span>
+                <span className="text-xl font-mono font-bold text-foreground leading-none tracking-wider">{formatTime(elapsedTime)}</span>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}

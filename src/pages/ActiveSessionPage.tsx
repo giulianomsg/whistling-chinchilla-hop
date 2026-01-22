@@ -420,7 +420,12 @@ const ActiveSessionPage = () => {
             if (isCompleted) {
                 const restTime = workoutExercise?.rest_time_seconds || 60
                 const targetTime = Date.now() + restTime * 1000
-                const resumeId = activeTimerId === exerciseId ? exerciseId : null // Resume if running
+
+                // Determine if this was the last set
+                const isLastSet = workoutExercise?.sets ? setIndex >= workoutExercise.sets : false
+
+                // If it's the last set, we do NOT want to resume automatically.
+                const resumeId = (activeTimerId === exerciseId && !isLastSet) ? exerciseId : null
 
                 let updatePayload: any = {}
                 let newTimers = { ...exerciseTimers }
@@ -644,6 +649,7 @@ const ActiveSessionPage = () => {
                 exerciseTimers={exerciseTimers}
                 onToggleTimer={handleToggleTimer}
                 isSessionActive={sessionData?.status === 'started'}
+                elapsedTime={elapsedTime}
             />
         </div>
     )

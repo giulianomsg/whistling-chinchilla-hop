@@ -18,14 +18,24 @@ interface ActiveWorkoutSessionProps {
     restTimerOpen: boolean
     setRestTimerOpen: (open: boolean) => void
     restTimerSeconds: number
-    setRestTimerSeconds: (seconds: any) => void // Accepts function or number
+    setRestTimerSeconds: (seconds: any) => void
     totalRestSeconds: number
 
     // Exercise Timer Props
     activeTimerId: string | null
-    exerciseTimers: Record<string, any> // Changed to 'any' to support internal persistence keys
+    exerciseTimers: Record<string, any>
     onToggleTimer: (id: string) => void
     isSessionActive: boolean
+
+    // Global Timer
+    elapsedTime: number
+}
+
+// Helper for formatting
+const formatSeconds = (sec: number) => {
+    const m = Math.floor(sec / 60)
+    const s = sec % 60
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
 }
 
 export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
@@ -44,15 +54,12 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     activeTimerId,
     exerciseTimers,
     onToggleTimer,
-    isSessionActive
+    isSessionActive,
+    elapsedTime
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
-    // Reset index if exercises change significantly or on re-mount if needed, 
-    // but we probably want to persist index if minimized.
-    // For now, let's keep it simple: local state. 
-    // If parent unmounts, this resets. The prompt asked for state persistence.
-    // If "Minimize" sets isOpen=false, and checks style={{display: none}}, state is kept.
+    // ... (rest of state)
 
     const currentExercise = exercises[currentIndex]
 
@@ -68,15 +75,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
         }
     }
 
-    // Calculate progress
-    const completedCount = exercises.reduce((acc, ex) => {
-        const logs = executionLogs.filter(l => l.workout_exercise_id === ex.id)
-        // Heuristic: If logs count >= sets, it's "done"
-        if (logs.length >= ex.sets) return acc + 1
-        return acc
-    }, 0)
-
-    const progressPercentage = (completedCount / exercises.length) * 100
+    // ...
 
     // if (!isOpen) return null (Removed to persist state)
     // If no exercises, show something else (but we keep rendered if hidden)
@@ -94,8 +93,8 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                 </Button>
 
                 <div className="flex flex-col items-center">
-                    <span className="text-sm font-bold">
-                        {currentIndex + 1} / {exercises.length}
+                    <span className="text-sm font-bold font-mono">
+                        {formatSeconds(elapsedTime)}
                     </span>
                     <div className="w-24 h-1 bg-muted rounded-full mt-1 overflow-hidden">
                         <div
