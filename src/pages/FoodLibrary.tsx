@@ -37,7 +37,7 @@ const FoodLibrary: React.FC = () => {
     if (!user) return
     setPageLoading(true)
     try {
-      const filterString = `created_by.eq.${ user.id }, is_public.eq.true`
+      const filterString = 'created_by.eq.' + user.id + ',is_public.eq.true'
       let query = supabase.from('foods_library').select('*').or(filterString).order('created_at', { ascending: false })
       if (searchTerm) query = query.ilike('name', `% ${ searchTerm }% `)
       const { data } = await query
