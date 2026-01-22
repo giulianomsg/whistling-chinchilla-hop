@@ -405,6 +405,11 @@ const ActiveSessionPage = () => {
     }
 
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
+        if (sessionData?.status === 'paused') {
+            showError("O treino está pausado. Retome para registrar.")
+            return
+        }
+
         // Audio/Notification Permission Warmup (Triggered by user click)
         if (Notification.permission === 'default') {
             Notification.requestPermission()

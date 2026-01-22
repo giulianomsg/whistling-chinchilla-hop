@@ -300,13 +300,24 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         showSuccess('Treino iniciado!')
         navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
       } else if (action === 'resume' && sessionId) {
-        // Update DB to resume timer (Recalculate started_at so delta works)
-        const effectiveStart = new Date(Date.now() - (elapsedTime * 1000))
+        // RESUME: Restore Global, Active, and Rest Timers
+        const now = Date.now()
+        const effectiveStart = new Date(now - (elapsedTime * 1000))
+        let newTimers = { ...exerciseTimers }
+
+        // Restore Rest Timer
+        const savedRR = newTimers['_saved_rr']
+        if (savedRR) {
+          newTimers['_rt'] = now + (savedRR * 1000)
+          delete newTimers['_saved_rr']
+        }
 
         const { error } = await supabase.from('workout_sessions')
           .update({
             status: 'started',
-            started_at: effectiveStart.toISOString()
+            started_at: effectiveStart.toISOString(),
+            exercise_timers_state: newTimers,
+            active_timer_started_at: activeTimerId ? new Date().toISOString() : null
           })
           .eq('id', sessionId)
 
@@ -314,21 +325,44 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
         setSessionStatus('started')
         setSessionStartTime(effectiveStart.getTime())
+        setExerciseTimers(newTimers)
+        if (activeTimerId) setActiveTimerStartTime(now)
         setIsSessionActive(true)
 
-        // Just navigate
+        // Navigate
         navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
       } else if (action === 'pause' && sessionId) {
-        // PAUSE: Update status to 'paused' and update local state
+        // PAUSE: Snapshot All Timers
+        const now = Date.now()
+        let newTimers = { ...exerciseTimers }
+
+        // Snapshot Rest Timer
+        const rt = newTimers['_rt']
+        if (rt && rt > now) {
+          const remaining = Math.ceil((rt - now) / 1000)
+          newTimers['_saved_rr'] = remaining
+          delete newTimers['_rt']
+        }
+
+        // Snapshot Active Timer happens automatically as we save 'exerciseTimers' current state
+        // creating a "frozen" base. We just need to stop the start_time in DB.
+
         const { error } = await supabase.from('workout_sessions')
-          .update({ status: 'paused', duration_seconds: elapsedTime })
+          .update({
+            status: 'paused',
+            duration_seconds: elapsedTime,
+            exercise_timers_state: newTimers,
+            active_timer_started_at: null
+          })
           .eq('id', sessionId)
 
         if (error) throw error
 
         setSessionStatus('paused')
+        setExerciseTimers(newTimers)
         showSuccess('Treino pausado!')
-        // We don't navigate, just update UI
+        // UI Update handled by state
+
       } else if (action === 'finish' && sessionId) {
         // FINISH: Verify, Calculate XP, Update Profile, Show Summary
 

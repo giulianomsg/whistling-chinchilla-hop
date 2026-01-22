@@ -127,6 +127,16 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
             {/* Main Content (Carousel) */}
             <div className="flex-1 overflow-hidden relative">
+                {/* Block Overlay when Paused */}
+                {!isSessionActive && (
+                    <div className="absolute inset-0 z-50 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-300">
+                        <div className="bg-card p-6 rounded-2xl shadow-xl border border-border max-w-sm">
+                            <h3 className="text-xl font-bold mb-2 text-foreground">Treino Pausado</h3>
+                            <p className="text-muted-foreground text-sm mb-4">Retome o treino na tela principal para gerenciar séries e cronômetros.</p>
+                            <Button onClick={onMinimize} variant="outline">Voltar</Button>
+                        </div>
+                    </div>
+                )}
                 {/* We could use a real carousel lib, but simple conditional rendering 
               with animation keys works well for step-by-step 
           */}
