@@ -35,12 +35,12 @@ export const calculateSessionXP = (
     }
 
     // 1. Minimum Viable Session Rule
-    // If < 1 min OR no logs, 0 XP.
+    // If no logs, 0 XP.
     const totalActiveTime = Object.values(exerciseTimers).reduce((a, b) => a + b, 0)
     const effectiveTime = totalActiveTime > 60 ? totalActiveTime : elapsedTime
 
-    if (effectiveTime < 60 || logs.length === 0) {
-        result.details.push('Sem XP: Treino muito curto ou vazio.')
+    if (logs.length === 0) {
+        result.details.push('Sem XP: Treino vazio.')
         return result
     }
 

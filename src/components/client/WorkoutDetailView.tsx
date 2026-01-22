@@ -331,8 +331,19 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         // We don't navigate, just update UI
       } else if (action === 'finish' && sessionId) {
         // FINISH: Verify, Calculate XP, Update Profile, Show Summary
-        if (elapsedTime < 60 && executionLogs.length === 0) {
-          if (!confirm("Tem certeza? O treino parece muito curto ou vazio.")) {
+
+        // 1. Discard Empty Sessions (Anti-pollution)
+        if (executionLogs.length === 0) {
+          await supabase.from('workout_sessions').delete().eq('id', sessionId)
+          handleCloseSummary()
+          showSuccess('Treino vazio descartado.')
+          setSessionLoading(false)
+          return
+        }
+
+        /* Short Time Warning (OPTIONAL: Keep if desired, or let system handle low XP) */
+        if (elapsedTime < 60) {
+          if (!confirm("Treino muito curto (menos de 1min). Deseja finalizar mesmo assim?")) {
             setSessionLoading(false)
             return
           }

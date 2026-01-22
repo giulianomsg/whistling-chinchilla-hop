@@ -562,14 +562,16 @@ const ActiveSessionPage = () => {
         setLoading(true)
         try {
             // Validate basic constraints
-            if (elapsedTime < 60 || executionLogs.length === 0) {
-                await supabase.from('workout_sessions')
-                    .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
-                    .eq('id', sessionId)
-                showSuccess('Treino finalizado! (Curto demais para XP)')
+            // 1. Discard Empty Sessions (Anti-pollution)
+            if (executionLogs.length === 0) {
+                await supabase.from('workout_sessions').delete().eq('id', sessionId)
+                showSuccess('Treino vazio descartado.')
                 navigate(-1)
                 return
             }
+
+            // 2. Short Sessions (Valid + Partial XP)
+            // Removed blocking logic to allow XP calculation for short but intense/partial workouts.
 
             // Calculations
             const enrichedLogs = executionLogs.map(log => {
