@@ -30,10 +30,12 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
         if (currentLog) {
             setWeight(currentLog.weight?.toString() || '')
             setReps(currentLog.reps?.toString() || '')
-        } else if (previousWeight) {
-            setWeight(previousWeight.toString())
+        } else {
+            // Clear inputs if not completed (e.g. unchecked)
+            setWeight('')
+            setReps('')
         }
-    }, [currentLog, previousWeight])
+    }, [currentLog])
 
     const handleCheck = () => {
         const w = parseFloat(weight)
@@ -55,7 +57,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
 
             {/* Inputs */}
             <div className="col-span-8 md:col-span-9 grid grid-cols-2 gap-2">
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                     <label className="text-[9px] uppercase text-muted-foreground font-bold pl-1">Kg</label>
                     <Input
                         type="number"

@@ -433,6 +433,19 @@ const ActiveSessionPage = () => {
         try {
             if (existingLog) {
                 if (!isCompleted) {
+                    // Safeguards
+                    if (restTimerOpen) {
+                        showError('Aguarde o descanso terminar para alterar séries.')
+                        return
+                    }
+
+                    // Prevent unchecking if subsequent sets exist
+                    const futureLog = relevantLogs.find(l => new Date(l.created_at) > new Date(existingLog.created_at))
+                    if (futureLog) {
+                        showError('Não é permitido desmarcar séries anteriores à última realizada.')
+                        return
+                    }
+
                     await supabase.from('workout_execution_logs').delete().eq('id', existingLog.id)
                     setExecutionLogs(p => p.filter(l => l.id !== existingLog.id))
                 } else {
@@ -468,16 +481,26 @@ const ActiveSessionPage = () => {
                 let newTimers = { ...exerciseTimers }
 
                 // 1. Pause Active Timer (Atomic Manual Update)
+                // 1. Pause Active Timer (Atomic Manual Update)
                 if (activeTimerId === exerciseId) {
-                    const activeStartStr = sessionData?.active_timer_started_at
-                    if (activeStartStr) {
-                        const activeStart = new Date(activeStartStr).getTime()
-                        const additional = Math.max(0, Math.floor((Date.now() - activeStart) / 1000))
-                        newTimers[exerciseId] = (newTimers[exerciseId] || 0) + additional
+                    let startTs = activeTimerStartTime
+                    if (!startTs && sessionData?.active_timer_started_at) {
+                        startTs = new Date(sessionData.active_timer_started_at).getTime()
                     }
+                    // Fallback to now if missing (shouldn't happen if active)
+                    startTs = startTs || Date.now()
+
+                    const additional = Math.max(0, Math.floor((Date.now() - startTs) / 1000))
+                    const base = exerciseTimersBaseRef.current[exerciseId] || 0
+                    const finalTotal = base + additional
+
+                    newTimers[exerciseId] = finalTotal
+                    exerciseTimersBaseRef.current[exerciseId] = finalTotal
+
                     updatePayload.active_timer_id = null
                     updatePayload.active_timer_started_at = null
-                    setActiveTimerId(null) // Optimistic
+                    setActiveTimerId(null)
+                    setActiveTimerStartTime(null)
                 }
 
                 // 2. Persist Rest State (Only if resting)
