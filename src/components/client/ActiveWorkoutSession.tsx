@@ -124,6 +124,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     isTimerRunning={activeTimerId === currentExercise.id}
                     onToggleTimer={onToggleTimer}
                     isSessionActive={isSessionActive}
+                    isResting={restTimerOpen}
                 />
             </div>
 

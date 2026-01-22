@@ -13,6 +13,7 @@ interface ActiveExerciseSlideProps {
     isTimerRunning: boolean
     onToggleTimer: (exerciseId: string) => void
     isSessionActive: boolean
+    isResting?: boolean
 }
 
 export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
@@ -23,7 +24,8 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     activeTime,
     isTimerRunning,
     onToggleTimer,
-    isSessionActive
+    isSessionActive,
+    isResting
 }) => {
     // View Mode: 'gif' | 'video' | 'info'
     const [viewMode, setViewMode] = useState<'gif' | 'video' | 'info'>('gif')
@@ -133,7 +135,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                     variant={isTimerRunning ? "destructive" : "outline"}
                     size="sm"
                     onClick={() => onToggleTimer(exercise.id)}
-                    className={`h-9 px-3 rounded-full flex items-center gap-2 transition-all ${isTimerRunning ? 'animate-pulse' : 'border-dashed border-muted-foreground/50'}`}
+                    className={`h-9 px-3 rounded-full flex items-center gap-2 transition-all ${isTimerRunning ? 'animate-pulse' : 'border-dashed border-muted-foreground/50'} ${isResting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                     {isTimerRunning ? <Square className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 ml-0.5" />}
                     <span className="font-mono font-bold text-sm min-w-[3ch] text-center">

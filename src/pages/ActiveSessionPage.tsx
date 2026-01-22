@@ -331,6 +331,11 @@ const ActiveSessionPage = () => {
             return
         }
 
+        if (restTimerOpen) {
+            showError("Descanso em andamento! Pule o descanso para retomar.")
+            return
+        }
+
         // Check if exercise is already completed (all sets done)
         // We only block STARTING the timer. Stopping is always allowed (though if it's running it means it wasn't done?)
         // Actually, if it's running, we assume we can stop it.
