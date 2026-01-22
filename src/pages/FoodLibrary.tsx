@@ -186,8 +186,8 @@ const FoodLibrary: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 py-2">
-                  <Checkbox id={`public - ${ d.mode } `} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-green-600" />
-                  <Label htmlFor={`public - ${ d.mode } `} className="cursor-pointer">Público</Label>
+                  <Checkbox id={'public-' + d.mode} checked={formData.is_public} onCheckedChange={(c) => setFormData({ ...formData, is_public: c as boolean })} className="border-muted-foreground data-[state=checked]:bg-green-600" />
+                  <Label htmlFor={'public-' + d.mode} className="cursor-pointer">Público</Label>
                 </div>
                 <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">Salvar</Button>
               </form>
