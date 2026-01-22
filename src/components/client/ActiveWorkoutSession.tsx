@@ -21,6 +21,8 @@ interface ActiveWorkoutSessionProps {
     setRestTimerSeconds: (seconds: any) => void
     totalRestSeconds: number
     onSkipRest?: () => void
+    lastRestExId?: string | null
+
 
     // Exercise Timer Props
     activeTimerId: string | null
@@ -53,6 +55,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     setRestTimerSeconds,
     totalRestSeconds,
     onSkipRest,
+    lastRestExId,
     activeTimerId,
     exerciseTimers,
     onToggleTimer,
@@ -63,13 +66,14 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
     // Auto-navigate to active exercise on load or when timer starts
     useEffect(() => {
-        if (activeTimerId && exercises.length > 0) {
-            const idx = exercises.findIndex(e => e.id === activeTimerId)
+        const targetId = activeTimerId || lastRestExId
+        if (targetId && exercises.length > 0) {
+            const idx = exercises.findIndex(e => e.id === targetId)
             if (idx !== -1) {
                 setCurrentIndex(idx)
             }
         }
-    }, [activeTimerId, exercises])
+    }, [activeTimerId, lastRestExId, exercises])
 
     // ... (rest of state)
 

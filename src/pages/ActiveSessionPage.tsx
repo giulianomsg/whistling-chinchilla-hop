@@ -715,6 +715,7 @@ const ActiveSessionPage = () => {
                 setRestTimerSeconds={setRestTimerSeconds}
                 totalRestSeconds={totalRestSeconds}
                 onSkipRest={handleSkipRest}
+                lastRestExId={lastRestExId}
 
                 // Timer Props
                 activeTimerId={activeTimerId}
