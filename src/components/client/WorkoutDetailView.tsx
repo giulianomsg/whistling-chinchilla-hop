@@ -138,7 +138,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     const exerciseIds = Array.from(new Set(
       dayExercises.map(e => e.exercise_id)
         .filter(id => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
-    )).slice(0, 20)
+    )).slice(0, 10)
 
     if (exerciseIds.length > 0) {
       const { data } = await supabase
@@ -734,7 +734,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           return null
         }).filter(Boolean)
       })
-    )) as string[]
+    )) as string[] || []
   }, [displayedExercises])
 
   const extraExercises = executionLogs.filter(l => l.workout_exercise_id === null)

@@ -14,9 +14,17 @@ const VALID_SLUGS = [
     'quadriceps', 'abductors', 'calves', 'gluteal', 'head', 'neck'
 ]
 
-const BodyHighlighter: React.FC<BodyHighlighterProps> = ({ muscles, className, width = 300, height = 300 }) => {
+const BodyHighlighter: React.FC<BodyHighlighterProps> = ({ muscles = [], className, width = 300, height = 300 }) => {
     // Filter out invalid muscles to prevent library crash
-    const safeMuscles = muscles.filter(m => VALID_SLUGS.includes(m))
+    const safeMuscles = (muscles || []).filter(m => m && typeof m === 'string' && VALID_SLUGS.includes(m))
+
+    if (safeMuscles.length === 0) {
+        return (
+            <div className={`flex items-center justify-center p-4 text-muted-foreground text-sm ${className}`}>
+                Nenhum músculo visualizável na data de hoje
+            </div>
+        )
+    }
 
     // Optional: Log warnings for dropped muscles to help debugging
     if (muscles.length !== safeMuscles.length) {
