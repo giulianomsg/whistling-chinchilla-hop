@@ -743,8 +743,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <div className="p-4 bg-black/5 dark:bg-black/40 flex justify-center border-t border-border">
-                    <BodyHighlighter muscles={activeMuscles} height={250} width={200} />
+                  <div className="p-4 bg-muted/40 flex justify-center border-t border-border">
+                    {/* Safe render thanks to robust filtering upstream in activeMuscles and inside BodyHighlighter */}
+                    <BodyHighlighter muscles={activeMuscles} width={220} height={220} />
                   </div>
                 </CollapsibleContent>
               </Collapsible>
