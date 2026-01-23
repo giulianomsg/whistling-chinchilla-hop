@@ -22,23 +22,28 @@ import Model from 'react-body-highlighter'
 import { MultiSelect } from '@/components/ui/multi-select'
 
 const VALID_MUSCLES = [
+  // Costas / Posterior
   { value: 'trapezius', label: 'Trapézio' },
-  { value: 'upper-back', label: 'Costas Superior' },
-  { value: 'lower-back', label: 'Lombar' },
+  { value: 'upper-back', label: 'Costas (Dorsal)' },
+  { value: 'lower-back', label: 'Costas (Lombar)' },
+  { value: 'back-deltoids', label: 'Ombro (Posterior)' },
+  { value: 'triceps', label: 'Tríceps' },
+  { value: 'gluteal', label: 'Glúteos' },
+  { value: 'hamstring', label: 'Posterior de Coxa (Isquiotibiais)' },
+  { value: 'calves', label: 'Panturrilhas' },
+
+  // Frente / Anterior
   { value: 'chest', label: 'Peitoral' },
   { value: 'biceps', label: 'Bíceps' },
-  { value: 'triceps', label: 'Tríceps' },
   { value: 'forearm', label: 'Antebraço' },
-  { value: 'back-deltoids', label: 'Deltoide Posterior' },
-  { value: 'front-deltoids', label: 'Deltoide Anterior' },
+  { value: 'front-deltoids', label: 'Ombro (Anterior/Lateral)' },
   { value: 'abs', label: 'Abdômen' },
   { value: 'obliques', label: 'Oblíquos' },
-  { value: 'adductor', label: 'Adutores' },
-  { value: 'hamstring', label: 'Isquiotibiais' },
   { value: 'quadriceps', label: 'Quadríceps' },
-  { value: 'abductors', label: 'Abdutores' },
-  { value: 'calves', label: 'Panturrilhas' },
-  { value: 'gluteal', label: 'Glúteos' },
+  { value: 'adductor', label: 'Adutores (Parte Interna)' },
+  { value: 'abductors', label: 'Abdutores (Lateral do Quadril)' },
+
+  // Outros
   { value: 'head', label: 'Cabeça' },
   { value: 'neck', label: 'Pescoço' }
 ]
