@@ -92,6 +92,27 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     return `${h}:${m}:${s}`
   }
 
+  /* Mapeamento de nomes legados/pt-BR para slugs do visualizador */
+  const MUSCLE_MAP: Record<string, string> = {
+    'Peitoral Maior': 'chest', 'Peito': 'chest', 'Peitoral Maior (Porção Clavicular)': 'chest',
+    'Peitoral Maior (Porção Esternocostal)': 'chest', 'Tríceps Braquial': 'triceps', 'Tríceps': 'triceps',
+    'Deltoide Anterior': 'front-deltoids', 'Deltoide Lateral': 'front-deltoids', 'Deltoide Posterior': 'back-deltoids',
+    'Ombros': 'front-deltoids', 'Supraespinal': 'upper-back', 'Trapézio': 'trapezius',
+    'Trapézio (Porções Superior e Média)': 'trapezius', 'Trapézio (Superior e Médio)': 'trapezius',
+    'Grande Dorsal': 'upper-back', 'Costas': 'upper-back', 'Serrátil Anterior': 'chest',
+    'Ancôneo': 'forearm', 'Extensores do Pulso': 'forearm', 'Antebraço': 'forearm', 'Core e Antebraços': 'forearm',
+    'Bíceps Braquial': 'biceps', 'Bíceps': 'biceps', 'Quadríceps': 'quadriceps', 'Vasto Lateral': 'quadriceps',
+    'Vasto Medial': 'quadriceps', 'Vasto Intermédio': 'quadriceps', 'Reto Femoral': 'quadriceps', 'Reto Femoral (Diferencial)': 'quadriceps',
+    'Isquiotibiais': 'hamstring', 'Posterior de Coxa': 'hamstring', 'Bíceps Femoral': 'hamstring',
+    'Isquiotibiais (Posteriores)': 'hamstring', 'Isquiotibiais (Bíceps Femoral)': 'hamstring', 'Isquiotibiais (Semi-tendíneo/membranáceo)': 'hamstring',
+    'Glúteo Máximo': 'gluteal', 'Glúteos': 'gluteal', 'Glúteo Médio e Mínimo': 'gluteal',
+    'Panturrilha': 'calves', 'Gastrocnêmio': 'calves', 'Sóleo': 'calves', 'Gastrocnêmio (Panturrilha)': 'calves', 'Gastrocnêmio (Motor Primário - Foco Total)': 'calves',
+    'Abdômen': 'abs', 'Reto Abdominal': 'abs', 'Oblíquos': 'obliques', 'Core': 'abs', 'Core (Abdominal)': 'abs', 'Core (Reto Abdominal e Oblíquos)': 'abs', 'Core (Abdominal e Oblíquos)': 'abs',
+    'Eretores da Espinha': 'lower-back', 'Lombar': 'lower-back', 'Eretores da Espinha / Core': 'lower-back', 'Eretores da Espinha (Lombar)': 'lower-back',
+    'Adutores': 'adductor', 'Adutor Magno': 'adductor', 'Abdutores': 'abductors', 'Grácil e Sartório': 'adductor', 'Tensor da Fáscia Lata (TFL)': 'abductors',
+    'Sartório': 'adductor', 'Cabeça': 'head', 'Pescoço': 'neck', 'Quadríceps (Principal)': 'quadriceps'
+  }
+
   const fetchLogs = async (currentSessionId: string) => {
     // UPDATED: Join with exercises_library to get names for ad-hoc exercises
     const { data } = await supabase
@@ -113,7 +134,11 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     const dayExercises = workoutExercises.filter(we => we.day_number === activeDayNumber)
     if (dayExercises.length === 0) return
 
-    const exerciseIds = dayExercises.map(e => e.exercise_id).filter(id => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
+    // Limit to 20 unique IDs to prevent 400 Bad Request (URL Length)
+    const exerciseIds = Array.from(new Set(
+      dayExercises.map(e => e.exercise_id)
+        .filter(id => id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
+    )).slice(0, 20)
 
     if (exerciseIds.length > 0) {
       const { data } = await supabase
@@ -681,8 +706,34 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         const groups = e.exercise.muscle_groups || []
         const single = e.exercise.muscle_group
         const safeGroups = Array.isArray(groups) ? groups : []
-        return [...safeGroups, single]
-      }).filter((m: any) => m && typeof m === 'string')
+        const rawList = [...safeGroups, single].filter((m: any) => m && typeof m === 'string')
+
+        return rawList.map((m: string) => {
+          // 1. Direct Valid Match
+          if (['chest', 'triceps', 'biceps', 'trapezius', 'upper-back', 'lower-back', 'forearm', 'back-deltoids', 'front-deltoids', 'abs', 'obliques', 'adductor', 'hamstring', 'quadriceps', 'abductors', 'calves', 'gluteal', 'head', 'neck'].includes(m)) return m
+
+          // 2. Map Lookup
+          if (MUSCLE_MAP[m]) return MUSCLE_MAP[m]
+
+          // 3. Fuzzy Match
+          const lower = m.toLowerCase()
+          if (lower.includes('peito') || lower.includes('peitoral')) return 'chest'
+          if (lower.includes('costas') || lower.includes('dorsal')) return 'upper-back'
+          if (lower.includes('bíceps') || lower.includes('biceps')) return 'biceps'
+          if (lower.includes('tríceps') || lower.includes('triceps')) return 'triceps'
+          if (lower.includes('ombro') || lower.includes('deltoide')) return 'front-deltoids'
+          if (lower.includes('perna') || lower.includes('quadríceps') || lower.includes('quadriceps') || lower.includes('coxa')) return 'quadriceps'
+          if (lower.includes('posterior') || lower.includes('isquiotibiais')) return 'hamstring'
+          if (lower.includes('glúteo') || lower.includes('bumbum')) return 'gluteal'
+          if (lower.includes('panturrilha')) return 'calves'
+          if (lower.includes('abdômen') || lower.includes('abdominal') || lower.includes('core')) return 'abs'
+          if (lower.includes('antebraço')) return 'forearm'
+          if (lower.includes('trapézio')) return 'trapezius'
+          if (lower.includes('lombar') || lower.includes('eretores')) return 'lower-back'
+
+          return null
+        }).filter(Boolean)
+      })
     )) as string[]
   }, [displayedExercises])
 

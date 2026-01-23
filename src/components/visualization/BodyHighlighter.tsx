@@ -26,13 +26,25 @@ const BodyHighlighter: React.FC<BodyHighlighterProps> = ({ muscles, className, w
     const data = safeMuscles.map(m => ({ slug: m, intensity: 1 }))
 
     return (
-        <div className={`flex items-center justify-center ${className}`}>
-            {/* We render both front and back driven by the presence of muscles */}
-            <Model
-                data={data}
-                style={{ width: width, padding: '1rem' }}
-                highlightedColors={['#e65100', '#f57c00']} // Colors for highlight
-            />
+        <div className={`flex flex-wrap items-center justify-center gap-4 ${className}`}>
+            <div className="flex flex-col items-center">
+                <span className="text-xs text-muted-foreground mb-2">Frente</span>
+                <Model
+                    type="anterior"
+                    data={data}
+                    style={{ width: width, padding: '1rem' }}
+                    highlightedColors={['#e65100', '#f57c00']}
+                />
+            </div>
+            <div className="flex flex-col items-center">
+                <span className="text-xs text-muted-foreground mb-2">Costas</span>
+                <Model
+                    type="posterior"
+                    data={data}
+                    style={{ width: width, padding: '1rem' }}
+                    highlightedColors={['#e65100', '#f57c00']}
+                />
+            </div>
         </div>
     )
 }
