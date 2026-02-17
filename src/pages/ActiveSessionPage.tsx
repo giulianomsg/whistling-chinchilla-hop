@@ -184,6 +184,7 @@ const ActiveSessionPage = () => {
                         .from('workout_execution_logs')
                         .select('*')
                         .in('exercise_id', dayExIds)
+                        .neq('workout_session_id', sessionId) // Exclude current session
                         .order('created_at', { ascending: false })
                         .limit(200)
                     setHistoryLogs(hist || [])
@@ -338,9 +339,6 @@ const ActiveSessionPage = () => {
         }
 
         // Check if exercise is already completed (all sets done)
-        // We only block STARTING the timer. Stopping is always allowed (though if it's running it means it wasn't done?)
-        // Actually, if it's running, we assume we can stop it.
-        // So only block if `activeTimerId !== exerciseId` (i.e., we are trying to start it).
         if (activeTimerId !== exerciseId) {
             const targetEx = exercises.find(e => e.id === exerciseId)
             const existingLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
@@ -404,27 +402,100 @@ const ActiveSessionPage = () => {
         setExerciseTimers(newTimersVal)
     }
 
+    // Session Controls Handlers
+    const handlePauseSession = async () => {
+        if (!sessionId) return
+
+        const now = Date.now()
+        let newTimers = { ...exerciseTimers }
+
+        // Snapshot Rest Timer
+        const rt = newTimers['_rt']
+        if (rt && rt > now) {
+            const remaining = Math.ceil((rt - now) / 1000)
+            newTimers['_saved_rr'] = remaining
+            delete newTimers['_rt']
+        }
+
+        const { error } = await supabase.from('workout_sessions')
+            .update({
+                status: 'paused',
+                duration_seconds: elapsedTime,
+                exercise_timers_state: newTimers,
+                active_timer_started_at: null
+            })
+            .eq('id', sessionId)
+
+        if (error) {
+            showError("Erro ao pausar")
+            return
+        }
+
+        setSessionData((prev: any) => ({ ...prev, status: 'paused', duration_seconds: elapsedTime }))
+        setExerciseTimers(newTimers)
+        toggleBackgroundMode(false)
+    }
+
+    const handleResumeSession = async () => {
+        if (!sessionId) return
+
+        const now = Date.now()
+        const effectiveStart = new Date(now - (elapsedTime * 1000))
+        let newTimers = { ...exerciseTimers }
+
+        // Restore Rest Timer
+        const savedRR = newTimers['_saved_rr']
+        if (savedRR) {
+            newTimers['_rt'] = now + (savedRR * 1000)
+            delete newTimers['_saved_rr']
+        }
+
+        const { error } = await supabase.from('workout_sessions')
+            .update({
+                status: 'started',
+                started_at: effectiveStart.toISOString(),
+                exercise_timers_state: newTimers,
+                active_timer_started_at: activeTimerId ? new Date().toISOString() : null
+            })
+            .eq('id', sessionId)
+
+        if (error) {
+            showError("Erro ao retomar")
+            return
+        }
+
+        setSessionData((prev: any) => ({ ...prev, status: 'started' }))
+        setSessionStartTime(effectiveStart.getTime())
+        setExerciseTimers(newTimers)
+        if (activeTimerId) setActiveTimerStartTime(now)
+
+        // Restore Rest UI
+        if (savedRR) {
+            const targetTime = now + (savedRR * 1000)
+            setRestTargetTime(targetTime)
+            setRestTimerSeconds(savedRR)
+            setRestTimerOpen(true)
+            toggleBackgroundMode(true)
+        }
+    }
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
         if (sessionData?.status === 'paused') {
             showError("O treino está pausado. Retome para registrar.")
             return
         }
 
-        // Audio/Notification Permission Warmup (Triggered by user click)
+        // Audio/Notification Permission Warmup
         if (Notification.permission === 'default') {
             Notification.requestPermission()
         }
         try {
-            // Play silent buffer to unlock audio context on mobile for later
             new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAgZGF0YQAAAAA=').play().catch(() => { })
         } catch (e) { }
 
-        // Find existing log at this index
         const relevantLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
             .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
 
         const existingLog = relevantLogs[setIndex - 1]
-
         const workoutExercise = exercises.find(e => e.id === exerciseId)
 
         const logData = {
@@ -439,19 +510,15 @@ const ActiveSessionPage = () => {
         try {
             if (existingLog) {
                 if (!isCompleted) {
-                    // Safeguards
                     if (restTimerOpen) {
                         showError('Aguarde o descanso terminar para alterar séries.')
                         return
                     }
-
-                    // Prevent unchecking if subsequent sets exist
                     const futureLog = relevantLogs.find(l => new Date(l.created_at) > new Date(existingLog.created_at))
                     if (futureLog) {
                         showError('Não é permitido desmarcar séries anteriores à última realizada.')
                         return
                     }
-
                     await supabase.from('workout_execution_logs').delete().eq('id', existingLog.id)
                     setExecutionLogs(p => p.filter(l => l.id !== existingLog.id))
                 } else {
@@ -459,32 +526,21 @@ const ActiveSessionPage = () => {
                     if (data) setExecutionLogs(p => p.map(l => l.id === data.id ? { ...l, ...data, exercise: workoutExercise?.exercise } : l))
                 }
             } else if (isCompleted) {
-                // Safeguard: Enforce Sequential Check (Stack logic)
                 if (relevantLogs.length !== setIndex - 1) {
                     showError('Por favor, marque as séries na ordem correta (1, 2, 3...).')
                     return
                 }
-
                 const { data } = await supabase.from('workout_execution_logs').insert(logData).select().single()
                 if (data) setExecutionLogs(p => [...p, { ...data, exercise: workoutExercise?.exercise }])
             }
 
             // Rest Timer Logic
             if (isCompleted) {
-                // Determine if this was the last set
-                // We use the count of logs for this exercise.
-                // Note: 'relevantLogs' includes the one we just saved/updated if we re-fetched or updated state locally?
-                // 'executionLogs' state update in lines 412/416 is async/batched so 'executionLogs' here might be stale?
-                // Actually `setExecutionLogs` uses functional update, but `executionLogs` var is from render scope.
-                // However, we can use `setIndex` and `workoutExercise.sets`.
                 const setsTarget = workoutExercise?.sets || 0
                 const isLastSet = setsTarget > 0 && setIndex >= setsTarget
 
                 const restTime = workoutExercise?.rest_time_seconds || 60
                 const targetTime = Date.now() + restTime * 1000
-
-                // If it's the last set: Stop timer, NO rest, NO auto-resume
-                // If NOT last set: Stop timer, START rest, AUTO-resume
 
                 const shouldRest = !isLastSet
                 const resumeId = shouldRest ? exerciseId : null
@@ -493,13 +549,11 @@ const ActiveSessionPage = () => {
                 let newTimers = { ...exerciseTimers }
 
                 // 1. Pause Active Timer (Atomic Manual Update)
-                // 1. Pause Active Timer (Atomic Manual Update)
                 if (activeTimerId === exerciseId) {
                     let startTs = activeTimerStartTime
                     if (!startTs && sessionData?.active_timer_started_at) {
                         startTs = new Date(sessionData.active_timer_started_at).getTime()
                     }
-                    // Fallback to now if missing (shouldn't happen if active)
                     startTs = startTs || Date.now()
 
                     const additional = Math.max(0, Math.floor((Date.now() - startTs) / 1000))
@@ -530,17 +584,12 @@ const ActiveSessionPage = () => {
                     setRestTimerOpen(true)
                     toggleBackgroundMode(true)
                 } else {
-                    // Update only timers state (storing the stopped time)
                     updatePayload.exercise_timers_state = newTimers
-
-                    // Clear rest if any (edge case)
                     setRestTargetTime(null)
                     setRestTimerOpen(false)
                 }
 
                 setExerciseTimers(newTimers)
-
-                // 4. DB Update
                 await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
             }
         } catch (e) {
@@ -548,6 +597,7 @@ const ActiveSessionPage = () => {
             showError("Erro ao salvar")
         }
     }
+
 
     const handleUpdateLogNote = async (logId: string, note: string) => {
         try {
@@ -651,6 +701,7 @@ const ActiveSessionPage = () => {
 
 
     // Rest Timer Logic
+    // Rest Timer Logic
     const handleSkipRest = async () => {
         // Immediate cleanup of local state
         setRestTargetTime(null)
@@ -662,7 +713,7 @@ const ActiveSessionPage = () => {
             await handleToggleTimer(lastRestExId, true)
             setLastRestExId(null)
         } else {
-            // If no auto-resume, explicitly clear rest from DB to prevent it from reappearing
+            // If no auto-resume, explicitly clear rest from DB
             let newTimersVal = { ...exerciseTimers }
             delete newTimersVal['_rt']
             delete newTimersVal['_rre']
@@ -671,67 +722,6 @@ const ActiveSessionPage = () => {
             await supabase.from('workout_sessions').update({ exercise_timers_state: newTimersVal }).eq('id', sessionId)
         }
     }
-
-    useEffect(() => {
-        let interval: NodeJS.Timeout
-        if (restTargetTime) {
-            interval = setInterval(() => {
-                const now = Date.now()
-                const remaining = Math.ceil((restTargetTime - now) / 1000)
-
-                if (remaining <= 0) {
-                    setRestTimerSeconds(0)
-                    setRestTargetTime(null)
-                    setRestTimerOpen(false)
-
-                    // Notify
-                    try {
-                        // Sound & Vibration - Repeat 3 times
-                        const playAlarm = (count: number) => {
-                            if (count <= 0) return
-                            const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
-                            audio.volume = 1.0
-                            audio.play().catch((e) => console.log("Audio Permission Blocked", e))
-                            if ('vibrate' in navigator) navigator.vibrate([500, 200, 500])
-
-                            setTimeout(() => playAlarm(count - 1), 1500) // Repeat every 1.5s
-                        }
-                        playAlarm(3)
-
-                        // System Notification
-                        if (Notification.permission === 'granted') {
-                            // Try Service Worker registration first if available (better for Android)
-                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
-                                navigator.serviceWorker.ready.then(registration => {
-                                    registration.showNotification("CapiFit", {
-                                        body: "Descanso finalizado!",
-                                        icon: '/favicon.ico',
-                                        vibrate: [300, 100, 300]
-                                    } as any)
-                                })
-                            } else {
-                                new Notification("CapiFit", {
-                                    body: "Descanso finalizado!",
-                                    vibrate: [300, 100, 300]
-                                } as any)
-                            }
-                        }
-                    } catch (e) {
-                        console.error("Notify error", e)
-                    }
-
-                    // Auto-Resume
-                    if (lastRestExId) {
-                        handleToggleTimer(lastRestExId)
-                        setLastRestExId(null)
-                    }
-                } else {
-                    setRestTimerSeconds(remaining)
-                }
-            }, 1000)
-        }
-        return () => clearInterval(interval)
-    }, [restTargetTime, lastRestExId])
 
 
 
@@ -768,11 +758,17 @@ const ActiveSessionPage = () => {
                 lastRestExId={lastRestExId}
 
                 // Timer Props
+                // Timer Props
                 activeTimerId={activeTimerId}
                 exerciseTimers={exerciseTimers}
                 onToggleTimer={handleToggleTimer}
                 isSessionActive={sessionData?.status === 'started'}
                 elapsedTime={elapsedTime}
+
+                // Controls
+                sessionStatus={sessionData?.status || 'idle'}
+                onPauseSession={handlePauseSession}
+                onResumeSession={handleResumeSession}
             />
         </div>
     )

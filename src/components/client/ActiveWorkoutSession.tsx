@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Minimize2, CheckCircle2, Trophy, ArrowLeft, User } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Minimize2, CheckCircle2, Trophy, ArrowLeft, User, Play, Pause, Square } from 'lucide-react'
 import { ActiveExerciseSlide } from './ActiveExerciseSlide'
 import { RestTimerOverlay } from './RestTimerOverlay'
 import { cn } from '@/lib/utils'
@@ -25,6 +25,11 @@ interface ActiveWorkoutSessionProps {
     totalRestSeconds: number
     onSkipRest?: () => void
     lastRestExId?: string | null
+
+    // Session Controls
+    sessionStatus: 'idle' | 'started' | 'paused' | 'completed'
+    onPauseSession: () => void
+    onResumeSession: () => void
 
 
     // Exercise Timer Props
@@ -64,7 +69,10 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     exerciseTimers,
     onToggleTimer,
     isSessionActive,
-    elapsedTime
+    elapsedTime,
+    sessionStatus,
+    onPauseSession,
+    onResumeSession
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -149,6 +157,51 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     </DialogContent>
                 </Dialog>
             </div>
+
+            {/* Session Controls & Timer - CENTERED */}
+            {isOpen && (
+                <div className="flex flex-col items-center justify-center p-2 bg-card/30 backdrop-blur-sm border-b border-border z-40">
+                    <div className="flex items-center gap-4 bg-background/80 p-2 rounded-full border border-border shadow-sm">
+                        {/* Timer Display */}
+                        <div className="px-3 py-1 bg-muted/50 rounded-full">
+                            <span className="font-mono font-bold text-xl text-foreground tabular-nums tracking-wider">
+                                {formatSeconds(elapsedTime)}
+                            </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
+                            {sessionStatus === 'started' ? (
+                                <Button
+                                    size="icon"
+                                    variant="outline"
+                                    onClick={onPauseSession}
+                                    className="h-10 w-10 full rounded-full border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
+                                >
+                                    <Pause className="h-5 w-5 fill-current" />
+                                </Button>
+                            ) : (
+                                <Button
+                                    size="icon"
+                                    onClick={onResumeSession}
+                                    className="h-10 w-10 full rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20"
+                                >
+                                    <Play className="h-5 w-5 fill-current ml-0.5" />
+                                </Button>
+                            )}
+
+                            <Button
+                                size="icon"
+                                variant="destructive"
+                                onClick={onFinishWorkout}
+                                className="h-10 w-10 full rounded-full bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/50"
+                            >
+                                <Square className="h-4 w-4 fill-current" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Main Content (Carousel) */}
             <div className="flex-1 overflow-hidden relative">
