@@ -776,22 +776,8 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
               <p className="text-xs text-muted-foreground">{displayedExercises.length} exercícios programados</p>
             </div>
           </div>
-          <div className="flex gap-2">
-            {!isSessionActive ? (
-              <Button size="sm" onClick={() => handleSessionAction('start')} className="gap-2 bg-green-600 hover:bg-green-700 text-white font-bold animate-in zoom-in duration-300">
-                <Play className="h-4 w-4" /> INICIAR
-              </Button>
-            ) : (
-              <Button size="sm" onClick={() => handleSessionAction('resume')} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold animate-pulse">
-                <Maximize2 className="h-4 w-4" /> VOLTAR AO TREINO
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardHeader className="flex flex-row items-center justify-between border-b border-border py-2">
-          <div className="text-xs text-muted-foreground">Adicionar exercícios extras ou personalizados:</div>
-          <Button size="sm" variant="ghost" onClick={() => setIsAddExerciseOpen(true)} disabled={!isSessionActive} className="gap-2 text-xs h-8">
-            <Plus className="h-3 w-3" /> <span className="hidden sm:inline">Adicionar Extra</span>
+          <Button size="sm" variant="outline" onClick={() => setIsAddExerciseOpen(true)} disabled={!isSessionActive} className="gap-2">
+            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Adicionar Extra</span>
           </Button>
         </CardHeader>
         <CardContent className="pt-6">
@@ -871,7 +857,61 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         </CardContent>
       </Card>
 
-      {/* Footer Removed - Controls moved to ActiveSessionPage */}
+      {/* Player Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
+
+          {/* Time Display - Centered or Left aligned based on screen */}
+          <div className="flex items-center justify-center md:justify-start w-full md:w-auto mb-1 md:mb-0">
+            <div className="bg-muted/50 px-3 py-1 pb-1.5 rounded-lg border border-border flex flex-col items-center min-w-[100px]">
+              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-none mb-0.5">Tempo</span>
+              <span className="text-xl font-mono font-bold text-foreground leading-none tracking-wider">{formatTime(elapsedTime)}</span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="w-full md:w-auto flex items-center justify-center gap-2">
+            {!isSessionActive ? (
+              <Button size="default" onClick={() => handleSessionAction('start')} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold h-11 shadow-lg shadow-green-600/20 text-base">
+                {sessionLoading ? <Loader2 className="animate-spin h-5 w-5" /> : <Play className="mr-2 h-5 w-5" />} INICIAR TREINO
+              </Button>
+            ) : (
+              <>
+                {/* Expand Button (Mobile Icon / Desktop Text) */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)}
+                  className="h-11 w-11 shrink-0 border-border bg-card hover:bg-muted"
+                  title="Expandir Treino"
+                >
+                  <Maximize2 className="h-5 w-5 text-foreground" />
+                </Button>
+
+                {sessionStatus === 'started' ? (
+                  <Button size="default" variant="outline" onClick={() => handleSessionAction('pause')} className="flex-1 md:flex-none border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-11 px-6 font-bold">
+                    <Pause className="mr-2 h-4 w-4" /> PAUSAR
+                  </Button>
+                ) : (
+                  <Button size="default" onClick={() => handleSessionAction('resume')} className="flex-1 md:flex-none bg-blue-500 text-white hover:bg-blue-600 h-11 px-6 font-bold">
+                    <Play className="mr-2 h-4 w-4" /> RETOMAR
+                  </Button>
+                )}
+
+                <Button size="default" variant="destructive" onClick={() => handleSessionAction('finish')} className="flex-1 md:flex-none bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white h-11 px-6 font-bold">
+                  <Square className="mr-2 h-4 w-4 fill-current" /> FINALIZAR
+                </Button>
+              </>
+            )}
+
+            {sessionStatus === 'abandoned' && (
+              <Button size="default" disabled className="w-full md:w-auto bg-gray-500/20 text-gray-500 border border-gray-500/50 h-11">
+                <Square className="mr-2 h-4 w-4 fill-current" /> TREINO ABANDONADO
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Log Modal */}
       <Dialog open={isLogModalOpen} onOpenChange={setIsLogModalOpen}>

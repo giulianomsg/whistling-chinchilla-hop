@@ -237,7 +237,7 @@ const DashboardLayout: React.FC = () => {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 bg-card border-r border-border p-0 flex flex-col z-[1000]">
+            <SheetContent side="left" className="w-72 bg-card border-r border-border p-0 flex flex-col">
               <div className="p-6 flex items-center justify-between border-b border-border">
                 <span className="text-xl font-bold text-foreground">Menu</span>
               </div>

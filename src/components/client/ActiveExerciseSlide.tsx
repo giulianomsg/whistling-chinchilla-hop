@@ -203,21 +203,7 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                     </div>
 
                     {Array.from({ length: exercise.sets }).map((_, i) => {
-                        // 1. Identify Last Session from History
-                        // historyLogs are already filtered to be NOT current session and ordered by created_at DESC
-                        // We need the *latest* session for this specific exercise_id.
-                        const thisExHistory = historyLogs.filter(l => l.exercise_id === exercise.exercise_id)
-
-                        // Get the most recent session ID from these logs
-                        const lastSessionId = thisExHistory.length > 0 ? thisExHistory[0].workout_session_id : null
-
-                        // Get all logs for that session, sorted by time (Set 1, Set 2...)
-                        const lastSessionLogs = lastSessionId
-                            ? thisExHistory.filter(l => l.workout_session_id === lastSessionId).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                            : []
-
-                        const historyLog = lastSessionLogs[i] // Match by Index (Set 1 -> Index 0)
-
+                        const historyLog = pastLogs[i]
                         const currentLog = currentExLogs.find(l => l.set_number === i + 1) || currentExLogs[i] // Fallback index
                         const isLastSet = i === exercise.sets - 1
                         return (
