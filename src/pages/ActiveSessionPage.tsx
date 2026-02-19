@@ -82,57 +82,8 @@ const ActiveSessionPage = () => {
         }
     }, [])
 
-    // Rest Timer Logic (Web Worker)
-    useEffect(() => {
-        if (!restTargetTime) return
-
-        // Create a blob worker for the timer to run in background more reliably
-        const workerCode = `
-            self.onmessage = function() {
-                setInterval(() => {
-                    self.postMessage('tick');
-                }, 1000);
-            }
-        `
-        const blob = new Blob([workerCode], { type: 'application/javascript' })
-        const worker = new Worker(URL.createObjectURL(blob))
-
-        worker.onmessage = () => {
-            const now = Date.now()
-            const remaining = Math.ceil((restTargetTime - now) / 1000)
-
-            if (remaining <= 0) {
-                setRestTimerSeconds(0)
-                setRestTargetTime(null)
-                setRestTimerOpen(false)
-                worker.terminate()
-
-                // Notify Logic
-                try {
-                    const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
-                    audio.play().catch((e) => console.log("Audio Permission/Autoplay Blocked", e))
-                    if ('vibrate' in navigator) navigator.vibrate([300, 100, 300, 100, 300])
-
-                    if (Notification.permission === 'granted') {
-                        new Notification("CapiFit", { body: "Descanso finalizado!", vibrate: [300, 100, 300] } as any)
-                    }
-                } catch (e) { console.error(e) }
-
-                if (lastRestExId) {
-                    handleToggleTimer(lastRestExId)
-                    setLastRestExId(null)
-                }
-            } else {
-                setRestTimerSeconds(remaining)
-            }
-        }
-
-        worker.postMessage('start')
-
-        return () => {
-            worker.terminate()
-        }
-    }, [restTargetTime, lastRestExId])
+    // Rest Timer Logic (Consolidated in the main effect below)
+    // Removed duplicate Web Worker implementation to prevent race conditions and crashes.
 
 
     // Gamification
@@ -675,18 +626,21 @@ const ActiveSessionPage = () => {
     useEffect(() => {
         let interval: NodeJS.Timeout
         if (restTargetTime) {
-            interval = setInterval(() => {
+            // Initial check to prevent flash of wrong time
+            const checkTimer = () => {
                 const now = Date.now()
                 const remaining = Math.ceil((restTargetTime - now) / 1000)
 
                 if (remaining <= 0) {
+                    // Timer Finished
+                    if (interval) clearInterval(interval)
+                    
                     setRestTimerSeconds(0)
                     setRestTargetTime(null)
                     setRestTimerOpen(false)
 
                     // Notify
                     try {
-                        // Sound & Vibration - Repeat 3 times
                         const playAlarm = (count: number) => {
                             if (count <= 0) return
                             const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
@@ -694,14 +648,13 @@ const ActiveSessionPage = () => {
                             audio.play().catch((e) => console.log("Audio Permission Blocked", e))
                             if ('vibrate' in navigator) navigator.vibrate([500, 200, 500])
 
-                            setTimeout(() => playAlarm(count - 1), 1500) // Repeat every 1.5s
+                            setTimeout(() => playAlarm(count - 1), 1500)
                         }
                         playAlarm(3)
 
-                        // System Notification
                         if (Notification.permission === 'granted') {
-                            // Try Service Worker registration first if available (better for Android)
-                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                             // Try Service Worker registration first if available (better for Android)
+                             if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
                                 navigator.serviceWorker.ready.then(registration => {
                                     registration.showNotification("CapiFit", {
                                         body: "Descanso finalizado!",
@@ -720,15 +673,21 @@ const ActiveSessionPage = () => {
                         console.error("Notify error", e)
                     }
 
-                    // Auto-Resume
+                    // Auto-Resume (Important: ignoreRest = true)
                     if (lastRestExId) {
-                        handleToggleTimer(lastRestExId)
+                        handleToggleTimer(lastRestExId, true)
                         setLastRestExId(null)
                     }
                 } else {
                     setRestTimerSeconds(remaining)
                 }
-            }, 1000)
+            }
+
+            // check immediately
+            checkTimer()
+            
+            // set interval for 1s checks
+            interval = setInterval(checkTimer, 1000)
         }
         return () => clearInterval(interval)
     }, [restTargetTime, lastRestExId])
