@@ -20,7 +20,14 @@ const ActiveSessionPage = () => {
     const activeDayNumber = parseInt(searchParams.get('day') || '1')
 
     const [loading, setLoading] = useState(true)
-    const [exercises, setExercises] = useState<any[]>([])
+    // Actually, let's Replace the state definition entirely.
+    const [allWorkoutsExercises, setAllWorkoutsExercises] = useState<any[]>([])
+
+    // Derived state for current day
+    const exercises = React.useMemo(() => {
+        return allWorkoutsExercises.filter(e => e.day_number === activeDayNumber)
+    }, [allWorkoutsExercises, activeDayNumber])
+
     const [executionLogs, setExecutionLogs] = useState<any[]>([])
     const [historyLogs, setHistoryLogs] = useState<any[]>([])
 
@@ -116,9 +123,7 @@ const ActiveSessionPage = () => {
                     .order('day_number').order('order_index')
 
                 const allExercises = (exs || []).filter(i => i.exercise !== null)
-                // Filter for current day!
-                // If day is not passed, maybe infer from something? For now rely on URL.
-                setExercises(allExercises.filter(e => e.day_number === activeDayNumber))
+                setAllWorkoutsExercises(allExercises)
 
                 // 3. Load Logs
                 const { data: logs } = await supabase
@@ -358,6 +363,11 @@ const ActiveSessionPage = () => {
     const handleSaveLog = async (exerciseId: string, setIndex: number, weight: number, reps: number, isCompleted: boolean) => {
         if (sessionData?.status === 'paused') {
             showError("O treino está pausado. Retome para registrar.")
+            return
+        }
+
+        if (restTimerOpen) {
+            showError("Aguarde o descanso terminar para registrar séries.")
             return
         }
 
@@ -634,7 +644,7 @@ const ActiveSessionPage = () => {
                 if (remaining <= 0) {
                     // Timer Finished
                     if (interval) clearInterval(interval)
-                    
+
                     setRestTimerSeconds(0)
                     setRestTargetTime(null)
                     setRestTimerOpen(false)
@@ -653,8 +663,8 @@ const ActiveSessionPage = () => {
                         playAlarm(3)
 
                         if (Notification.permission === 'granted') {
-                             // Try Service Worker registration first if available (better for Android)
-                             if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                            // Try Service Worker registration first if available (better for Android)
+                            if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
                                 navigator.serviceWorker.ready.then(registration => {
                                     registration.showNotification("CapiFit", {
                                         body: "Descanso finalizado!",
@@ -685,7 +695,7 @@ const ActiveSessionPage = () => {
 
             // check immediately
             checkTimer()
-            
+
             // set interval for 1s checks
             interval = setInterval(checkTimer, 1000)
         }
