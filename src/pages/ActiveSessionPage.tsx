@@ -20,14 +20,7 @@ const ActiveSessionPage = () => {
     const activeDayNumber = parseInt(searchParams.get('day') || '1')
 
     const [loading, setLoading] = useState(true)
-    // Actually, let's Replace the state definition entirely.
-    const [allWorkoutsExercises, setAllWorkoutsExercises] = useState<any[]>([])
-
-    // Derived state for current day
-    const exercises = React.useMemo(() => {
-        return allWorkoutsExercises.filter(e => e.day_number === activeDayNumber)
-    }, [allWorkoutsExercises, activeDayNumber])
-
+    const [exercises, setExercises] = useState<any[]>([])
     const [executionLogs, setExecutionLogs] = useState<any[]>([])
     const [historyLogs, setHistoryLogs] = useState<any[]>([])
 
@@ -123,7 +116,9 @@ const ActiveSessionPage = () => {
                     .order('day_number').order('order_index')
 
                 const allExercises = (exs || []).filter(i => i.exercise !== null)
-                setAllWorkoutsExercises(allExercises)
+                // Filter for current day!
+                // If day is not passed, maybe infer from something? For now rely on URL.
+                setExercises(allExercises.filter(e => e.day_number === activeDayNumber))
 
                 // 3. Load Logs
                 const { data: logs } = await supabase
@@ -366,11 +361,6 @@ const ActiveSessionPage = () => {
             return
         }
 
-        if (restTimerOpen) {
-            showError("Aguarde o descanso terminar para registrar séries.")
-            return
-        }
-
         // Audio/Notification Permission Warmup (Triggered by user click)
         if (Notification.permission === 'default') {
             Notification.requestPermission()
@@ -384,15 +374,14 @@ const ActiveSessionPage = () => {
         const relevantLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
             .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
 
-        // Match by set_number if possible, else index
-        const existingLog = relevantLogs.find(l => l.set_number === setIndex) || relevantLogs[setIndex - 1]
+        const existingLog = relevantLogs[setIndex - 1]
 
         const workoutExercise = exercises.find(e => e.id === exerciseId)
 
         const logData = {
+            workout_session_id: sessionId,
             workout_exercise_id: exerciseId,
             exercise_id: workoutExercise?.exercise_id,
-            set_number: setIndex, // Persist the set number!
             weight,
             reps,
             completed_at: new Date().toISOString()
