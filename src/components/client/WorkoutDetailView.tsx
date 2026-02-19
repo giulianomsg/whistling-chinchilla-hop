@@ -25,6 +25,7 @@ import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useFeedback } from '@/components/ui/CapiFitFeedback'
+import { clearSessionState } from '@/utils/workoutStorage'
 
 interface WorkoutDetailViewProps {
   clientWorkout: any
@@ -482,6 +483,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         }
         await supabase.from('workout_sessions').update(updatePayload).eq('id', sessionId)
         await supabase.from('profiles').update({ current_xp: newXP, level: newLevel }).eq('id', clientWorkout.client_id)
+
+        // Clear local storage
+        clearSessionState(sessionId)
 
         // 5. Show Summary
         setSummaryData({
@@ -1054,6 +1058,33 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Active Session Overlay */}
+      <ActiveWorkoutSession
+        isOpen={activeSessionOpen}
+        onMinimize={() => setActiveSessionOpen(false)}
+        exercises={workoutExercises}
+        executionLogs={executionLogs}
+        historyLogs={historyLogs}
+        onSaveLog={handleActiveSessionSaveLog}
+        onUpdateLogNote={async (id, note) => { console.log('Update note inactive in read-only view') }}
+        onFinishWorkout={() => handleSessionAction('finish')}
+        restTimerOpen={restTimerOpen}
+        setRestTimerOpen={setRestTimerOpen}
+        restTimerSeconds={restTimerSeconds}
+        setRestTimerSeconds={setRestTimerSeconds}
+        totalRestSeconds={totalRestSeconds}
+        onSkipRest={() => setRestTimerOpen(false)}
+        lastRestExId={null}
+
+        // Timer Props
+        activeTimerId={activeTimerId}
+        exerciseTimers={exerciseTimers}
+        onToggleTimer={handleToggleTimer}
+        isSessionActive={isSessionActive}
+        elapsedTime={elapsedTime}
+        sessionId={sessionId}
+      />
 
       <WorkoutSummaryModal
         isOpen={showSummaryModal}

@@ -35,6 +35,9 @@ interface ActiveWorkoutSessionProps {
 
     // Global Timer
     elapsedTime: number
+
+    // Session ID for persistence
+    sessionId?: string | null
 }
 
 // Helper for formatting
@@ -64,7 +67,8 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     exerciseTimers,
     onToggleTimer,
     isSessionActive,
-    elapsedTime
+    elapsedTime,
+    sessionId
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -177,6 +181,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     onToggleTimer={onToggleTimer}
                     isSessionActive={isSessionActive}
                     isResting={restTimerOpen}
+                    sessionId={sessionId}
                 />
             </div>
 

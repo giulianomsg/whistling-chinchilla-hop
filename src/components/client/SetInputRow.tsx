@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Check, Clock, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getSetState, saveSetState } from '@/utils/workoutStorage'
 
 interface SetInputRowProps {
     setNumber: number
@@ -11,6 +12,8 @@ interface SetInputRowProps {
     currentLog?: any
     onSave: (weight: number, reps: number, isCompleted: boolean) => void
     isCompleted: boolean
+    sessionId?: string | null
+    exerciseId?: string
 }
 
 export const SetInputRow: React.FC<SetInputRowProps> = ({
@@ -19,23 +22,59 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
     previousReps,
     currentLog,
     onSave,
-    isCompleted
+    isCompleted,
+    sessionId, // New prop
+    exerciseId // New prop
 }) => {
-    // Initialize with current log or previous history (user requested pre-fill)
-    const [weight, setWeight] = useState<string>('')
-    const [reps, setReps] = useState<string>('')
+    // Lazy Initialize with current log (DB) or local storage (Draft) or empty
+    const [weight, setWeight] = useState<string>(() => {
+        if (currentLog?.weight) return currentLog.weight.toString()
+        if (sessionId && exerciseId) {
+            const saved = getSetState(sessionId, exerciseId, setNumber)
+            if (saved?.weight) return saved.weight
+        }
+        return ''
+    })
 
-    // Update effect to handle external data changes (e.g. initial load)
+    const [reps, setReps] = useState<string>(() => {
+        if (currentLog?.reps) return currentLog.reps.toString()
+        if (sessionId && exerciseId) {
+            const saved = getSetState(sessionId, exerciseId, setNumber)
+            if (saved?.reps) return saved.reps
+        }
+        return ''
+    })
+
+    // Update effect to handle external data changes (e.g. initial load from DB overriding draft)
     useEffect(() => {
         if (currentLog) {
             setWeight(currentLog.weight?.toString() || '')
             setReps(currentLog.reps?.toString() || '')
-        } else {
-            // Clear inputs if not completed (e.g. unchecked)
-            setWeight('')
-            setReps('')
+        }
+        // Note: We intentionally DO NOT clear inputs if currentLog becomes null/undefined 
+        // because that might just mean we switched view context, unless explicitly handled.
+        // However, if the parent re-renders and currentLog is removed, it might mean "uncompleted".
+        // Use logic from previous implementation:
+        else if (currentLog === null && isCompleted) {
+            // Logic from original file: if not completed/currentLog is null, maybe clear?
+            // Original: "Clear inputs if not completed"
+            // But now we want persistence. So we keep local state if it exists.
         }
     }, [currentLog])
+
+    const handleWeightChange = (val: string) => {
+        setWeight(val)
+        if (sessionId && exerciseId) {
+            saveSetState(sessionId, exerciseId, setNumber, { weight: val })
+        }
+    }
+
+    const handleRepsChange = (val: string) => {
+        setReps(val)
+        if (sessionId && exerciseId) {
+            saveSetState(sessionId, exerciseId, setNumber, { reps: val })
+        }
+    }
 
     const handleCheck = () => {
         const w = parseFloat(weight)
@@ -62,7 +101,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                     <Input
                         type="number"
                         value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
+                        onChange={(e) => handleWeightChange(e.target.value)}
                         placeholder={previousWeight ? `${previousWeight}` : "-"}
                         className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
                     />
@@ -78,7 +117,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                     <Input
                         type="number"
                         value={reps}
-                        onChange={(e) => setReps(e.target.value)}
+                        onChange={(e) => handleRepsChange(e.target.value)}
                         placeholder={previousReps ? `${previousReps}` : "-"}
                         className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
                     />

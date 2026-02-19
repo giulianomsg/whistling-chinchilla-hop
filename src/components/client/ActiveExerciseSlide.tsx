@@ -16,6 +16,7 @@ interface ActiveExerciseSlideProps {
     isSessionActive: boolean
     isResting?: boolean
     onUpdateLogNote: (logId: string, note: string) => void
+    sessionId?: string | null
 }
 
 export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
@@ -28,7 +29,8 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     onToggleTimer,
     isSessionActive,
     isResting,
-    onUpdateLogNote
+    onUpdateLogNote,
+    sessionId
 }) => {
     // View Mode: 'gif' | 'video' | 'info'
     const [viewMode, setViewMode] = useState<'gif' | 'video' | 'info'>('gif')

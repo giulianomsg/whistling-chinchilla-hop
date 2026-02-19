@@ -9,6 +9,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useAuth } from '@/contexts/AuthContext'
+import { clearSessionState } from '@/utils/workoutStorage'
 
 const ActiveSessionPage = () => {
     const { sessionId } = useParams()
@@ -579,6 +580,9 @@ const ActiveSessionPage = () => {
 
             await supabase.from('profiles').update({ current_xp: newXP, level: newLevel }).eq('id', clientWorkout.client_id)
 
+            // Clear local storage state
+            clearSessionState(sessionId)
+
             setSummaryData({
                 xpEarned: xpGained,
                 currentXP: newXP,
@@ -732,6 +736,7 @@ const ActiveSessionPage = () => {
                 onToggleTimer={handleToggleTimer}
                 isSessionActive={sessionData?.status === 'started'}
                 elapsedTime={elapsedTime}
+                sessionId={sessionId}
             />
         </div>
     )
