@@ -11,6 +11,7 @@ interface SetInputRowProps {
     currentLog?: any
     onSave: (weight: number, reps: number, isCompleted: boolean) => void
     isCompleted: boolean
+    isDisabled?: boolean
 }
 
 export const SetInputRow: React.FC<SetInputRowProps> = ({
@@ -19,7 +20,8 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
     previousReps,
     currentLog,
     onSave,
-    isCompleted
+    isCompleted,
+    isDisabled
 }) => {
     // Initialize with current log or previous history (user requested pre-fill)
     const [weight, setWeight] = useState<string>('')
@@ -32,12 +34,16 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
             setReps(currentLog.reps?.toString() || '')
         } else {
             // Clear inputs if not completed (e.g. unchecked)
+            // But if user typed something and it's not saved yet... persistence issue?
+            // With set_number schema fix, saving becomes reliable.
+            // If explicit save, we rely on DB.
             setWeight('')
             setReps('')
         }
     }, [currentLog])
 
     const handleCheck = () => {
+        if (isDisabled) return
         const w = parseFloat(weight)
         const r = parseInt(reps)
         if (!isNaN(w) && !isNaN(r)) {
@@ -47,8 +53,9 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
 
     return (
         <div className={cn(
-            "grid grid-cols-12 gap-2 items-center p-3 rounded-lg mb-2 transition-colors",
-            isCompleted ? "bg-green-500/10 border border-green-500/20" : "bg-card border border-border"
+            "grid grid-cols-12 gap-2 items-center p-3 rounded-lg mb-2 transition-colors relative",
+            isCompleted ? "bg-green-500/10 border border-green-500/20" : "bg-card border border-border",
+            isDisabled && "opacity-50 grayscale pointer-events-none"
         )}>
             {/* Set Indicator */}
             <div className="col-span-1 md:col-span-1 flex flex-col items-center justify-center">
@@ -64,6 +71,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                         placeholder={previousWeight ? `${previousWeight}` : "-"}
+                        disabled={isDisabled}
                         className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
                     />
                     {previousWeight && (
@@ -80,6 +88,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                         value={reps}
                         onChange={(e) => setReps(e.target.value)}
                         placeholder={previousReps ? `${previousReps}` : "-"}
+                        disabled={isDisabled}
                         className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
                     />
                     {previousReps && (
@@ -102,6 +111,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                             : "bg-muted hover:bg-muted/80 text-muted-foreground"
                     )}
                     onClick={handleCheck}
+                    disabled={isDisabled}
                 >
                     {isCompleted ? <Check className="h-5 w-5 md:h-6 md:w-6" /> : <Check className="h-5 w-5 md:h-6 md:w-6" />}
                 </Button>

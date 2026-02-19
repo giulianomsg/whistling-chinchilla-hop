@@ -384,14 +384,15 @@ const ActiveSessionPage = () => {
         const relevantLogs = executionLogs.filter(l => l.workout_exercise_id === exerciseId)
             .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
 
-        const existingLog = relevantLogs[setIndex - 1]
+        // Match by set_number if possible, else index
+        const existingLog = relevantLogs.find(l => l.set_number === setIndex) || relevantLogs[setIndex - 1]
 
         const workoutExercise = exercises.find(e => e.id === exerciseId)
 
         const logData = {
-            workout_session_id: sessionId,
             workout_exercise_id: exerciseId,
             exercise_id: workoutExercise?.exercise_id,
+            set_number: setIndex, // Persist the set number!
             weight,
             reps,
             completed_at: new Date().toISOString()
