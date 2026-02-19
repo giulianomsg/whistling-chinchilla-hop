@@ -360,8 +360,25 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         if (activeTimerId) setActiveTimerStartTime(now)
         setIsSessionActive(true)
 
+        // Determine correct day to resume to
+        let targetDay = activeDayNumber
+
+        // 1. Try to find day from Active Timer
+        if (activeTimerId) {
+          const activeEx = workoutExercises.find(we => we.id === activeTimerId)
+          if (activeEx) targetDay = activeEx.day_number
+        }
+        // 2. If no timer, try to find day from existing Logs (most recent)
+        else if (executionLogs.length > 0) {
+          // Sort by creation to get latest
+          const sortedLogs = [...executionLogs].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          const lastLog = sortedLogs[0]
+          const logEx = workoutExercises.find(we => we.id === lastLog.workout_exercise_id)
+          if (logEx) targetDay = logEx.day_number
+        }
+
         // Navigate
-        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
+        navigate(`/app/my-workout/session/${sessionId}?day=${targetDay}`)
       } else if (action === 'pause' && sessionId) {
         // PAUSE: Snapshot All Timers
         const now = Date.now()
