@@ -862,7 +862,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       </Card>
 
       {/* Player Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 md:left-64 md:w-[calc(100%-16rem)] bg-background/80 backdrop-blur-md border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)] transition-all duration-300">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
 
           {/* Time Display - Centered or Left aligned based on screen */}
