@@ -38,10 +38,12 @@ export const paymentService = {
                 // UX Delay for realism
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
+                const idempotencyKey = crypto.randomUUID();
                 const { data, error } = await supabase.rpc('process_subscription_payment', {
                     p_plan_id: planId,
                     p_student_id: user.id,
-                    p_payment_method: 'sandbox_simulated'
+                    p_payment_method: 'sandbox_simulated',
+                    p_idempotency_key: idempotencyKey
                 });
 
                 if (error) throw error;
@@ -65,11 +67,13 @@ export const paymentService = {
                     throw new Error("URLs de retorno não fornecidas para o checkout.");
                 }
 
+                const idempotencyKey = crypto.randomUUID();
                 const { data, error } = await supabase.functions.invoke('checkout', {
                     body: {
                         planId,
                         successUrl,
-                        cancelUrl
+                        cancelUrl,
+                        idempotencyKey
                     }
                 });
 

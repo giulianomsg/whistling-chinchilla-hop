@@ -28,9 +28,10 @@ serve(async (req) => {
     const student_id = user.id;
 
     // 2. Parse Request
-    const { planId, priceId, successUrl, cancelUrl } = await req.json();
+    const { planId, priceId, successUrl, cancelUrl, idempotencyKey } = await req.json();
     if (!planId) throw new Error('Missing planId');
     if (!successUrl || !cancelUrl) throw new Error('Missing return URLs');
+    if (!idempotencyKey) throw new Error('Missing idempotencyKey');
 
     // 3. Get Stripe Secrets (Using Admin Client)
     const supabaseAdmin = createClient(
@@ -60,28 +61,28 @@ serve(async (req) => {
       .select('*')
       .eq('id', planId)
       .single();
-    
+
     if (planError || !plan) throw new Error('Plan not found');
 
     // 6. Create Checkout Session
     // Use priceId if provided, else construct ad-hoc price data from plan
-    const lineItem = priceId 
+    const lineItem = priceId
       ? { price: priceId, quantity: 1 }
       : {
-          price_data: {
-            currency: 'brl',
-            product_data: {
-              name: plan.name,
-              description: `Plano de ${plan.duration_months} meses`,
-            },
-            unit_amount: Math.round(plan.price * 100), // Stripes uses cents
-            recurring: {
-              interval: 'month',
-              interval_count: plan.duration_months
-            }
+        price_data: {
+          currency: 'brl',
+          product_data: {
+            name: plan.name,
+            description: `Plano de ${plan.duration_months} meses`,
           },
-          quantity: 1,
-        };
+          unit_amount: Math.round(plan.price * 100), // Stripes uses cents
+          recurring: {
+            interval: 'month',
+            interval_count: plan.duration_months
+          }
+        },
+        quantity: 1,
+      };
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -93,6 +94,8 @@ serve(async (req) => {
         student_id: student_id,
         plan_id: planId
       }
+    }, {
+      idempotencyKey: idempotencyKey // Passes key to prevent multi-click races directly at Stripe level
     });
 
     return new Response(
