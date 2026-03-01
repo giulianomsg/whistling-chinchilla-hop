@@ -11,11 +11,12 @@ import {
 import {
   Timer, Play, Pause, Square, Loader2, BarChart3,
   Save, Trash2, Plus, Search, X, Calendar as CalendarIcon, Maximize2,
-  ChevronDown, ChevronUp, User
+  ChevronDown, ChevronUp, User, ChevronLeft, ChevronRight, CheckCircle, Info, Flame, AlertCircle, RefreshCw
 } from 'lucide-react'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
 import BodyHighlighter from '@/components/visualization/BodyHighlighter'
 import { supabase } from '@/integrations/supabase/client'
+import { useSidebarContext } from '@/contexts/SidebarContext'
 import { showSuccess, showError } from '@/utils/toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { WorkoutSummaryModal } from '@/components/gamification/WorkoutSummaryModal'
@@ -36,6 +37,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { confirm } = useFeedback()
+  const { isSidebarCollapsed } = useSidebarContext()
 
   // Day Persistence (Read Only here, navigation is handled by parent or headers hidden)
   const activeTab = searchParams.get('day') || 'day-1'
@@ -862,7 +864,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       </Card>
 
       {/* Player Footer */}
-      <div className="fixed bottom-0 left-0 right-0 md:left-64 md:w-[calc(100%-16rem)] bg-background/80 backdrop-blur-md border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)] transition-all duration-300">
+      <div className={`fixed bottom-0 ${isSidebarCollapsed ? 'md:left-20 md:w-[calc(100%-5rem)]' : 'md:left-64 md:w-[calc(100%-16rem)]'} left-0 right-0 bg-background/80 backdrop-blur-md border-t border-border p-3 pb-4 md:p-4 z-[100] shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)] transition-all duration-300`}>
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
 
           {/* Time Display - Centered or Left aligned based on screen */}

@@ -37,13 +37,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ModeToggle } from "@/components/mode-toggle"
+import { useSidebarContext } from '@/contexts/SidebarContext'
 
 const DashboardLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const { isSidebarCollapsed, toggleSidebar } = useSidebarContext()
   const [isSandbox, setIsSandbox] = useState(false)
 
   React.useEffect(() => {
@@ -53,8 +54,6 @@ const DashboardLayout: React.FC = () => {
     };
     checkSandbox();
   }, []);
-
-  const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed)
 
   const handleSignOut = async () => {
     await signOut()
