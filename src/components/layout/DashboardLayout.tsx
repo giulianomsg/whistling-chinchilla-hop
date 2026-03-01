@@ -193,21 +193,23 @@ const DashboardLayout: React.FC = () => {
     <div className="min-h-screen bg-background flex">
       {/* Sidebar Desktop */}
       <aside className={`hidden md:flex flex-col fixed h-full border-r border-border bg-card/50 backdrop-blur-xl z-[50] transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
-        <div className={`p-6 flex items-center ${isSidebarCollapsed ? 'justify-center p-4' : 'justify-between'}`}>
-          <div className="flex items-center gap-2 w-full">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 text-foreground hover:bg-accent hidden md:flex shrink-0 mr-1">
+        <div className={`flex flex-col gap-6 w-full ${isSidebarCollapsed ? 'p-4' : 'p-6'}`}>
+          {/* Toggle Button */}
+          <div className={`flex w-full ${isSidebarCollapsed ? 'justify-center' : 'justify-end'}`}>
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 text-foreground hover:bg-accent hidden md:flex shrink-0">
               {isSidebarCollapsed ? <Menu className="h-5 w-5" /> : <X className="h-5 w-5" />}
             </Button>
+          </div>
 
+          {/* Logo */}
+          <div className={`flex items-center gap-2 ${isSidebarCollapsed ? 'justify-center' : 'justify-start'}`}>
+            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)] shrink-0">
+              <Dumbbell className="h-5 w-5 text-primary-foreground" />
+            </div>
             {!isSidebarCollapsed && (
-              <>
-                <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)] shrink-0">
-                  <Dumbbell className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold text-foreground tracking-tight animate-in fade-in duration-300 whitespace-nowrap">
-                  CapiFit<span className="text-primary">.</span>
-                </span>
-              </>
+              <span className="text-xl font-bold text-foreground tracking-tight animate-in fade-in duration-300 whitespace-nowrap">
+                CapiFit<span className="text-primary">.</span>
+              </span>
             )}
           </div>
         </div>
