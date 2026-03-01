@@ -193,7 +193,7 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar Desktop */}
-      <aside className={`hidden md:flex flex-col fixed h-full border-r border-border bg-card/50 backdrop-blur-xl z-20 transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
+      <aside className={`hidden md:flex flex-col fixed h-full border-r border-border bg-card/50 backdrop-blur-xl z-[50] transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
         <div className={`p-6 flex items-center ${isSidebarCollapsed ? 'justify-center p-4' : 'justify-between'}`}>
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
@@ -221,7 +221,7 @@ const DashboardLayout: React.FC = () => {
       </aside>
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 w-full h-16 border-b border-border bg-card/80 backdrop-blur-xl z-30 flex items-center justify-between px-4">
+      <div className="md:hidden fixed top-0 w-full h-16 border-b border-border bg-card/80 backdrop-blur-xl z-[50] flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
             <Dumbbell className="h-5 w-5 text-primary-foreground" />

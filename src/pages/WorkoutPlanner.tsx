@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { useFeedback } from '@/components/ui/CapiFitFeedback'
 import {
   Dumbbell, Plus, Edit, Trash2, Settings, Calendar, Target, Clock, Loader2, Search, X
@@ -267,11 +268,11 @@ const WorkoutPlanner: React.FC = () => {
 
         {/* Sheet de Gerenciamento de Exercícios */}
         <Sheet open={isManageSheetOpen} onOpenChange={setIsManageSheetOpen}>
-          <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] overflow-y-auto">
-            <SheetHeader><SheetTitle className="text-foreground">Gerenciar: {selectedWorkout?.name}</SheetTitle></SheetHeader>
+          <SheetContent className="bg-card border-l border-border text-foreground w-[90%] sm:w-[600px] flex flex-col h-full max-h-screen">
+            <SheetHeader className="shrink-0"><SheetTitle className="text-foreground">Gerenciar: {selectedWorkout?.name}</SheetTitle></SheetHeader>
 
-            <div className="mt-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="mt-6 flex flex-col flex-1 overflow-hidden">
+              <div className="flex justify-between items-center mb-4 shrink-0">
                 <h3 className="font-bold text-lg">Exercícios do Plano</h3>
                 <Button size="sm" onClick={openAddExDialog} className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50"><Plus className="h-4 w-4 mr-2" /> Adicionar</Button>
 
@@ -326,33 +327,35 @@ const WorkoutPlanner: React.FC = () => {
                 </Dialog>
               </div>
 
-              <Tabs defaultValue="day-1">
-                <TabsList className="bg-muted w-full justify-start overflow-x-auto p-1">
+              <Tabs defaultValue="day-1" className="flex flex-col flex-1 overflow-hidden">
+                <TabsList className="bg-muted w-full justify-start overflow-x-auto p-1 shrink-0">
                   {Array.from({ length: selectedWorkout?.days_per_week || 1 }, (_, i) => (
                     <TabsTrigger key={i} value={`day-${i + 1}`} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground px-4">Dia {i + 1}</TabsTrigger>
                   ))}
                 </TabsList>
-                {Array.from({ length: selectedWorkout?.days_per_week || 1 }, (_, i) => (
-                  <TabsContent key={i} value={`day-${i + 1}`} className="space-y-3 mt-4">
-                    {workoutExercises.filter(we => we.day_number === i + 1).map(we => (
-                      <div key={we.id} className="bg-card border border-border p-3 rounded-lg flex items-center justify-between group hover:bg-accent/50 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-primary/20 text-primary w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-inner">{we.order_index}</div>
-                          <div>
-                            <div className="font-bold text-foreground">{we.exercise?.name}</div>
-                            <div className="text-xs text-muted-foreground">{we.sets}x{we.reps} • {we.weight ? `${we.weight}kg` : 'Peso livre'} • {we.rest_time_seconds}s</div>
-                            {we.notes && <div className="text-[10px] text-yellow-600 dark:text-yellow-400 mt-1">{we.notes}</div>}
+                <ScrollArea className="flex-1 mt-4">
+                  {Array.from({ length: selectedWorkout?.days_per_week || 1 }, (_, i) => (
+                    <TabsContent key={i} value={`day-${i + 1}`} className="space-y-3 mt-0 pr-4">
+                      {workoutExercises.filter(we => we.day_number === i + 1).map(we => (
+                        <div key={we.id} className="bg-card border border-border p-3 rounded-lg flex items-center justify-between group hover:bg-accent/50 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-primary/20 text-primary w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-inner">{we.order_index}</div>
+                            <div>
+                              <div className="font-bold text-foreground">{we.exercise?.name}</div>
+                              <div className="text-xs text-muted-foreground">{we.sets}x{we.reps} • {we.weight ? `${we.weight}kg` : 'Peso livre'} • {we.rest_time_seconds}s</div>
+                              {we.notes && <div className="text-[10px] text-yellow-600 dark:text-yellow-400 mt-1">{we.notes}</div>}
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button size="icon" variant="ghost" onClick={() => openEditExDialog(we)} className="text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/20"><Edit className="h-4 w-4" /></Button>
+                            <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
                           </div>
                         </div>
-                        <div className="flex gap-1">
-                          <Button size="icon" variant="ghost" onClick={() => openEditExDialog(we)} className="text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/20"><Edit className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" onClick={() => handleDeleteExercise(we.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                      </div>
-                    ))}
-                    {workoutExercises.filter(we => we.day_number === i + 1).length === 0 && <div className="text-center text-muted-foreground text-sm py-8 bg-card rounded-lg border border-dashed border-border">Sem exercícios neste dia</div>}
-                  </TabsContent>
-                ))}
+                      ))}
+                      {workoutExercises.filter(we => we.day_number === i + 1).length === 0 && <div className="text-center text-muted-foreground text-sm py-8 bg-card rounded-lg border border-dashed border-border">Sem exercícios neste dia</div>}
+                    </TabsContent>
+                  ))}
+                </ScrollArea>
               </Tabs>
             </div>
           </SheetContent>

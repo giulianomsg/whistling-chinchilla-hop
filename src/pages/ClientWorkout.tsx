@@ -92,7 +92,7 @@ const ClientWorkout: React.FC = () => {
 
   if (!clientWorkout) {
     return (
-      <div className="min-h-screen bg-background py-8">
+      <div className="min-h-screen bg-background py-8 pb-24">
         <div className="w-full mx-auto px-4 text-center py-12 bg-card rounded-xl border border-border">
           <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">Sem treino ativo</h2>
@@ -116,7 +116,7 @@ const ClientWorkout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background w-full overflow-x-hidden p-2 md:p-8 space-y-8">
+    <div className="min-h-screen bg-background w-full overflow-x-hidden p-2 md:p-8 pb-24 md:pb-24 space-y-8">
       <div>
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">

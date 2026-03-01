@@ -38,7 +38,7 @@ import StrengthRadar from '@/components/analytics/StrengthRadar'
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard'
 import { useStrengthData } from '@/hooks/useStrengthData'
 import GoalsManager from '@/components/goals/GoalsManager'
-
+import WorkoutHistoryFeed from '@/components/client/WorkoutHistoryFeed'
 const SKINFOLD_LABELS: Record<string, string> = { triceps: 'Tríceps', biceps: 'Bíceps', subscapular: 'Subescapular', chest: 'Peitoral', axillary: 'Axilar Média', suprailiac: 'Supra-ilíaca', abdominal: 'Abdominal', thigh: 'Coxa', calf: 'Panturrilha' }
 const CIRCUMFERENCE_LABELS: Record<string, string> = { shoulder: 'Ombros', chest: 'Tórax', arm_right: 'Braço Dir.', arm_left: 'Braço Esq.', waist: 'Cintura', abdomen: 'Abdômen', hips: 'Quadril', thigh_right: 'Coxa Dir.', thigh_left: 'Coxa Esq.', calf_right: 'Panturrilha Dir.', calf_left: 'Panturrilha Esq.' }
 const COMMON_CONDITIONS = ['Diabetes', 'Hipertensão', 'Asma', 'Artrite', 'Problema Renal', 'Anemia', 'Problemas Oculares', 'Obesidade', 'Colesterol Alto']
@@ -1331,118 +1331,9 @@ const ClientDetails: React.FC = () => {
           </FolderTabsContent>
 
           <FolderTabsContent value="history">
-            <Card className="bg-card border-border w-full">
-              <CardHeader className="p-6 border-b border-border">
-                <CardTitle className="text-foreground text-xl flex items-center gap-2">
-                  <Activity className="h-6 w-6 text-orange-500" /> Histórico de Execução
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                {historySessions.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">Nenhum treino realizado ainda.</div>
-                ) : (
-                  <div className="space-y-4">
-                    {historySessions.map(session => (
-                      <div
-                        key={session.id}
-                        className="bg-muted/50 p-5 rounded-xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 cursor-pointer hover:bg-muted transition-colors"
-                        onClick={() => handleHistorySessionClick(session)}
-                      >
-                        <div className="flex items-center gap-5 w-full md:w-auto">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${session.status === 'completed' ? 'bg-green-500/10 text-green-500' :
-                            session.status === 'abandoned' ? 'bg-red-500/10 text-red-500' :
-                              'bg-blue-500/10 text-blue-500'
-                            }`} >
-                            {session.status === 'completed' ? <CheckCircle className="h-6 w-6" /> :
-                              session.status === 'abandoned' ? <AlertCircle className="h-6 w-6" /> :
-                                <Play className="h-6 w-6" />
-                            }
-                          </div>
-                          <div>
-                            <h4 className="text-lg font-bold text-foreground">{session.workout?.name || 'Treino Avulso'}</h4>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                              <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {new Date(session.created_at).toLocaleDateString()}</span>
-                              <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {session.duration_seconds ? `${Math.floor(session.duration_seconds / 60)} min` : '--'}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          {/* Status Badge Logic */}
-                          {(() => {
-                            switch (session.status) {
-                              case 'completed': return <Badge variant='default' className="bg-green-600">Concluído</Badge>
-                              case 'abandoned': return <Badge variant='destructive'>Abandonado</Badge>
-                              case 'started': return <Badge variant='secondary' className="bg-blue-500/10 text-blue-500 border-blue-500/20">Em Andamento</Badge>
-                              case 'paused': return <Badge variant='outline' className="text-yellow-500 border-yellow-500/50">Pausado</Badge>
-                              default: return <Badge variant='outline'>{session.status}</Badge>
-                            }
-                          })()}
-                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Dialog open={isHistoryDetailOpen} onOpenChange={setIsHistoryDetailOpen}>
-              <DialogContent className="bg-card border-border text-foreground sm:max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>{selectedHistorySession?.workout?.name}</DialogTitle>
-                  <div className="text-sm text-muted-foreground flex gap-3">
-                    <span>{selectedHistorySession && new Date(selectedHistorySession.ended_at || selectedHistorySession.created_at).toLocaleDateString('pt-BR')}</span>
-                    <span>•</span>
-                    <span>{selectedHistorySession && formatDuration(selectedHistorySession.duration_seconds || 0)}</span>
-                  </div>
-                </DialogHeader>
-                <ScrollArea className="max-h-[60vh] pr-4 mt-4">
-                  {historyLogsLoading ? (
-                    <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
-                  ) : historyLogs.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">Nenhum registro de exercício encontrado.</div>
-                  ) : (
-                    <div className="space-y-4">
-                      {historyLogs.map((log, index) => {
-                        // Calculate Duration from stored state if available
-                        const timers = selectedHistorySession?.exercise_timers_state || {}
-                        const durationSeconds = timers[log.workout_exercise_id] || 0
-                        const durationText = durationSeconds > 0 ? formatDuration(durationSeconds) : null
-
-                        return (
-                          <div key={log.id || index} className="bg-muted p-4 rounded-lg border border-border">
-                            <div className="flex justify-between items-center mb-2">
-                              <h4 className="font-bold text-foreground">{log.exercise?.name || 'Exercício'}</h4>
-                              {durationText && (
-                                <Badge variant="outline" className="font-mono text-xs flex items-center gap-1">
-                                  <Clock className="h-3 w-3" /> {durationText}
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div className="bg-background p-2 rounded border border-border">
-                                <span className="text-muted-foreground block text-xs uppercase">Carga</span>
-                                <span className="font-mono font-bold">{log.weight} kg</span>
-                              </div>
-                              <div className="bg-background p-2 rounded border border-border">
-                                <span className="text-muted-foreground block text-xs uppercase">Repetições</span>
-                                <span className="font-mono font-bold">{log.reps}</span>
-                              </div>
-                            </div>
-                            {log.notes && (
-                              <div className="mt-2 text-sm text-muted-foreground italic border-t border-border/50 pt-2">
-                                "{log.notes}"
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
-
+            <div className="w-full">
+              <WorkoutHistoryFeed clientId={id!} />
+            </div>
           </FolderTabsContent>
 
           <FolderTabsContent value="workouts">
