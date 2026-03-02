@@ -77,7 +77,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   const [summaryData, setSummaryData] = useState({ xpEarned: 0, currentXP: 0, newLevel: 1, oldLevel: 1, workoutName: '', durationSeconds: 0, totalLoadKg: 0 })
 
   // Active Session Overlay State
-  const [activeSessionOpen, setActiveSessionOpen] = useState(false)
+  const [flowState, setFlowState] = useState<'preview' | 'warmup' | 'active' | 'summary'>('preview')
 
   // Rest Timer State
   const [restTimerOpen, setRestTimerOpen] = useState(false)
@@ -331,8 +331,12 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           started_at: new Date().toISOString()
         }).select().single()
         if (error) throw error
+        setSessionId(data.id)
+        setSessionStatus('started')
+        setSessionStartTime(new Date(data.started_at).getTime())
+        setIsSessionActive(true)
+        setFlowState('active')
         showSuccess('Treino iniciado!')
-        navigate(`/app/my-workout/session/${data.id}?day=${activeDayNumber}`)
       } else if (action === 'resume' && sessionId) {
         // RESUME: Restore Global, Active, and Rest Timers
         const now = Date.now()
@@ -363,8 +367,8 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         if (activeTimerId) setActiveTimerStartTime(now)
         setIsSessionActive(true)
 
-        // Navigate
-        navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)
+        // Flow State Update
+        setFlowState('active')
       } else if (action === 'pause' && sessionId) {
         // PAUSE: Snapshot All Timers
         const now = Date.now()
@@ -419,6 +423,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
           handleCloseSummary()
           showSuccess('Treino vazio descartado.')
           setSessionLoading(false)
+          setFlowState('preview')
           return
         }
 
@@ -501,6 +506,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
         })
 
         setShowSummaryModal(true)
+        setFlowState('summary')
         if (refreshProfile) refreshProfile()
 
       }
@@ -516,6 +522,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
     setElapsedTime(0)
     setSessionStatus('idle')
     setExecutionLogs([])
+    setFlowState('preview')
   }
 
   const handleExerciseClick = (exercise: any) => {
@@ -887,7 +894,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => navigate(`/app/my-workout/session/${sessionId}?day=${activeDayNumber}`)}
+                  onClick={() => setFlowState('active')}
                   className="h-11 w-11 shrink-0 border-border bg-card hover:bg-muted"
                   title="Expandir Treino"
                 >
@@ -1063,9 +1070,9 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       {/* Active Session Overlay */}
       <ActiveWorkoutSession
-        isOpen={activeSessionOpen}
-        onMinimize={() => setActiveSessionOpen(false)}
-        exercises={workoutExercises}
+        isOpen={flowState === 'active'}
+        onMinimize={() => setFlowState('preview')}
+        exercises={displayedExercises}
         executionLogs={executionLogs}
         historyLogs={historyLogs}
         onSaveLog={handleActiveSessionSaveLog}

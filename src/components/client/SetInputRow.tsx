@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Check, Clock, History } from 'lucide-react'
+import { Check, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getSetState, saveSetState } from '@/utils/workoutStorage'
+import { useWorkoutDraft } from '@/hooks/useWorkoutDraft'
 
 interface SetInputRowProps {
     setNumber: number
@@ -26,53 +26,43 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
     sessionId, // New prop
     exerciseId // New prop
 }) => {
-    // Lazy Initialize with current log (DB) or local storage (Draft) or empty
-    const [weight, setWeight] = useState<string>(() => {
-        if (currentLog?.weight) return currentLog.weight.toString()
-        if (sessionId && exerciseId) {
-            const saved = getSetState(sessionId, exerciseId, setNumber)
-            if (saved?.weight) return saved.weight
-        }
-        return ''
-    })
+    const [weight, setWeight] = useWorkoutDraft(
+        sessionId,
+        exerciseId,
+        setNumber,
+        'weight',
+        currentLog?.weight
+    )
 
-    const [reps, setReps] = useState<string>(() => {
-        if (currentLog?.reps) return currentLog.reps.toString()
-        if (sessionId && exerciseId) {
-            const saved = getSetState(sessionId, exerciseId, setNumber)
-            if (saved?.reps) return saved.reps
-        }
-        return ''
-    })
-
-    // Update effect to handle external data changes (e.g. initial load from DB overriding draft)
-    useEffect(() => {
-        if (currentLog) {
-            setWeight(currentLog.weight?.toString() || '')
-            setReps(currentLog.reps?.toString() || '')
-        }
-        // Note: We intentionally DO NOT clear inputs if currentLog becomes null/undefined 
-        // because that might just mean we switched view context, unless explicitly handled.
-        // However, if the parent re-renders and currentLog is removed, it might mean "uncompleted".
-        // Use logic from previous implementation:
-        else if (currentLog === null && isCompleted) {
-            // Logic from original file: if not completed/currentLog is null, maybe clear?
-            // Original: "Clear inputs if not completed"
-            // But now we want persistence. So we keep local state if it exists.
-        }
-    }, [currentLog])
+    const [reps, setReps] = useWorkoutDraft(
+        sessionId,
+        exerciseId,
+        setNumber,
+        'reps',
+        currentLog?.reps
+    )
 
     const handleWeightChange = (val: string) => {
-        setWeight(val)
-        if (sessionId && exerciseId) {
-            saveSetState(sessionId, exerciseId, setNumber, { weight: val })
+        // Auto-format comma to dot
+        const formatted = val.replace(/,/g, '.')
+
+        // Regex validation: Allows integers, and floats with up to 2 decimal places. 
+        // We use ^\d*\.?\d{0,2}$ to allow intermediate typing like "12."
+        if (formatted === '' || /^\d*\.?\d{0,2}$/.test(formatted)) {
+            setWeight(formatted)
         }
     }
 
     const handleRepsChange = (val: string) => {
-        setReps(val)
-        if (sessionId && exerciseId) {
-            saveSetState(sessionId, exerciseId, setNumber, { reps: val })
+        // Only allow integers, remove non-digits
+        const formatted = val.replace(/\D/g, '')
+        setReps(formatted)
+    }
+
+    const handleRepsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Strict integer validation to block dots, commas, e, +, - at keystroke level
+        if (['.', ',', 'e', 'E', '+', '-'].includes(e.key)) {
+            e.preventDefault()
         }
     }
 
@@ -99,7 +89,8 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                 <div className="space-y-1">
                     <label className="text-[9px] uppercase text-muted-foreground font-bold pl-1">Kg</label>
                     <Input
-                        type="number"
+                        type="text"
+                        inputMode="decimal"
                         value={weight}
                         onChange={(e) => handleWeightChange(e.target.value)}
                         placeholder={previousWeight ? `${previousWeight}` : "-"}
@@ -116,8 +107,10 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                     <label className="text-[10px] uppercase text-muted-foreground font-bold pl-1">Reps</label>
                     <Input
                         type="number"
+                        inputMode="numeric"
                         value={reps}
                         onChange={(e) => handleRepsChange(e.target.value)}
+                        onKeyDown={handleRepsKeyDown}
                         placeholder={previousReps ? `${previousReps}` : "-"}
                         className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
                     />
