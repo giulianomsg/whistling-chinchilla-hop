@@ -72,16 +72,18 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
-    // Auto-navigate to active exercise on load or when timer starts
+    // Auto-navigate to active exercise on open
     useEffect(() => {
-        const targetId = activeTimerId || lastRestExId
-        if (targetId && exercises.length > 0) {
-            const idx = exercises.findIndex(e => e.id === targetId)
-            if (idx !== -1) {
-                setCurrentIndex(idx)
+        if (isOpen) {
+            const targetId = activeTimerId || lastRestExId
+            if (targetId && exercises.length > 0) {
+                const idx = exercises.findIndex(e => e.id === targetId)
+                if (idx !== -1) {
+                    setCurrentIndex(idx)
+                }
             }
         }
-    }, [activeTimerId, lastRestExId, exercises])
+    }, [isOpen])
 
     // ... (rest of state)
 
@@ -184,6 +186,32 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     sessionId={sessionId}
                 />
             </div>
+
+            {/* Global Mini-player (when navigating away from active timer) */}
+            {activeTimerId && activeTimerId !== currentExercise.id && (
+                <div className="bg-primary/10 border-t border-primary/20 p-3 flex items-center justify-between gap-3 animate-in slide-in-from-bottom-2">
+                    <div className="flex flex-col flex-1 min-w-0">
+                        <span className="text-[10px] uppercase font-bold text-primary">Em Andamento</span>
+                        <span className="font-bold text-sm truncate">{exercises.find(e => e.id === activeTimerId)?.exercise?.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <span className="font-mono font-bold text-primary animate-pulse">
+                            {formatSeconds(exerciseTimers[activeTimerId] || 0)}
+                        </span>
+                        <Button
+                            size="sm"
+                            variant="default"
+                            onClick={() => {
+                                const idx = exercises.findIndex(e => e.id === activeTimerId);
+                                if (idx !== -1) setCurrentIndex(idx);
+                            }}
+                            className="h-8 text-xs font-bold shadow-md shadow-primary/20"
+                        >
+                            Voltar para Série
+                        </Button>
+                    </div>
+                </div>
+            )}
 
             {/* Footer Navigation */}
             <div className="p-4 border-t border-border bg-card/80 backdrop-blur-xl flex items-center justify-between gap-4">

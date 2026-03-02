@@ -284,6 +284,32 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       return
     }
 
+    // 1. Lock: Prevent starting a new timer if there is already an active timer (exercise or rest)
+    if (exerciseId !== activeTimerId && (activeTimerId !== null || restTimerOpen)) {
+      showError('Ação negada: Finalize o exercício ou o descanso atual antes de iniciar o próximo.')
+      return
+    }
+
+    // 2. Transition Validation: If starting a NEW timer, check if there's any incomplete exercise
+    if (exerciseId !== activeTimerId && activeTimerId === null) {
+      const pendingExercise = workoutExercises.find(we => {
+        if (we.id === exerciseId) return false
+        const logsCount = executionLogs.filter(l => l.workout_exercise_id === we.id).length
+        return logsCount > 0 && logsCount < we.sets
+      })
+
+      if (pendingExercise) {
+        const confirmed = await confirm({
+          title: 'Séries Pendentes',
+          description: `Você ainda possui séries pendentes em "${pendingExercise.exercise?.name}". Deseja realmente avançar e iniciar um novo exercício?`,
+          confirmText: 'Avançar',
+          cancelText: 'Cancelar',
+          variant: 'default'
+        })
+        if (!confirmed) return
+      }
+    }
+
     const now = new Date()
     let updatePayload: any = {}
     let newTimersVal = { ...exerciseTimers }
