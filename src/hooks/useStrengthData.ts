@@ -58,11 +58,6 @@ export const useStrengthData = (clientId: string | undefined) => {
                     const canonicalId = getCanonicalExerciseId(name, baseType)
                     if (!canonicalId) return
 
-                    // Unilateral logic: Double weight for stats
-                    if (isUnilateral) {
-                        w = w * 2
-                    }
-
                     const oneRM = calculateOneRM(w, r)
                     if (oneRM > maxLifts[canonicalId]) {
                         maxLifts[canonicalId] = oneRM

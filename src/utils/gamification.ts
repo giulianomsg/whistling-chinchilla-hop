@@ -5,28 +5,28 @@
  */
 
 export const getRankTitle = (level: number): string => {
-    if (level <= 5) return 'Novato de Sofá'
-    if (level <= 10) return 'Caminhante de Fim de Semana'
-    if (level <= 20) return 'Rato de Academia'
-    if (level <= 30) return 'Maratonista de Dados'
-    if (level <= 50) return 'Ciborgue Fitness'
-    return 'Lenda Viva'
+    if (level <= 5) return 'Ferro'
+    if (level <= 15) return 'Aço'
+    if (level <= 30) return 'Bronze'
+    if (level <= 50) return 'Prata'
+    if (level <= 75) return 'Ouro'
+    if (level <= 99) return 'Titanium'
+    return 'Diamante Negro'
 }
 
 export const calculateLevel = (xp: number): number => {
     if (xp < 100) return 1
-    return Math.floor(Math.sqrt(xp / 100.0))
+    // Updated: XP = 100 * level^1.5 => level = (XP / 100)^(1/1.5)
+    return Math.floor(Math.pow(xp / 100.0, 1 / 1.5))
 }
 
 export const getNextLevelXP = (level: number): number => {
-    // Inverse of level = sqrt(xp / 100) -> xp = level^2 * 100
-    // Next level is level + 1
-    return Math.pow(level + 1, 2) * 100
+    return Math.floor(Math.pow(level + 1, 1.5) * 100)
 }
 
 export const getLevelProgress = (currentXP: number, currentLevel: number) => {
-    const currentLevelBaseXP = Math.pow(currentLevel, 2) * 100
-    const nextLevelXP = Math.pow(currentLevel + 1, 2) * 100
+    const currentLevelBaseXP = Math.floor(Math.pow(currentLevel, 1.5) * 100)
+    const nextLevelXP = Math.floor(Math.pow(currentLevel + 1, 1.5) * 100)
 
     const xpInLevel = currentXP - currentLevelBaseXP
     const xpRequiredForNext = nextLevelXP - currentLevelBaseXP

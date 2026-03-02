@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { PlayCircle, VideoOff, Info, Image as ImageIcon, Video as VideoIcon, Square, Play } from 'lucide-react'
+import { PlayCircle, VideoOff, Info, Image as ImageIcon, Video as VideoIcon, Square, Play, History } from 'lucide-react'
 import { SetInputRow } from './SetInputRow'
 import { Textarea } from '@/components/ui/textarea'
+import { supabase } from '@/integrations/supabase/client'
 
 interface ActiveExerciseSlideProps {
     exercise: any
@@ -17,6 +18,7 @@ interface ActiveExerciseSlideProps {
     isResting?: boolean
     onUpdateLogNote: (logId: string, note: string) => void
     sessionId?: string | null
+    clientId?: string | null
 }
 
 export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
@@ -30,10 +32,12 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
     isSessionActive,
     isResting,
     onUpdateLogNote,
-    sessionId
+    sessionId,
+    clientId
 }) => {
     // View Mode: 'gif' | 'video' | 'info'
     const [viewMode, setViewMode] = useState<'gif' | 'video' | 'info'>('gif')
+    const [lastExec, setLastExec] = useState<{ weight: number, reps: number, text: string } | null>(null)
 
     // Reset view mode when exercise changes
     useEffect(() => {
@@ -43,6 +47,31 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
         else if (hasVideo(exercise)) setViewMode('video')
         else setViewMode('info')
     }, [exercise.id])
+
+    // Load History via RPC
+    useEffect(() => {
+        if (!clientId || !exercise.exercise_id) return
+
+        const fetchHistory = async () => {
+            try {
+                const { data } = await supabase.rpc('get_last_exercise_execution', {
+                    p_client_id: clientId,
+                    p_exercise_id: exercise.exercise_id
+                })
+                if (data && data.length > 0) {
+                    setLastExec({
+                        weight: data[0].weight,
+                        reps: data[0].reps,
+                        text: `Última vez: ${data[0].weight}kg x ${data[0].reps} reps`
+                    })
+                }
+            } catch (err) {
+                console.error("Error fetching last execution:", err)
+            }
+        }
+
+        fetchHistory()
+    }, [clientId, exercise.exercise_id])
 
     // Helpers
     const isVideoUrl = (url: string) => /\.(mp4|webm|ogg|mov)$/i.test(url) || url?.includes('youtu')
@@ -200,9 +229,17 @@ export const ActiveExerciseSlide: React.FC<ActiveExerciseSlideProps> = ({
                                     <PlayCircle className="h-3 w-3" /> Descanso: {exercise.rest_time_seconds}s
                                 </Badge>
                             )}
-                            <span className="text-xs text-muted-foreground">{exercise.sets} séries • {exercise.reps} reps</span>
                         </div>
                     </div>
+
+                    {lastExec && (
+                        <div className="flex justify-center mb-3">
+                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20 text-xs px-3 py-1 font-bold animate-in fade-in slide-in-from-top-2">
+                                <History className="w-3 h-3 mr-1.5" />
+                                {lastExec.text}
+                            </Badge>
+                        </div>
+                    )}
 
                     {Array.from({ length: exercise.sets }).map((_, i) => {
                         const historyLog = pastLogs[i]

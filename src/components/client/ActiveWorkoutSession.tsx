@@ -38,6 +38,8 @@ interface ActiveWorkoutSessionProps {
 
     // Session ID for persistence
     sessionId?: string | null
+
+    clientId?: string | null
 }
 
 // Helper for formatting
@@ -68,7 +70,8 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
     onToggleTimer,
     isSessionActive,
     elapsedTime,
-    sessionId
+    sessionId,
+    clientId
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -184,6 +187,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
                     isSessionActive={isSessionActive}
                     isResting={restTimerOpen}
                     sessionId={sessionId}
+                    clientId={clientId}
                 />
             </div>
 

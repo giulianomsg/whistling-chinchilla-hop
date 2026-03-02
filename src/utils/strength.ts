@@ -1,8 +1,15 @@
 
 export const calculateOneRM = (weight: number, reps: number): number => {
     if (reps === 1) return weight
-    // Epley Formula
-    return Math.round(weight * (1 + reps / 30))
+    // Epley Formula: 1RM = W * (1 + r/30)
+    let estimated1RM = weight * (1 + reps / 30)
+
+    // Confiability Penalty for High Reps
+    if (reps > 15) {
+        estimated1RM *= 0.85 // 15% reduction
+    }
+
+    return Math.round(estimated1RM)
 }
 
 // DOTS Coefficients (Male/Female)

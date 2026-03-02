@@ -10,6 +10,7 @@ import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useAuth } from '@/contexts/AuthContext'
 import { clearSessionState } from '@/utils/workoutStorage'
+import { calculateLevel } from '@/utils/gamification'
 
 const ActiveSessionPage = () => {
     const { sessionId } = useParams()
@@ -570,15 +571,21 @@ const ActiveSessionPage = () => {
                 history1RMs
             )
 
-            const xpGained = xpResult.total
+            // Use RPC to Finalize Session and Apply Anti-Cheat Rules in Backend
+            const timeAndBonusXP = xpResult.breakdown.time + xpResult.breakdown.bonus
+
+            const { data: finalXpGained, error: finalizeError } = await supabase.rpc('finalize_workout_session', {
+                p_session_id: sessionId,
+                p_duration_seconds: elapsedTime,
+                p_time_bonus_xp: timeAndBonusXP,
+                p_log_xps: xpResult.logXPMap
+            })
+
+            if (finalizeError) throw finalizeError
+
+            const xpGained = finalXpGained || xpResult.total
             const newXP = (profile?.current_xp || 0) + xpGained
-            const newLevel = Math.floor(newXP / 1000) + 1
-
-            await supabase.from('workout_sessions')
-                .update({ status: 'completed', ended_at: new Date().toISOString(), duration_seconds: elapsedTime })
-                .eq('id', sessionId)
-
-            await supabase.from('profiles').update({ current_xp: newXP, level: newLevel }).eq('id', clientWorkout.client_id)
+            const newLevel = calculateLevel(newXP)
 
             // Clear local storage state
             clearSessionState(sessionId)
@@ -590,7 +597,11 @@ const ActiveSessionPage = () => {
                 oldLevel: profile?.level || 1,
                 workoutName: clientWorkout.workout?.name || 'Treino',
                 durationSeconds: elapsedTime,
-                totalLoadKg: enrichedLogs.reduce((a, l) => a + (l.weight || 0) * (l.reps || 0), 0)
+                totalLoadKg: enrichedLogs.reduce((a, l) => {
+                    const isUnilateral = (l as any).exercise?.is_unilateral || false;
+                    const logLoad = (l.weight || 0) * (l.reps || 0);
+                    return a + (isUnilateral ? logLoad * 2 : logLoad);
+                }, 0)
             })
 
             setShowSummaryModal(true)
@@ -737,6 +748,7 @@ const ActiveSessionPage = () => {
                 isSessionActive={sessionData?.status === 'started'}
                 elapsedTime={elapsedTime}
                 sessionId={sessionId}
+                clientId={clientWorkout?.client_id}
             />
         </div>
     )
