@@ -54,7 +54,8 @@ export const WorkoutExerciseCard: React.FC<WorkoutExerciseCardProps> = ({
     const [showVideo, setShowVideo] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
 
-    const isCompleted = executionLogs.some(log => log.workout_exercise_id === we.id)
+    const exerciseLogsCount = executionLogs.filter(log => log.workout_exercise_id === we.id).length
+    const isCompleted = exerciseLogsCount >= we.sets
 
     // Logic for Media Types
     const demoUrl = we.exercise?.demo_url
