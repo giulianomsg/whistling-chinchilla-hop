@@ -107,7 +107,7 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({
 
     return (
         <div className={cn(
-            "fixed inset-0 z-50 bg-background flex-col animate-in fade-in duration-300",
+            "fixed inset-0 z-[110] bg-background flex-col animate-in fade-in duration-300 !mt-0 h-screen",
             isOpen ? "flex" : "hidden"
         )}>
             {/* Header */}
