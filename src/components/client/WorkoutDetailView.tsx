@@ -246,13 +246,7 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
   // Active Exercise Timer Interval (Real-time Ticking)
   useEffect(() => {
     let interval: NodeJS.Timeout
-    if (activeTimerId && activeTimerStartTime && isSessionActive && sessionStatus === 'started') {
-      const baseTime = exerciseTimers[activeTimerId] || 0 // Warning: This baseTime includes usage up to load.
-      // Issue: if we just add 1 every second to 'exerciseTimers', it drifts.
-      // Ideally we use a Ref for the Base like in ActiveSessionPage.
-      // But for simplicity in this View (which is secondary), an interval tick is usually acceptable unless user stays long.
-      // However, if we refresh, we recalc from DB.
-      // Let's use simple tick to update state.
+    if (activeTimerId && activeTimerStartTime && isSessionActive && sessionStatus === 'started' && !restTimerOpen) {
       interval = setInterval(() => {
         setExerciseTimers(prev => ({
           ...prev,
@@ -261,7 +255,20 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
       }, 1000)
     }
     return () => clearInterval(interval)
-  }, [activeTimerId, activeTimerStartTime, isSessionActive, sessionStatus])
+  }, [activeTimerId, activeTimerStartTime, isSessionActive, sessionStatus, restTimerOpen])
+
+  // Rest Timer Interval
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (restTimerOpen && restTimerSeconds > 0) {
+      interval = setInterval(() => {
+        setRestTimerSeconds(prev => prev - 1)
+      }, 1000)
+    } else if (restTimerSeconds === 0 && restTimerOpen) {
+      setRestTimerOpen(false) // Auto-close when done
+    }
+    return () => clearInterval(interval)
+  }, [restTimerOpen, restTimerSeconds])
 
 
   // ... (rest of imports/state)
