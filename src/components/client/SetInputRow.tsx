@@ -14,6 +14,7 @@ interface SetInputRowProps {
     isCompleted: boolean
     sessionId?: string | null
     exerciseId?: string
+    disabled?: boolean
 }
 
 export const SetInputRow: React.FC<SetInputRowProps> = ({
@@ -24,7 +25,8 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
     onSave,
     isCompleted,
     sessionId, // New prop
-    exerciseId // New prop
+    exerciseId, // New prop
+    disabled // New prop
 }) => {
     const [weight, setWeight] = useWorkoutDraft(
         sessionId,
@@ -94,7 +96,8 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                         value={weight}
                         onChange={(e) => handleWeightChange(e.target.value)}
                         placeholder={previousWeight ? `${previousWeight}` : "-"}
-                        className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
+                        className="h-12 text-lg font-bold text-center bg-muted/50 border-input disabled:opacity-50"
+                        disabled={disabled}
                     />
                     {previousWeight && (
                         <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/70">
@@ -112,7 +115,8 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                         onChange={(e) => handleRepsChange(e.target.value)}
                         onKeyDown={handleRepsKeyDown}
                         placeholder={previousReps ? `${previousReps}` : "-"}
-                        className="h-12 text-lg font-bold text-center bg-muted/50 border-input"
+                        className="h-12 text-lg font-bold text-center bg-muted/50 border-input disabled:opacity-50"
+                        disabled={disabled}
                     />
                     {previousReps && (
                         <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/70">
@@ -134,6 +138,7 @@ export const SetInputRow: React.FC<SetInputRowProps> = ({
                             : "bg-muted hover:bg-muted/80 text-muted-foreground"
                     )}
                     onClick={handleCheck}
+                    disabled={disabled && !isCompleted} // Can uncheck if completed even if resting (optional, but good for undo)
                 >
                     {isCompleted ? <Check className="h-5 w-5 md:h-6 md:w-6" /> : <Check className="h-5 w-5 md:h-6 md:w-6" />}
                 </Button>

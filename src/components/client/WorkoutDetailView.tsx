@@ -698,9 +698,15 @@ const WorkoutDetailView: React.FC<WorkoutDetailViewProps> = ({ clientWorkout }) 
 
       // Trigger Timer if completed
       if (isCompleted) {
-        setRestTimerSeconds(60) // Default 60s
-        setTotalRestSeconds(60)
-        setRestTimerOpen(true)
+        const exercise = workoutExercises.find(we => we.id === exerciseId)
+        const isLastSet = exercise && exerciseLogs.length >= exercise.sets
+
+        if (!isLastSet) {
+          const restTime = exercise?.rest_time_seconds || 60
+          setRestTimerSeconds(restTime)
+          setTotalRestSeconds(restTime)
+          setRestTimerOpen(true)
+        }
       }
 
     } catch (e) {
