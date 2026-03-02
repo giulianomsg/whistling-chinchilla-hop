@@ -39,3 +39,12 @@ export const getLevelProgress = (currentXP: number, currentLevel: number) => {
         progress
     }
 }
+
+/**
+ * Validates if a logged weight is realistic compared to previous historical records.
+ * Matches backend trigger logic (1.5x multiplier).
+ */
+export const checkIsValidForXP = (currentWeight: number, historicalMaxWeight: number): boolean => {
+    if (!historicalMaxWeight || historicalMaxWeight <= 0) return true;
+    return currentWeight <= (historicalMaxWeight * 1.5);
+}

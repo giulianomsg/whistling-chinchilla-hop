@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Calendar, Clock, Dumbbell, ChevronRight, Loader2 } from 'lucide-react'
+import { Calendar, Clock, Dumbbell, ChevronRight, Loader2, AlertTriangle } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import { cn } from '@/lib/utils'
 
 interface WorkoutHistoryFeedProps {
     clientId: string;
@@ -106,27 +107,32 @@ const WorkoutHistoryFeed: React.FC<WorkoutHistoryFeedProps> = ({ clientId }) => 
                         ) : (
                             <div className="space-y-4">
                                 {sessionLogs.map((log, idx) => (
-                                    <div key={log.id} className="bg-muted/50 p-4 rounded-lg border border-border">
+                                    <div key={log.id} className={cn("bg-muted/50 p-4 rounded-lg border border-border", log.is_valid_for_xp === false && "opacity-75")}>
                                         <div className="flex items-start justify-between mb-2">
                                             <h4 className="font-semibold text-foreground flex items-center gap-2">
-                                                <span className="bg-primary/10 text-primary w-6 h-6 flex items-center justify-center rounded-full text-xs">{idx + 1}</span>
-                                                {log.exercise?.name}
+                                                <span className={cn("text-primary w-6 h-6 flex items-center justify-center rounded-full text-xs", log.is_valid_for_xp === false ? "bg-destructive/10 text-destructive" : "bg-primary/10")}>{idx + 1}</span>
+                                                <span className={cn(log.is_valid_for_xp === false && "line-through text-muted-foreground")}>{log.exercise?.name}</span>
                                             </h4>
+                                            {log.is_valid_for_xp === false && (
+                                                <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-destructive bg-destructive/10 px-2 py-0.5 rounded-full">
+                                                    <AlertTriangle className="h-3 w-3" /> Carga sob revisão
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 text-sm">
                                             <div className="bg-background p-2 rounded border border-border">
                                                 <span className="text-muted-foreground block text-xs">Carga</span>
-                                                <span className="font-mono font-medium">{log.weight || '-'} kg</span>
+                                                <span className={cn("font-mono font-medium", log.is_valid_for_xp === false && "line-through")}>{log.weight || '-'} kg</span>
                                             </div>
                                             <div className="bg-background p-2 rounded border border-border">
                                                 <span className="text-muted-foreground block text-xs">Repetições</span>
-                                                <span className="font-mono font-medium">{log.reps || '-'}</span>
+                                                <span className={cn("font-mono font-medium", log.is_valid_for_xp === false && "line-through")}>{log.reps || '-'}</span>
                                             </div>
                                         </div>
                                         {log.notes && (
                                             <div className="mt-2 text-sm text-muted-foreground bg-background p-2 rounded border border-border">
                                                 <span className="block text-xs font-semibold mb-1">Notas:</span>
-                                                {log.notes}
+                                                <span className={cn(log.is_valid_for_xp === false && "line-through")}>{log.notes}</span>
                                             </div>
                                         )}
                                     </div>

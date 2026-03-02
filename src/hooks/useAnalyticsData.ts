@@ -42,6 +42,7 @@ export const useAnalyticsData = (clientId: string | undefined) => {
             workout_session:workout_sessions!inner(id, created_at, client_id)
           `)
                     .eq('workout_session.client_id', clientId)
+                    .eq('is_valid_for_xp', true)
                     .order('completed_at', { ascending: true })
 
                 if (error) throw error

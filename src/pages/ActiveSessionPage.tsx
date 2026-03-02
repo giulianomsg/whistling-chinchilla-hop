@@ -10,7 +10,7 @@ import { calculateSessionXP } from '@/utils/xpCalculator'
 import { calculateOneRM, getCanonicalExerciseId } from '@/utils/strength'
 import { useAuth } from '@/contexts/AuthContext'
 import { clearSessionState } from '@/utils/workoutStorage'
-import { calculateLevel } from '@/utils/gamification'
+import { calculateLevel, checkIsValidForXP } from '@/utils/gamification'
 
 const ActiveSessionPage = () => {
     const { sessionId } = useParams()
@@ -598,6 +598,15 @@ const ActiveSessionPage = () => {
                 workoutName: clientWorkout.workout?.name || 'Treino',
                 durationSeconds: elapsedTime,
                 totalLoadKg: enrichedLogs.reduce((a, l) => {
+                    // Anti-Cheat: Filter from UI summary if invalid
+                    const exName = (l as any).exercise?.name || ''
+                    const cId = getCanonicalExerciseId(exName)
+                    const hist1RM = cId ? (history1RMs[cId] || 0) : 0
+
+                    if (!checkIsValidForXP(l.weight || 0, hist1RM)) {
+                        return a; // Skip invalid log
+                    }
+
                     const isUnilateral = (l as any).exercise?.is_unilateral || false;
                     const logLoad = (l.weight || 0) * (l.reps || 0);
                     return a + (isUnilateral ? logLoad * 2 : logLoad);

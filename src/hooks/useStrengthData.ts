@@ -27,6 +27,7 @@ export const useStrengthData = (clientId: string | undefined) => {
                     .from('workout_execution_logs')
                     .select(`weight, reps, exercise:exercises_library(name, base_type), workout_session:workout_sessions!inner(client_id)`)
                     .eq('workout_session.client_id', clientId)
+                    .eq('is_valid_for_xp', true)
 
                 // Fetch User Weight (Latest Body Assessment)
                 const { data: assessments } = await supabase
